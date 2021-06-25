@@ -1,0 +1,34 @@
+CREATE TABLE persons
+(
+    email text NOT NULL PRIMARY KEY,
+    password text  NOT NULL,
+    fullname text NOT NULL,
+    dob date NOT NULL,
+    gender bit(1) NOT NULL,
+    address text NOT NULL,
+    phonenumber varchar(12) NOT NULL,
+    role text
+);
+
+CREATE TABLE products
+(
+    product_id text not null PRIMARY KEY,
+    name text,
+    price numeric,
+    quantity integer,
+    product_type text,
+    description text,
+    brand text
+);
+CREATE TABLE orderbill
+(
+    id integer GENERATED ALWAYS AS IDENTITY,
+    product_id text NOT NULL,
+    customer_email text NOT NULL,
+    quantity integer NOT NULL,
+    timebought timestamp NOT NULL,
+    total_cost numeric not null,
+    status bit NOT NULL,
+    CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
+	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
+);
