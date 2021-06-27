@@ -18,7 +18,11 @@ CREATE TABLE products
     quantity integer,
     product_type text,
     description text,
-    brand text
+    brand text,
+    photo1 text null,
+    photo2 text null, 
+    photo3 text null,
+    photo4 text null
 );
 CREATE TABLE orderbill
 (
@@ -28,6 +32,8 @@ CREATE TABLE orderbill
     quantity integer NOT NULL,
     timebought timestamp NOT NULL,
     total_cost numeric not null,
+    rate_num int null, 
+    rate_text text null,
     status bit NOT NULL,
     CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
 	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
