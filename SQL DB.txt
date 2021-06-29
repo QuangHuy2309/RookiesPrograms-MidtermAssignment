@@ -38,3 +38,8 @@ CREATE TABLE orderbill
     CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
 	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
 );
+
+insert into persons 
+values ('shynhyn319@gmail.com','123','Lê Hoàng Nhât Lâm','1999-02-03',B'0','TP HCM','0967123456','admin'),
+		('lqhuy2309@gmail.com','123','Luơng Quang Huy','1999-09-23',B'0','Long An','0967123456','user'),
+		('nguyenvana@gmail.com','123','Nguyên Văn A','1999-01-01',B'0','Bến Tre','0967123456','user')
