@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.entity.Person;
+import com.nashtech.MyBikeShop.exception.PersonNotFoundException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.service.PersonService;
 
@@ -24,9 +25,11 @@ public class PersonServiceImpl implements PersonService{
 	}
 	
 	public Person getPerson(String email) {
-		Optional<Person> optperson = personRepository.findById(email);
-		Person person = optperson.get();
-		return person;
+//		Optional<Person> optperson = personRepository.findById(email);
+//		Person person = optperson.get();
+//		return person;
+		return personRepository.findById(email)
+				.orElseThrow(() -> new PersonNotFoundException(email));
 	}
 	public Person savePerson(Person person) {return personRepository.save(person);}
 	public void deletePerson(String email) {personRepository.deleteById(email);}
