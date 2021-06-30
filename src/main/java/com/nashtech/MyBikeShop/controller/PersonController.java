@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nashtech.MyBikeShop.entity.Person;
+import com.nashtech.MyBikeShop.DTO.PersonDTO;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.service.PersonService;
 
 @RestController
@@ -22,18 +23,17 @@ public class PersonController {
 	private PersonService personService;
 
 	@GetMapping
-	public List<Person> retrivePerson() {
-		List<Person> persons = personService.retrievePersons();
-		return persons;
+	public List<PersonEntity> retrivePerson() {
+		return  personService.retrievePersons();
 	}
 
 	@GetMapping("/{email}")
-	public Person findPerson(@PathVariable(name = "email") String email) {
+	public PersonEntity findPerson(@PathVariable(name = "email") String email) {
 		return personService.getPerson(email);
 	}
 
 	@PostMapping
-	public Person savePerson(@RequestBody Person newPerson) {
+	public PersonEntity savePerson(@RequestBody PersonDTO newPerson) {
 		return personService.savePerson(newPerson);
 	}
 
@@ -43,7 +43,7 @@ public class PersonController {
 	}
 
 	@PutMapping()
-	public void editPerson(@RequestBody Person newPerson) {
+	public void editPerson(@RequestBody PersonDTO newPerson) {
 		personService.updatePerson(newPerson);
 	}
 }

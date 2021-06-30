@@ -7,9 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.nashtech.MyBikeShop.DTO.PersonDTO;
+
 @Entity
 @Table(name="persons")
-public class Person {
+public class PersonEntity {
 	@Id
 	private String email;
 	
@@ -33,7 +35,24 @@ public class Person {
 	
 	@Column(name="role")
 	private String role;
+	
+	
+	
+	public PersonEntity() {
+		super();
+	}
 
+	public PersonEntity(PersonDTO personDTO) {
+		super();
+		this.email = personDTO.getEmail();
+		this.password = personDTO.getPassword();
+		this.fullname = personDTO.getFullname();
+		this.dob = personDTO.getDob();
+		this.gender = personDTO.isGender();
+		this.address = personDTO.getAddress();
+		this.phonenumber = personDTO.getPhonenumber();
+		this.role = personDTO.getRole();
+	}
 	public String getEmail() {
 		return email;
 	}

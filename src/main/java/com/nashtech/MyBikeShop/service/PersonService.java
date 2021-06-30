@@ -2,12 +2,13 @@ package com.nashtech.MyBikeShop.service;
 
 import java.util.List;
 
-import com.nashtech.MyBikeShop.entity.Person;
+import com.nashtech.MyBikeShop.DTO.PersonDTO;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 
 public interface PersonService {
-	public List<Person> retrievePersons();
-	public Person getPerson(String email);
-	public Person savePerson(Person person);
+	public List<PersonEntity> retrievePersons();
+	public PersonEntity getPerson(String email);
+	public PersonEntity savePerson(PersonDTO person);
 	public void deletePerson(String email);
-	public void updatePerson(Person person);
+	public void updatePerson(PersonDTO person);
 }

@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nashtech.MyBikeShop.entity.Person;
+import com.nashtech.MyBikeShop.DTO.PersonDTO;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.PersonNotFoundException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.service.PersonService;
@@ -19,19 +20,24 @@ public class PersonServiceImpl implements PersonService{
 	public void setPersonRepository(PersonRepository personRepository) {
 		this.personRepository = personRepository;
 	}
-	public List<Person> retrievePersons(){
-		List<Person> persons = personRepository.findAll();
-		return persons;
+	public List<PersonEntity> retrievePersons(){
+		return  personRepository.findAll();
 	}
 	
-	public Person getPerson(String email) {
+	public PersonEntity getPerson(String email) {
 //		Optional<Person> optperson = personRepository.findById(email);
 //		Person person = optperson.get();
 //		return person;
 		return personRepository.findById(email)
 				.orElseThrow(() -> new PersonNotFoundException(email));
 	}
-	public Person savePerson(Person person) {return personRepository.save(person);}
+	public PersonEntity savePerson(PersonDTO personDTO) {
+		PersonEntity person = new PersonEntity(personDTO);
+		return personRepository.save(person);
+		}
 	public void deletePerson(String email) {personRepository.deleteById(email);}
-	public void updatePerson(Person person) {personRepository.save(person);}
+	public void updatePerson(PersonDTO personDTO) {
+		PersonEntity person = new PersonEntity(personDTO);
+		personRepository.save(person);
+		}
 }
