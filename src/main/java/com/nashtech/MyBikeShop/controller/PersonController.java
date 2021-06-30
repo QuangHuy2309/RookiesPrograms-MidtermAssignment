@@ -34,7 +34,7 @@ public class PersonController {
 
 	@PostMapping
 	public PersonEntity savePerson(@RequestBody PersonDTO newPerson) {
-		return personService.savePerson(newPerson);
+		return personService.createPerson(newPerson);
 	}
 
 	@DeleteMapping("/{email}")

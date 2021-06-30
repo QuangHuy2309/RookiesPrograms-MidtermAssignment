@@ -8,7 +8,7 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 public interface PersonService {
 	public List<PersonEntity> retrievePersons();
 	public PersonEntity getPerson(String email);
-	public PersonEntity savePerson(PersonDTO person);
+	public PersonEntity createPerson(PersonDTO person);
 	public void deletePerson(String email);
 	public void updatePerson(PersonDTO person);
 }
