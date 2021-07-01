@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
-import com.nashtech.MyBikeShop.entity.ProductEnity;
+import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
@@ -23,20 +23,20 @@ public class ProductServiceImpl implements ProductService{
 		this.productRepository = productRepository;
 	}
 	
-	public List<ProductEnity> retrieveProducts(){
+	public List<ProductEntity> retrieveProducts(){
 		return productRepository.findAll();
 		
 	}
-	public ProductEnity getProduct(String id) {
+	public ProductEntity getProduct(String id) {
 		return productRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));
 		
 	}
-	public ProductEnity createProduct(ProductDTO productDTO) {
-		Optional<ProductEnity> product = productRepository.findById(productDTO.getId());
+	public ProductEntity createProduct(ProductDTO productDTO) {
+		Optional<ProductEntity> product = productRepository.findById(productDTO.getId());
 		if (product.isPresent()) {
 			throw new ObjectAlreadyExistException("There is a product with Id " + product.get().getId());
 		} else {
-			ProductEnity productEntity = new ProductEnity(productDTO);
+			ProductEntity productEntity = new ProductEntity(productDTO);
 			return productRepository.save(productEntity);
 		}
 	}
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService{
 		productRepository.deleteById(id);
 	}
 	public void updateProduct(ProductDTO productDTO) {
-		ProductEnity product = new ProductEnity(productDTO);
+		ProductEntity product = new ProductEntity(productDTO);
 		productRepository.save(product);
 	}
 }

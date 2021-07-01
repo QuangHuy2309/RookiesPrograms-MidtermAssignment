@@ -13,55 +13,55 @@ import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name="products")
-public class ProductEnity {
+@Table(name = "products")
+public class ProductEntity {
 	@Id
 	@NotNull
-	@Column(name="id")
+	@Column(name = "id")
 	private String id;
-	
+
 	@NotNull
-	@Column(name="name")
+	@Column(name = "name")
 	private String name;
-	
+
 	@NotNull
-	@Column(name="price")
+	@Column(name = "price")
 	private float price;
-	
+
 	@NotNull
-	@Column(name="quantity")
+	@Column(name = "quantity")
 	private int quantity;
-	
+
 	@NotNull
-	@Column(name="productType")
+	@Column(name = "productType")
 	private String productType;
-	
-	@Column(name="description")
+
+	@Column(name = "description")
 	private String description;
-	
-	@Column(name="brand")
+
+	@Column(name = "brand")
 	private String brand;
-	
-	@Column(name="photo1")
+
+	@Column(name = "photo1")
 	private String photo1;
-	
-	@Column(name="photo2")
+
+	@Column(name = "photo2")
 	private String photo2;
-	
-	@Column(name="photo3")
+
+	@Column(name = "photo3")
 	private String photo3;
-	
-	@Column(name="photo4")
+
+	@Column(name = "photo4")
 	private String photo4;
-	
-	@OneToMany(mappedBy = "products", fetch=FetchType.EAGER)
+
+	@OneToMany(mappedBy = "products", fetch = FetchType.EAGER)
 	private Collection<OrderEntity> orders;
-	
-	public ProductEnity() {
+
+	public ProductEntity() {
 		super();
 	}
 
-	public ProductEnity(ProductDTO product) {
+	public ProductEntity(ProductDTO product) {
 		super();
 		this.id = product.getId();
 		this.name = product.getName();
@@ -75,7 +75,7 @@ public class ProductEnity {
 		this.photo3 = product.getPhoto3();
 		this.photo4 = product.getPhoto4();
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -116,6 +116,12 @@ public class ProductEnity {
 
 	public int getQuantity() {
 		return quantity;
+	}
+
+	public void decreaseQuantity(int numDecrease) {
+		if (this.quantity < numDecrease)
+			throw new IllegalArgumentException("Quantity is invalid");
+		this.quantity -= numDecrease;
 	}
 
 	public void setQuantity(int quantity) {
@@ -189,9 +195,9 @@ public class ProductEnity {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		//return super.toString();
-		return "ID: "+ this.id + "\t Name: " + this.name + "\t Price:" + this.price + "\t Quantity: " 
-			+ this.quantity + "\t Type: " + this.productType + "\t Brand: " +this.brand;
+		// return super.toString();
+		return "ID: " + this.id + "\t Name: " + this.name + "\t Price:" + this.price + "\t Quantity: " + this.quantity
+				+ "\t Type: " + this.productType + "\t Brand: " + this.brand;
 	}
 
 }

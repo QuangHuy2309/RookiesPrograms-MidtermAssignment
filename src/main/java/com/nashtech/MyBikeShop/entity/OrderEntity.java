@@ -5,16 +5,20 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.nashtech.MyBikeShop.DTO.OrderDTO;
+import com.sun.istack.NotNull;
+
 @Entity
 @Table(name="orderbill")
 public class OrderEntity {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private int id;
 	
@@ -24,27 +28,27 @@ public class OrderEntity {
 	@Column(name="timebought")
 	private Date timebought;
 	
-	@Column(name="totalCost")
-	private float totalCost;
+	@Column(name="totalcost")
+	private Float totalCost;
 	
 	@Column(name="address")
 	private String address;
 	
-	@Column(name="rateNum")
-	private int rateNum;
+	@Column(name="ratenum")
+	private Integer rateNum;
 	
-	@Column(name="rateText")
+	@Column(name="ratetext")
 	private String rateText;
 	
 	@Column(name="status")
 	private boolean status;
 	
 	@ManyToOne
-	@JoinColumn(name="productId")
-	private ProductEnity products;
+	@JoinColumn(name="productid")
+	private ProductEntity products;
 	
 	@ManyToOne
-	@JoinColumn(name="customerEmail")
+	@JoinColumn(name="customeremail")
 	private PersonEntity customers;
 	
 	public OrderEntity() {
@@ -53,19 +57,20 @@ public class OrderEntity {
 
 	
 
-	public OrderEntity(int id, int quantity, Date timebought, float totalCost, String address, int rateNum,
-			String rateText, boolean status, ProductEnity products, PersonEntity customers) {
+	public OrderEntity(OrderDTO order) {
 		super();
-		this.id = id;
-		this.quantity = quantity;
-		this.timebought = timebought;
-		this.totalCost = totalCost;
-		this.address = address;
-		this.rateNum = rateNum;
-		this.rateText = rateText;
-		this.status = status;
-		this.products = products;
-		this.customers = customers;
+		this.id = order.getId();
+		this.quantity = order.getQuantity();
+		this.timebought = order.getTimebought();
+		this.totalCost = order.getTotalCost();
+		this.address = order.getAddress();
+		this.rateNum = order.getRateNum();
+		this.rateText = order.getRateText();
+		this.status = order.isStatus();
+		ProductEntity prodEntity = new ProductEntity(order.getProducts());
+		this.products = prodEntity;
+		PersonEntity perEntity = new PersonEntity(order.getCustomers());
+		this.customers = perEntity;
 	}
 
 
@@ -80,13 +85,13 @@ public class OrderEntity {
 
 	
 
-	public ProductEnity getProducts() {
+	public ProductEntity getProducts() {
 		return products;
 	}
 
 
 
-	public void setProducts(ProductEnity products) {
+	public void setProducts(ProductEntity products) {
 		this.products = products;
 	}
 

@@ -12,38 +12,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
+import com.nashtech.MyBikeShop.service.OrderService;
 import com.nashtech.MyBikeShop.service.ProductService;
 
 @RestController
-@RequestMapping("/api/product")
-public class ProductController {
+@RequestMapping("/api/order")
+public class OrderController {
 	@Autowired
-	private ProductService productService;
+	private OrderService orderService;
 
 	@GetMapping
-	public List<ProductEntity> retrieveProducts() {
-		return  productService.retrieveProducts();
+	public List<OrderEntity> retrieveOrders() {
+		return  orderService.retrieveOrders();
 	}
 
 	@GetMapping("/{id}")
-	public ProductEntity findProduct(@PathVariable(name = "id") String id) {
-		return productService.getProduct(id);
+	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
+		return orderService.getOrders(id);
 	}
 
 	@PostMapping
-	public ProductEntity saveProduct(@RequestBody ProductDTO newProduct) {
-		return productService.createProduct(newProduct);
+	public OrderEntity createOrder(@RequestBody OrderDTO newOrder) {
+		return orderService.createOrder(newOrder);
 	}
-
-	@DeleteMapping("/{id}")
-	public void deleteProduct(@PathVariable(name = "id") String id) {
-		productService.deleteProduct(id);
-	}
-
-	@PutMapping
-	public void editProduct(@RequestBody ProductDTO newProduct) {
-		productService.updateProduct(newProduct);
-	}
+//
+//	@DeleteMapping("/{id}")
+//	public void deletePerson(@PathVariable(name = "id") String id) {
+//		productService.deleteProduct(id);
+//	}
+//
+//	@PutMapping
+//	public void editPerson(@RequestBody ProductDTO newProduct) {
+//		productService.updateProduct(newProduct);
+//	}
 }
