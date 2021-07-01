@@ -42,7 +42,7 @@ public class PersonController {
 		personService.deletePerson(email);
 	}
 
-	@PutMapping()
+	@PutMapping
 	public void editPerson(@RequestBody PersonDTO newPerson) {
 		personService.updatePerson(newPerson);
 	}

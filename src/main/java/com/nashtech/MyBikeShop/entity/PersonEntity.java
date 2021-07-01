@@ -1,10 +1,13 @@
 package com.nashtech.MyBikeShop.entity;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
@@ -13,6 +16,7 @@ import com.nashtech.MyBikeShop.DTO.PersonDTO;
 @Table(name="persons")
 public class PersonEntity {
 	@Id
+	@Column(name="email")
 	private String email;
 	
 	@Column(name="password")
@@ -36,7 +40,8 @@ public class PersonEntity {
 	@Column(name="role")
 	private String role;
 	
-	
+	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER)
+	private Collection<OrderEntity> orders;
 	
 	public PersonEntity() {
 		super();

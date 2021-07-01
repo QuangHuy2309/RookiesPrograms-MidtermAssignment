@@ -1,45 +1,92 @@
 package com.nashtech.MyBikeShop.entity;
 
-public class Product {
+import java.util.Collection;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.sun.istack.NotNull;
+
+@Entity
+@Table(name="products")
+public class ProductEnity {
+	@Id
+	@NotNull
+	@Column(name="id")
 	private String id;
+	
+	@NotNull
+	@Column(name="name")
 	private String name;
+	
+	@NotNull
+	@Column(name="price")
 	private float price;
+	
+	@NotNull
+	@Column(name="quantity")
 	private int quantity;
+	
+	@NotNull
+	@Column(name="productType")
 	private String productType;
+	
+	@Column(name="description")
 	private String description;
+	
+	@Column(name="brand")
 	private String brand;
+	
+	@Column(name="photo1")
 	private String photo1;
+	
+	@Column(name="photo2")
 	private String photo2;
+	
+	@Column(name="photo3")
 	private String photo3;
+	
+	@Column(name="photo4")
 	private String photo4;
-
-	public Product() {
+	
+	@OneToMany(mappedBy = "products", fetch=FetchType.EAGER)
+	private Collection<OrderEntity> orders;
+	
+	public ProductEnity() {
 		super();
 	}
 
-	public Product(String id, String name, float price, int quantity, String product_type, String description,
-			String brand) {
+	public ProductEnity(ProductDTO product) {
 		super();
-		this.id = id;
-		this.name = name;
-		this.price = price;
-		this.quantity = quantity;
-		this.productType = product_type;
-		this.description = description;
-		this.brand = brand;
+		this.id = product.getId();
+		this.name = product.getName();
+		this.price = product.getPrice();
+		this.quantity = product.getQuantity();
+		this.productType = product.getProductType();
+		this.description = product.getProductType();
+		this.brand = product.getBrand();
+		this.photo1 = product.getPhoto1();
+		this.photo2 = product.getPhoto2();
+		this.photo3 = product.getPhoto3();
+		this.photo4 = product.getPhoto4();
 	}
-
+	
 	public String getId() {
 		return id;
 	}
 
 	public void setId(String id) {
-		StringBuilder id_trim = new StringBuilder();
-		id_trim.append(id.trim());
-		if (id_trim.length() == 0) {
+		StringBuilder idTrim = new StringBuilder();
+		idTrim.append(id.trim());
+		if (idTrim.length() == 0) {
 			throw new IllegalArgumentException("Name is invalid");
 		}
-		this.name = id_trim.toString();
+		this.name = idTrim.toString();
 		this.id = id;
 	}
 
@@ -48,12 +95,12 @@ public class Product {
 	}
 
 	public void setName(String name) {
-		StringBuilder name_trim = new StringBuilder();
-		name_trim.append(name.trim());
-		if (name_trim.length() == 0) {
+		StringBuilder nameTrim = new StringBuilder();
+		nameTrim.append(name.trim());
+		if (nameTrim.length() == 0) {
 			throw new IllegalArgumentException("Name is invalid");
 		}
-		this.name = name_trim.toString();
+		this.name = nameTrim.toString();
 	}
 
 	public float getPrice() {
@@ -83,12 +130,12 @@ public class Product {
 	}
 
 	public void setProductType(String productType) {
-		StringBuilder type_trim = new StringBuilder();
-		type_trim.append(productType.trim());
-		if (type_trim.length() == 0) {
+		StringBuilder typeTrim = new StringBuilder();
+		typeTrim.append(productType.trim());
+		if (typeTrim.length() == 0) {
 			throw new IllegalArgumentException("Type of product is invalid");
 		}
-		this.productType = type_trim.toString();
+		this.productType = typeTrim.toString();
 	}
 
 	public String getDescription() {

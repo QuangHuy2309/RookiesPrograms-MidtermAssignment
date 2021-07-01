@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
-import com.nashtech.MyBikeShop.exception.PersonAlreadyHaveException;
-import com.nashtech.MyBikeShop.exception.PersonNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.service.PersonService;
 
@@ -18,7 +18,7 @@ public class PersonServiceImpl implements PersonService {
 	@Autowired
 	private PersonRepository personRepository;
 
-	public void setPersonRepository(PersonRepository personRepository) {
+	public PersonServiceImpl(PersonRepository personRepository) {
 		this.personRepository = personRepository;
 	}
 
@@ -30,13 +30,13 @@ public class PersonServiceImpl implements PersonService {
 //		Optional<Person> optperson = personRepository.findById(email);
 //		Person person = optperson.get();
 //		return person;
-		return personRepository.findById(email).orElseThrow(() -> new PersonNotFoundException(email));
+		return personRepository.findById(email).orElseThrow(() -> new ObjectNotFoundException("Could not find person with email: " + email));
 	}
 
 	public PersonEntity createPerson(PersonDTO personDTO) {
 		Optional<PersonEntity> person = personRepository.findById(personDTO.getEmail());
 		if (person.isPresent()) {
-			throw new PersonAlreadyHaveException(person.get().getEmail());
+			throw new ObjectAlreadyExistException("There is a person with email " + person.get().getEmail());
 		} else {
 			PersonEntity personEntity = new PersonEntity(personDTO);
 			return personRepository.save(personEntity);
