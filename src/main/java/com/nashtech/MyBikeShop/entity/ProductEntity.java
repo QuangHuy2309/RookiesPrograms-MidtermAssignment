@@ -118,10 +118,11 @@ public class ProductEntity {
 		return quantity;
 	}
 
-	public void decreaseQuantity(int numDecrease) {
-		if (this.quantity < numDecrease)
-			throw new IllegalArgumentException("Quantity is invalid");
-		this.quantity -= numDecrease;
+	public void changeQuantity(int numChange) {
+		boolean checkNumberChange = ((numChange < 0) && (this.quantity < Math.abs(numChange)));
+		if (checkNumberChange)
+			throw new IllegalArgumentException("The number of quantity change is invalid");
+		this.quantity += numChange;
 	}
 
 	public void setQuantity(int quantity) {

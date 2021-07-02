@@ -39,14 +39,14 @@ public class OrderController {
 	public OrderEntity createOrder(@RequestBody OrderDTO newOrder) {
 		return orderService.createOrder(newOrder);
 	}
-//
-//	@DeleteMapping("/{id}")
-//	public void deletePerson(@PathVariable(name = "id") String id) {
-//		productService.deleteProduct(id);
-//	}
-//
-//	@PutMapping
-//	public void editPerson(@RequestBody ProductDTO newProduct) {
-//		productService.updateProduct(newProduct);
-//	}
+
+	@DeleteMapping("/{id}")
+	public void deleteOrder(@PathVariable(name = "id") int id) {
+		orderService.deleteOrder(id);
+	}
+
+	@PutMapping
+	public void updateOrder(@RequestBody OrderDTO order) {
+		orderService.updateOrder(order);
+	}
 }

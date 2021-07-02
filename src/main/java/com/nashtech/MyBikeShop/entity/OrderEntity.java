@@ -114,6 +114,9 @@ public class OrderEntity {
 	}
 
 	public void setQuantity(int quantity) {
+		if (quantity < 0) {
+			throw new IllegalArgumentException("Quantity must not below zero");
+		}
 		this.quantity = quantity;
 	}
 
@@ -130,6 +133,9 @@ public class OrderEntity {
 	}
 
 	public void setTotalCost(float totalCost) {
+		if (totalCost < 0) {
+			throw new IllegalArgumentException("Total must not below zero");
+		}
 		this.totalCost = totalCost;
 	}
 
@@ -146,6 +152,9 @@ public class OrderEntity {
 	}
 
 	public void setRateNum(int rateNum) {
+		if (rateNum < 0) {
+			throw new IllegalArgumentException("Rate number must not below zero");
+		}
 		this.rateNum = rateNum;
 	}
 

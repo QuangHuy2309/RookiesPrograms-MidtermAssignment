@@ -10,6 +10,6 @@ public interface OrderService {
 	public List<OrderEntity> retrieveOrders();
 	public OrderEntity getOrders(int id);
 	public OrderEntity createOrder(OrderDTO order);
-//	public void deleteProduct(String id);
-//	public void updateProduct(ProductDTO product);
+	public void deleteOrder(int id);
+	public void updateOrder(OrderDTO order);
 }

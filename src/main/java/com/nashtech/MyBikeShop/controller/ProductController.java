@@ -43,7 +43,7 @@ public class ProductController {
 	}
 
 	@PutMapping
-	public void editProduct(@RequestBody ProductDTO newProduct) {
-		productService.updateProduct(newProduct);
+	public void editProduct(@RequestBody ProductDTO product) {
+		productService.updateProduct(product);
 	}
 }

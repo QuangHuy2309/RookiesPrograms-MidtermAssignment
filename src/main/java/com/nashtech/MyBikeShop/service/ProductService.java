@@ -12,4 +12,6 @@ public interface ProductService {
 	public ProductEntity createProduct(ProductDTO product);
 	public void deleteProduct(String id);
 	public void updateProduct(ProductDTO product);
+	public void updateProduct(ProductEntity product);
+	public void updateProductQuantity(String id, int numberChange);
 }
