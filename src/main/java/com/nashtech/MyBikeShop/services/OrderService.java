@@ -1,4 +1,4 @@
-package com.nashtech.MyBikeShop.service;
+package com.nashtech.MyBikeShop.services;
 
 import java.util.List;
 

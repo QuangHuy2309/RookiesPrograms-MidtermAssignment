@@ -2,6 +2,7 @@ package com.nashtech.MyBikeShop.entity;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,7 +42,7 @@ public class PersonEntity {
 	private String role;
 	
 	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER)
-	private Collection<OrderEntity> orders;
+	private List<OrderEntity> orders;
 	
 	public PersonEntity() {
 		super();
@@ -120,6 +121,14 @@ public class PersonEntity {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public List<OrderEntity> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<OrderEntity> orders) {
+		this.orders = orders;
 	}
 	
 	

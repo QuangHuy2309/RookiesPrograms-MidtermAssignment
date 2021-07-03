@@ -1,4 +1,4 @@
-package com.nashtech.MyBikeShop.service.impl;
+package com.nashtech.MyBikeShop.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +12,8 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
-import com.nashtech.MyBikeShop.service.OrderService;
-import com.nashtech.MyBikeShop.service.ProductService;
+import com.nashtech.MyBikeShop.services.OrderService;
+import com.nashtech.MyBikeShop.services.ProductService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -31,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findAll();
 
 	}
+
 
 	public OrderEntity getOrders(int id) {
 		return orderRepository.findById(id)

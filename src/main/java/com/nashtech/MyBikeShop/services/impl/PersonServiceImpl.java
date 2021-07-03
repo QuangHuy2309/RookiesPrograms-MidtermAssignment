@@ -1,4 +1,4 @@
-package com.nashtech.MyBikeShop.service.impl;
+package com.nashtech.MyBikeShop.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,11 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
+import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
-import com.nashtech.MyBikeShop.service.PersonService;
+import com.nashtech.MyBikeShop.services.PersonService;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -30,7 +31,8 @@ public class PersonServiceImpl implements PersonService {
 //		Optional<Person> optperson = personRepository.findById(email);
 //		Person person = optperson.get();
 //		return person;
-		return personRepository.findById(email).orElseThrow(() -> new ObjectNotFoundException("Could not find person with email: " + email));
+		return personRepository.findById(email)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find person with email: " + email));
 	}
 
 	public PersonEntity createPerson(PersonDTO personDTO) {
@@ -50,5 +52,11 @@ public class PersonServiceImpl implements PersonService {
 	public void updatePerson(PersonDTO personDTO) {
 		PersonEntity person = new PersonEntity(personDTO);
 		personRepository.save(person);
+	}
+
+	public List<OrderEntity> findOrderByCustomer(String email) {
+		PersonEntity person = personRepository.findById(email)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find person with email: " + email));
+		return person.getOrders();
 	}
 }

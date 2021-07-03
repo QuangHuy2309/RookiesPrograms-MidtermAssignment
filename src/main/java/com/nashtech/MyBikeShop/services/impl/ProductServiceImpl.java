@@ -1,4 +1,4 @@
-package com.nashtech.MyBikeShop.service.impl;
+package com.nashtech.MyBikeShop.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
-import com.nashtech.MyBikeShop.service.ProductService;
+import com.nashtech.MyBikeShop.services.ProductService;
 
 @Service
 public class ProductServiceImpl implements ProductService {

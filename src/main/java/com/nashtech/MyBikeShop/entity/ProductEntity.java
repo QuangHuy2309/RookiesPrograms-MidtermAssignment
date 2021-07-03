@@ -84,7 +84,7 @@ public class ProductEntity {
 		StringBuilder idTrim = new StringBuilder();
 		idTrim.append(id.trim());
 		if (idTrim.length() == 0) {
-			throw new IllegalArgumentException("Name is invalid");
+			throw new IllegalArgumentException("ID is invalid");
 		}
 		this.name = idTrim.toString();
 		this.id = id;
