@@ -1,14 +1,16 @@
 package com.nashtech.MyBikeShop.payload.response;
 
+import java.util.Collection;
+
 public class JwtResponse {
 	private String token;
     private String type = "Bearer";
 
     private String username;
     private String email;
-    private String roles;
+    private Collection<String> roles;
 
-    public JwtResponse(String accessToken, String username, String email, String roles) {
+    public JwtResponse(String accessToken, String username, String email, Collection<String> roles) {
         this.token = accessToken;
         this.username = username;
         this.email = email;
@@ -47,14 +49,14 @@ public class JwtResponse {
         this.username = username;
     }
 
-	public String getRoles() {
+	public Collection<String> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(String roles) {
+	public void setRoles(Collection<String> roles) {
 		this.roles = roles;
 	}
 
-    
+	   
     
 }
