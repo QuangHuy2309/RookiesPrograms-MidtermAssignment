@@ -38,16 +38,7 @@ CREATE TABLE orderbill
     CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
 	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
 );
-CREATE TABLE reviews
-(
-    id serial primary key,
-    product_id text NOT NULL,
-    customer_email text NOT NULL,
-    rate_num int not null check (rate_num > 0 and rate_num<5), 
-    rate_text text not null,
-    CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
-	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
-);
+
 insert into persons 
 values ('shynhyn319@gmail.com','123','Lê Hoàng Nhât Lâm','1999-02-03',B'0','TP HCM','0967123456','admin'),
 		('lqhuy2309@gmail.com','123','Luơng Quang Huy','1999-09-23',B'0','Long An','0967123456','user'),
@@ -59,5 +50,19 @@ add column rate_text text null;
 insert into products 
 values ('A','b',1000,23,'mountain','abc','giant')
 
-insert into reviews(product_id,customer_email,rate_num ,rate_text ) 
-values ('A','nguyenvana@gmail.com',3,'good')
+
+CREATE TABLE categories
+(
+    id serial primary key,
+    producttype text NOT NULL,
+    description text
+);
+
+ALTER TABLE products 
+ADD CONSTRAINT fk_products_categories 
+FOREIGN KEY (producttype) 
+REFERENCES categories (id);
+
+
+insert into categories (categoriesname ,description ) 
+values ('Mountain','Bike for Mountaing'), ('Road','Bike for long road'), ('Race','Bike for Racing')

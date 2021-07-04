@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -32,9 +34,6 @@ public class ProductEntity {
 	@Column(name = "quantity")
 	private int quantity;
 
-	@NotNull
-	@Column(name = "productType")
-	private String productType;
 
 	@Column(name = "description")
 	private String description;
@@ -56,7 +55,11 @@ public class ProductEntity {
 
 	@OneToMany(mappedBy = "products", fetch = FetchType.EAGER)
 	private Collection<OrderEntity> orders;
-
+	
+	@ManyToOne
+	@JoinColumn(name = "producttype")
+	private CategoriesEntity categories;
+	
 	public ProductEntity() {
 		super();
 	}
@@ -67,8 +70,8 @@ public class ProductEntity {
 		this.name = product.getName();
 		this.price = product.getPrice();
 		this.quantity = product.getQuantity();
-		this.productType = product.getProductType();
-		this.description = product.getProductType();
+		this.categories = new CategoriesEntity(product.getCategories());
+		this.description = product.getDescription();
 		this.brand = product.getBrand();
 		this.photo1 = product.getPhoto1();
 		this.photo2 = product.getPhoto2();
@@ -132,18 +135,7 @@ public class ProductEntity {
 		this.quantity = quantity;
 	}
 
-	public String getProductType() {
-		return productType;
-	}
 
-	public void setProductType(String productType) {
-		StringBuilder typeTrim = new StringBuilder();
-		typeTrim.append(productType.trim());
-		if (typeTrim.length() == 0) {
-			throw new IllegalArgumentException("Type of product is invalid");
-		}
-		this.productType = typeTrim.toString();
-	}
 
 	public String getDescription() {
 		return description;
@@ -192,13 +184,21 @@ public class ProductEntity {
 	public void setPhoto4(String photo4) {
 		this.photo4 = photo4;
 	}
+	
+	public CategoriesEntity getCategories() {
+		return categories;
+	}
+
+	public void setCategories(CategoriesEntity categories) {
+		this.categories = categories;
+	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		// return super.toString();
 		return "ID: " + this.id + "\t Name: " + this.name + "\t Price:" + this.price + "\t Quantity: " + this.quantity
-				+ "\t Type: " + this.productType + "\t Brand: " + this.brand;
+				+ "\t Type: " + this.categories.getCategoriesName() + "\t Brand: " + this.brand;
 	}
 
 }

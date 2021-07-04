@@ -1,7 +1,6 @@
 package com.nashtech.MyBikeShop.controller;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -27,6 +26,12 @@ import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.security.services.UserDetailsImpl;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -47,7 +52,20 @@ public class AuthController {
 		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
 	}
-
+	@Operation(summary = "Log in to get Authorize")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Login Success!", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = LoginRequest.class))}),
+			@ApiResponse(responseCode = "400", description = "Bad Request : JSON missing elements", 
+			content = @Content),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Login Failed!", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login not found", 
+			content = @Content),
+			@ApiResponse(responseCode = "405", description = "Method not allow", 
+			content = @Content)
+	})
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(

@@ -6,7 +6,7 @@ public class ProductDTO {
 	private String name;
 	private float price;
 	private int quantity;
-	private String productType;
+	private CategoriesDTO categories;
 	private String description;
 	private String brand;
 	private String photo1;
@@ -16,14 +16,14 @@ public class ProductDTO {
 	
 	public ProductDTO() {}
 	
-	public ProductDTO(String id, String name, float price, int quantity, String productType, String description,
+	public ProductDTO(String id, String name, float price, int quantity, CategoriesDTO categories, String description,
 			String brand, String photo1, String photo2, String photo3, String photo4) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
-		this.productType = productType;
+		this.categories = categories;
 		this.description = description;
 		this.brand = brand;
 		this.photo1 = photo1;
@@ -56,12 +56,15 @@ public class ProductDTO {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	public String getProductType() {
-		return productType;
+
+	public CategoriesDTO getCategories() {
+		return categories;
 	}
-	public void setProductType(String productType) {
-		this.productType = productType;
+
+	public void setCategories(CategoriesDTO categories) {
+		this.categories = categories;
 	}
+
 	public String getDescription() {
 		return description;
 	}
