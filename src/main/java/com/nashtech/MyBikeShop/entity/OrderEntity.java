@@ -9,53 +9,54 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name="orderbill")
+@Table(name = "orderbill")
 public class OrderEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="quantity")
+
+	@Column(name = "quantity")
 	private int quantity;
-	
-	@Column(name="timebought")
+
+	@Column(name = "timebought")
 	private Date timebought;
-	
-	@Column(name="totalcost")
+
+	@Column(name = "totalcost")
 	private Float totalCost;
-	
-	@Column(name="address")
+
+	@Column(name = "address")
 	private String address;
-	
-	@Column(name="ratenum")
+
+	@Column(name = "ratenum")
 	private Integer rateNum;
-	
-	@Column(name="ratetext")
+
+	@Column(name = "ratetext")
 	private String rateText;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private boolean status;
-	
+
 	@ManyToOne
-	@JoinColumn(name="productid")
+	@JoinColumn(name = "productid")
 	private ProductEntity products;
-	
+
 	@ManyToOne
-	@JoinColumn(name="customeremail")
+	@JoinColumn(name = "customeremail")
+	//@JsonBackReference
 	private PersonEntity customers;
-	
+
 	public OrderEntity() {
 		super();
 	}
-
-	
 
 	public OrderEntity(OrderDTO order) {
 		super();
@@ -67,13 +68,9 @@ public class OrderEntity {
 		this.rateNum = order.getRateNum();
 		this.rateText = order.getRateText();
 		this.status = order.isStatus();
-		ProductEntity prodEntity = new ProductEntity(order.getProducts());
-		this.products = prodEntity;
-		PersonEntity perEntity = new PersonEntity(order.getCustomers());
-		this.customers = perEntity;
+		this.products = new ProductEntity(order.getProducts());
+		this.customers = new PersonEntity(order.getCustomers());
 	}
-
-
 
 	public int getId() {
 		return id;
@@ -83,31 +80,21 @@ public class OrderEntity {
 		this.id = id;
 	}
 
-	
-
 	public ProductEntity getProducts() {
 		return products;
 	}
-
-
 
 	public void setProducts(ProductEntity products) {
 		this.products = products;
 	}
 
-
-
 	public PersonEntity getCustomers() {
 		return customers;
 	}
 
-
-
 	public void setCustomers(PersonEntity customers) {
 		this.customers = customers;
 	}
-
-
 
 	public int getQuantity() {
 		return quantity;
@@ -173,6 +160,5 @@ public class OrderEntity {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
-	
-	
+
 }

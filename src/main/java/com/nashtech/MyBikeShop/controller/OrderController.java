@@ -57,4 +57,10 @@ public class OrderController {
 	public void updateOrder(@RequestBody OrderDTO order) {
 		orderService.updateOrder(order);
 	}
+	
+	@GetMapping("/getListOrder/{email}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public List<OrderEntity> findListOrderedByCustomer(@PathVariable(name = "email") String email) {
+		return orderService.findOrderByCustomer(email);
+	}
 }

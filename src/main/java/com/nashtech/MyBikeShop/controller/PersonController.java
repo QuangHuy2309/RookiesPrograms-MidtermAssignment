@@ -38,15 +38,10 @@ public class PersonController {
 		return personService.getPerson(email);
 	}
 
-	@GetMapping("/getListOrder/{email}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public List<OrderEntity> findListOrderedByCustomer(@PathVariable(name = "email") String email) {
-		return personService.findOrderByCustomer(email);
-	}
+	
 
 	@PostMapping
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public PersonEntity savePerson(@RequestBody PersonDTO newPerson) {
+	public PersonEntity createPerson(@RequestBody PersonDTO newPerson) {
 		return personService.createPerson(newPerson);
 	}
 

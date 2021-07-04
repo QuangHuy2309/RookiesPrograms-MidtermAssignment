@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,9 +55,5 @@ public class PersonServiceImpl implements PersonService {
 		personRepository.save(person);
 	}
 
-	public List<OrderEntity> findOrderByCustomer(String email) {
-		PersonEntity person = personRepository.findById(email)
-				.orElseThrow(() -> new ObjectNotFoundException("Could not find person with email: " + email));
-		return person.getOrders();
-	}
+	
 }

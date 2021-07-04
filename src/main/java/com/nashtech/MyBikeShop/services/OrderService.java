@@ -12,4 +12,5 @@ public interface OrderService {
 	public OrderEntity createOrder(OrderDTO order);
 	public void deleteOrder(int id);
 	public void updateOrder(OrderDTO order);
+	public List<OrderEntity> findOrderByCustomer(String email);
 }

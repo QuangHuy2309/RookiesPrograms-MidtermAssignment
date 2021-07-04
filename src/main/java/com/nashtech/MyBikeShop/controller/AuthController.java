@@ -12,19 +12,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nashtech.MyBikeShop.entity.UserEntity;
+import com.nashtech.MyBikeShop.DTO.PersonDTO;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.payload.request.LoginRequest;
-import com.nashtech.MyBikeShop.payload.request.SignupRequest;
 import com.nashtech.MyBikeShop.payload.response.JwtResponse;
 import com.nashtech.MyBikeShop.payload.response.MessageResponse;
-import com.nashtech.MyBikeShop.repository.UserRepository;
+import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.security.services.UserDetailsImpl;
 
@@ -34,30 +33,23 @@ import com.nashtech.MyBikeShop.security.services.UserDetailsImpl;
 public class AuthController {
 
 	final private AuthenticationManager authenticationManager;
-
-	final private UserRepository userRepository;
+	
+	final private PersonRepository personRepository;
 
 	final private PasswordEncoder encoder;
 
 	final private JwtUtils jwtUtils;
 
-	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
+	public AuthController(AuthenticationManager authenticationManager, PersonRepository personRepository,
 			PasswordEncoder encoder, JwtUtils jwtUtils) {
 		this.authenticationManager = authenticationManager;
-		this.userRepository = userRepository;
+		this.personRepository = personRepository;
 		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
 	}
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-		// TODO, authenticate when login
-		// Username, pass from client
-		// com.nashtech.rookies.security.WebSecurityConfig.configure(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder)
-//        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-		// on this step, we tell to authenticationManager how we load data from database
-		// and the password encoder
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
@@ -73,16 +65,18 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody PersonDTO signUpRequest) {
 
-		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+		if (personRepository.existsByEmail(signUpRequest.getEmail())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 		}
 
 		// Create new user's account
-		UserEntity user = new UserEntity(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),
-				signUpRequest.getFullname(),signUpRequest.getRole());
-		userRepository.save(user);
+//		UserEntity user = new UserEntity(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),
+//				signUpRequest.getFullname(),signUpRequest.getRole());
+		signUpRequest.setPassword(encoder.encode(signUpRequest.getPassword()));
+		PersonEntity user = new PersonEntity(signUpRequest);
+		personRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}

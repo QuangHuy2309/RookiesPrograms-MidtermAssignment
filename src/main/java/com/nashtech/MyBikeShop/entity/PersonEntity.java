@@ -11,8 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
 
+//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class)
 @Entity
 @Table(name="persons")
 public class PersonEntity {
@@ -42,7 +46,8 @@ public class PersonEntity {
 	private String role;
 	
 	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER)
-	private List<OrderEntity> orders;
+	//@JsonManagedReference
+	private Collection<OrderEntity> orders;
 	
 	public PersonEntity() {
 		super();
@@ -123,13 +128,12 @@ public class PersonEntity {
 		this.role = role;
 	}
 
-	public List<OrderEntity> getOrders() {
-		return orders;
-	}
+//	public Collection<OrderEntity> getOrdersHadBought() {
+//		return orders;
+//	}
+//
+//	public void setOrders(Collection<OrderEntity> orders) {
+//		this.orders = orders;
+//	}
 
-	public void setOrders(List<OrderEntity> orders) {
-		this.orders = orders;
-	}
-	
-	
 }

@@ -1,7 +1,9 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderService;
+import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
 
 @Service
@@ -22,6 +26,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	PersonService personService;
 
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
@@ -31,7 +38,6 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findAll();
 
 	}
-
 
 	public OrderEntity getOrders(int id) {
 		return orderRepository.findById(id)
@@ -73,5 +79,13 @@ public class OrderServiceImpl implements OrderService {
 			productService.updateProductQuantity(orderEntity.getProducts().getId(), quantityChange);
 		}
 		orderRepository.save(new OrderEntity(orderDTO));
+	}
+
+	public List<OrderEntity> findOrderByCustomer(String email) {
+		//PersonEntity person = personService.getPerson(email);
+		List<OrderEntity> orderList = orderRepository.findByCustomersEmail(email);
+		if (orderList.isEmpty())
+			throw new ObjectNotFoundException("Could not find any order bought by email: " + email);
+		return orderList;
 	}
 }

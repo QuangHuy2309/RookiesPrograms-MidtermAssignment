@@ -12,5 +12,5 @@ public interface PersonService {
 	public PersonEntity createPerson(PersonDTO person);
 	public void deletePerson(String email);
 	public void updatePerson(PersonDTO person);
-	public List<OrderEntity> findOrderByCustomer(String email);
+	
 }
