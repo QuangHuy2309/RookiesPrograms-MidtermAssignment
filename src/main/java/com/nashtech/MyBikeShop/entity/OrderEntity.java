@@ -36,7 +36,7 @@ public class OrderEntity {
 
 	@Column(name = "address")
 	private String address;
-
+	
 	@Column(name = "ratenum")
 	private Integer rateNum;
 
@@ -136,11 +136,17 @@ public class OrderEntity {
 	}
 
 	public int getRateNum() {
+		if (this.rateNum == null) {
+			this.rateNum = 0;
+		}
 		return rateNum;
 	}
 
-	public void setRateNum(int rateNum) {
-		if (rateNum < 0) {
+	public void setRateNum(Integer rateNum) {
+		if (rateNum == null) {
+			this.rateNum = 0;
+		}
+		else if (rateNum < 0) {
 			throw new IllegalArgumentException("Rate number must not below zero");
 		}
 		this.rateNum = rateNum;

@@ -15,36 +15,37 @@ import com.nashtech.MyBikeShop.services.CategoriesService;
 import com.nashtech.MyBikeShop.services.ProductService;
 
 @Service
-public class CategoriesServiceImpl implements CategoriesService{
+public class CategoriesServiceImpl implements CategoriesService {
 	@Autowired
 	CategoriesRepository categoriesRepository;
-	
+
 	@Autowired
 	ProductService productService;
-	
-	public List<CategoriesEntity> retrieveCategories(){
+
+	public List<CategoriesEntity> retrieveCategories() {
 		return categoriesRepository.findAll();
 	}
+
 	public CategoriesEntity getCategories(int id) {
 		return categoriesRepository.findById(id)
-		.orElseThrow(() -> new ObjectNotFoundException("Could not find categories with Id: " + id));
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find categories with Id: " + id));
 	}
-	
+
 	public String createCategories(CategoriesDTO categoriesDTO) {
 		CategoriesEntity categoriesFind = categoriesRepository.findByName(categoriesDTO.getName());
 		if (categoriesFind == null) {
 			CategoriesEntity categoriesConvert = new CategoriesEntity(categoriesDTO);
 			categoriesRepository.save(categoriesConvert);
 			return "Success";
-		}
-		else return "There is a category with the same name";
+		} else
+			return "There is a category with the same Name";
 	}
+
 	public String deleteCategories(int id) {
 		try {
 			categoriesRepository.deleteById(id);
 			return "Success";
-		}
-		catch(Exception ex){
+		} catch (Exception ex) {
 			return "There is a product use this categories.\n" + ex.getMessage();
 		}
 	}
