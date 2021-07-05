@@ -48,7 +48,7 @@ public class CategoriesServiceImpl implements CategoriesService{
 			return "There is a product use this categories.\n" + ex.getMessage();
 		}
 	}
-	public String updateCategories(CategoriesDTO categories) {
-		return "Success";
-	}
+//	public String updateCategories(CategoriesDTO categories) {
+//		return createCategories(categories);
+//	}
 }

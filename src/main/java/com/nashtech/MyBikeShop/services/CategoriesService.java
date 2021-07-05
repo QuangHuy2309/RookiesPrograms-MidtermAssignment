@@ -10,5 +10,5 @@ public interface CategoriesService {
 	public CategoriesEntity getCategories(int id);
 	public String createCategories(CategoriesDTO categories);
 	public String deleteCategories(int id);
-	public String updateCategories(CategoriesDTO categories);
+	//public String updateCategories(CategoriesDTO categories);
 }
