@@ -46,8 +46,13 @@ public class PersonServiceImpl implements PersonService {
 		}
 	}
 
-	public void deletePerson(String email) {
-		personRepository.deleteById(email);
+	public String deletePerson(String email) {
+		try {
+			personRepository.deleteById(email);
+			return "Success";
+		} catch (Exception ex) {
+			return "Failed! There is an Order bought by this user";
+		}
 	}
 
 	public void updatePerson(PersonDTO personDTO) {
@@ -55,5 +60,4 @@ public class PersonServiceImpl implements PersonService {
 		personRepository.save(person);
 	}
 
-	
 }

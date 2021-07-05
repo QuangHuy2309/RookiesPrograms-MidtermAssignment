@@ -20,10 +20,10 @@ import com.nashtech.MyBikeShop.services.ProductService;
 public class ProductServiceImpl implements ProductService {
 	@Autowired
 	ProductRepository productRepository;
-	
+
 	@Autowired
 	OrderService orderService;
-	
+
 	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
 	}
@@ -39,23 +39,24 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	public ProductEntity createProduct(ProductDTO productDTO) {
-		Optional<ProductEntity> product = productRepository.findById(productDTO.getId());
-		if (product.isPresent()) {
-			throw new ObjectAlreadyExistException("There is a product with Id " + product.get().getId());
-		} else {
+	public String createProduct(ProductDTO productDTO) {
+		try {
 			ProductEntity productEntity = new ProductEntity(productDTO);
-			return productRepository.save(productEntity);
+			productRepository.save(productEntity);
+			return "Success";
+		}
+		catch(Exception ex) {
+			return "Failed! There is a product with this id.\n" + ex;
 		}
 	}
 
 	public String deleteProduct(String id) {
-		List<OrderEntity> orderList = orderService.findOrderByProducts(id);
-		if (orderList.isEmpty()) {
+		try {
 			productRepository.deleteById(id);
-			return "True";
+			return "Success";
+		} catch (Exception ex) {
+			return "Failed! Product is existing in Order.\n" + ex;
 		}
-		else return "Failed! Product is existing in Order";
 	}
 
 	public void updateProduct(ProductDTO productDTO) {
@@ -66,9 +67,14 @@ public class ProductServiceImpl implements ProductService {
 	public void updateProduct(ProductEntity product) {
 		productRepository.save(product);
 	}
+
 	public void updateProductQuantity(String id, int numberChange) {
 		ProductEntity product = getProduct(id);
 		product.changeQuantity(numberChange);
 		productRepository.save(product);
+	}
+
+	public ProductEntity findProductByCategories(int id) {
+		return productRepository.findByCategoriesId(id);
 	}
 }

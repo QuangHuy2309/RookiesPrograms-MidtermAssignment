@@ -47,8 +47,8 @@ public class PersonController {
 
 	@DeleteMapping("/{email}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public void deletePerson(@PathVariable(name = "email") String email) {
-		personService.deletePerson(email);
+	public String deletePerson(@PathVariable(name = "email") String email) {
+		return personService.deletePerson(email);
 	}
 
 	@PutMapping

@@ -14,5 +14,5 @@ public interface OrderService {
 	public void deleteOrder(int id);
 	public void updateOrder(OrderDTO order);
 	public List<OrderEntity> findOrderByCustomer(String email);
-	public List<OrderEntity> findOrderByProducts(String id);
+	public OrderEntity findOrderByProducts(String id);
 }

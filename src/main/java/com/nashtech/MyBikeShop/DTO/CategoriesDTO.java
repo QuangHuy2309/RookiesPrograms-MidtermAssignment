@@ -4,7 +4,7 @@ public class CategoriesDTO {
 	
 	private int id;
 
-	private String categoriesName;
+	private String name;
 
 	private String description;
 
@@ -19,7 +19,7 @@ public class CategoriesDTO {
 	public CategoriesDTO(int id, String categoriesName, String description) {
 		super();
 		this.id = id;
-		this.categoriesName = categoriesName;
+		this.name = categoriesName;
 		this.description = description;
 	}
 
@@ -33,13 +33,19 @@ public class CategoriesDTO {
 		this.id = id;
 	}
 
-	public String getCategoriesName() {
-		return categoriesName;
+	
+
+	public String getName() {
+		return name;
 	}
 
-	public void setCategoriesName(String categoriesName) {
-		this.categoriesName = categoriesName;
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
+
+
 
 	public String getDescription() {
 		return description;

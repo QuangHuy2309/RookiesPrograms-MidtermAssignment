@@ -85,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
 		//PersonEntity person = personService.getPerson(email);
 		return orderRepository.findByCustomersEmail(email);
 	}
-	public List<OrderEntity> findOrderByProducts(String id){
+	public OrderEntity findOrderByProducts(String id){
 		return orderRepository.findByProductsId(id);
 	}
 }

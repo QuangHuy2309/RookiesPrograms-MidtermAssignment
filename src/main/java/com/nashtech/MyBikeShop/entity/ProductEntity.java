@@ -198,7 +198,7 @@ public class ProductEntity {
 		// TODO Auto-generated method stub
 		// return super.toString();
 		return "ID: " + this.id + "\t Name: " + this.name + "\t Price:" + this.price + "\t Quantity: " + this.quantity
-				+ "\t Type: " + this.categories.getCategoriesName() + "\t Brand: " + this.brand;
+				+ "\t Type: " + this.categories.getName() + "\t Brand: " + this.brand;
 	}
 
 }

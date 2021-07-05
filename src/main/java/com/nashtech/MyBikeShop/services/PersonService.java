@@ -10,7 +10,7 @@ public interface PersonService {
 	public List<PersonEntity> retrievePersons();
 	public PersonEntity getPerson(String email);
 	public PersonEntity createPerson(PersonDTO person);
-	public void deletePerson(String email);
+	public String deletePerson(String email);
 	public void updatePerson(PersonDTO person);
 	
 }

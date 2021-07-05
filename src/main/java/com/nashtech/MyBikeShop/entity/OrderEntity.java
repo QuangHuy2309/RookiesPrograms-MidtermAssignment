@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.entity;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -159,6 +160,23 @@ public class OrderEntity {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrderEntity other = (OrderEntity) obj;
+		return id == other.id;
 	}
 
 }

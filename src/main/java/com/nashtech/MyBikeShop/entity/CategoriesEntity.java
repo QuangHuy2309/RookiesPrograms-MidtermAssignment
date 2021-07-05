@@ -24,7 +24,7 @@ public class CategoriesEntity {
 	
 	@NotNull
 	@Column(name = "categoriesname")
-	private String categoriesName;
+	private String name;
 	
 	@Column(name = "description")
 	private String description;
@@ -38,14 +38,14 @@ public class CategoriesEntity {
 
 	public CategoriesEntity(CategoriesDTO categories) {
 		this.id = categories.getId();
-		this.categoriesName = categories.getCategoriesName();
+		this.name = categories.getName();
 		this.description = categories.getDescription();
 	}
 
 	public CategoriesEntity(int id, @NotNull String categoriesname, String description) {
 		super();
 		this.id = id;
-		this.categoriesName = categoriesname;
+		this.name = categoriesname;
 		this.description = description;
 	}
 
@@ -57,12 +57,13 @@ public class CategoriesEntity {
 		this.id = id;
 	}
 
-	public String getCategoriesName() {
-		return categoriesName;
+
+	public String getName() {
+		return name;
 	}
 
-	public void setCategoriesName(String categoriesName) {
-		this.categoriesName = categoriesName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getDescription() {

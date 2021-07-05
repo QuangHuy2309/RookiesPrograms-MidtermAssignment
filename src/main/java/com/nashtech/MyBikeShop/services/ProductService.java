@@ -9,9 +9,10 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 public interface ProductService {
 	public List<ProductEntity> retrieveProducts();
 	public ProductEntity getProduct(String id);
-	public ProductEntity createProduct(ProductDTO product);
+	public String createProduct(ProductDTO product);
 	public String deleteProduct(String id);
 	public void updateProduct(ProductDTO product);
 	public void updateProduct(ProductEntity product);
 	public void updateProductQuantity(String id, int numberChange);
+	public ProductEntity findProductByCategories(int id);
 }

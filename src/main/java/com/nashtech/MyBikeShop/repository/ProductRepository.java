@@ -7,5 +7,5 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, String>{
-
+	ProductEntity findByCategoriesId(int id);
 }

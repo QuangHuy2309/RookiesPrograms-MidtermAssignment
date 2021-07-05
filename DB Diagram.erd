@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="rookies_midterm">
+	<entities>
+		<data-source id="postgres-jdbc-17a2da3c77e-4f08e2f7ab0d5f1f">
+			<entity id="1" name="categories" fq-name="public.categories">
+				<path name="public"/>
+				<path name="rookies"/>
+			</entity>
+			<entity id="2" name="orderbill" fq-name="public.orderbill">
+				<path name="public"/>
+				<path name="rookies"/>
+			</entity>
+			<entity id="3" name="persons" fq-name="public.persons">
+				<path name="public"/>
+				<path name="rookies"/>
+			</entity>
+			<entity id="4" name="products" fq-name="public.products">
+				<path name="public"/>
+				<path name="rookies"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations>
+		<relation name="fk_products_categories" fq-name="public.products.fk_products_categories" type="fk" pk-ref="1" fk-ref="4"/>
+		<relation name="fk_persons" fq-name="public.orderbill.fk_persons" type="fk" pk-ref="3" fk-ref="2"/>
+		<relation name="fk_products" fq-name="public.orderbill.fk_products" type="fk" pk-ref="4" fk-ref="2"/>
+		<relation name="vfk_orderbill_products" type="vfk" pk-ref="4" fk-ref="2"/>
+	</relations>
+</diagram>
