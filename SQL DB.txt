@@ -66,3 +66,7 @@ REFERENCES categories (id);
 
 insert into categories (categoriesname ,description ) 
 values ('Mountain','Bike for Mountaing'), ('Road','Bike for long road'), ('Race','Bike for Racing')
+
+
+insert into orderbill (productid , customeremail , quantity, timebought, totalcost, address,status) 
+values ('A','lqhuy2309@gmail.com',3,'2021-01-02',3000,'Bike for Racing',true)

@@ -43,8 +43,8 @@ public class ProductController {
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public void deleteProduct(@PathVariable(name = "id") String id) {
-		productService.deleteProduct(id);
+	public String deleteProduct(@PathVariable(name = "id") String id) {
+		return productService.deleteProduct(id);
 	}
 
 	@PutMapping

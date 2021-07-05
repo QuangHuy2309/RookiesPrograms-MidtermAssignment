@@ -7,18 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
+import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ProductService;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 	@Autowired
 	ProductRepository productRepository;
-
+	
+	@Autowired
+	OrderService orderService;
+	
 	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
 	}
@@ -44,8 +49,13 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-	public void deleteProduct(String id) {
-		productRepository.deleteById(id);
+	public String deleteProduct(String id) {
+		List<OrderEntity> orderList = orderService.findOrderByProducts(id);
+		if (orderList.isEmpty()) {
+			productRepository.deleteById(id);
+			return "True";
+		}
+		else return "Failed! Product is existing in Order";
 	}
 
 	public void updateProduct(ProductDTO productDTO) {

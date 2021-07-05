@@ -83,9 +83,9 @@ public class OrderServiceImpl implements OrderService {
 
 	public List<OrderEntity> findOrderByCustomer(String email) {
 		//PersonEntity person = personService.getPerson(email);
-		List<OrderEntity> orderList = orderRepository.findByCustomersEmail(email);
-		if (orderList.isEmpty())
-			throw new ObjectNotFoundException("Could not find any order bought by email: " + email);
-		return orderList;
+		return orderRepository.findByCustomersEmail(email);
+	}
+	public List<OrderEntity> findOrderByProducts(String id){
+		return orderRepository.findByProductsId(id);
 	}
 }
