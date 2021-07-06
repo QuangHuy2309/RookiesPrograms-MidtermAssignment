@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public class OrderEntity {
 	private int quantity;
 
 	@Column(name = "timebought")
-	private Date timebought;
+	private LocalDateTime timebought;
 
 	@Column(name = "totalcost")
 	private Float totalCost;
@@ -108,11 +109,11 @@ public class OrderEntity {
 		this.quantity = quantity;
 	}
 
-	public Date getTimebought() {
+	public LocalDateTime getTimebought() {
 		return timebought;
 	}
 
-	public void setTimebought(Date timebought) {
+	public void setTimebought(LocalDateTime timebought) {
 		this.timebought = timebought;
 	}
 

@@ -70,3 +70,7 @@ values ('Mountain','Bike for Mountaing'), ('Road','Bike for long road'), ('Race'
 
 insert into orderbill (productid , customeremail , quantity, timebought, totalcost, address,status) 
 values ('A','lqhuy2309@gmail.com',3,'2021-01-02',3000,'Bike for Racing',true)
+
+alter table products 
+add column createdate timestamp,
+add column updatedate timestamp

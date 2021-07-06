@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.DTO;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -9,7 +10,7 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 public class OrderDTO {
 	private int id;
 	private int quantity;
-	private Date timebought;
+	private LocalDateTime timebought;
 	private float totalCost;
 	private String address;
 	private int rateNum;
@@ -20,7 +21,7 @@ public class OrderDTO {
 	
 	public OrderDTO() {}
 
-	public OrderDTO(int id, int quantity, Date timebought, float totalCost, String address, int rateNum,
+	public OrderDTO(int id, int quantity, LocalDateTime timebought, float totalCost, String address, int rateNum,
 			String rateText, boolean status, ProductDTO products, PersonDTO customers) {
 		super();
 		this.id = id;
@@ -51,11 +52,11 @@ public class OrderDTO {
 		this.quantity = quantity;
 	}
 
-	public Date getTimebought() {
+	public LocalDateTime getTimebought() {
 		return timebought;
 	}
 
-	public void setTimebought(Date timebought) {
+	public void setTimebought(LocalDateTime timebought) {
 		this.timebought = timebought;
 	}
 

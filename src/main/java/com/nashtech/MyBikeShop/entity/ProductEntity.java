@@ -1,6 +1,8 @@
 package com.nashtech.MyBikeShop.entity;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,9 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
-import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "products")
@@ -34,12 +36,17 @@ public class ProductEntity {
 	@Column(name = "quantity")
 	private int quantity;
 
-
 	@Column(name = "description")
 	private String description;
 
 	@Column(name = "brand")
 	private String brand;
+
+	@Column(name = "createdate")
+	private LocalDateTime createDate;
+
+	@Column(name = "updatedate")
+	private LocalDateTime updateDate;
 
 	@Column(name = "photo1")
 	private String photo1;
@@ -55,11 +62,11 @@ public class ProductEntity {
 
 	@OneToMany(mappedBy = "products", fetch = FetchType.EAGER)
 	private Collection<OrderEntity> orders;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "producttype")
 	private CategoriesEntity categories;
-	
+
 	public ProductEntity() {
 		super();
 	}
@@ -73,6 +80,8 @@ public class ProductEntity {
 		this.categories = new CategoriesEntity(product.getCategories());
 		this.description = product.getDescription();
 		this.brand = product.getBrand();
+		this.createDate = product.getCreateDate();
+		this.updateDate = product.getUpdateDate();
 		this.photo1 = product.getPhoto1();
 		this.photo2 = product.getPhoto2();
 		this.photo3 = product.getPhoto3();
@@ -135,8 +144,6 @@ public class ProductEntity {
 		this.quantity = quantity;
 	}
 
-
-
 	public String getDescription() {
 		return description;
 	}
@@ -151,6 +158,23 @@ public class ProductEntity {
 
 	public void setBrand(String brand) {
 		this.brand = brand;
+	}
+
+
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
+	}
+
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public String getPhoto1() {
@@ -184,7 +208,7 @@ public class ProductEntity {
 	public void setPhoto4(String photo4) {
 		this.photo4 = photo4;
 	}
-	
+
 	public CategoriesEntity getCategories() {
 		return categories;
 	}

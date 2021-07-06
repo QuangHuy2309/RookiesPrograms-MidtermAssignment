@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,7 @@ public class OrderServiceImpl implements OrderService {
 //		} else {
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
 		productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity() * (-1));
+		orderEntity.setTimebought(LocalDateTime.now());
 		return orderRepository.save(orderEntity);
 
 	}

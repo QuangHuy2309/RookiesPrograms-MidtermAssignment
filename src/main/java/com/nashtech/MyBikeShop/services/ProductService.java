@@ -15,4 +15,5 @@ public interface ProductService {
 	public void updateProduct(ProductEntity product);
 	public void updateProductQuantity(String id, int numberChange);
 	public ProductEntity findProductByCategories(int id);
+	public ProductEntity updateDate(ProductEntity product);
 }

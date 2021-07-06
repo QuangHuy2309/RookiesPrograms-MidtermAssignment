@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,8 @@ public class ProductServiceImpl implements ProductService {
 	public String createProduct(ProductDTO productDTO) {
 		try {
 			ProductEntity productEntity = new ProductEntity(productDTO);
+			productEntity.setCreateDate(LocalDateTime.now());
+			productEntity.setUpdateDate(LocalDateTime.now());
 			productRepository.save(productEntity);
 			return "Success";
 		}
@@ -61,20 +64,25 @@ public class ProductServiceImpl implements ProductService {
 
 	public void updateProduct(ProductDTO productDTO) {
 		ProductEntity product = new ProductEntity(productDTO);
-		productRepository.save(product);
+		
+		productRepository.save(updateDate(product));
 	}
 
 	public void updateProduct(ProductEntity product) {
-		productRepository.save(product);
+		productRepository.save(updateDate(product));
 	}
 
 	public void updateProductQuantity(String id, int numberChange) {
 		ProductEntity product = getProduct(id);
 		product.changeQuantity(numberChange);
-		productRepository.save(product);
+		productRepository.save(updateDate(product));
 	}
 
 	public ProductEntity findProductByCategories(int id) {
 		return productRepository.findByCategoriesId(id);
+	}
+	public ProductEntity updateDate(ProductEntity product) {
+		product.setUpdateDate(LocalDateTime.now());
+		return product;
 	}
 }
