@@ -13,16 +13,24 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.repository.CategoriesRepository;
 import com.nashtech.MyBikeShop.services.CategoriesService;
+import com.nashtech.MyBikeShop.services.impl.CategoriesServiceImpl;
 
+@SpringBootTest
 public class CategoriesServiceImplTest {
-	CategoriesRepository categoriesRepositoryMock;
-	CategoriesService categoriesServiceMock;
+	@Mock
+	CategoriesRepository categoriesRepo;
+	@InjectMocks
+	CategoriesServiceImpl categoriesService;
 
 	@BeforeAll
 	public static void setup() {
@@ -31,8 +39,8 @@ public class CategoriesServiceImplTest {
 
 	@BeforeEach
 	public void beforeEach() {
-		categoriesRepositoryMock = Mockito.mock(CategoriesRepository.class);
-		categoriesServiceMock = Mockito.mock(CategoriesService.class);
+		//categoriesRepo = Mockito.mock(CategoriesRepository.class);
+		//categoriesService = Mockito.mock(CategoriesServiceImpl.class);
 		System.out.println("Before each Testcase");
 	}
 
@@ -48,36 +56,40 @@ public class CategoriesServiceImplTest {
 
 	@Test
 	public void testRetrieveCategories() {
-		assertNotNull(categoriesRepositoryMock);
+		assertNotNull(categoriesRepo);
 		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
 		CategoriesEntity cate2 = new CategoriesEntity(1, "Cate 2", "This is categories number 2");
 		CategoriesEntity cate3 = new CategoriesEntity(1, "Cate 3", "This is categories number 3");
 		List<CategoriesEntity> listCate = Arrays.asList(cate1, cate2, cate3);
 		List<CategoriesEntity> listCate2 = Arrays.asList(cate1, cate2, cate3);
-		when(categoriesRepositoryMock.findAll()).thenReturn(listCate);
+		when(categoriesRepo.findAll()).thenReturn(listCate);
 		assertEquals(listCate, listCate2);
 	}
 
 	@Test
-	public void testCreateCategories_NotNull() {
-		assertNotNull(categoriesRepositoryMock);
-		assertNotNull(categoriesServiceMock);
+	public void testCreateCategories_WhenNameExisted() {
+		assertNotNull(categoriesRepo);
+		assertNotNull(categoriesService);
 		CategoriesEntity cateEntity = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepositoryMock.findByName(Mockito.anyString())).thenReturn(cateEntity);
-		assertNotNull(categoriesServiceMock.retrieveCategories());
+		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
+		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(cateEntity);
+		assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
 
 	}
 
 	@Test
-	public void testCreateCategories_WhenNameExisted() {
-		assertNotNull(categoriesRepositoryMock);
-		assertNotNull(categoriesServiceMock);
+	public void testCreateCategories_WhenNameNOTExisted() {
+		assertNotNull(categoriesRepo);
+		assertNotNull(categoriesService);
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepositoryMock.findByName(Mockito.anyString())).thenReturn(null);
+		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(null);
 		
-		System.out.println(categoriesRepositoryMock.findByName(Mockito.anyString()));
-		System.out.println(categoriesServiceMock.createCategories(cateDTO));
+		System.out.println(categoriesRepo.findByName(Mockito.anyString()));
+		System.out.println(categoriesService.createCategories(cateDTO));
 		
-		assertEquals("Success",categoriesServiceMock.createCategories(cateDTO));
+		assertEquals("Success",categoriesService.createCategories(cateDTO));
 	}
+	
+	@Test
+	public void testDeleteCategories() {}
 }

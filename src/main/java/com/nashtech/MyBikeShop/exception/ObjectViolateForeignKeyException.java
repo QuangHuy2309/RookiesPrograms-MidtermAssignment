@@ -1,14 +1,14 @@
 package com.nashtech.MyBikeShop.exception;
 
-public class ObjectAlreadyExistException extends RuntimeException {
+public class ObjectViolateForeignKeyException extends RuntimeException {
 	private static final long serialVersionUID = -7806029002430564887L;
 	private String message;
 	
-	public ObjectAlreadyExistException() {
+	public ObjectViolateForeignKeyException() {
 		super();
 	}
 	
-	public ObjectAlreadyExistException(String message) {
+	public ObjectViolateForeignKeyException(String message) {
 		this.message = message;
 	}
 
