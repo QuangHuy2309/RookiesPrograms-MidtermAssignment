@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,6 +23,10 @@ import com.nashtech.MyBikeShop.DTO.PersonDTO;
 @Table(name="persons")
 public class PersonEntity {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
+	private int id;
+	
 	@Column(name="email")
 	private String email;
 	
@@ -49,12 +55,16 @@ public class PersonEntity {
 	//@JsonManagedReference
 	private Collection<OrderEntity> orders;
 	
+	@OneToMany(mappedBy = "customer")
+	Collection<ReviewEntity> reviews;
+	
 	public PersonEntity() {
 		super();
 	}
 
 	public PersonEntity(PersonDTO personDTO) {
 		super();
+		this.id = personDTO.getId();
 		this.email = personDTO.getEmail();
 		this.password = personDTO.getPassword();
 		this.fullname = personDTO.getFullname();
@@ -64,6 +74,16 @@ public class PersonEntity {
 		this.phonenumber = personDTO.getPhonenumber();
 		this.role = personDTO.getRole();
 	}
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getEmail() {
 		return email;
 	}

@@ -13,26 +13,20 @@ public class OrderDTO {
 	private LocalDateTime timebought;
 	private float totalCost;
 	private String address;
-	private int rateNum;
-	private String rateText;
 	private boolean status;
-	private ProductDTO products;
 	private PersonDTO customers;
 	
 	public OrderDTO() {}
 
-	public OrderDTO(int id, int quantity, LocalDateTime timebought, float totalCost, String address, int rateNum,
-			String rateText, boolean status, ProductDTO products, PersonDTO customers) {
+	public OrderDTO(int id, int quantity, LocalDateTime timebought, float totalCost, String address,
+			boolean status, PersonDTO customers) {
 		super();
 		this.id = id;
 		this.quantity = quantity;
 		this.timebought = timebought;
 		this.totalCost = totalCost;
 		this.address = address;
-		this.rateNum = rateNum;
-		this.rateText = rateText;
 		this.status = status;
-		this.products = products;
 		this.customers = customers;
 	}
 
@@ -76,36 +70,12 @@ public class OrderDTO {
 		this.address = address;
 	}
 
-	public int getRateNum() {
-		return rateNum;
-	}
-
-	public void setRateNum(int rateNum) {
-		this.rateNum = rateNum;
-	}
-
-	public String getRateText() {
-		return rateText;
-	}
-
-	public void setRateText(String rateText) {
-		this.rateText = rateText;
-	}
-
 	public boolean isStatus() {
 		return status;
 	}
 
 	public void setStatus(boolean status) {
 		this.status = status;
-	}
-
-	public ProductDTO getProducts() {
-		return products;
-	}
-
-	public void setProducts(ProductDTO products) {
-		this.products = products;
 	}
 
 	public PersonDTO getCustomers() {

@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.entity;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -37,25 +39,18 @@ public class OrderEntity {
 
 	@Column(name = "address")
 	private String address;
-	
-	@Column(name = "ratenum")
-	private Integer rateNum;
-
-	@Column(name = "ratetext")
-	private String rateText;
 
 	@Column(name = "status")
 	private boolean status;
 
 	@ManyToOne
-	@JoinColumn(name = "productid")
-	private ProductEntity products;
-
-	@ManyToOne
-	@JoinColumn(name = "customeremail")
+	@JoinColumn(name = "customerid")
 	//@JsonBackReference
 	private PersonEntity customers;
-
+	
+	@OneToMany(mappedBy = "order")
+	Collection<OrderDetailEntity> orderDetails;
+	
 	public OrderEntity() {
 		super();
 	}
@@ -67,10 +62,7 @@ public class OrderEntity {
 		this.timebought = order.getTimebought();
 		this.totalCost = order.getTotalCost();
 		this.address = order.getAddress();
-		this.rateNum = order.getRateNum();
-		this.rateText = order.getRateText();
 		this.status = order.isStatus();
-		this.products = new ProductEntity(order.getProducts());
 		this.customers = new PersonEntity(order.getCustomers());
 	}
 
@@ -80,14 +72,6 @@ public class OrderEntity {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public ProductEntity getProducts() {
-		return products;
-	}
-
-	public void setProducts(ProductEntity products) {
-		this.products = products;
 	}
 
 	public PersonEntity getCustomers() {
@@ -136,30 +120,6 @@ public class OrderEntity {
 		this.address = address;
 	}
 
-	public int getRateNum() {
-		if (this.rateNum == null) {
-			this.rateNum = 0;
-		}
-		return rateNum;
-	}
-
-	public void setRateNum(Integer rateNum) {
-		if (rateNum == null) {
-			this.rateNum = 0;
-		}
-		else if (rateNum < 0) {
-			throw new IllegalArgumentException("Rate number must not below zero");
-		}
-		this.rateNum = rateNum;
-	}
-
-	public String getRateText() {
-		return rateText;
-	}
-
-	public void setRateText(String rateText) {
-		this.rateText = rateText;
-	}
 
 	public boolean isStatus() {
 		return status;

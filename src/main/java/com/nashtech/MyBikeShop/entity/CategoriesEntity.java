@@ -23,7 +23,7 @@ public class CategoriesEntity {
 	private int id;
 	
 	@NotNull
-	@Column(name = "categoriesname")
+	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "description")

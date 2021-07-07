@@ -48,21 +48,15 @@ public class ProductEntity {
 	@Column(name = "updatedate")
 	private LocalDateTime updateDate;
 
-	@Column(name = "photo1")
-	private String photo1;
+	@Column(name = "photo")
+	private String photo;
 
-	@Column(name = "photo2")
-	private String photo2;
-
-	@Column(name = "photo3")
-	private String photo3;
-
-	@Column(name = "photo4")
-	private String photo4;
-
-	@OneToMany(mappedBy = "products", fetch = FetchType.EAGER)
-	private Collection<OrderEntity> orders;
-
+	@OneToMany(mappedBy = "product")
+	Collection<OrderDetailEntity> orderDetails;
+	
+	@OneToMany(mappedBy = "product")
+	Collection<ReviewEntity> reviews;
+	
 	@ManyToOne
 	@JoinColumn(name = "producttype")
 	private CategoriesEntity categories;
@@ -82,10 +76,7 @@ public class ProductEntity {
 		this.brand = product.getBrand();
 		this.createDate = product.getCreateDate();
 		this.updateDate = product.getUpdateDate();
-		this.photo1 = product.getPhoto1();
-		this.photo2 = product.getPhoto2();
-		this.photo3 = product.getPhoto3();
-		this.photo4 = product.getPhoto4();
+		this.photo = product.getPhoto();
 	}
 
 	public String getId() {
@@ -176,36 +167,12 @@ public class ProductEntity {
 		this.updateDate = updateDate;
 	}
 
-	public String getPhoto1() {
-		return photo1;
+	public String getPhoto() {
+		return photo;
 	}
 
-	public void setPhoto1(String photo1) {
-		this.photo1 = photo1;
-	}
-
-	public String getPhoto2() {
-		return photo2;
-	}
-
-	public void setPhoto2(String photo2) {
-		this.photo2 = photo2;
-	}
-
-	public String getPhoto3() {
-		return photo3;
-	}
-
-	public void setPhoto3(String photo3) {
-		this.photo3 = photo3;
-	}
-
-	public String getPhoto4() {
-		return photo4;
-	}
-
-	public void setPhoto4(String photo4) {
-		this.photo4 = photo4;
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	public CategoriesEntity getCategories() {

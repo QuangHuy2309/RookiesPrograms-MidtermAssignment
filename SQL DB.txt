@@ -1,43 +1,110 @@
-CREATE TABLE persons
-(
-    email text NOT NULL PRIMARY KEY,
-    password text  NOT NULL,
-    fullname text NOT NULL,
-    dob date NOT NULL,
-    gender bit(1) NOT NULL,
-    address text NOT NULL,
-    phonenumber varchar(12) NOT NULL,
-    role text
+-- public.categories definition
+
+-- Drop table
+
+-- DROP TABLE public.categories;
+
+CREATE TABLE public.categories (
+	id serial NOT NULL,
+	"name" text NOT NULL,
+	description text NULL,
+	CONSTRAINT categories_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE products
-(
-    product_id text not null PRIMARY KEY,
-    name text,
-    price numeric,
-    quantity integer,
-    product_type text,
-    description text,
-    brand text,
-    photo1 text null,
-    photo2 text null, 
-    photo3 text null,
-    photo4 text null
-);
-CREATE TABLE orderbill
-(
-    id serial PRIMARY KEY,
-    product_id text NOT NULL,
-    customer_email text NOT NULL,
-    quantity integer NOT NULL,
-    timebought timestamp NOT NULL,
-    total_cost numeric not null,
-    
-    status bit NOT NULL,
-    CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
-	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
+
+-- public.persons definition
+
+-- Drop table
+
+-- DROP TABLE public.persons;
+
+CREATE TABLE public.persons (
+	id serial not null,
+	email text NOT NULL,
+	"password" text NOT NULL,
+	fullname text NOT NULL,
+	dob date NULL,
+	gender bool NULL,
+	address text NULL,
+	phonenumber varchar(12) NULL,
+	"role" text NOT NULL,
+	CONSTRAINT persons_pkey PRIMARY KEY (id)
 );
 
+
+-- public.orderbill definition
+
+-- Drop table
+
+-- DROP TABLE public.orderbill;
+
+CREATE TABLE public.orderbill (
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	customerid int NOT NULL,
+	timebought timestamp NOT NULL,
+	totalcost numeric NOT NULL,
+	address text NOT NULL,
+	status bool NOT NULL,
+	CONSTRAINT orderbill_pk PRIMARY KEY (id),
+	CONSTRAINT fk_persons FOREIGN KEY (customerid) REFERENCES public.persons(id)
+);
+
+
+-- public.products definition
+
+-- Drop table
+
+-- DROP TABLE public.products;
+
+CREATE TABLE public.products (
+	id text NOT NULL,
+	"name" text NOT NULL,
+	price numeric NOT NULL,
+	quantity int4 NOT NULL,
+	producttype int4 NOT NULL,
+	description text NULL,
+	brand text NULL,
+	photo text NULL,
+	createdate timestamp NOT NULL,
+	updatedate timestamp NOT NULL,
+	CONSTRAINT products_pkey PRIMARY KEY (id),
+	CONSTRAINT fk_products_categories FOREIGN KEY (producttype) REFERENCES public.categories(id) ON UPDATE CASCADE
+);
+======================================= CREATE DATABASE =========================================
+
+-- public.review definition
+
+-- Drop table
+
+-- DROP TABLE public.review;
+
+CREATE TABLE public.review (
+	productid text NOT NULL,
+	customerid int NOT NULL,
+	rate_num int4 NULL DEFAULT 0,
+	rate_text text NULL,
+	datereview date NULL,
+	CONSTRAINT email_product_pkey PRIMARY KEY (customerid, productid),
+	CONSTRAINT review_customeremail_fkey FOREIGN KEY (customerid) REFERENCES public.persons(id) ON UPDATE CASCADE,
+	CONSTRAINT review_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- public.orderdetails definition
+
+-- Drop table
+
+-- DROP TABLE public.orderdetails;
+
+CREATE TABLE public.orderdetails (
+	orderid int4 NOT NULL,
+	productid text NOT NULL,
+	amount int4 NOT NULL DEFAULT 1,
+	CONSTRAINT bill_product_pkey PRIMARY KEY (orderid, productid),
+	CONSTRAINT orderdetails_orderid_fkey FOREIGN KEY (orderid) REFERENCES public.orderbill(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT orderdetails_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(id) ON UPDATE CASCADE
+);
+================================ +++++++++++++++++++++++++++++++++ ==================================
 insert into persons 
 values ('shynhyn319@gmail.com','123','Lê Hoàng Nhât Lâm','1999-02-03',B'0','TP HCM','0967123456','admin'),
 		('lqhuy2309@gmail.com','123','Luơng Quang Huy','1999-09-23',B'0','Long An','0967123456','user'),
@@ -49,13 +116,6 @@ add column rate_text text null;
 insert into products 
 values ('A','b',1000,23,'mountain','abc','giant')
 
-
-CREATE TABLE categories
-(
-    id serial primary key,
-    producttype text NOT NULL,
-    description text
-);
 
 ALTER TABLE products 
 ADD CONSTRAINT fk_products_categories 
@@ -76,28 +136,3 @@ add column updatedate timestamp
 
 TRUNCATE TABLE orderbill RESTART IDENTITY; // reset auto increase
 
-CREATE TABLE orderdetails (
-  orderid    int REFERENCES orderdetails (id) ON UPDATE CASCADE ON DELETE CASCADE
-, productid text REFERENCES products (id) ON UPDATE CASCADE
-, amount     numeric NOT NULL DEFAULT 1
-, CONSTRAINT bill_product_pkey PRIMARY KEY (orderid, productid)  -- explicit pk
-);
-
-create table review(
-	productid text REFERENCES products (id) ON UPDATE CASCADE ON DELETE CASCADE
-,	customeremail text REFERENCES persons (email) ON UPDATE CASCADE
-,	rate_num int null
-,   rate_text text null
-,	datereview date null
-,	CONSTRAINT email_product_pkey PRIMARY KEY (customeremail, productid)
-);
-
-CREATE TABLE orderbill
-(
-    id serial PRIMARY KEY,
-    customer_email text NOT NULL,
-    timebought timestamp NOT NULL,
-    total_cost numeric not null,
-    status bit NOT NULL,
-	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
-);
