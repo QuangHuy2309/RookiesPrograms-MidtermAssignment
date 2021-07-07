@@ -32,8 +32,7 @@ CREATE TABLE orderbill
     quantity integer NOT NULL,
     timebought timestamp NOT NULL,
     total_cost numeric not null,
-    rate_num int null, 
-    rate_text text null,
+    
     status bit NOT NULL,
     CONSTRAINT fk_products FOREIGN KEY(product_id) REFERENCES products(product_id),
 	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
@@ -74,3 +73,31 @@ values ('A','lqhuy2309@gmail.com',3,'2021-01-02',3000,'Bike for Racing',true)
 alter table products 
 add column createdate timestamp,
 add column updatedate timestamp
+
+TRUNCATE TABLE orderbill RESTART IDENTITY; // reset auto increase
+
+CREATE TABLE orderdetails (
+  orderid    int REFERENCES orderdetails (id) ON UPDATE CASCADE ON DELETE CASCADE
+, productid text REFERENCES products (id) ON UPDATE CASCADE
+, amount     numeric NOT NULL DEFAULT 1
+, CONSTRAINT bill_product_pkey PRIMARY KEY (orderid, productid)  -- explicit pk
+);
+
+create table review(
+	productid text REFERENCES products (id) ON UPDATE CASCADE ON DELETE CASCADE
+,	customeremail text REFERENCES persons (email) ON UPDATE CASCADE
+,	rate_num int null
+,   rate_text text null
+,	datereview date null
+,	CONSTRAINT email_product_pkey PRIMARY KEY (customeremail, productid)
+);
+
+CREATE TABLE orderbill
+(
+    id serial PRIMARY KEY,
+    customer_email text NOT NULL,
+    timebought timestamp NOT NULL,
+    total_cost numeric not null,
+    status bit NOT NULL,
+	CONSTRAINT fk_persons FOREIGN KEY(customer_email) REFERENCES persons(email)
+);
