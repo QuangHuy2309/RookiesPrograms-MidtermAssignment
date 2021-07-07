@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.http.HttpStatus;
 
 import com.nashtech.MyBikeShop.exception.*;
@@ -15,6 +16,7 @@ public class SecurityControllerAdvice {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public MessageResponse handleSecurityException(ObjectAlreadyExistException ex) {
+		System.err.println(ex.getMessage());
 		return new MessageResponse(ex.getMessage());
 	}
 
@@ -22,6 +24,7 @@ public class SecurityControllerAdvice {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public MessageResponse handleSecurityException(ObjectViolateForeignKeyException ex) {
+		System.err.println(ex.getMessage());
 		return new MessageResponse(ex.getMessage());
 	}
 
@@ -29,12 +32,35 @@ public class SecurityControllerAdvice {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public MessageResponse handleSecurityException(ObjectNotFoundException ex) {
+		System.err.println(ex.getMessage());
 		return new MessageResponse(ex.getMessage());
 	}
+
 	@ExceptionHandler(ObjectPropertiesNullException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public MessageResponse handleSecurityException(ObjectPropertiesNullException ex) {
+		System.err.println(ex.getMessage());
 		return new MessageResponse(ex.getMessage());
+	}
+
+	@ExceptionHandler(JsonGetDataException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public MessageResponse handleSecurityException(JsonGetDataException ex) {
+		System.err.println(ex.getMessage());
+		return new MessageResponse(ex.getMessage());
+	}
+	
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public MessageResponse handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+	    String name = ex.getName();
+	    String type = ex.getRequiredType().getSimpleName();
+	    Object value = ex.getValue();
+	    String message = String.format("ERROR: '%s' should be a valid '%s' and '%s' isn't", 
+	                                   name, type, value);
+
+	    System.err.println(message);
+	    return new MessageResponse(message);
 	}
 }
