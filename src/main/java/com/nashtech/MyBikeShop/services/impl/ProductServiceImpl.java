@@ -16,7 +16,7 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
-import com.nashtech.MyBikeShop.exception.ObjectPropertiesNullException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
 import com.nashtech.MyBikeShop.services.OrderService;
@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product ID");
 		} catch (IllegalArgumentException | InvalidDataAccessApiUsageException ex) {
-			throw new ObjectPropertiesNullException("Failed! The given id must not be null");
+			throw new ObjectPropertiesIllegalException("Failed!"+ ex.getMessage());
 		}
 		catch (Exception ex) {
 			return ("Error exception: "+ex);

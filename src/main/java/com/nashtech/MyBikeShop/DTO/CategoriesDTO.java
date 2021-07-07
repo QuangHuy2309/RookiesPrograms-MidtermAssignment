@@ -42,6 +42,12 @@ public class CategoriesDTO {
 
 
 	public void setName(String name) {
+		StringBuilder nameTrim = new StringBuilder();
+		nameTrim.append(name.trim());
+		if (nameTrim.length() == 0) {
+			throw new IllegalArgumentException("Name is invalid");
+		}
+		this.name = nameTrim.toString();
 		this.name = name;
 	}
 

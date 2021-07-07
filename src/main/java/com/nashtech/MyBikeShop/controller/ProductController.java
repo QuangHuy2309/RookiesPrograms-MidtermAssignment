@@ -15,8 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.services.ProductService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,28 +32,68 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@Operation(summary = "Get all Product Infomation")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping
 	public List<ProductEntity> retrieveProducts() {
-		return  productService.retrieveProducts();
+		return productService.retrieveProducts();
 	}
 
+	@Operation(summary = "Get a Product Infomation by ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/{id}")
 	public ProductEntity findProduct(@PathVariable(name = "id") String id) {
 		return productService.getProduct(id);
 	}
 
+	@Operation(summary = "Create a Product")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping
 	@PreAuthorize("hasRole('ADMIN')")
 	public String saveProduct(@RequestBody ProductDTO newProduct) {
 		return productService.createProduct(newProduct);
 	}
 
+	@Operation(summary = "Delete a Product by id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteProduct(@PathVariable(name = "id") String id) {
 		return productService.deleteProduct(id);
 	}
 
+	@Operation(summary = "Update a Product")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping
 	@PreAuthorize("hasRole('ADMIN')")
 	public void editProduct(@RequestBody ProductDTO product) {

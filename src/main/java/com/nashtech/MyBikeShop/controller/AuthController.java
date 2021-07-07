@@ -81,7 +81,15 @@ public class AuthController {
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getName(), userDetails.getEmail(), roles));
 	}
-
+	@Operation(summary = "Sign up to get Authorize")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Registered successfully!", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = LoginRequest.class))}),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content)
+	})
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody PersonDTO signUpRequest) {
 

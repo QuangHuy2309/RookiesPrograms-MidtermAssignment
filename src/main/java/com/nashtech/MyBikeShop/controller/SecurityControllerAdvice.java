@@ -36,10 +36,10 @@ public class SecurityControllerAdvice {
 		return new MessageResponse(ex.getMessage());
 	}
 
-	@ExceptionHandler(ObjectPropertiesNullException.class)
+	@ExceptionHandler(ObjectPropertiesIllegalException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public MessageResponse handleSecurityException(ObjectPropertiesNullException ex) {
+	public MessageResponse handleSecurityException(ObjectPropertiesIllegalException ex) {
 		System.err.println(ex.getMessage());
 		return new MessageResponse(ex.getMessage());
 	}
@@ -62,5 +62,11 @@ public class SecurityControllerAdvice {
 
 	    System.err.println(message);
 	    return new MessageResponse(message);
+	}
+	
+	@ExceptionHandler(ObjectContainNullException.class)
+	public MessageResponse handleTypeMismatch(ObjectContainNullException ex) {
+		System.err.println(ex.getMessage());
+	    return new MessageResponse(ex.getMessage());
 	}
 }

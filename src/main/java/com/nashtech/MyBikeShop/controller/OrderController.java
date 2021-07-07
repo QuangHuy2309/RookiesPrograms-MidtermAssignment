@@ -16,11 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ProductService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -28,37 +35,120 @@ import com.nashtech.MyBikeShop.services.ProductService;
 public class OrderController {
 	@Autowired
 	private OrderService orderService;
-
+	
+	@Operation(summary = "Get All Order")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@GetMapping
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<OrderEntity> retrieveOrders() {
 		return  orderService.retrieveOrders();
 	}
-
+	
+	@Operation(summary = "Get Order by ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
 		return orderService.getOrders(id);
 	}
-
+	
+	@Operation(summary = "Create Order")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@PostMapping
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public OrderEntity createOrder(@RequestBody OrderDTO newOrder) {
 		return orderService.createOrder(newOrder);
 	}
-
+	
+	@Operation(summary = "Delete Order by ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public void deleteOrder(@PathVariable(name = "id") int id) {
 		orderService.deleteOrder(id);
 	}
-
+	@Operation(summary = "Update Order")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@PutMapping
 	@PreAuthorize("hasRole('ADMIN')")
 	public void updateOrder(@RequestBody OrderDTO order) {
 		orderService.updateOrder(order);
 	}
 	
+	@Operation(summary = "Get Order by Customer")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@GetMapping("/getListOrder/{email}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public List<OrderEntity> findListOrderedByCustomer(@PathVariable(name = "email") String email) {
