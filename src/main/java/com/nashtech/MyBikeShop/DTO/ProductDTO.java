@@ -45,7 +45,12 @@ public class ProductDTO {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		StringBuilder idTrim = new StringBuilder();
+		idTrim.append(id.trim());
+		if (idTrim.length() == 0) {
+			throw new IllegalArgumentException("ID is invalid");
+		}
+		this.id = idTrim.toString();
 	}
 
 	public String getName() {

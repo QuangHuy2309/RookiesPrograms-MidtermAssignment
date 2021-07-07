@@ -6,9 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 
-import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
-import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
-import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
+import com.nashtech.MyBikeShop.exception.*;
 import com.nashtech.MyBikeShop.payload.response.MessageResponse;
 
 @ControllerAdvice
@@ -33,5 +31,10 @@ public class SecurityControllerAdvice {
 	public MessageResponse handleSecurityException(ObjectNotFoundException ex) {
 		return new MessageResponse(ex.getMessage());
 	}
-
+	@ExceptionHandler(ObjectPropertiesNullException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public MessageResponse handleSecurityException(ObjectPropertiesNullException ex) {
+		return new MessageResponse(ex.getMessage());
+	}
 }

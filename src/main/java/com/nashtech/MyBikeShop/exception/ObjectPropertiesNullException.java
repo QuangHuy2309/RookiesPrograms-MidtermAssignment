@@ -1,14 +1,14 @@
 package com.nashtech.MyBikeShop.exception;
 
-public class ObjectViolateForeignKeyException extends RuntimeException {
-	private static final long serialVersionUID = 1947077612237154249L;
+public class ObjectPropertiesNullException extends IllegalArgumentException {
+	private static final long serialVersionUID = -7806029002430564887L;
 	private String message;
 	
-	public ObjectViolateForeignKeyException() {
+	public ObjectPropertiesNullException() {
 		super();
 	}
 	
-	public ObjectViolateForeignKeyException(String message) {
+	public ObjectPropertiesNullException(String message) {
 		this.message = message;
 	}
 

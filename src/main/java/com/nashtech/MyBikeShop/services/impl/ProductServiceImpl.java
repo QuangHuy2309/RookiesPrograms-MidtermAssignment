@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
@@ -15,6 +16,7 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesNullException;
 import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
 import com.nashtech.MyBikeShop.services.OrderService;
@@ -44,32 +46,40 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public String createProduct(ProductDTO productDTO) {
-		ProductEntity productCheck = productRepository.findById(productDTO.getId()).get();
-		if (productCheck == null) {
-			ProductEntity productEntity = new ProductEntity(productDTO);
-			productEntity.setCreateDate(LocalDateTime.now());
-			productEntity.setUpdateDate(LocalDateTime.now());
-			productRepository.save(productEntity);
-			return "Success";
+		try {
+			ProductEntity productCheck = productRepository.findById(productDTO.getId()).get();
+			if (productCheck == null) {
+				ProductEntity productEntity = new ProductEntity(productDTO);
+				productEntity.setCreateDate(LocalDateTime.now());
+				productEntity.setUpdateDate(LocalDateTime.now());
+				productRepository.save(productEntity);
+				return "Success";
+			} else
+				throw new ObjectAlreadyExistException(
+						"Failed! There is a product with this id. Please change product ID");
+		} catch (IllegalArgumentException | InvalidDataAccessApiUsageException ex) {
+			throw new ObjectPropertiesNullException("Failed! The given id must not be null");
 		}
-		else throw new ObjectAlreadyExistException("Failed! There is a product with this id. Please change product ID");
+		catch (Exception ex) {
+			return ("Error exception: "+ex);
+		}
 	}
 
 	public String deleteProduct(String id) {
 		try {
 			productRepository.deleteById(id);
 			return "Success";
-		} catch (DataIntegrityViolationException  ex) {
-			throw new  ObjectViolateForeignKeyException("Failed! This Product is existing in an Order. Please delete that Order first");
-		}
-		catch(EmptyResultDataAccessException ex) {
-			throw new ObjectNotFoundException(ex.getMessage());
+		} catch (DataIntegrityViolationException ex) {
+			throw new ObjectViolateForeignKeyException(
+					"Failed! This Product is existing in an Order. Please delete that Order first");
+		} catch (EmptyResultDataAccessException ex) {
+			throw new ObjectNotFoundException("No product found to delete!");
 		}
 	}
 
 	public void updateProduct(ProductDTO productDTO) {
 		ProductEntity product = new ProductEntity(productDTO);
-		
+
 		productRepository.save(updateDate(product));
 	}
 
@@ -86,6 +96,7 @@ public class ProductServiceImpl implements ProductService {
 	public ProductEntity findProductByCategories(int id) {
 		return productRepository.findByCategoriesId(id);
 	}
+
 	public ProductEntity updateDate(ProductEntity product) {
 		product.setUpdateDate(LocalDateTime.now());
 		return product;
