@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -47,21 +50,22 @@ public class ProductServiceImpl implements ProductService {
 
 	public String createProduct(ProductDTO productDTO) {
 		try {
-			ProductEntity productCheck = productRepository.findById(productDTO.getId()).get();
+			ProductEntity productCheck = productRepository.findById(productDTO.getId()).orElse(null);
 			if (productCheck == null) {
 				ProductEntity productEntity = new ProductEntity(productDTO);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
 				productRepository.save(productEntity);
-				return "Success";
+				return "Success";	
 			} else
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product ID");
-		} catch (IllegalArgumentException | InvalidDataAccessApiUsageException ex) {
-			throw new ObjectPropertiesIllegalException("Failed!"+ ex.getMessage());
 		}
-		catch (Exception ex) {
-			return ("Error exception: "+ex);
+		catch (DataAccessException ex) {
+			throw new ObjectNotFoundException("Failed!"+ ex.getMessage());
+		} 
+		catch (IllegalArgumentException ex) {
+			throw new ObjectPropertiesIllegalException("Failed!"+ ex.getMessage());
 		}
 	}
 

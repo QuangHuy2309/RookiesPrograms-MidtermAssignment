@@ -21,11 +21,11 @@ public class OrderDetailEntity {
 	private int ammount;
 	
 	@ManyToOne
-    @JoinColumn(name = "orderid")
+    @JoinColumn(name = "orderid", insertable = false, updatable = false)
     private OrderEntity order;
 	
 	@ManyToOne
-    @JoinColumn(name = "productid")
+    @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;
 		
 	

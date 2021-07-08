@@ -38,7 +38,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class AuthController {
 
 	final private AuthenticationManager authenticationManager;
-	
+
 	final private PersonRepository personRepository;
 
 	final private PasswordEncoder encoder;
@@ -52,20 +52,15 @@ public class AuthController {
 		this.encoder = encoder;
 		this.jwtUtils = jwtUtils;
 	}
+
 	@Operation(summary = "Log in to get Authorize")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Login Success!", 
-			content = { @Content(mediaType = "application/json", 
-			schema = @Schema(implementation = LoginRequest.class))}),
-			@ApiResponse(responseCode = "400", description = "Bad Request : JSON missing elements", 
-			content = @Content),
-			@ApiResponse(responseCode = "401", description = "Unauthorized, Login Failed!", 
-			content = @Content),
-			@ApiResponse(responseCode = "404", description = "Login not found", 
-			content = @Content),
-			@ApiResponse(responseCode = "405", description = "Method not allow", 
-			content = @Content)
-	})
+			@ApiResponse(responseCode = "200", description = "Login Success!", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = LoginRequest.class)) }),
+			@ApiResponse(responseCode = "400", description = "Bad Request : JSON missing elements", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Login Failed!", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Login not found", content = @Content),
+			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
@@ -81,15 +76,14 @@ public class AuthController {
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getName(), userDetails.getEmail(), roles));
 	}
+
 	@Operation(summary = "Sign up to get Authorize")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "Registered successfully!", 
-			content = { @Content(mediaType = "application/json", 
-			schema = @Schema(implementation = LoginRequest.class))}),
+			@ApiResponse(responseCode = "200", description = "Registered successfully!", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = LoginRequest.class)) }),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
-			content = @Content)
-	})
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody PersonDTO signUpRequest) {
 

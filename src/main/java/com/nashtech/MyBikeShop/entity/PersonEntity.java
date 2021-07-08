@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.entity;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,10 +54,10 @@ public class PersonEntity {
 	
 	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER)
 	//@JsonManagedReference
-	private Collection<OrderEntity> orders;
+	private Set<OrderEntity> orders;
 	
 	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
-	Collection<ReviewEntity> reviews;
+	Set<ReviewEntity> reviews;
 	
 	public PersonEntity() {
 		super();

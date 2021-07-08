@@ -9,7 +9,6 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 @Entity
@@ -19,17 +18,20 @@ public class ReviewEntity {
 	private ReviewKey id;
 	
 	@ManyToOne
-    @JoinColumn(name = "customerid")
+    @JoinColumn(name = "customerid", insertable = false, updatable = false)
 	private PersonEntity customer;
 	
 	@ManyToOne
-    @JoinColumn(name = "productid")
+    @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;
 	
+	@Column(name = "ratetext")
 	private int rateNum;
 	
+	@Column(name = "ratenum")
 	private String rateText;
 	
+	@Column(name = "datereview")
 	private Date datereview;
 
 	@Embeddable

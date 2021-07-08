@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,10 +53,10 @@ public class ProductEntity {
 	private String photo;
 
 	@OneToMany(mappedBy = "product")
-	Collection<OrderDetailEntity> orderDetails;
+	Set<OrderDetailEntity> orderDetails;
 	
 	@OneToMany(mappedBy = "product")
-	Collection<ReviewEntity> reviews;
+	Set<ReviewEntity> reviews;
 	
 	@ManyToOne
 	@JoinColumn(name = "producttype")

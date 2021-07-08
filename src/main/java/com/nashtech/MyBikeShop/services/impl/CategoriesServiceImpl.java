@@ -47,7 +47,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 			} else
 				throw new ObjectAlreadyExistException("There is a category with the same Name");
 		} catch (IllegalArgumentException | ConstraintViolationException ex) {
-			throw new ObjectContainNullException(ex.getMessage());
+			return "Failed! "+ ex.getMessage();
+			//throw new ObjectContainNullException(ex.getMessage());
 		}
 
 	}

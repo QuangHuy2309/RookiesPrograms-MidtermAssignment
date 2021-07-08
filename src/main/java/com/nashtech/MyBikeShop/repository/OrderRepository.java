@@ -14,5 +14,5 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 	//@Query(nativeQuery = true, value="select o from OrderEntity o where o.customers.getEmail() = ':email'")
 	List<OrderEntity> findByCustomersEmail(String email);
-	OrderEntity findByProductsId(String id);
+	//OrderEntity findByProductsId(String id);
 }
