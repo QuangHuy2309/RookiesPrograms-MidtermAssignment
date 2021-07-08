@@ -56,47 +56,48 @@ public class OrderServiceImpl implements OrderService {
 //		if (order.isPresent()) {
 //			throw new ObjectAlreadyExistException("There is a product with Id " + order.get().getId());
 //		} else {
-		try {
+//		try {
 			OrderEntity orderEntity = new OrderEntity(orderDTO);
-			productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity() * (-1));
-			orderEntity.setTimebought(LocalDateTime.now());
-			return orderRepository.save(orderEntity);
-		} catch (HttpMessageNotReadableException | JsonParseException | NullPointerException ex) {
-			throw new JsonGetDataException(ex.getMessage());
-		} 
+			return orderEntity;
+//			productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity() * (-1));
+//			orderEntity.setTimebought(LocalDateTime.now());
+//			return orderRepository.save(orderEntity);
+//		} catch (HttpMessageNotReadableException | JsonParseException | NullPointerException ex) {
+//			throw new JsonGetDataException(ex.getMessage());
+//		} 
 	}
 
 	@Transactional
 	public void deleteOrder(int id) {
-		try {
-		OrderEntity orderEntity = getOrders(id);
-		if (!orderEntity.isStatus()) { // False = Not delivery yet
-			productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity());
-		}
-		orderRepository.delete(orderEntity);
-		}catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
-			throw new JsonGetDataException(ex.getMessage());
-		}
+//		try {
+//		OrderEntity orderEntity = getOrders(id);
+//		if (!orderEntity.isStatus()) { // False = Not delivery yet
+//			productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity());
+//		}
+//		orderRepository.delete(orderEntity);
+//		}catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
+//			throw new JsonGetDataException(ex.getMessage());
+//		}
 	}
 
 	public void updateOrder(OrderDTO orderDTO) {
-		try {
-			OrderEntity orderEntity = getOrders(orderDTO.getId());
-			int quantityChange = orderEntity.getQuantity() - orderDTO.getQuantity();
-			boolean checkProduct = (orderDTO.getProducts().getId().equals(orderEntity.getProducts().getId()));
-			if (!checkProduct) {
-				// Increase quantity of old Product
-				productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity());
-				// Decrease quantity of new Product
-				productService.updateProductQuantity(orderDTO.getProducts().getId(), orderDTO.getQuantity() * (-1));
-			} else if (quantityChange != 0 && checkProduct) {
-				productService.updateProductQuantity(orderEntity.getProducts().getId(), quantityChange);
-			}
-			orderRepository.save(new OrderEntity(orderDTO));
-
-		} catch (HttpMessageNotReadableException | JsonParseException | NullPointerException ex) {
-			throw new JsonGetDataException(ex.getMessage());
-		} 
+//		try {
+//			OrderEntity orderEntity = getOrders(orderDTO.getId());
+//			int quantityChange = orderEntity.getQuantity() - orderDTO.getQuantity();
+//			boolean checkProduct = (orderDTO.getProducts().getId().equals(orderEntity.getProducts().getId()));
+//			if (!checkProduct) {
+//				// Increase quantity of old Product
+//				productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity());
+//				// Decrease quantity of new Product
+//				productService.updateProductQuantity(orderDTO.getProducts().getId(), orderDTO.getQuantity() * (-1));
+//			} else if (quantityChange != 0 && checkProduct) {
+//				productService.updateProductQuantity(orderEntity.getProducts().getId(), quantityChange);
+//			}
+//			orderRepository.save(new OrderEntity(orderDTO));
+//
+//		} catch (HttpMessageNotReadableException | JsonParseException | NullPointerException ex) {
+//			throw new JsonGetDataException(ex.getMessage());
+//		} 
 	}
 
 	public List<OrderEntity> findOrderByCustomer(String email) {

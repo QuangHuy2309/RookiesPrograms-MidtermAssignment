@@ -55,7 +55,7 @@ public class PersonEntity {
 	//@JsonManagedReference
 	private Collection<OrderEntity> orders;
 	
-	@OneToMany(mappedBy = "customer")
+	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
 	Collection<ReviewEntity> reviews;
 	
 	public PersonEntity() {

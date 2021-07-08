@@ -1,5 +1,9 @@
 package com.nashtech.MyBikeShop.entity;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,18 +17,57 @@ public class OrderDetailEntity {
 	@EmbeddedId
 	private OrderDetailsKey id;
 	
+	@Column(name = "amount")
+	private int ammount;
+	
 	@ManyToOne
-    @MapsId("orderId")
     @JoinColumn(name = "orderid")
     private OrderEntity order;
 	
 	@ManyToOne
-    @MapsId("productId")
     @JoinColumn(name = "productid")
     private ProductEntity product;
+		
 	
-	private int ammount;
+	@Embeddable
+	public static class OrderDetailsKey implements Serializable {
 
+		private static final long serialVersionUID = -4415409401138657585L;
+
+		@Column(name = "orderid")
+		private int orderId;
+
+		@Column(name = "productid")
+		private String productId;
+
+		public OrderDetailsKey() {
+			super();
+		}
+
+		public OrderDetailsKey(int orderId, String productID) {
+			super();
+			this.orderId = orderId;
+			this.productId = productID;
+		}
+
+		public int getOrderId() {
+			return orderId;
+		}
+
+		public void setOrderId(int orderId) {
+			this.orderId = orderId;
+		}
+
+		public String getProductID() {
+			return productId;
+		}
+
+		public void setProductID(String productID) {
+			this.productId = productID;
+		}
+
+	}
+	
 	public OrderDetailsKey getId() {
 		return id;
 	}

@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,7 +49,7 @@ public class OrderEntity {
 	//@JsonBackReference
 	private PersonEntity customers;
 	
-	@OneToMany(mappedBy = "order")
+	@OneToMany(mappedBy = "order", fetch=FetchType.EAGER)
 	Collection<OrderDetailEntity> orderDetails;
 	
 	public OrderEntity() {

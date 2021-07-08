@@ -1,7 +1,10 @@
 package com.nashtech.MyBikeShop.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -16,12 +19,10 @@ public class ReviewEntity {
 	private ReviewKey id;
 	
 	@ManyToOne
-    @MapsId("customerId")
     @JoinColumn(name = "customerid")
 	private PersonEntity customer;
 	
 	@ManyToOne
-    @MapsId("productId")
     @JoinColumn(name = "productid")
     private ProductEntity product;
 	
@@ -31,6 +32,47 @@ public class ReviewEntity {
 	
 	private Date datereview;
 
+	@Embeddable
+	public static class ReviewKey implements Serializable {
+		private static final long serialVersionUID = -6908742347311635007L;
+
+		@Column(name = "customerid")
+		private String customerId;
+
+		@Column(name = "productid")
+		private String productId;
+		
+		public ReviewKey() {
+			super();
+		}
+
+		public ReviewKey(String customerId, String productId) {
+			super();
+			this.customerId = customerId;
+			this.productId = productId;
+		}
+
+		public String getCustomerId() {
+			return customerId;
+		}
+
+		public void setCustomerId(String customerId) {
+			this.customerId = customerId;
+		}
+
+		public String getProductId() {
+			return productId;
+		}
+
+		public void setProductId(String productId) {
+			this.productId = productId;
+		}
+		
+		
+		
+	}
+
+	
 	public ReviewEntity() {
 		super();
 	}
