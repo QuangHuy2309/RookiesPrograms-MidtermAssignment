@@ -3,8 +3,10 @@ package com.nashtech.MyBikeShop.entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +21,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
+import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -29,9 +33,6 @@ public class OrderEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-
-	@Column(name = "quantity")
-	private int quantity;
 
 	@Column(name = "timebought")
 	private LocalDateTime timebought;
@@ -47,12 +48,13 @@ public class OrderEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "customerid")
-	//@JsonBackReference
+	// @JsonBackReference
 	private PersonEntity customers;
-	
-	@OneToMany(mappedBy = "order", fetch=FetchType.EAGER)
-	Set<OrderDetailEntity> orderDetails;
-	
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+	Set<OrderDetailEntity> orderDetails = new HashSet<OrderDetailEntity>();
+
 	public OrderEntity() {
 		super();
 	}
@@ -60,7 +62,6 @@ public class OrderEntity {
 	public OrderEntity(OrderDTO order) {
 		super();
 		this.id = order.getId();
-		this.quantity = order.getQuantity();
 		this.timebought = order.getTimebought();
 		this.totalCost = order.getTotalCost();
 		this.address = order.getAddress();
@@ -82,17 +83,6 @@ public class OrderEntity {
 
 	public void setCustomers(PersonEntity customers) {
 		this.customers = customers;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		if (quantity < 0) {
-			throw new IllegalArgumentException("Quantity must not below zero");
-		}
-		this.quantity = quantity;
 	}
 
 	public LocalDateTime getTimebought() {
@@ -122,13 +112,32 @@ public class OrderEntity {
 		this.address = address;
 	}
 
-
 	public boolean isStatus() {
 		return status;
 	}
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public Set<OrderDetailEntity> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(Set<OrderDetailEntity> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+//	public void setOrderDetails(Set<OrderDetailDTO> orderDetails) {
+//
+//		this.orderDetails = orderDetails.stream().map(detail -> new OrderDetailEntity(detail))
+//				.collect(Collectors.toSet());
+//	}
+
+	public void setTotalCost(Float totalCost) {
+		if (totalCost < 0) {
+			throw new IllegalArgumentException("Total must not below zero");
+		}
+		this.totalCost = totalCost;
 	}
 
 	@Override

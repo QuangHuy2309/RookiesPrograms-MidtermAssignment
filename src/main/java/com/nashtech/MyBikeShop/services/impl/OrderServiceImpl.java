@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
+import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
+import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
+import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
 import com.nashtech.MyBikeShop.exception.JsonGetDataException;
+import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
+import com.nashtech.MyBikeShop.services.OrderDetailService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
@@ -34,6 +40,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	PersonService personService;
+
+	@Autowired
+	OrderDetailService orderDetailService;
 
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
@@ -51,39 +60,65 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Transactional
-	public OrderEntity createOrder(OrderDTO orderDTO) {
-//		Optional<OrderEntity> order = orderRepository.findById(orderDTO.getId());
-//		if (order.isPresent()) {
-//			throw new ObjectAlreadyExistException("There is a product with Id " + order.get().getId());
-//		} else {
-//		try {
-			OrderEntity orderEntity = new OrderEntity(orderDTO);
-			return orderEntity;
-//			productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity() * (-1));
-//			orderEntity.setTimebought(LocalDateTime.now());
-//			return orderRepository.save(orderEntity);
-//		} catch (HttpMessageNotReadableException | JsonParseException | NullPointerException ex) {
-//			throw new JsonGetDataException(ex.getMessage());
-//		} 
+	public String createOrder(OrderDTO orderDTO) {
+		OrderEntity orderEntity = new OrderEntity(orderDTO);
+		orderEntity.setTimebought(LocalDateTime.now());
+		OrderEntity orderEntitySaved = orderRepository.save(orderEntity);
+		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
+			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
+			OrderDetailsKey id = new OrderDetailsKey(orderEntitySaved.getId(), detail.getProduct().getId());
+			detail.setId(id);
+			orderDetailService.createDetail(detail);
+
+		}
+		return "Success";
 	}
 
 	@Transactional
-	public void deleteOrder(int id) {
-//		try {
-//		OrderEntity orderEntity = getOrders(id);
-//		if (!orderEntity.isStatus()) { // False = Not delivery yet
-//			productService.updateProductQuantity(orderEntity.getProducts().getId(), orderEntity.getQuantity());
-//		}
-//		orderRepository.delete(orderEntity);
-//		}catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
-//			throw new JsonGetDataException(ex.getMessage());
-//		}
+	public String deleteOrder(int id) {
+		try {
+			OrderEntity orderEntity = getOrders(id);
+			if (!orderEntity.isStatus()) { // False = Not delivery yet
+				for (OrderDetailEntity detail : orderDetailService.getDetailOrder(id)) {
+					productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
+				}
+			}
+			orderRepository.delete(orderEntity);
+			return "Success!";
+		} catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
+			throw new JsonGetDataException(ex.getMessage());
+		}
 	}
 
-	public void updateOrder(OrderDTO orderDTO) {
+	public String updateOrder(OrderDTO orderDTO) {
 //		try {
-//			OrderEntity orderEntity = getOrders(orderDTO.getId());
-//			int quantityChange = orderEntity.getQuantity() - orderDTO.getQuantity();
+		/*
+		 * * Sử dụng cách này vì khi thay đổi Order thì số lượng product bán ra sẽ thay đổi. 
+		 */
+		orderDetailService.getDetailOrder(orderDTO.getId()).forEach(deOr -> orderDetailService.deleteDetail(deOr)); 
+		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
+			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
+			OrderDetailsKey id = new OrderDetailsKey(orderDTO.getId(), detail.getProduct().getId());
+			detail.setId(id);
+			orderDetailService.createDetail(detail);
+		}
+		orderRepository.save(new OrderEntity(orderDTO));
+		return "Success";
+//		for (OrderDetailEntity detail : orderDetailService.getDetailOrder(orderDTO.getId())) {
+//			OrderDetailDTO checkDetail = orderDTO.getOrderDetails().stream()
+//					.filter(o -> o.getProduct().getId().equals(detail.getProduct().getId())).findFirst().orElse(null);
+//			if (checkDetail == null) {
+//				OrderDetailEntity detailEntity = new OrderDetailEntity(orderDTO);
+//				OrderDetailsKey id = new OrderDetailsKey(orderEntity.getId(), detailEntity.getProduct().getId());
+//				detail.setId(id);
+//				orderDetailService.createOrder(detailEntity);
+//			}
+//			else {
+//			int quantityChange = detail.getAmmount() - checkDetail.getAmmount();
+//			productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
+//			}
+//		}
+
 //			boolean checkProduct = (orderDTO.getProducts().getId().equals(orderEntity.getProducts().getId()));
 //			if (!checkProduct) {
 //				// Increase quantity of old Product
@@ -106,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public OrderEntity findOrderByProducts(String id) {
-		//return orderRepository.findByProductsId(id);
+		// return orderRepository.findByProductsId(id);
 		return new OrderEntity();
 	}
 }

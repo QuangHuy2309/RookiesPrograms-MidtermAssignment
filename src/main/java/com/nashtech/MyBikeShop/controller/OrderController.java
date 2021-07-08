@@ -92,7 +92,7 @@ public class OrderController {
 	})
 	@PostMapping
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public OrderEntity createOrder(@RequestBody OrderDTO newOrder) {
+	public String createOrder(@RequestBody OrderDTO newOrder) {
 		return orderService.createOrder(newOrder);
 	}
 	
@@ -112,8 +112,8 @@ public class OrderController {
 	})
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public void deleteOrder(@PathVariable(name = "id") int id) {
-		orderService.deleteOrder(id);
+	public String deleteOrder(@PathVariable(name = "id") int id) {
+		return orderService.deleteOrder(id);
 	}
 	@Operation(summary = "Update Order")
 	@ApiResponses(value = {
@@ -131,8 +131,8 @@ public class OrderController {
 	})
 	@PutMapping
 	@PreAuthorize("hasRole('ADMIN')")
-	public void updateOrder(@RequestBody OrderDTO order) {
-		orderService.updateOrder(order);
+	public String updateOrder(@RequestBody OrderDTO order) {
+		return orderService.updateOrder(order);
 	}
 	
 	@Operation(summary = "Get Order by Customer")

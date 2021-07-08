@@ -10,9 +10,9 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 public interface OrderService {
 	public List<OrderEntity> retrieveOrders();
 	public OrderEntity getOrders(int id);
-	public OrderEntity createOrder(OrderDTO order);
-	public void deleteOrder(int id);
-	public void updateOrder(OrderDTO order);
+	public String createOrder(OrderDTO order);
+	public String deleteOrder(int id);
+	public String updateOrder(OrderDTO order);
 	public List<OrderEntity> findOrderByCustomer(String email);
 	public OrderEntity findOrderByProducts(String id);
 }

@@ -2,32 +2,33 @@ package com.nashtech.MyBikeShop.DTO;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-
+import java.util.Set;
 
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 public class OrderDTO {
 	private int id;
-	private int quantity;
 	private LocalDateTime timebought;
 	private float totalCost;
 	private String address;
 	private boolean status;
 	private PersonDTO customers;
-	
-	public OrderDTO() {}
+	private Set<OrderDetailDTO> orderDetails;
 
-	public OrderDTO(int id, int quantity, LocalDateTime timebought, float totalCost, String address,
-			boolean status, PersonDTO customers) {
+	public OrderDTO() {
+	}
+
+	public OrderDTO(int id, LocalDateTime timebought, float totalCost, String address, boolean status,
+			PersonDTO customers, Set<OrderDetailDTO> orderdetail) {
 		super();
 		this.id = id;
-		this.quantity = quantity;
 		this.timebought = timebought;
 		this.totalCost = totalCost;
 		this.address = address;
 		this.status = status;
 		this.customers = customers;
+		this.orderDetails = orderdetail;
 	}
 
 	public int getId() {
@@ -36,14 +37,6 @@ public class OrderDTO {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
 	}
 
 	public LocalDateTime getTimebought() {
@@ -85,5 +78,15 @@ public class OrderDTO {
 	public void setCustomers(PersonDTO customers) {
 		this.customers = customers;
 	}
+
+	public Set<OrderDetailDTO> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(Set<OrderDetailDTO> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+
 	
+
 }

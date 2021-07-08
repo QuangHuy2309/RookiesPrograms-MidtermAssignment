@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
+
 @Entity
 @Table(name="orderdetails")
 public class OrderDetailEntity {
@@ -22,6 +25,7 @@ public class OrderDetailEntity {
 	
 	@ManyToOne
     @JoinColumn(name = "orderid", insertable = false, updatable = false)
+	@JsonBackReference
     private OrderEntity order;
 	
 	@ManyToOne
@@ -68,6 +72,26 @@ public class OrderDetailEntity {
 
 	}
 	
+	public OrderDetailEntity() {}
+	
+	public OrderDetailEntity(OrderDetailsKey id, int ammount, OrderEntity order, ProductEntity product) {
+		super();
+		this.id = id;
+		this.ammount = ammount;
+		this.order = order;
+		this.product = product;
+	}
+	
+	
+	
+	public OrderDetailEntity(OrderDetailDTO orderDTO) {
+		super();
+		this.id = orderDTO.getId();
+		this.ammount = orderDTO.getAmmount();
+		this.order = orderDTO.getOrder();
+		this.product = orderDTO.getProduct();
+	}
+
 	public OrderDetailsKey getId() {
 		return id;
 	}

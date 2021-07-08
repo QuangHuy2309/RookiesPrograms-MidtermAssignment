@@ -25,10 +25,10 @@ public class ReviewEntity {
     @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;
 	
-	@Column(name = "ratetext")
+	@Column(name = "rate_text")
 	private int rateNum;
 	
-	@Column(name = "ratenum")
+	@Column(name = "rate_num")
 	private String rateText;
 	
 	@Column(name = "datereview")
