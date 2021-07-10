@@ -45,6 +45,7 @@ public class ProductController {
 			@ApiResponse(responseCode = "303", description = "Error: Have an existed product ", content = @Content),
 			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "403", description = "Forbidden: Only ADMIN can create Product", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -12,6 +13,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
@@ -40,7 +44,12 @@ public class ProductServiceImpl implements ProductService {
 
 	public List<ProductEntity> retrieveProducts() {
 		return productRepository.findAll();
+	}
 
+	public List<ProductEntity> getProductPage(int page, int size) {
+		Sort sortable = Sort.by("updateDate").descending();
+		Pageable pageable = PageRequest.of(page, size, sortable);
+		return productRepository.findAll(pageable).stream().collect(Collectors.toList());
 	}
 
 	public Optional<ProductEntity> getProduct(String id) {
@@ -58,18 +67,16 @@ public class ProductServiceImpl implements ProductService {
 			} else
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product ID");
-		}
-		catch (DataAccessException ex) {
-			throw new ObjectNotFoundException("Failed!"+ ex.getMessage());
-		} 
-		catch (IllegalArgumentException ex) {
-			throw new ObjectPropertiesIllegalException("Failed!"+ ex.getMessage());
+		} catch (DataAccessException ex) {
+			throw new ObjectNotFoundException("Failed!" + ex.getMessage());
+		} catch (IllegalArgumentException ex) {
+			throw new ObjectPropertiesIllegalException("Failed!" + ex.getMessage());
 		}
 	}
 
 	public boolean deleteProduct(String id) {
-			productRepository.deleteById(id);
-			return true;
+		productRepository.deleteById(id);
+		return true;
 	}
 
 	public boolean updateProduct(ProductDTO productDTO) {
@@ -78,15 +85,13 @@ public class ProductServiceImpl implements ProductService {
 		return true;
 	}
 
-
 	public boolean updateProductQuantity(String id, int numberChange) {
 		try {
-		ProductEntity product = getProduct(id).get();
-		product.changeQuantity(numberChange);
-		//productRepository.save(updateDate(product));
-		return true;
-		}
-		catch (NoSuchElementException ex) {
+			ProductEntity product = getProduct(id).get();
+			product.changeQuantity(numberChange);
+			// productRepository.save(updateDate(product));
+			return true;
+		} catch (NoSuchElementException ex) {
 			ex.printStackTrace();
 			return false;
 		}
