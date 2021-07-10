@@ -46,10 +46,15 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findAll();
 	}
 
-	public List<ProductEntity> getProductPage(int page, int size) {
+	public List<ProductEntity> getProductPage(int page, int size, int categoriesId) {
 		Sort sortable = Sort.by("updateDate").descending();
 		Pageable pageable = PageRequest.of(page, size, sortable);
-		return productRepository.findAll(pageable).stream().collect(Collectors.toList());
+		return productRepository.findByCategoriesId(pageable,categoriesId);
+	}
+	public List<ProductEntity> getNewestProductCategories(int categoriesId, int size){
+		Sort sortable = Sort.by("updateDate").descending();
+		Pageable pageable = PageRequest.of(0, size, sortable);
+		return productRepository.findByCategoriesId(pageable,categoriesId);
 	}
 
 	public Optional<ProductEntity> getProduct(String id) {

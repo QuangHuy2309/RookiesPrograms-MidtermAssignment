@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.RateDTO;
@@ -90,7 +91,35 @@ public class PublicController {
 		return productService.findProductByCategories(id);
 	}
 	
-	@Operation(summary = "Get a list of Rate for Product")
+	@Operation(summary = "Get Product by Type for Page")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
+	@GetMapping("/product/page")
+	public List<ProductEntity> getProductPage(@RequestParam(name = "pagenum") int page, 
+				@RequestParam(name = "size") int size,@RequestParam(name = "type") int id) {
+		return productService.getProductPage(page, size, id);
+	}
+	
+	@Operation(summary = "Get Top Product by Type for Welcome Page")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
+	@GetMapping("/product/categories/{id}")
+	public List<ProductEntity> getNewstProductByCategories(@PathVariable(name = "id") int id) {
+		return productService.getNewestProductCategories(id, 4);
+	}
+	
+	
+	@Operation(summary = "Get a list of Rate for Product") // RATE
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
@@ -101,18 +130,5 @@ public class PublicController {
 	@GetMapping("/product/rate/{id}")
 	public List<RateEntity> getRateOfProduct(@PathVariable(name = "id") String id) {
 		return rateService.getRateByProduct(id);
-	}
-	
-	@Operation(summary = "Get Product for Page")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
-			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
-			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/product/page/{num}")
-	public List<ProductEntity> getProductPage(@PathVariable(name = "num") int num) {
-		return productService.getProductPage(num, 6);
 	}
 }
