@@ -106,8 +106,8 @@ public class OrderServiceImpl implements OrderService {
 		}
 		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
 			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
-			OrderDetailsKey id = new OrderDetailsKey(orderDTO.getId(), detail.getProduct().getId());
-			detail.setId(id);
+			//OrderDetailsKey id = new OrderDetailsKey(orderDTO.getId(), detail.getProduct().getId());
+			//detail.setId(id);
 			orderDetailService.createDetail(detail);
 		}
 		orderRepository.save(new OrderEntity(orderDTO));

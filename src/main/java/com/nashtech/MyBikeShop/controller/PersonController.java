@@ -59,7 +59,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public PersonEntity findPerson(@PathVariable(name = "id") int id) {
 		try {
 		return personService.getPerson(id).get();

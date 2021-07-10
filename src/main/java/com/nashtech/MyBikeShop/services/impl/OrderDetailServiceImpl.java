@@ -64,7 +64,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		// Optional<OrderEntity> order = orderRepository.findById(orderDTO.getId());
 //		try {
 		// OrderDetailEntity orderDetailEntity = new OrderDetailEntity(orderDTO);
-		boolean result = productService.updateProductQuantity(order.getProduct().getId(), order.getAmmount() * (-1));
+		boolean result = productService.updateProductQuantity(order.getId().getProductId(), order.getAmmount() * (-1));
 		if (!result) return false;
 		orderDetailRepo.save(order);
 		return true;

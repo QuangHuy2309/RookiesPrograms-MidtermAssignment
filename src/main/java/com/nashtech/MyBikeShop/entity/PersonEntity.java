@@ -57,7 +57,7 @@ public class PersonEntity {
 	private Set<OrderEntity> orders;
 	
 	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
-	Set<ReviewEntity> reviews;
+	Set<RateEntity> reviews;
 	
 	public PersonEntity() {
 		super();

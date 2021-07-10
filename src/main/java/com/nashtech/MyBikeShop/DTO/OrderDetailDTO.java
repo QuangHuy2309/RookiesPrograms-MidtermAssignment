@@ -5,37 +5,38 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
 
 public class OrderDetailDTO {
-	private OrderDetailsKey id;
-
+	private int orderId;
+	private String productId;
 	private int ammount;
-	private OrderEntity order;
-	private ProductEntity product;
 
 	public OrderDetailDTO() {
 		super();
 	}
 
-	public OrderDetailDTO(OrderDetailsKey id, int ammount) {
+	public OrderDetailDTO(int orderId, String productId, int ammount) {
 		super();
-		this.id = id;
+		this.orderId = orderId;
+		this.productId = productId;
 		this.ammount = ammount;
 	}
 
-	public OrderDetailDTO(OrderDetailsKey id, int ammount, OrderEntity order, ProductEntity product) {
-		super();
-		this.id = id;
-		this.ammount = ammount;
-		this.order = order;
-		this.product = product;
+
+	public int getOrderId() {
+		return orderId;
 	}
 
-	public OrderDetailsKey getId() {
-		return id;
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 
-	public void setId(OrderDetailsKey id) {
-		this.id = id;
+	public String getProductId() {
+		return productId;
 	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+
 
 	public int getAmmount() {
 		return ammount;
@@ -43,22 +44,6 @@ public class OrderDetailDTO {
 
 	public void setAmmount(int ammount) {
 		this.ammount = ammount;
-	}
-
-	public OrderEntity getOrder() {
-		return order;
-	}
-
-	public void setOrder(OrderEntity order) {
-		this.order = order;
-	}
-
-	public ProductEntity getProduct() {
-		return product;
-	}
-
-	public void setProduct(ProductEntity product) {
-		this.product = product;
 	}
 	
 }

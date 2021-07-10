@@ -94,7 +94,7 @@ public class OrderController {
 			content = @Content)
 	})
 	@PostMapping
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER')")
 	public String createOrder(@RequestBody OrderDTO newOrder) {
 		return orderService.createOrder(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
 	}

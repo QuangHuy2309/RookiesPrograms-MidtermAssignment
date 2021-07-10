@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-	public ProductEntity findProductByCategories(int id) {
+	public List<ProductEntity> findProductByCategories(int id) {
 		return productRepository.findByCategoriesId(id);
 	}
 

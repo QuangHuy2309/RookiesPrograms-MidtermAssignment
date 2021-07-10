@@ -40,18 +40,6 @@ public class CategoriesController {
 	@Autowired
 	CategoriesService cateService;
 
-	@Operation(summary = "Get all Categories")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriesEntity.class)) }),
-			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
-			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping
-	@PreAuthorize("hasRole('ADMIN')")
-	public List<CategoriesEntity> retrieveCategories() {
-		return cateService.retrieveCategories();
-	}
-
 	@Operation(summary = "Get Categories by ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriesEntity.class)) }),
@@ -75,7 +63,7 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping
 	@PutMapping
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public String createCategories(@RequestBody CategoriesDTO newOrder) {
 		try {
 			String result = cateService.createCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;

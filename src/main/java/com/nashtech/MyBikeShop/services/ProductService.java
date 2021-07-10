@@ -14,6 +14,6 @@ public interface ProductService {
 	public boolean deleteProduct(String id);
 	public boolean updateProduct(ProductDTO product);
 	public boolean updateProductQuantity(String id, int numberChange);
-	public ProductEntity findProductByCategories(int id);
+	public List<ProductEntity> findProductByCategories(int id);
 	public ProductEntity updateDate(ProductEntity product);
 }

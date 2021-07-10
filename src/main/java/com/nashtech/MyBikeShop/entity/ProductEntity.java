@@ -56,7 +56,7 @@ public class ProductEntity {
 	Set<OrderDetailEntity> orderDetails;
 	
 	@OneToMany(mappedBy = "product")
-	Set<ReviewEntity> reviews;
+	Set<RateEntity> reviews;
 	
 	@ManyToOne
 	@JoinColumn(name = "producttype")

@@ -11,11 +11,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.nashtech.MyBikeShop.DTO.RateDTO;
+
 @Entity
 @Table(name="review")
-public class ReviewEntity {
+public class RateEntity {
 	@EmbeddedId
-	private ReviewKey id;
+	private RateKey id;
 	
 	@ManyToOne
     @JoinColumn(name = "customerid", insertable = false, updatable = false)
@@ -25,40 +27,40 @@ public class ReviewEntity {
     @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;
 	
-	@Column(name = "rate_text")
+	@Column(name = "rate_num")
 	private int rateNum;
 	
-	@Column(name = "rate_num")
+	@Column(name = "rate_text")
 	private String rateText;
 	
 	@Column(name = "datereview")
-	private Date datereview;
+	private Date dateReview;
 
 	@Embeddable
-	public static class ReviewKey implements Serializable {
+	public static class RateKey implements Serializable {
 		private static final long serialVersionUID = -6908742347311635007L;
 
 		@Column(name = "customerid")
-		private String customerId;
+		private int customerId;
 
 		@Column(name = "productid")
 		private String productId;
 		
-		public ReviewKey() {
+		public RateKey() {
 			super();
 		}
 
-		public ReviewKey(String customerId, String productId) {
+		public RateKey(int customerId, String productId) {
 			super();
 			this.customerId = customerId;
 			this.productId = productId;
 		}
 
-		public String getCustomerId() {
+		public int getCustomerId() {
 			return customerId;
 		}
 
-		public void setCustomerId(String customerId) {
+		public void setCustomerId(int customerId) {
 			this.customerId = customerId;
 		}
 
@@ -69,17 +71,14 @@ public class ReviewEntity {
 		public void setProductId(String productId) {
 			this.productId = productId;
 		}
-		
-		
-		
 	}
 
 	
-	public ReviewEntity() {
+	public RateEntity() {
 		super();
 	}
 	
-	public ReviewEntity(ReviewKey id, PersonEntity customer, ProductEntity product, int rateNum, String rateText,
+	public RateEntity(RateKey id, PersonEntity customer, ProductEntity product, int rateNum, String rateText,
 			Date datereview) {
 		super();
 		this.id = id;
@@ -87,16 +86,24 @@ public class ReviewEntity {
 		this.product = product;
 		this.rateNum = rateNum;
 		this.rateText = rateText;
-		this.datereview = datereview;
+		this.dateReview = datereview;
 	}
 
+	public RateEntity(RateDTO rateDTO) {
+		super();
+//		this.id.customerId = rateDTO.getCustomerId();
+//		this.id.productId = rateDTO.getProductId();
+		this.id = new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId());
+		//this.id.setProductId(rateDTO.getProductId());
+		this.rateNum = rateDTO.getRateNum();
+		this.rateText = rateDTO.getRateText();
+	}
 
-
-	public ReviewKey getId() {
+	public RateKey getId() {
 		return id;
 	}
 
-	public void setId(ReviewKey id) {
+	public void setId(RateKey id) {
 		this.id = id;
 	}
 
@@ -132,12 +139,12 @@ public class ReviewEntity {
 		this.rateText = rateText;
 	}
 
-	public Date getDatereview() {
-		return datereview;
+	public Date getDateReview() {
+		return dateReview;
 	}
 
-	public void setDatereview(Date datereview) {
-		this.datereview = datereview;
+	public void setDateReview(Date dateReview) {
+		this.dateReview = dateReview;
 	}
 	
 	
