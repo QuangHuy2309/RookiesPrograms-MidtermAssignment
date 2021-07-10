@@ -3,6 +3,8 @@ package com.nashtech.MyBikeShop.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
+import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,7 +61,8 @@ public class ProductController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/{id}")
 	public ProductEntity findProduct(@PathVariable(name = "id") String id) {
-		return productService.getProduct(id);
+		return productService.getProduct(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));
 	}
 
 	@Operation(summary = "Create a Product")
@@ -70,8 +76,8 @@ public class ProductController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping
 	@PreAuthorize("hasRole('ADMIN')")
-	public String saveProduct(@RequestBody ProductDTO newProduct) {
-		return productService.createProduct(newProduct);
+	public ProductEntity saveProduct(@RequestBody ProductDTO newProduct) {
+				return productService.createProduct(newProduct);
 	}
 
 	@Operation(summary = "Delete a Product by id")
@@ -85,7 +91,11 @@ public class ProductController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteProduct(@PathVariable(name = "id") String id) {
-		return productService.deleteProduct(id);
+		try {
+		return productService.deleteProduct(id) ? StringUtils.TRUE : StringUtils.FALSE;
+		}catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
+			return StringUtils.FALSE;
+		}
 	}
 
 	@Operation(summary = "Update a Product")

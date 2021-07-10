@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.services.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,14 +54,13 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
-	public OrderEntity getOrders(int id) {
-		return orderRepository.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Could not find order with Id: " + id));
+	public Optional<OrderEntity> getOrders(int id) {
+		return orderRepository.findById(id);
 
 	}
 
 	@Transactional
-	public String createOrder(OrderDTO orderDTO) {
+	public boolean createOrder(OrderDTO orderDTO) {
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
 		orderEntity.setTimebought(LocalDateTime.now());
 		OrderEntity orderEntitySaved = orderRepository.save(orderEntity);
@@ -68,34 +68,42 @@ public class OrderServiceImpl implements OrderService {
 			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
 			OrderDetailsKey id = new OrderDetailsKey(orderEntitySaved.getId(), detail.getProduct().getId());
 			detail.setId(id);
-			orderDetailService.createDetail(detail);
+			boolean result = orderDetailService.createDetail(detail);
+			if (!result) return false;
 
 		}
-		return "Success";
+		return true;
 	}
 
 	@Transactional
-	public String deleteOrder(int id) {
-		try {
-			OrderEntity orderEntity = getOrders(id);
-			if (!orderEntity.isStatus()) { // False = Not delivery yet
-				for (OrderDetailEntity detail : orderDetailService.getDetailOrder(id)) {
-					productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
-				}
+	public boolean deleteOrder(int id) {
+		OrderEntity orderEntity = getOrders(id).get();
+		if (!orderEntity.isStatus()) { // False = Not delivery yet
+			for (OrderDetailEntity detail : orderDetailService.getDetailOrder(id)) {
+				productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
 			}
-			orderRepository.delete(orderEntity);
-			return "Success!";
-		} catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
-			throw new JsonGetDataException(ex.getMessage());
 		}
+		orderRepository.delete(orderEntity);
+		return true;
 	}
 
-	public String updateOrder(OrderDTO orderDTO) {
+	public boolean updateOrder(OrderDTO orderDTO) {
 //		try {
 		/*
-		 * * Sử dụng cách này vì khi thay đổi Order thì số lượng product bán ra sẽ thay đổi. 
+		 * * Sử dụng cách này vì khi thay đổi Order thì số lượng product bán ra sẽ thay
+		 * đổi.
+		 * 
 		 */
-		orderDetailService.getDetailOrder(orderDTO.getId()).forEach(deOr -> orderDetailService.deleteDetail(deOr)); 
+		int orderId = orderDTO.getId();
+		OrderEntity orderCheck = getOrders(orderId).get(); // Nếu không có Order sẽ gây ra lỗi NoSuchElementException
+														   // sẽ được catch ở Controller
+//		orderDetailService.getDetailOrder(orderId).forEach(deOr -> {
+//			
+//		});
+		for (OrderDetailEntity detail : orderDetailService.getDetailOrder(orderId)) {
+			boolean result = orderDetailService.deleteDetail(detail);
+			if (!result) return false;
+		}
 		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
 			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
 			OrderDetailsKey id = new OrderDetailsKey(orderDTO.getId(), detail.getProduct().getId());
@@ -103,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
 			orderDetailService.createDetail(detail);
 		}
 		orderRepository.save(new OrderEntity(orderDTO));
-		return "Success";
+		return true;
 //		for (OrderDetailEntity detail : orderDetailService.getDetailOrder(orderDTO.getId())) {
 //			OrderDetailDTO checkDetail = orderDTO.getOrderDetails().stream()
 //					.filter(o -> o.getProduct().getId().equals(detail.getProduct().getId())).findFirst().orElse(null);

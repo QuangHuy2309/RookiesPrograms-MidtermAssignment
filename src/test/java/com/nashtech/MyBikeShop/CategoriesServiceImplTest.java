@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
+import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.repository.CategoriesRepository;
 import com.nashtech.MyBikeShop.services.CategoriesService;
 import com.nashtech.MyBikeShop.services.impl.CategoriesServiceImpl;
@@ -73,7 +74,12 @@ public class CategoriesServiceImplTest {
 		CategoriesEntity cateEntity = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
 		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(cateEntity);
-		assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
+		try {
+			assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
+		} catch (ObjectAlreadyExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -85,9 +91,19 @@ public class CategoriesServiceImplTest {
 		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(null);
 		
 		System.out.println(categoriesRepo.findByName(Mockito.anyString()));
-		System.out.println(categoriesService.createCategories(cateDTO));
+		try {
+			System.out.println(categoriesService.createCategories(cateDTO));
+		} catch (ObjectAlreadyExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		assertEquals("Success",categoriesService.createCategories(cateDTO));
+		try {
+			assertEquals("Success",categoriesService.createCategories(cateDTO));
+		} catch (ObjectAlreadyExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test

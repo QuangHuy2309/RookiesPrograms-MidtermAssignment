@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
@@ -73,7 +75,8 @@ public class OrderController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
-		return orderService.getOrders(id);
+		return orderService.getOrders(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find order with Id: " + id));
 	}
 	
 	@Operation(summary = "Create Order")
@@ -93,7 +96,7 @@ public class OrderController {
 	@PostMapping
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public String createOrder(@RequestBody OrderDTO newOrder) {
-		return orderService.createOrder(newOrder);
+		return orderService.createOrder(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 	
 	@Operation(summary = "Delete Order by ID")
@@ -113,7 +116,13 @@ public class OrderController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteOrder(@PathVariable(name = "id") int id) {
-		return orderService.deleteOrder(id);
+		try {
+			String result = orderService.deleteOrder(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			return result;
+		}
+		catch(NoSuchElementException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
+		}
 	}
 	@Operation(summary = "Update Order")
 	@ApiResponses(value = {
@@ -132,7 +141,13 @@ public class OrderController {
 	@PutMapping
 	@PreAuthorize("hasRole('ADMIN')")
 	public String updateOrder(@RequestBody OrderDTO order) {
-		return orderService.updateOrder(order);
+		try {
+			return orderService.updateOrder(order) ? StringUtils.TRUE : StringUtils.FALSE;
+		}catch (NoSuchElementException ex) {
+			System.err.println(ex.getMessage());
+			throw new ObjectNotFoundException("Could not find Order with id: " + order.getId());
+		}
+		
 	}
 	
 	@Operation(summary = "Get Order by Customer")

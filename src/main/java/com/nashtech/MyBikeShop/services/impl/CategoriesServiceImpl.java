@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
 
@@ -32,40 +33,36 @@ public class CategoriesServiceImpl implements CategoriesService {
 		return categoriesRepository.findAll();
 	}
 
-	public CategoriesEntity getCategories(int id) {
-		return categoriesRepository.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Could not find categories with Id: " + id));
+	public Optional<CategoriesEntity> getCategories(int id) {
+		return categoriesRepository.findById(id);
 	}
 
-	public String createCategories(CategoriesDTO categoriesDTO) {
+	public boolean createCategories(CategoriesDTO categoriesDTO) {
 		try {
 			CategoriesEntity categoriesFind = categoriesRepository.findByName(categoriesDTO.getName());
 			if (categoriesFind == null) {
 				CategoriesEntity categoriesConvert = new CategoriesEntity(categoriesDTO);
 				categoriesRepository.save(categoriesConvert);
-				return "Success";
+				return true;
 			} else
 				throw new ObjectAlreadyExistException("There is a category with the same Name");
 		} catch (IllegalArgumentException | ConstraintViolationException ex) {
-			return "Failed! "+ ex.getMessage();
+			return false;
 			//throw new ObjectContainNullException(ex.getMessage());
 		}
 
 	}
 
-	public String deleteCategories(int id) {
-		try {
+	public boolean deleteCategories(int id) {
+//		try {
 			categoriesRepository.deleteById(id);
-			return "Success";
-		} catch (DataIntegrityViolationException ex) {
-			throw new ObjectViolateForeignKeyException(
-					"Failed! There is a product use this categories. Please delete that Order first");
-		}
-		catch (EmptyResultDataAccessException ex) {
-			throw new ObjectNotFoundException("No product found to delete!");
-		}
+			return false;
+//		catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {		
+//			throw new ObjectNotFoundException("No product found to delete!");
+//			return false;
+//		}
 	}
-	public String updateCategories(CategoriesDTO categories) {
-		return createCategories(categories);
-	}
+//	public boolean updateCategories(CategoriesDTO categories) {
+//		return createCategories(categories);
+//	}
 }

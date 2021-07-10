@@ -2,7 +2,11 @@ package com.nashtech.MyBikeShop.controller;
 
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
+import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
+import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.exception.ObjectContainNullException;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.payload.request.LoginRequest;
 import com.nashtech.MyBikeShop.services.CategoriesService;
 
@@ -54,7 +62,8 @@ public class CategoriesController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public CategoriesEntity findCategories(@PathVariable(name = "id") int id) {
-		return cateService.getCategories(id);
+		return cateService.getCategories(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find categories with Id: " + id));
 	}
 
 	@Operation(summary = "Create/Update Categories")
@@ -68,7 +77,13 @@ public class CategoriesController {
 	@PutMapping
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public String createCategories(@RequestBody CategoriesDTO newOrder) {
-		return cateService.createCategories(newOrder);
+		try {
+			String result = cateService.createCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
+			return result;
+
+		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
+			return StringUtils.FALSE;
+		}
 	}
 
 	@Operation(summary = "Delete Categories")
@@ -81,6 +96,11 @@ public class CategoriesController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteCategories(@PathVariable(name = "id") int id) {
-		return cateService.deleteCategories(id);
+		try {
+			String result = cateService.deleteCategories(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			return result;
+		} catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {
+			throw new ObjectNotFoundException("No product found to delete!");
+		}
 	}
 }

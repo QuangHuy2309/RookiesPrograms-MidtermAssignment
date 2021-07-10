@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
+import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
@@ -59,12 +60,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 	}
 
 	@Transactional
-	public OrderDetailEntity createDetail(OrderDetailEntity order) {
+	public boolean createDetail(OrderDetailEntity order) {
 		// Optional<OrderEntity> order = orderRepository.findById(orderDTO.getId());
 //		try {
 		// OrderDetailEntity orderDetailEntity = new OrderDetailEntity(orderDTO);
-		productService.updateProductQuantity(order.getProduct().getId(), order.getAmmount() * (-1));
-		return orderDetailRepo.save(order);
+		boolean result = productService.updateProductQuantity(order.getProduct().getId(), order.getAmmount() * (-1));
+		if (!result) return false;
+		orderDetailRepo.save(order);
+		return true;
 //		} catch (HttpMessageNotReadableException | JsonParseException | NullPointerException ex) {
 //			throw new JsonGetDataException(ex.getMessage());
 //		}
@@ -72,19 +75,22 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 	}
 
 	@Transactional
-	public String deleteDetail(OrderDetailEntity orderDetailEntity) {
-		try {
-			OrderEntity orderEntity = orderService.getOrders(orderDetailEntity.getId().getOrderId());
+	public boolean deleteDetail(OrderDetailEntity orderDetailEntity) {
+//		try {
+			int orderId = orderDetailEntity.getId().getOrderId();
+			OrderEntity orderEntity = orderService.getOrders(orderId).get();
+//					.orElseThrow(() -> new ObjectNotFoundException("Could not find Order with id: " + orderId));
 			if (!orderEntity.isStatus()) { // False = Not delivery yet
-				productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
+				boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
 						orderDetailEntity.getAmmount());
+				if (!result) return false;
 
 			}
 			orderDetailRepo.delete(orderDetailEntity);
-			return "true";
-		} catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
-			throw new JsonGetDataException(ex.getMessage());
-		}
+			return true;
+//		} catch (MethodArgumentTypeMismatchException | NumberFormatException ex) {
+//			throw new JsonGetDataException(ex.getMessage());
+//		}
 	}
 
 //	public void updateOrder(OrderDTO orderDTO) {

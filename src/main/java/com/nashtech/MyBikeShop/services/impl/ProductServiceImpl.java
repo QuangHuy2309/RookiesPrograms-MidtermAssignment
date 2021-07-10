@@ -2,6 +2,7 @@ package com.nashtech.MyBikeShop.services.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -42,21 +43,18 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	public ProductEntity getProduct(String id) {
-		return productRepository.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));
-
+	public Optional<ProductEntity> getProduct(String id) {
+		return productRepository.findById(id);
 	}
 
-	public String createProduct(ProductDTO productDTO) {
+	public ProductEntity createProduct(ProductDTO productDTO) {
 		try {
 			ProductEntity productCheck = productRepository.findById(productDTO.getId()).orElse(null);
 			if (productCheck == null) {
 				ProductEntity productEntity = new ProductEntity(productDTO);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
-				productRepository.save(productEntity);
-				return "Success";	
+				return productRepository.save(productEntity);
 			} else
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product ID");
@@ -69,32 +67,29 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-	public String deleteProduct(String id) {
-		try {
+	public boolean deleteProduct(String id) {
 			productRepository.deleteById(id);
-			return "Success";
-		} catch (DataIntegrityViolationException ex) {
-			throw new ObjectViolateForeignKeyException(
-					"Failed! This Product is existing in an Order. Please delete that Order first");
-		} catch (EmptyResultDataAccessException ex) {
-			throw new ObjectNotFoundException("No product found to delete!");
-		}
+			return true;
 	}
 
-	public void updateProduct(ProductDTO productDTO) {
+	public boolean updateProduct(ProductDTO productDTO) {
 		ProductEntity product = new ProductEntity(productDTO);
-
 		productRepository.save(updateDate(product));
+		return true;
 	}
 
-	public void updateProduct(ProductEntity product) {
-		productRepository.save(updateDate(product));
-	}
 
-	public void updateProductQuantity(String id, int numberChange) {
-		ProductEntity product = getProduct(id);
+	public boolean updateProductQuantity(String id, int numberChange) {
+		try {
+		ProductEntity product = getProduct(id).get();
 		product.changeQuantity(numberChange);
-		productRepository.save(updateDate(product));
+		//productRepository.save(updateDate(product));
+		return true;
+		}
+		catch (NoSuchElementException ex) {
+			ex.printStackTrace();
+			return false;
+		}
 	}
 
 	public ProductEntity findProductByCategories(int id) {
