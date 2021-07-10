@@ -1,4 +1,4 @@
-package com.nashtech.MyBikeShop;
+package com.nashtech.MyBikeShop.Service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

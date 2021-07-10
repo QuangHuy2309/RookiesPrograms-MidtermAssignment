@@ -43,7 +43,7 @@ public class RateController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public RateEntity createRateOfProduct(@RequestBody RateDTO rate) {
 		return rateService.createRate(rate);
 	}

@@ -10,6 +10,7 @@ import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 
 public interface PersonService {
 	public List<PersonEntity> retrievePersons();
+	public List<PersonEntity> getPersonsPage(int num, int size, String role);
 	public Optional<PersonEntity> getPerson(int id);
 	public PersonEntity getPerson(String email);
 	public PersonEntity createPerson(PersonDTO person);

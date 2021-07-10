@@ -119,7 +119,7 @@ public class PublicController {
 	}
 	
 	
-	@Operation(summary = "Get a list of Rate for Product") // RATE
+	@Operation(summary = "Get a list of Rate for Product") // RATE OF PRODUCT
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
@@ -130,5 +130,19 @@ public class PublicController {
 	@GetMapping("/product/rate/{id}")
 	public List<RateEntity> getRateOfProduct(@PathVariable(name = "id") String id) {
 		return rateService.getRateByProduct(id);
+	}
+	
+	@Operation(summary = "Get a Rate for Product by Pages") 
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
+	@GetMapping("/product/rate")
+	public List<RateEntity> getRateProductPages(@RequestParam(name = "pagenum") int page, 
+			@RequestParam(name = "size") int size,@RequestParam(name = "id") String id) {
+		return rateService.getRateProductPage(id,page,size);
 	}
 }

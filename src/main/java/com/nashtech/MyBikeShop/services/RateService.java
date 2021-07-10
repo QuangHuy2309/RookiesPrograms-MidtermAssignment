@@ -9,6 +9,7 @@ import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
 
 public interface RateService {
 	public List<RateEntity> getRateByProduct(String id);
+	public List<RateEntity> getRateProductPage(String id, int pageNum, int size);
 	public RateEntity createRate(RateDTO rate);
 	public boolean deleteRate(RateKey id);
 	public boolean updateRate(RateDTO rate);

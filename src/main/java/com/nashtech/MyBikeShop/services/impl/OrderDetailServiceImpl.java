@@ -55,7 +55,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 	}
 
-	public Set<OrderDetailEntity> getDetailOrder(int id) {
+	public Set<OrderDetailEntity> getDetailOrderByOrderId(int id) {
 		return orderDetailRepo.findByIdOrderId(id);
 	}
 

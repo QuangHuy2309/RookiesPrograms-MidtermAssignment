@@ -10,6 +10,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParseException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +62,17 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
+	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id){
+		Sort sortable = Sort.by("timebought").descending();
+		Pageable pageable = PageRequest.of(num, size, sortable);
+		return orderRepository.findByCustomersId(pageable, id);
+	}
+	public List<OrderEntity> getOrderPage(int num, int size){
+		Sort sortable = Sort.by("timebought").descending().and(Sort.by("status"));
+		Pageable pageable = PageRequest.of(num, size, sortable);
+		return orderRepository.findAll(pageable).stream().toList();
+	}
+	
 	@Transactional
 	public boolean createOrder(OrderDTO orderDTO) {
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
@@ -79,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
 	public boolean deleteOrder(int id) {
 		OrderEntity orderEntity = getOrders(id).get();
 		if (!orderEntity.isStatus()) { // False = Not delivery yet
-			for (OrderDetailEntity detail : orderDetailService.getDetailOrder(id)) {
+			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
 			}
 		}
@@ -100,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
 //		orderDetailService.getDetailOrder(orderId).forEach(deOr -> {
 //			
 //		});
-		for (OrderDetailEntity detail : orderDetailService.getDetailOrder(orderId)) {
+		for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(orderId)) {
 			boolean result = orderDetailService.deleteDetail(detail);
 			if (!result) return false;
 		}
@@ -143,13 +157,15 @@ public class OrderServiceImpl implements OrderService {
 //		} 
 	}
 
-	public List<OrderEntity> findOrderByCustomer(String email) {
+	public List<OrderEntity> findOrderByCustomer(int num, int size, String email) {
 		// PersonEntity person = personService.getPerson(email);
-		return orderRepository.findByCustomersEmail(email);
+		Sort sortable = Sort.by("timebought").descending();
+		Pageable pageable = PageRequest.of(num, size, sortable);
+		return orderRepository.findByCustomersEmail(pageable, email);
 	}
 
-	public OrderEntity findOrderByProducts(String id) {
-		// return orderRepository.findByProductsId(id);
-		return new OrderEntity();
-	}
+//	public OrderEntity findOrderByProducts(String id) {
+//		// return orderRepository.findByProductsId(id);
+//		return new OrderEntity();
+//	}
 }

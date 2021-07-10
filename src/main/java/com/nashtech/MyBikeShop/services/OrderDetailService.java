@@ -13,7 +13,7 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 
 public interface OrderDetailService {
 	public List<OrderDetailEntity> retrieveOrders();
-	public Set<OrderDetailEntity> getDetailOrder(int id);
+	public Set<OrderDetailEntity> getDetailOrderByOrderId(int id);
 	public boolean createDetail(OrderDetailEntity orDetail);
 	public boolean deleteDetail(OrderDetailEntity orderDetailEntity);
 	//public void updateOrder(OrderDetailDTO orDetail);

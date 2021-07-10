@@ -8,6 +8,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.RateDTO;
@@ -31,7 +34,11 @@ public class RateServiceImpl implements RateService {
 		rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
 		return rateRepo.save(rate);
 	}
-
+	public List<RateEntity> getRateProductPage(String id, int pageNum, int size){
+		Sort sortable = Sort.by("dateReview").descending();
+		Pageable pageable = PageRequest.of(pageNum, size, sortable);
+		return rateRepo.findByIdProductId(pageable, id);
+	}
 	public boolean deleteRate(RateKey id) {
 		try {
 			rateRepo.deleteById(id);

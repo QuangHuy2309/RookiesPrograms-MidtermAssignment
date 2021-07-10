@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
@@ -36,7 +37,7 @@ public class PersonController {
 	@Autowired
 	private PersonService personService;
 
-	@Operation(summary = "Get all Account Infomation")
+	@Operation(summary = "Get all Account Infomation by Role")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = PersonEntity.class)) }),
@@ -46,8 +47,9 @@ public class PersonController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping
 	@PreAuthorize("hasRole('ADMIN')")
-	public List<PersonEntity> retrivePerson() {
-		return personService.retrievePersons();
+	public List<PersonEntity> getPersonbyRole(@RequestParam(name = "pagenum") int page,
+			@RequestParam(name = "size") int size, @RequestParam(name = "role") String role) {
+		return personService.getPersonsPage(page,size,role);
 	}
 
 	@Operation(summary = "Get Account Infomation by Email")

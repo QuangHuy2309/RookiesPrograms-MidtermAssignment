@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
@@ -42,7 +45,11 @@ public class PersonServiceImpl implements PersonService {
 //		return person;
 		return personRepository.findByEmail(email);
 	}
-
+	public List<PersonEntity> getPersonsPage(int num, int size,String role){
+		Sort sortable = Sort.by("id").descending();
+		Pageable pageable = PageRequest.of(num, size, sortable);
+		return personRepository.findByRole(pageable, role.toUpperCase());
+	}
 	public PersonEntity createPerson(PersonDTO personDTO){
 		Optional<PersonEntity> person = personRepository.findById(personDTO.getId());
 		if (person.isPresent()) {

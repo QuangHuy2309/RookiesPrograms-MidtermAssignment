@@ -58,6 +58,19 @@ public class OrderEntity {
 	public OrderEntity() {
 		super();
 	}
+	
+	
+	
+	public OrderEntity(int id, Float totalCost, String address, boolean status) {
+		super();
+		this.id = id;
+		this.timebought = timebought;
+		this.totalCost = totalCost;
+		this.address = address;
+		this.status = status;
+	}
+
+
 
 	public OrderEntity(OrderDTO order) {
 		super();
