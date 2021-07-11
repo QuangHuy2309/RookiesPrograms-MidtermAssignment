@@ -90,8 +90,8 @@ public class OrderController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping
 	@PreAuthorize("hasRole('USER')")
-	public String createOrder(@RequestBody OrderDTO newOrder) {
-		return orderService.createOrder(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
+	public OrderEntity createOrder(@RequestBody OrderDTO newOrder) {
+		return orderService.createOrder(newOrder);
 	}
 
 	@Operation(summary = "Delete Order by ID")
@@ -143,7 +143,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/customeremail")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public List<OrderEntity> findListOrderedByCustomer(@RequestParam(name = "pagenum") int page,
+	public List<OrderEntity> findListOrderedByCustomerEmail(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "email") String email) {
 		return orderService.findOrderByCustomer(page, size, email);
 	}
@@ -158,7 +158,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/customerid")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public List<OrderEntity> findListOrderedByCustomer(@RequestParam(name = "pagenum") int page,
+	public List<OrderEntity> findListOrderedByCustomerId(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "id") int id) {
 		return orderService.getOrdersByCustomerPages(page, size, id);
 	}

@@ -62,6 +62,15 @@ public class PersonEntity {
 	public PersonEntity() {
 		super();
 	}
+	
+	public PersonEntity(int id, String email, String password, String fullname, String role) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.fullname = fullname;
+		this.role = role;
+	}
 
 	public PersonEntity(PersonDTO personDTO) {
 		super();

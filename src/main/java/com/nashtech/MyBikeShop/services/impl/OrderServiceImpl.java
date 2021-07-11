@@ -28,6 +28,7 @@ import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
 import com.nashtech.MyBikeShop.exception.JsonGetDataException;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
 import com.nashtech.MyBikeShop.services.OrderService;
@@ -70,23 +71,24 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderEntity> getOrderPage(int num, int size){
 		Sort sortable = Sort.by("timebought").descending().and(Sort.by("status"));
 		Pageable pageable = PageRequest.of(num, size, sortable);
-		return orderRepository.findAll(pageable).stream().toList();
+		return orderRepository.findAll(pageable).stream().collect(Collectors.toList());
 	}
 	
 	@Transactional
-	public boolean createOrder(OrderDTO orderDTO) {
+	public OrderEntity createOrder(OrderDTO orderDTO) {
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
 		orderEntity.setTimebought(LocalDateTime.now());
-		OrderEntity orderEntitySaved = orderRepository.save(orderEntity);
+		OrderEntity orderSaved = orderRepository.save(orderEntity);
 		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
 			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
-			OrderDetailsKey id = new OrderDetailsKey(orderEntitySaved.getId(), detail.getProduct().getId());
+
+			OrderDetailsKey id = new OrderDetailsKey(orderSaved.getId(),detailDTO.getProductId() );
 			detail.setId(id);
 			boolean result = orderDetailService.createDetail(detail);
-			if (!result) return false;
+			if (!result) throw new ObjectPropertiesIllegalException("Failed in create detail order");
 
 		}
-		return true;
+		return orderRepository.getById(orderSaved.getId());
 	}
 
 	@Transactional

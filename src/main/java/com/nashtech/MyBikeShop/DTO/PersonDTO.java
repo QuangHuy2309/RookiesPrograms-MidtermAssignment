@@ -25,6 +25,22 @@ public class PersonDTO {
 	@NotBlank
 	private String role;
 	
+	PersonDTO(){}
+	
+	
+	
+	public PersonDTO(int id, @NotBlank @Size(max = 50) @Email String email,
+			@NotBlank @Size(min = 6, max = 40) String password, @NotBlank String fullname, @NotBlank String role) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.fullname = fullname;
+		this.role = role;
+	}
+
+
+
 	public int getId() {
 		return id;
 	}

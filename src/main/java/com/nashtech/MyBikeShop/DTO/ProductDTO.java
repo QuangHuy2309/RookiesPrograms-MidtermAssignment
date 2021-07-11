@@ -19,6 +19,19 @@ public class ProductDTO {
 	public ProductDTO() {
 	}
 
+	
+	
+	public ProductDTO(String id, String name, float price, int quantity,CategoriesDTO categories) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+		this.categories = categories;
+	}
+
+
+
 	public ProductDTO(String id, String name, float price, int quantity, CategoriesDTO categories, String description,
 			String brand, LocalDateTime createDate, LocalDateTime updateDate, String photo) {
 		super();

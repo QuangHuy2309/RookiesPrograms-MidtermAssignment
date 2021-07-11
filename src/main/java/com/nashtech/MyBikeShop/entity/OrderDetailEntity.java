@@ -48,12 +48,6 @@ public class OrderDetailEntity {
 			super();
 		}
 
-		public OrderDetailsKey(int orderId, String productId) {
-			super();
-			this.orderId = orderId;
-			this.productId = productId;
-		}
-
 		public int getOrderId() {
 			return orderId;
 		}
@@ -69,6 +63,14 @@ public class OrderDetailEntity {
 		public void setProductId(String productId) {
 			this.productId = productId;
 		}
+
+		public OrderDetailsKey(int orderId, String productId) {
+			super();
+			this.orderId = orderId;
+			this.productId = productId;
+		}
+
+		
 
 		
 
@@ -88,7 +90,7 @@ public class OrderDetailEntity {
 	
 	public OrderDetailEntity(OrderDetailDTO orderDTO) {
 		super();
-		this.id = new OrderDetailsKey(orderDTO.getOrderId(), orderDTO.getProductId());
+		//this.id = new OrderDetailsKey(orderDTO.getOrderId(), orderDTO.getProductId());
 		this.ammount = orderDTO.getAmmount();
 	}
 

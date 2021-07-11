@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.entity;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -65,6 +66,20 @@ public class ProductEntity {
 	public ProductEntity() {
 		super();
 	}
+
+	
+	
+	public ProductEntity(@NotNull String id, @NotNull String name, @NotNull float price, @NotNull int quantity,
+			CategoriesEntity categories) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+		this.categories = categories;
+	}
+
+
 
 	public ProductEntity(ProductDTO product) {
 		super();
@@ -192,4 +207,31 @@ public class ProductEntity {
 				+ "\t Type: " + this.categories.getName() + "\t Brand: " + this.brand;
 	}
 
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(brand, categories, createDate, description, id, name, orderDetails, photo, price, quantity,
+				reviews, updateDate);
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductEntity other = (ProductEntity) obj;
+		return Objects.equals(brand, other.brand) && Objects.equals(categories, other.categories)
+				&& Objects.equals(createDate, other.createDate) && Objects.equals(description, other.description)
+				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(orderDetails, other.orderDetails) && Objects.equals(photo, other.photo)
+				&& Float.floatToIntBits(price) == Float.floatToIntBits(other.price) && quantity == other.quantity
+				&& Objects.equals(reviews, other.reviews) && Objects.equals(updateDate, other.updateDate);
+	}
+	
 }

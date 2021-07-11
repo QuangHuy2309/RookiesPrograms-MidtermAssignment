@@ -61,13 +61,13 @@ public class OrderEntity {
 	
 	
 	
-	public OrderEntity(int id, Float totalCost, String address, boolean status) {
+	public OrderEntity(int id, Float totalCost, String address, boolean status, PersonEntity customers) {
 		super();
 		this.id = id;
-		this.timebought = timebought;
 		this.totalCost = totalCost;
 		this.address = address;
 		this.status = status;
+		this.customers = customers;
 	}
 
 
@@ -81,6 +81,7 @@ public class OrderEntity {
 		this.status = order.isStatus();
 		this.customers = new PersonEntity(order.getCustomers());
 	}
+
 
 	public int getId() {
 		return id;
