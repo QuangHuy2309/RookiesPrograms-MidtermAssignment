@@ -3,6 +3,8 @@ package com.nashtech.MyBikeShop.DTO;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class ProductDTO {
 	private String id;
 	private String name;
@@ -13,7 +15,7 @@ public class ProductDTO {
 	private String brand;
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
-	private String photo;
+	private MultipartFile photo;
 
 	
 	public ProductDTO() {
@@ -33,7 +35,7 @@ public class ProductDTO {
 
 
 	public ProductDTO(String id, String name, float price, int quantity, CategoriesDTO categories, String description,
-			String brand, LocalDateTime createDate, LocalDateTime updateDate, String photo) {
+			String brand, LocalDateTime createDate, LocalDateTime updateDate, MultipartFile photo) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -129,13 +131,12 @@ public class ProductDTO {
 		this.updateDate = updateDate;
 	}
 
-	public String getPhoto() {
+	public MultipartFile getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(MultipartFile photo) {
 		this.photo = photo;
 	}
-
 	
 }

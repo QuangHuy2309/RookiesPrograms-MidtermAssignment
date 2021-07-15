@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
@@ -85,4 +87,17 @@ public class ProductController {
 	public void editProduct(@RequestBody ProductDTO product) {
 		productService.updateProduct(product);
 	}
+	
+	@PostMapping("/img")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String saveImgProduct(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
+		try {
+			return productService.storeImage(file, id) ? StringUtils.TRUE : StringUtils.FALSE;
+			
+		}catch(Exception e) {
+			return StringUtils.FALSE;
+		}
+	}
+	
+	
 }

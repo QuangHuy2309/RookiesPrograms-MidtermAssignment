@@ -52,7 +52,7 @@ public class PersonController {
 		return personService.getPersonsPage(page,size,role);
 	}
 
-	@Operation(summary = "Get Account Infomation by Email")
+	@Operation(summary = "Get Account Infomation by Id")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = PersonEntity.class)) }),
@@ -60,7 +60,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/{id}")
+	@GetMapping("/search/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public PersonEntity findPerson(@PathVariable(name = "id") int id) {
 		try {
@@ -111,9 +111,14 @@ public class PersonController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER')")
 	public String editPerson(@RequestBody PersonDTO newPerson) {
 		return personService.updatePerson(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
-
+	
+	@PutMapping("/changePassword")
+	@PreAuthorize("hasRole('USER')")
+	public String editPasswordPerson(@RequestBody PersonDTO newPerson) {
+		return personService.updatePassword(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
+	}
 }

@@ -1,6 +1,13 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -8,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
@@ -49,12 +58,13 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductEntity> getProductPage(int page, int size, int categoriesId) {
 		Sort sortable = Sort.by("updateDate").descending();
 		Pageable pageable = PageRequest.of(page, size, sortable);
-		return productRepository.findByCategoriesId(pageable,categoriesId);
+		return productRepository.findByCategoriesId(pageable, categoriesId);
 	}
-	public List<ProductEntity> getNewestProductCategories(int categoriesId, int size){
+
+	public List<ProductEntity> getNewestProductCategories(int categoriesId, int size) {
 		Sort sortable = Sort.by("updateDate").descending();
 		Pageable pageable = PageRequest.of(0, size, sortable);
-		return productRepository.findByCategoriesId(pageable,categoriesId);
+		return productRepository.findByCategoriesId(pageable, categoriesId);
 	}
 
 	public Optional<ProductEntity> getProduct(String id) {
@@ -110,4 +120,23 @@ public class ProductServiceImpl implements ProductService {
 		product.setUpdateDate(LocalDateTime.now());
 		return product;
 	}
+
+	public boolean storeImage(MultipartFile file, String prodId) throws IOException {
+		byte[] fileContent = FileUtils.readFileToByteArray((File) file);
+		ProductEntity prod = productRepository.getById(prodId);
+		String encodedString = Base64.getEncoder().encodeToString(fileContent);
+		prod.setPhoto(encodedString);
+		productRepository.save(prod);
+		return true;
+
+	}
+
+//	public MultipartFile convertToImg(String encodedString) throws IOException {
+//		Date date = Calendar.getInstance().getTime();
+//		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+//		String strName = dateFormat.format(date);
+//		byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+//
+//		FileUtils.writeByteArrayToFile(new File(strName), decodedBytes);
+//	}
 }

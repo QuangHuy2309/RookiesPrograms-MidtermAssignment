@@ -5,8 +5,11 @@ import java.util.Arrays;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,81 +31,49 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthEntryPoint;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.security.services.UserDetailsServiceImpl;
+import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.impl.OrderServiceImpl;
 import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 
-@WebMvcTest(OrderController.class)
+//@WebMvcTest(OrderController.class)
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
 public class OrderControllerTest {
 
-//	@Mock
-//	private OrderServiceImpl orderService;
-//
-//	@InjectMocks
-//	private OrderController orderController;
-//
-//	@Test
-//	@WithMockUser(roles="ADMIN")
-//	public void testCreateOrderTrue() throws Exception {
-//		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
-//		OrderDTO order = new OrderDTO(1, (float) 3.5, "ABC", true,customers);
-//		when(orderService.createOrder(Mockito.anyObject())).thenReturn(true);
-//		assertEquals(orderController.createOrder(order), "SUCCESS");
-////		this.mockMvc.perform(post("/api/order"))
-////					.andExpect(status().isOk())
-////					.andExpect(content().string(containsString("SUCCESS")));
-//					//.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(order.getId()));
-//	}
-//	
-//	@Test
-//	@WithMockUser(roles="ADMIN")
-//	public void testCreateOrder() throws Exception {
-//		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
-//		OrderDTO order = new OrderDTO(1, (float) 3.5, "ABC", true,customers);
-//		when(orderService.createOrder(Mockito.anyObject())).thenReturn(false);
-//		assertEquals(orderController.createOrder(order), "FAILED");
-////		this.mockMvc.perform(post("/api/order"))
-////					.andExpect(status().isOk())
-////					.andExpect(content().string(containsString("SUCCESS")));
-//					//.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(order.getId()));
-//	}
-	@MockBean
-	OrderServiceImpl orderService;
-	@MockBean
-	UserDetailsServiceImpl userService;
-	@MockBean
-	JwtUtils jwtUtil;
-	@MockBean
-	JwtAuthEntryPoint jwtAuthEntryPoint;
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Mock
+	private OrderService orderService;
 
-//	private WebApplicationContext context;
-//
-//	ObjectMapper om = new ObjectMapper();
+	@InjectMocks
+	private OrderController orderController;
 
-//	@Before
-//	private void setUp() {
-//		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-//	}
 	@Test
-	@WithMockUser(roles="ADMIN")
-	public void testgetOrder() throws Exception {
+	@WithMockUser(username = "admin", password = "123456", roles = "ADMIN") 
+	public void testGetOrder() throws Exception {
 		PersonEntity customers = new PersonEntity(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
 		OrderEntity order1 = new OrderEntity(1,(float) 3.5, "A", true, customers);
 		OrderEntity order2 = new OrderEntity(2,(float) 3.5, "B", true, customers);
 		OrderEntity order3 = new OrderEntity(3,(float) 3.5, "C", true, customers);
 		List<OrderEntity> listOrder = Arrays.asList(order1,order2,order3);
-		Mockito.when(orderService.getOrderPage(Mockito.anyInt(), Mockito.anyInt())).thenReturn(listOrder);
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/order")
-				.contentType(MediaType.APPLICATION_JSON)
-		        .accept(MediaType.APPLICATION_JSON))
+		
+		Mockito.when(orderService.getOrderPage(Mockito.anyInt(), Mockito.anyInt()))
+											.thenReturn(listOrder);
+		MvcResult result = 
+				mockMvc.perform(MockMvcRequestBuilders.get("/api/order"))
+				//.contentType(MediaType.APPLICATION_JSON)
+				//.characterEncoding("UTF-8")
+		        //.accept(MediaType.APPLICATION_JSON))
+				//.andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(listOrder.size())));
 				.andReturn();
 		String resultDOW = result.getResponse().getContentAsString();
-		System.out.println(resultDOW);
+		System.out.println("KET QUA: " +resultDOW);
 	}
 	
 	@Test
+	@WithMockUser(username = "admin", password = "admin", roles = "ADMIN") 
 	public void createOrderTest() throws Exception {
 		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
 		OrderDTO order = new OrderDTO((float) 3.5, "ABC", true,customers);
@@ -115,6 +86,7 @@ public class OrderControllerTest {
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
 				.content(ow.writeValueAsString(orderEntity))
 		        .contentType(MediaType.APPLICATION_JSON)
+		        .characterEncoding("UTF-8")
 		        .accept(MediaType.APPLICATION_JSON))
 //				.andReturn().getResponse().getContentAsString());
 //				.andExpect(MockMvcResultMatchers.status().isOk())

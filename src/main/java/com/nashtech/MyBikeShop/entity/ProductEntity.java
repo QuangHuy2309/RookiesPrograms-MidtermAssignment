@@ -92,7 +92,6 @@ public class ProductEntity {
 		this.brand = product.getBrand();
 		this.createDate = product.getCreateDate();
 		this.updateDate = product.getUpdateDate();
-		this.photo = product.getPhoto();
 	}
 
 	public String getId() {

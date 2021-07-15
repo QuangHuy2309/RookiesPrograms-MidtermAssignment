@@ -72,7 +72,7 @@ public class PublicController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/product/{id}")
+	@GetMapping("/product/search/{id}")
 	public ProductEntity getProduct(@PathVariable(name = "id") String id) {
 		return productService.getProduct(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));
@@ -86,7 +86,7 @@ public class PublicController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/product/type/{id}")
+	@GetMapping("/product/searchtype/{id}")
 	public List<ProductEntity> getAllProductbyCategory(@PathVariable(name = "id") int id) {
 		return productService.findProductByCategories(id);
 	}
