@@ -1,0 +1,11 @@
+.fixed-nav{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    padding: 10px;
+    font-size: 20px;
+}
+#card-button{
+    left: 2rem;
+}
