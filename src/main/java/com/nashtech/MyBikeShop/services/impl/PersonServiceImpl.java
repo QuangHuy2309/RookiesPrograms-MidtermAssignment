@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
@@ -24,8 +25,11 @@ public class PersonServiceImpl implements PersonService {
 	@Autowired
 	private PersonRepository personRepository;
 
-	public PersonServiceImpl(PersonRepository personRepository) {
+	final private PasswordEncoder encoder;
+
+	public PersonServiceImpl(PersonRepository personRepository, PasswordEncoder encoder) {
 		this.personRepository = personRepository;
+		this.encoder = encoder;
 	}
 
 	public List<PersonEntity> retrievePersons() {
@@ -38,19 +42,21 @@ public class PersonServiceImpl implements PersonService {
 //		return person;
 		return personRepository.findById(id);
 	}
-	
+
 	public PersonEntity getPerson(String email) {
 //		Optional<Person> optperson = personRepository.findById(email);
 //		Person person = optperson.get();
 //		return person;
 		return personRepository.findByEmail(email);
 	}
-	public List<PersonEntity> getPersonsPage(int num, int size,String role){
+
+	public List<PersonEntity> getPersonsPage(int num, int size, String role) {
 		Sort sortable = Sort.by("id").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return personRepository.findByRole(pageable, role.toUpperCase());
 	}
-	public PersonEntity createPerson(PersonDTO personDTO){
+
+	public PersonEntity createPerson(PersonDTO personDTO) {
 		Optional<PersonEntity> person = personRepository.findById(personDTO.getId());
 		if (person.isPresent()) {
 			throw new ObjectAlreadyExistException("There is a person with email " + person.get().getEmail());
@@ -67,6 +73,8 @@ public class PersonServiceImpl implements PersonService {
 
 	public boolean updatePerson(PersonDTO personDTO) {
 		boolean checkEmailChange = getPerson(personDTO.getId()).get().getEmail().equals(personDTO.getEmail());
+		PersonEntity personEntity = new PersonEntity(personDTO);
+		//personEntity.setEmail(encoder.encode(personDTO.getPassword()));
 		if (checkEmailChange) {		// Không đổi email
 		personRepository.save(new PersonEntity(personDTO));
 		}
@@ -79,6 +87,13 @@ public class PersonServiceImpl implements PersonService {
 				throw new ObjectAlreadyExistException("There is a user using this email");
 			}
 		}
+		return true;
+	}
+	
+	public boolean updatePassword(PersonDTO personDTO) {
+		PersonEntity person = personRepository.findByEmail(personDTO.getEmail());
+		person.setPassword(encoder.encode(personDTO.getPassword()));
+		personRepository.save(person);
 		return true;
 	}
 
