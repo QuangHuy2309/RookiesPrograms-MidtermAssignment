@@ -115,7 +115,4 @@ public class OrderDTO {
 				&& Objects.equals(timebought, other.timebought)
 				&& Float.floatToIntBits(totalCost) == Float.floatToIntBits(other.totalCost);
 	}
-
-	
-
 }

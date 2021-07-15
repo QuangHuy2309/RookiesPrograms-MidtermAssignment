@@ -154,10 +154,14 @@ public class OrderEntity {
 		this.totalCost = totalCost;
 	}
 
+
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(address, customers, id, orderDetails, status, timebought, totalCost);
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -168,7 +172,10 @@ public class OrderEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		OrderEntity other = (OrderEntity) obj;
-		return id == other.id;
+		return Objects.equals(address, other.address) && Objects.equals(customers, other.customers) && id == other.id
+				&& Objects.equals(orderDetails, other.orderDetails) && status == other.status
+				&& Objects.equals(timebought, other.timebought) && Objects.equals(totalCost, other.totalCost);
 	}
+	
 
 }

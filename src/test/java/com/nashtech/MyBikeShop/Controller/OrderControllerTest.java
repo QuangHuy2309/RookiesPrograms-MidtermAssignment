@@ -38,13 +38,13 @@ import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 //@WebMvcTest(OrderController.class)
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 public class OrderControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 	
-	@Mock
+	@MockBean
 	private OrderService orderService;
 
 	@InjectMocks
@@ -61,30 +61,29 @@ public class OrderControllerTest {
 		
 		Mockito.when(orderService.getOrderPage(Mockito.anyInt(), Mockito.anyInt()))
 											.thenReturn(listOrder);
-		MvcResult result = 
-				mockMvc.perform(MockMvcRequestBuilders.get("/api/order"))
+				mockMvc.perform(MockMvcRequestBuilders.get("/api/order?pagenum=4&size=4"))
 				//.contentType(MediaType.APPLICATION_JSON)
 				//.characterEncoding("UTF-8")
 		        //.accept(MediaType.APPLICATION_JSON))
-				//.andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(listOrder.size())));
-				.andReturn();
-		String resultDOW = result.getResponse().getContentAsString();
-		System.out.println("KET QUA: " +resultDOW);
+				.andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(3)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.is(1)));
+//				.andReturn();
+//		String resultDOW = result.getResponse().getContentAsString();
+//		System.out.println("KET QUA: " +resultDOW);
 	}
 	
 	@Test
-	@WithMockUser(username = "admin", password = "admin", roles = "ADMIN") 
+	@WithMockUser(roles = "USER") 
 	public void createOrderTest() throws Exception {
 		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
-		OrderDTO order = new OrderDTO((float) 3.5, "ABC", true,customers);
-		OrderEntity orderEntity = new OrderEntity(1,(float) 3.5, "ABC", true, new PersonEntity(customers));
-		//orderEntity.setId(0);
-//		String jsonRequest = om.writeValueAsString(order);
+		OrderDTO orderDTO = new OrderDTO((float) 3.5, "ABC", true,customers);
+		OrderEntity order = new OrderEntity(1,(float) 3.5, "ABC", true, new PersonEntity(customers));
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
-		Mockito.when(orderService.createOrder(order)).thenReturn(orderEntity);
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
-				.content(ow.writeValueAsString(orderEntity))
+		Mockito.when(orderService.createOrder(Mockito.anyObject())).thenReturn(order);
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
+				.content(ow.writeValueAsString(orderDTO))
 		        .contentType(MediaType.APPLICATION_JSON)
 		        .characterEncoding("UTF-8")
 		        .accept(MediaType.APPLICATION_JSON))
@@ -92,9 +91,9 @@ public class OrderControllerTest {
 //				.andExpect(MockMvcResultMatchers.status().isOk())
 //				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 //				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)));
-		//.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-		.andReturn();
-		System.out.println("KET QUA: "+ result.getResponse().getContentAsString());
+		.andExpect(MockMvcResultMatchers.jsonPath("$.id",Matchers.equalTo(1)));
+//		.andReturn();
+//		System.out.println("KET QUA: "+ result.getResponse().getContentAsString());
 //			.andExpect(MockMvcResultMatchers.model().attribute("id",1));
 	}
 }

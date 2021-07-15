@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.DTO;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -113,4 +114,28 @@ public class PersonDTO {
 		this.role = role;
 	}
 
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, dob, email, fullname, gender, id, password, phonenumber, role);
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PersonDTO other = (PersonDTO) obj;
+		return Objects.equals(address, other.address) && Objects.equals(dob, other.dob)
+				&& Objects.equals(email, other.email) && Objects.equals(fullname, other.fullname)
+				&& gender == other.gender && id == other.id && Objects.equals(password, other.password)
+				&& Objects.equals(phonenumber, other.phonenumber) && Objects.equals(role, other.role);
+	}
+	
 }
