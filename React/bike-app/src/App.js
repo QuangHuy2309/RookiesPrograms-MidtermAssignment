@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
+import ProductByType from "./components/ProductByType";
 import Home1 from "./components/Home1/Home1";
 import { BrowserRouter, Route } from "react-router-dom";
 
@@ -15,6 +16,9 @@ function App() {
         <Header/>
         <Route exact path="/Home">
           <Home1/>
+        </Route>
+        <Route exact path="/Bike/:id/:pagenum">
+          <ProductByType/>
         </Route>
 
 

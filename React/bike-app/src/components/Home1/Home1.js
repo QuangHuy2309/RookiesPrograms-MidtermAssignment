@@ -36,7 +36,7 @@ export default function Home1() {
               <>
             <div key={cate.id} className="title-bike-type">
               <Link
-                to={`product/type/${cate.id}`}
+                to={`/Bike/${cate.id}/0`}
                 style={{ textDecoration: "none" }}
               >
                 <h2>{cate.name}</h2>
