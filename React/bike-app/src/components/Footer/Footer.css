@@ -1,0 +1,15 @@
+footer{
+    background-color: #A6D6D6;
+    
+    margin-inline: auto;
+    top: 10rem;
+    height: 20rem;
+}
+footer > h2{
+    text-align: center;
+    padding-top: 2rem;
+}
+footer > h4{
+    text-align: left;
+    left: 10rem;
+}

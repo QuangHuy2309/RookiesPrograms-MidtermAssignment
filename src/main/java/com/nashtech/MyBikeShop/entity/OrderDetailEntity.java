@@ -29,6 +29,7 @@ public class OrderDetailEntity {
     private OrderEntity order;
 	
 	@ManyToOne
+	@JsonBackReference
     @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;
 		

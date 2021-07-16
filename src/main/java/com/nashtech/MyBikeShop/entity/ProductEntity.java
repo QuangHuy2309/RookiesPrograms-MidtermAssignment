@@ -16,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 
 @Entity
@@ -52,14 +55,20 @@ public class ProductEntity {
 
 	@Column(name = "photo")
 	private String photo;
-
+	
+//	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	Set<OrderDetailEntity> orderDetails;
 	
+//	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	Set<RateEntity> reviews;
 	
+//	@JsonBackReference
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "producttype")
 	private CategoriesEntity categories;
 

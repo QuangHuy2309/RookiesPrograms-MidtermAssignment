@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.nashtech.MyBikeShop.DTO.RateDTO;
 
 @Entity
@@ -19,10 +20,12 @@ public class RateEntity {
 	@EmbeddedId
 	private RateKey id;
 	
+//	@JsonBackReference
 	@ManyToOne
     @JoinColumn(name = "customerid", insertable = false, updatable = false)
 	private PersonEntity customer;
 	
+//	@JsonBackReference
 	@ManyToOne
     @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;

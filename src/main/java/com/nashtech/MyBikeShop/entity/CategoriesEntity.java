@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
 
 @Entity
@@ -30,6 +32,8 @@ public class CategoriesEntity {
 	private String description;
 	
 	@OneToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+//	@JsonManagedReference
+	@JsonIgnore
 	private Collection<ProductEntity> product;
 	
 	public CategoriesEntity() {

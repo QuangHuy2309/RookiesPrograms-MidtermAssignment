@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
@@ -48,10 +49,11 @@ public class OrderEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "customerid")
-	// @JsonBackReference
+	@JsonBackReference
 	private PersonEntity customers;
 
-	@JsonManagedReference
+//	@JsonManagedReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
 	Set<OrderDetailEntity> orderDetails = new HashSet<OrderDetailEntity>();
 

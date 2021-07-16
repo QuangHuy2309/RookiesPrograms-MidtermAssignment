@@ -1,0 +1,31 @@
+.card-info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-btn{
+    align-content: flex-end;
+    border: 1px solid #333;
+    background-color:black;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    padding: 0.5em;
+    text-decoration: none;
+}
+.card-btn:hover{
+    border: 1px solid #FFD8CC;
+    background-color:#FFC074;
+    color: black;
+}
+.card-name{
+    text-align: left;
+    font-family: Arial;
+    color: black;
+}
+.card-price{
+    align-content: flex-start;
+    font-family: inherit;
+    text-align: left;
+    width: fit-content;
+    color: orangered;
+}

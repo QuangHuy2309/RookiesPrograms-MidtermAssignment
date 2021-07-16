@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
@@ -54,10 +55,13 @@ public class PersonEntity {
 	private String role;
 	
 	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER)
-	//@JsonManagedReference
+	@JsonIgnore
+//	@JsonManagedReference
 	private Set<OrderEntity> orders;
 	
 	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
+//	@JsonManagedReference
+	@JsonIgnore
 	Set<RateEntity> reviews;
 	
 	public PersonEntity() {
