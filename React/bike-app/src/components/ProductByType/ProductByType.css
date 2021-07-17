@@ -1,0 +1,11 @@
+.bike-type{
+    width: 90%;
+    text-align: center;
+    margin-inline: auto;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-family: 'Droid serif', serif;
+    border: 1px solid #333;
+    border-width: medium;
+}

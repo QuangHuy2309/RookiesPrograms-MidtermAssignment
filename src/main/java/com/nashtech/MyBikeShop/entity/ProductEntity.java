@@ -68,7 +68,7 @@ public class ProductEntity {
 	
 //	@JsonBackReference
 	@ManyToOne
-	@JsonIgnore
+//	@JsonIgnore
 	@JoinColumn(name = "producttype")
 	private CategoriesEntity categories;
 

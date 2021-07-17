@@ -35,7 +35,7 @@ export default class index extends Component {
     return (
       <Row>
         {this.state.prodList.map((prod) => (
-          <Col className="col-3">
+          <Col key={prod.id} className="col-3">
             <Card>
               <CardImg top width="100%" src={img} alt="Card image cap" />
               <CardBody>

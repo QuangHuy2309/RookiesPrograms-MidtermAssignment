@@ -55,7 +55,7 @@ public class OrderEntity {
 //	@JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-	Set<OrderDetailEntity> orderDetails = new HashSet<OrderDetailEntity>();
+	Set<OrderDetailEntity> orderDetails = new HashSet<>();
 
 	public OrderEntity() {
 		super();

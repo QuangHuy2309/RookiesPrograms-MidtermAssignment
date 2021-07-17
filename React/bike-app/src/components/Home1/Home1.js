@@ -17,24 +17,15 @@ export default function Home1() {
     });
   }, []);
 
-  function getProductByType(id) {
-    get(`/public/product/categories/${id}`).then((response) => {
-      if (response.status === 200) {
-        return response.data;
-      }
-    });
-  }
-
   return (
     <div>
       {
         cateList.map((cate) => {
           let prodList = [];
-          prodList = getProductByType(cate.id);
           console.log(prodList);
           return (
-              <>
-            <div key={cate.id} className="title-bike-type">
+              <div key={cate.id}>
+            <div  className="title-bike-type">
               <Link
                 to={`/Bike/${cate.id}/0`}
                 style={{ textDecoration: "none" }}
@@ -43,7 +34,7 @@ export default function Home1() {
               </Link>
             </div>
             <Product id = {cate.id}/>
-            </>
+            </div>
           );
         })
         //   cateList.map((cate) => (
