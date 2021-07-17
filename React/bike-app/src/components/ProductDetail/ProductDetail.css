@@ -1,0 +1,29 @@
+#img-prod{
+    width: 100%;
+    padding: 2rem;
+}
+.info-prod{
+    padding:2rem;
+    text-align: left;
+}
+.name-prod {
+    text-align: left;
+}
+.price-prod{
+    display: flex;
+    font-size: 3rem;
+    padding: 0.25rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding-left: 2rem;
+    background-color: #F3F4ED;
+    color: #F05945;
+}
+.currency-prod{
+    font-size: 2.5rem;
+    color: #F05945;
+}
+.descrip-prod{
+    text-align: left;
+    padding: 2rem;
+}

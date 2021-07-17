@@ -72,7 +72,7 @@ export default function Index() {
                     <CardSubtitle tag="h4" className="mb-2 card-price">
                       {prod.price}
                     </CardSubtitle>
-                    <Link to="/prodDetail" className="card-btn">
+                    <Link to={`/prodDetail/${prod.id}`} className="card-btn">
                       Buy Now
                     </Link>
                   </div>
