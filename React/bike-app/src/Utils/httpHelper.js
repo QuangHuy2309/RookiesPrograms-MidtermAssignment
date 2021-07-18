@@ -11,16 +11,36 @@ export function get(url) {
 }
 export function post(url, body) {
   return axios.post(endpoint + url, body, {
-    headers: { Authorization: `Bearer ${token}` },
+    "Access-Control-Allow-Origin": "*",
+    headers: { 
+      Authorization: `Bearer ${token}`, 
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  });
+}
+export function postAuth(url, body) {
+  return axios.post(endpoint + url, body, {
+    headers: { 
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json; charset=utf-8',
+    },
   });
 }
 export function put(url, body) {
   return axios.put(endpoint + url, body, {
-    headers: { Authorization: `Bearer ${token}` },
+    "Access-Control-Allow-Origin": "*",
+    headers: { 
+      Authorization: `Bearer ${token}` ,
+      'Content-Type': 'application/json; charset=utf-8',
+    },
   });
 }
 export function del(url) {
   return axios.delete(endpoint + url, {
-    headers: { Authorization: `Bearer ${token}` },
+    "Access-Control-Allow-Origin": "*",
+    headers: { 
+      Authorization: `Bearer ${token}` ,
+      'Content-Type': 'application/json; charset=utf-8',
+    },
   });
 }

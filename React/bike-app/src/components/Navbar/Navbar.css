@@ -3,9 +3,20 @@
     top: 0;
     width: 100%;
     z-index: 10;
-    padding: 10px;
+    padding: 2rem;
     font-size: 20px;
+    margin-bottom: 2rem;
+    background-color: #C9D8B6;
+    color:coral;
+    text-align: right;
+    text-decoration: none;
+    border: 1px solid #333;
+    border-width: medium;
 }
 #card-button{
-    left: 2rem;
+    text-align: right;
+}
+
+.welcome-nav{
+    margin-right: 2rem;
 }

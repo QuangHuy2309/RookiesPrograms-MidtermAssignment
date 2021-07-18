@@ -1,0 +1,18 @@
+.login{
+    display: flex;
+    margin:3rem;
+}
+.login-form{
+    width: 70%;
+    margin: auto;
+    border: 1px solid #333;
+    border-width: medium;
+    padding: 2rem;
+    margin-bottom: 5rem;
+}
+.head-login{
+    margin-bottom: 3rem;
+}
+.input-login{
+    width: 12rem;
+}
