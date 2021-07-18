@@ -163,26 +163,26 @@ public class PersonEntity {
 		this.role = role;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(address, dob, email, fullname, gender, id, orders, password, phonenumber, reviews, role);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PersonEntity other = (PersonEntity) obj;
-		return Objects.equals(address, other.address) && Objects.equals(dob, other.dob)
-				&& Objects.equals(email, other.email) && Objects.equals(fullname, other.fullname)
-				&& gender == other.gender && id == other.id && Objects.equals(orders, other.orders)
-				&& Objects.equals(password, other.password) && Objects.equals(phonenumber, other.phonenumber)
-				&& Objects.equals(reviews, other.reviews) && Objects.equals(role, other.role);
-	}
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(address, dob, email, fullname, gender, id, orders, password, phonenumber, reviews, role);
+//	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		PersonEntity other = (PersonEntity) obj;
+//		return Objects.equals(address, other.address) && Objects.equals(dob, other.dob)
+//				&& Objects.equals(email, other.email) && Objects.equals(fullname, other.fullname)
+//				&& gender == other.gender && id == other.id && Objects.equals(orders, other.orders)
+//				&& Objects.equals(password, other.password) && Objects.equals(phonenumber, other.phonenumber)
+//				&& Objects.equals(reviews, other.reviews) && Objects.equals(role, other.role);
+//	}
 
 //	public Collection<OrderEntity> getOrdersHadBought() {
 //		return orders;

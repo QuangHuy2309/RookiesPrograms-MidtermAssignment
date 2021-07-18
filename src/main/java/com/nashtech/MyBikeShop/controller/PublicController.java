@@ -105,6 +105,11 @@ public class PublicController {
 		return productService.getProductPage(page, size, id);
 	}
 	
+	@GetMapping("/product/numTotal/{id}")
+	public int getNumTotalProductByCategories(@PathVariable(name = "id") int id) {
+		return productService.getNumProductByCategories(id);
+	}
+	
 	@Operation(summary = "Get Top Product by Type for Welcome Page")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -118,7 +123,7 @@ public class PublicController {
 	}
 	
 	
-	@Operation(summary = "Get a list of Rate for Product") // RATE OF PRODUCT
+	@Operation(summary = "Get number of Rate for Product") // RATE OF PRODUCT
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),
@@ -126,9 +131,9 @@ public class PublicController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/product/rate/{id}")
-	public List<RateEntity> getRateOfProduct(@PathVariable(name = "id") String id) {
-		return rateService.getRateByProduct(id);
+	@GetMapping("/product/rateTotal/{id}")
+	public int getRateOfProduct(@PathVariable(name = "id") String id) {
+		return rateService.getNumRate(id);
 	}
 	
 	@Operation(summary = "Get a Rate for Product by Pages") 

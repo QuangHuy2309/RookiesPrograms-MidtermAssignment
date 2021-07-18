@@ -22,5 +22,6 @@ public interface ProductService {
 	public List<ProductEntity> findProductByCategories(int id);
 	public ProductEntity updateDate(ProductEntity product);
 	public boolean storeImage(MultipartFile file, String id) throws IOException;
+	public int getNumProductByCategories(int id);
 //	public MultipartFile convertToImg(String encodedString) throws IOException;
 }

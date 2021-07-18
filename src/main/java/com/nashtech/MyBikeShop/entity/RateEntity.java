@@ -20,12 +20,12 @@ public class RateEntity {
 	@EmbeddedId
 	private RateKey id;
 	
-	@JsonBackReference
+//	@JsonBackReference
 	@ManyToOne
     @JoinColumn(name = "customerid", insertable = false, updatable = false)
 	private PersonEntity customer;
 	
-	@JsonBackReference
+//	@JsonBackReference
 	@ManyToOne
     @JoinColumn(name = "productid", insertable = false, updatable = false)
     private ProductEntity product;
@@ -35,6 +35,7 @@ public class RateEntity {
 	
 	@Column(name = "rate_text")
 	private String rateText;
+	
 	
 	@Column(name = "datereview")
 	private Date dateReview;

@@ -158,10 +158,10 @@ public class OrderEntity {
 
 
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(address, customers, id, orderDetails, status, timebought, totalCost);
-	}
+//	@Override
+//	public int hashCode() {
+//		return Objects.hash(address, customers, id, orderDetails, status, timebought, totalCost);
+//	}
 
 
 

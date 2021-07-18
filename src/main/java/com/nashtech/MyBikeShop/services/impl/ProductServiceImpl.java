@@ -120,7 +120,10 @@ public class ProductServiceImpl implements ProductService {
 		product.setUpdateDate(LocalDateTime.now());
 		return product;
 	}
-
+	public int getNumProductByCategories(int id) {
+		return productRepository.countByCategoriesId(id);
+	}
+	
 	public boolean storeImage(MultipartFile file, String prodId) throws IOException {
 		byte[] fileContent = FileUtils.readFileToByteArray((File) file);
 		ProductEntity prod = productRepository.getById(prodId);

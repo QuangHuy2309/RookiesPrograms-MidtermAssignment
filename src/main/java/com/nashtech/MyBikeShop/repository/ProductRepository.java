@@ -12,4 +12,5 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 public interface ProductRepository extends JpaRepository<ProductEntity, String>{
 	List<ProductEntity> findByCategoriesId(int id);
 	List<ProductEntity> findByCategoriesId(Pageable pageable, int id);
+	int countByCategoriesId(int id);
 }

@@ -13,4 +13,5 @@ public interface RateService {
 	public RateEntity createRate(RateDTO rate);
 	public boolean deleteRate(RateKey id);
 	public boolean updateRate(RateDTO rate);
+	public int getNumRate(String id);
 }

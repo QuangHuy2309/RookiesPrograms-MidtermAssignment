@@ -34,11 +34,13 @@ public class RateServiceImpl implements RateService {
 		rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
 		return rateRepo.save(rate);
 	}
-	public List<RateEntity> getRateProductPage(String id, int pageNum, int size){
+
+	public List<RateEntity> getRateProductPage(String id, int pageNum, int size) {
 		Sort sortable = Sort.by("dateReview").descending();
 		Pageable pageable = PageRequest.of(pageNum, size, sortable);
 		return rateRepo.findByIdProductId(pageable, id);
 	}
+
 	public boolean deleteRate(RateKey id) {
 		try {
 			rateRepo.deleteById(id);
@@ -61,5 +63,9 @@ public class RateServiceImpl implements RateService {
 		rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
 		rateRepo.save(rate);
 		return true;
+	}
+
+	public int getNumRate(String id) {
+		return rateRepo.countByIdProductId(id);
 	}
 }

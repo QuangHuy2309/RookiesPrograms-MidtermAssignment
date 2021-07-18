@@ -14,4 +14,5 @@ import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
 public interface RateRepository extends JpaRepository<RateEntity,RateKey>{
 	List<RateEntity> findByIdProductId (String id);
 	List<RateEntity> findByIdProductId (Pageable pageable, String id);
+	int countByIdProductId(String id);
 }
