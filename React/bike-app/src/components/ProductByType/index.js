@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
 import img from "../../assets/img/test.jpg";
+import Page from "../Pagination";
 import "./ProductByType.css";
 import {
   Card,
@@ -18,26 +19,24 @@ import {
 
 
 export default function Index() {
-  let { id, pagenum } = useParams();
+  const {id} = useParams();
+  const [pagenum, setPageNum] = useState(0);
   const [cateList, setCateList] = useState([]);
   const [prodList, setProdList] = useState([]);
-
+  const size = 4;
+  let totalPage =  useRef(0) ;
   useEffect(() => {
+    get(`/public/product/numTotal/${id}`).then((response) => {
+      if (response.status === 200) {
+        totalPage.current = response.data;
+      }
+    });
     get("/public/categories").then((response) => {
       if (response.status === 200) {
         setCateList([...response.data]);
       }
     });
-    get(`/public/product/page?pagenum=${pagenum}&size=10&type=${id}`).then(
-      (response) => {
-        if (response.status === 200) {
-          setProdList([...response.data]);
-        }
-      }
-    );
-  }, []);
-  useEffect(()=> {
-    get(`/public/product/page?pagenum=${pagenum}&size=10&type=${id}`).then(
+    get(`/public/product/page?pagenum=${pagenum}&size=${size}&type=${id}`).then(
       (response) => {
         if (response.status === 200) {
           setProdList([...response.data]);
@@ -45,20 +44,35 @@ export default function Index() {
       }
     );
   }, [id,pagenum]);
+  // useEffect(()=> {
+  //   get(`/public/product/page?pagenum=${pagenum}&size=10&type=${id}`).then(
+  //     (response) => {
+  //       if (response.status === 200) {
+  //         setProdList([...response.data]);
+  //       }
+  //     }
+  //   );
+  // }, [id,pagenum]);
+
+function handlePageChange(e){
+  console.log(`Page press is ${e}`);
+    setPageNum(e);
+}
+
   return (
     <Row>
       <Col className="col-3 ">
         <div className="bike-type">
-        <h2>{id}</h2>
         {cateList.map((cate) => (
+          <div key={cate.id}>
           <Link to={`/Bike/${cate.id}/0`} style={{ textDecoration: "none" }}>
             <div>{cate.name}</div>
           </Link>
+          </div>
         ))}
         </div>
       </Col>
       <Col>
-        <h3>{pagenum}</h3>
         <Row>
           {prodList.map((prod) => (
             <Col key={prod.id} className="col-3">
@@ -81,6 +95,7 @@ export default function Index() {
             </Col>
           ))}
         </Row>
+        <Page total={Math.ceil(totalPage.current/size)}  onPageChange={(e) => handlePageChange(e)}/>
       </Col>
     </Row>
   );
