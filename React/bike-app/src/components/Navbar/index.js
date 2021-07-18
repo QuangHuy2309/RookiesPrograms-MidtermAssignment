@@ -9,7 +9,7 @@ import { FaShoppingCart } from "react-icons/fa";
 export default function index(props) {
     return (
         <Navbar color="faded" className="fixed-nav" light>
-            <Link to="/Home" style={{ textDecoration: 'none' }}>
+            <Link to="/" style={{ textDecoration: 'none' }}>
                 <img src={logo} id="logo-img" alt="Logo" width="170"/>
             </Link>
         

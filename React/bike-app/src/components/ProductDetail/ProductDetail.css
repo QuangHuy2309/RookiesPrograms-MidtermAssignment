@@ -27,3 +27,31 @@
     text-align: left;
     padding: 2rem;
 }
+.prod-btn{
+    margin-top: 3rem;
+}
+.addtoCard-btn{
+    display: inline-block;
+    width: 9rem;
+    text-align: center;
+    align-content: flex-end;
+    border: 1px solid #7DEDFF;
+    background-color:#E8F6EF;
+    color: #39A2DB;
+    font-family: 'Roboto', sans-serif;
+    padding: 1rem;
+    text-decoration: none;
+}
+.buyNow-btn{
+    display: inline-block;
+    width: 9rem;
+    text-align: center;
+    align-content: flex-end;
+    border: 1px solid #39A2DB;
+    background-color:#39A2DB;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    padding: 1rem;
+    margin-left: 1rem;
+    text-decoration: none;
+}

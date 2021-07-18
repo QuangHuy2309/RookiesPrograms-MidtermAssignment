@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col } from "reactstrap";
+import { Link } from "react-router-dom";
 import img from "../../assets/img/test.jpg";
 import { get } from "../../Utils/httpHelper";
+import { FaCartPlus } from "react-icons/fa";
+import Review from "./Review/"
 import "./ProductDetail.css";
+
 export default function Index() {
   let { id } = useParams();
   const [prod, setProd] = useState(Object);
-  useEffect(async() => {
-     await get(`/public/product/search/${id}`).then((response) => {
-        console.log(response.data);
-      if (response.status === 200) {
-        setProd(response.data);
-      }
-    });
-  }, []);
+  
+  useEffect(() => {
+      async function getProduct(){
+        await get(`/public/product/search/${id}`).then((response) => {
+        if (response.status === 200) {
+          console.log(response.data);
+          setProd(response.data);
+        }
+      });
+      } 
+      getProduct()
+  }, [id]);
   return (
     <div>
       <Row>
@@ -32,12 +40,22 @@ export default function Index() {
             <h5>Remain :: {prod.quantity} </h5>
             <h5>BRAND :: {prod.brand}</h5>
             {/* <h5>TYPE :: {prod.categories.name}</h5> */}
-            <Button outline color="primary">Add to Cart</Button>
+            <div className="prod-btn">
+            <Link to={`/prodDetail/${prod.id}`} className="addtoCard-btn">
+                    <FaCartPlus/>  Add to Cart
+                    </Link>
+            <Link to={`/Ordering/${prod.id}`} className="buyNow-btn">
+                    Buy Now
+                    </Link>
+                    </div>
           </div>
         </Col>
       </Row>
       <br/>
       <h4 className="descrip-prod">{prod.description}</h4>
+      <div>
+        <Review id={prod.id}/>
+      </div>
     </div>
   );
 }

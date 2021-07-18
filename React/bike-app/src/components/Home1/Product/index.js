@@ -46,7 +46,7 @@ export default class index extends Component {
                   <CardSubtitle tag="h4" className="mb-2 card-price">
                     {prod.price}
                   </CardSubtitle>
-                  <Link to="/prodDetail" className="card-btn">Buy Now</Link>
+                  <Link to={`/prodDetail/${prod.id}`} className="card-btn">Buy Now</Link>
                 </div>
               </CardBody>
             </Card>

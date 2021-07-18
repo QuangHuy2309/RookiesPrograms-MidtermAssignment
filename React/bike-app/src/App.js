@@ -15,10 +15,10 @@ function App() {
       <div className="App">
         <Navbar/>
         <Header/>
-        <Route exact path="/Home">
+        <Route exact path="/">
           <Home1/>
         </Route>
-        <Route exact path="/Bike/:id/:pagenum">
+        <Route exact path="/Bike/:id">
           <ProductByType/>
         </Route>
         <Route exact path="/prodDetail/:id">
