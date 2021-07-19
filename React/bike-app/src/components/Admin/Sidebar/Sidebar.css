@@ -1,0 +1,21 @@
+html, body
+{
+    height: 100%;
+    margin :0;
+    padding: 0;
+}
+.mainRow-admin{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    
+}
+.side-menu{
+    background-color: #C9D8B6;
+    width: 100%;
+    text-align: center;
+    padding-top: 50%;
+    padding-bottom: 50%;
+}

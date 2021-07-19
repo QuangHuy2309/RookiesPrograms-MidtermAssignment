@@ -24,7 +24,7 @@ export default function Index() {
   const [cateList, setCateList] = useState([]);
   const [prodList, setProdList] = useState([]);
   const size = 4;
-  let totalPage =  useRef(0) ;
+  let totalPage =  useRef(0);
   useEffect(() => {
     get(`/public/product/numTotal/${id}`).then((response) => {
       if (response.status === 200) {

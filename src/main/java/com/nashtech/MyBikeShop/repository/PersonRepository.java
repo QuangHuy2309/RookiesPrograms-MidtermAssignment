@@ -15,4 +15,5 @@ public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
 	List<PersonEntity> findByRole(Pageable pageable, String role);
 	PersonEntity findByEmail(String email);
 	Boolean existsByEmail(String email);
+	int countByRole(String role);
 }

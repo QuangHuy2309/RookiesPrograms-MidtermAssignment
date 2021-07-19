@@ -10,7 +10,6 @@ import {
   Col,
 } from "reactstrap";
 import { Redirect, useHistory   } from "react-router-dom";
-import { bake_cookie } from 'sfcookies';
 import "./Login.css";
 import { postAuth } from "../../Utils/httpHelper";
 
@@ -24,10 +23,21 @@ export default function Index(props) {
     });
     postAuth("/auth/signin",body).then((response) => {
       if (response.status === 200) {
-        bake_cookie("token", response.data.accessToken);
+        document.cookie = `token=${response.data.accessToken}; max-age=86400; path=/;`;
+        document.cookie = `username=${response.data.username}; max-age=86400; path=/;`;
+        document.cookie = `email=${response.data.email}; max-age=86400; path=/;`;
+        document.cookie = `role=${response.data.roles[0]}; max-age=86400; path=/;`;
+        document.cookie = `status=true; max-age=86400; path=/;`;
         alert("Loggin Success!");
         props.onStatus(response.data);
-        history.goBack();
+        if (response.data.roles[0] === "ROLE_USER"){
+          history.goBack();
+        }
+        else if (response.data.roles[0] === "ROLE_ADMIN")
+        {
+          history.push("/Admin")
+        }
+        
       }
     }).catch(error => {alert("Login Failed! Please check email and password again")});
       

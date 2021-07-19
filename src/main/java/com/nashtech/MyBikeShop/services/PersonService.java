@@ -17,5 +17,5 @@ public interface PersonService {
 	public boolean deletePerson(int id);
 	public boolean updatePerson(PersonDTO person);
 	public boolean updatePassword(PersonDTO person);
-	
+	public int getTotalByRole(String role);
 }

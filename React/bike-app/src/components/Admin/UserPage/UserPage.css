@@ -1,0 +1,10 @@
+.title-user{
+    margin:2rem;
+}
+.btn-list{
+    text-align: left;
+    margin: 1rem;
+}
+.btn-list > Button {
+    margin-left: 2rem;
+}

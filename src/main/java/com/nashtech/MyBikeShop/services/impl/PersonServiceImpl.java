@@ -96,5 +96,7 @@ public class PersonServiceImpl implements PersonService {
 		personRepository.save(person);
 		return true;
 	}
-
+	public int getTotalByRole(String role) {
+		return personRepository.countByRole(role);
+		}
 }

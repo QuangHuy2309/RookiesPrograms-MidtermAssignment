@@ -121,4 +121,10 @@ public class PersonController {
 	public String editPasswordPerson(@RequestBody PersonDTO newPerson) {
 		return personService.updatePassword(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
+	
+	@GetMapping("/countByRole/{role}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public int getTotalByRole(@PathVariable(name = "role") String role) {
+		return personService.getTotalByRole(role);
+	}
 }
