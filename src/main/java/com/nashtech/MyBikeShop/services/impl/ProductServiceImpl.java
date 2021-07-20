@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
@@ -36,6 +37,7 @@ import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
+import com.nashtech.MyBikeShop.services.CategoriesService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ProductService;
 
@@ -46,6 +48,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	OrderService orderService;
+	
+	@Autowired
+	CategoriesService cateService;
 
 	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
@@ -75,7 +80,8 @@ public class ProductServiceImpl implements ProductService {
 		try {
 			ProductEntity productCheck = productRepository.findById(productDTO.getId()).orElse(null);
 			if (productCheck == null) {
-				ProductEntity productEntity = new ProductEntity(productDTO);
+				CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
+				ProductEntity productEntity = new ProductEntity(productDTO, cate);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
 				return productRepository.save(productEntity);
@@ -95,7 +101,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean updateProduct(ProductDTO productDTO) {
-		ProductEntity product = new ProductEntity(productDTO);
+		CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
+		ProductEntity product = new ProductEntity(productDTO, cate);
 		productRepository.save(updateDate(product));
 		return true;
 	}
@@ -125,11 +132,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	public boolean storeImage(MultipartFile file, String prodId) throws IOException {
-		byte[] fileContent = FileUtils.readFileToByteArray((File) file);
-		ProductEntity prod = productRepository.getById(prodId);
-		String encodedString = Base64.getEncoder().encodeToString(fileContent);
-		prod.setPhoto(encodedString);
-		productRepository.save(prod);
+//		byte[] fileContent = FileUtils.readFileToByteArray((File) file);
+//		ProductEntity prod = productRepository.getById(prodId);
+//		String encodedString = Base64.getEncoder().encodeToString(fileContent);
+//		prod.setPhoto(encodedString);
+//		productRepository.save(prod);
 		return true;
 
 	}

@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.entity;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
@@ -11,10 +12,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -53,19 +57,21 @@ public class ProductEntity {
 	@Column(name = "updatedate")
 	private LocalDateTime updateDate;
 
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
 	@Column(name = "photo")
-	private String photo;
-	
+	private byte[] photo;
+
 //	@JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	Set<OrderDetailEntity> orderDetails;
-	
+
 //	@JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
 	Set<RateEntity> reviews;
-	
+
 //	@JsonBackReference
 	@ManyToOne
 //	@JsonIgnore
@@ -76,8 +82,6 @@ public class ProductEntity {
 		super();
 	}
 
-	
-	
 	public ProductEntity(@NotNull String id, @NotNull String name, @NotNull float price, @NotNull int quantity,
 			CategoriesEntity categories) {
 		super();
@@ -88,19 +92,17 @@ public class ProductEntity {
 		this.categories = categories;
 	}
 
-
-
-	public ProductEntity(ProductDTO product) {
+	public ProductEntity(ProductDTO product, CategoriesEntity cate) {
 		super();
 		this.id = product.getId();
 		this.name = product.getName();
 		this.price = product.getPrice();
 		this.quantity = product.getQuantity();
-		this.categories = new CategoriesEntity(product.getCategories());
-		this.description = product.getDescription();
-		this.brand = product.getBrand();
+		this.categories = cate;
 		this.createDate = product.getCreateDate();
-		this.updateDate = product.getUpdateDate();
+		this.description = product.getDescription();
+		this.photo = product.getPhoto();
+		this.brand = product.getBrand();
 	}
 
 	public String getId() {
@@ -174,7 +176,6 @@ public class ProductEntity {
 		this.brand = brand;
 	}
 
-
 	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
@@ -191,11 +192,13 @@ public class ProductEntity {
 		this.updateDate = updateDate;
 	}
 
-	public String getPhoto() {
+	
+
+	public byte[] getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
 
@@ -215,15 +218,11 @@ public class ProductEntity {
 				+ "\t Type: " + this.categories.getName() + "\t Brand: " + this.brand;
 	}
 
-
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(brand, categories, createDate, description, id, name, orderDetails, photo, price, quantity,
+		return Objects.hash(brand, categories, createDate, description, id, name, orderDetails, price, quantity,
 				reviews, updateDate);
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -234,12 +233,10 @@ public class ProductEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		ProductEntity other = (ProductEntity) obj;
-		return Objects.equals(brand, other.brand) && Objects.equals(categories, other.categories)
-				&& Objects.equals(createDate, other.createDate) && Objects.equals(description, other.description)
-				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(orderDetails, other.orderDetails) && Objects.equals(photo, other.photo)
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(orderDetails, other.orderDetails)
 				&& Float.floatToIntBits(price) == Float.floatToIntBits(other.price) && quantity == other.quantity
 				&& Objects.equals(reviews, other.reviews) && Objects.equals(updateDate, other.updateDate);
 	}
-	
+
 }

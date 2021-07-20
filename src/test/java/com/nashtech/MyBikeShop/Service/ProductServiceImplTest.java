@@ -35,7 +35,7 @@ public class ProductServiceImplTest {
 		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
 		ProductEntity prod1 = new ProductEntity("ProdA", "Product A", (float) 3.45, 2, cate1);
-		ProductDTO prodDTO = new ProductDTO("1","NAME",3,3,cateDTO);
+		ProductDTO prodDTO = new ProductDTO("1","NAME",3,3,1);
 		//when(prodRepository.findById(Mockito.anyString())).thenReturn(null);
 		when(prodRepository.save(Mockito.any(ProductEntity.class))).thenReturn(prod1);
 		assertEquals(prod1, prodService.createProduct(prodDTO));

@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.DTO;
 
+import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -10,42 +11,37 @@ public class ProductDTO {
 	private String name;
 	private float price;
 	private int quantity;
-	private CategoriesDTO categories;
+	private int categoriesId;
 	private String description;
 	private String brand;
 	private LocalDateTime createDate;
-	private LocalDateTime updateDate;
-	private MultipartFile photo;
+//	private LocalDateTime updateDate;
+	private byte[] photo;
 
-	
 	public ProductDTO() {
 	}
 
-	
-	
-	public ProductDTO(String id, String name, float price, int quantity,CategoriesDTO categories) {
+	public ProductDTO(String id, String name, float price, int quantity, int categoriesId) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
-		this.categories = categories;
+		this.categoriesId = categoriesId;
 	}
 
-
-
-	public ProductDTO(String id, String name, float price, int quantity, CategoriesDTO categories, String description,
-			String brand, LocalDateTime createDate, LocalDateTime updateDate, MultipartFile photo) {
+	public ProductDTO(String id, String name, float price, int quantity, int categories, String description,
+			LocalDateTime createDate, String brand, byte[] photo) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
-		this.categories = categories;
+		this.categoriesId = categories;
 		this.description = description;
 		this.brand = brand;
 		this.createDate = createDate;
-		this.updateDate = updateDate;
+//		this.updateDate = updateDate;
 		this.photo = photo;
 	}
 
@@ -91,12 +87,12 @@ public class ProductDTO {
 		this.quantity = quantity;
 	}
 
-	public CategoriesDTO getCategories() {
-		return categories;
+	public int getCategoriesId() {
+		return categoriesId;
 	}
 
-	public void setCategories(CategoriesDTO categories) {
-		this.categories = categories;
+	public void setCategoriesId(int categoriesId) {
+		this.categoriesId = categoriesId;
 	}
 
 	public String getDescription() {
@@ -115,6 +111,15 @@ public class ProductDTO {
 		this.brand = brand;
 	}
 
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
+
 	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
@@ -122,21 +127,4 @@ public class ProductDTO {
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}
-
-	public LocalDateTime getUpdateDate() {
-		return updateDate;
-	}
-
-	public void setUpdateDate(LocalDateTime updateDate) {
-		this.updateDate = updateDate;
-	}
-
-	public MultipartFile getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(MultipartFile photo) {
-		this.photo = photo;
-	}
-	
 }

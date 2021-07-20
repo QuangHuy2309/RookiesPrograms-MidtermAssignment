@@ -84,20 +84,20 @@ public class ProductController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping
 	@PreAuthorize("hasRole('ADMIN')")
-	public void editProduct(@RequestBody ProductDTO product) {
-		productService.updateProduct(product);
+	public String editProduct(@RequestBody ProductDTO product) {
+		return productService.updateProduct(product) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 	
-	@PostMapping("/img")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String saveImgProduct(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
-		try {
-			return productService.storeImage(file, id) ? StringUtils.TRUE : StringUtils.FALSE;
-			
-		}catch(Exception e) {
-			return StringUtils.FALSE;
-		}
-	}
+//	@PostMapping("/img")
+//	@PreAuthorize("hasRole('ADMIN')")
+//	public String saveImgProduct(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
+//		try {
+//			return productService.storeImage(file, id) ? StringUtils.TRUE : StringUtils.FALSE;
+//			
+//		}catch(Exception e) {
+//			return StringUtils.FALSE;
+//		}
+//	}
 	
 	
 }
