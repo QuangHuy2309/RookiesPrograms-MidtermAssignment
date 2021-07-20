@@ -37,7 +37,7 @@ export default class index extends Component {
         {this.state.prodList.map((prod) => (
           <Col key={prod.id} className="col-3">
             <Card>
-              <CardImg top width="100%" src={img} alt="Card image cap" />
+              <CardImg top width="100%" src={`data:image/jpeg;base64,${prod.photo}`} alt="Card image cap" />
               <CardBody>
                 <CardTitle tag="h3" className="card-name">
                   {prod.name}

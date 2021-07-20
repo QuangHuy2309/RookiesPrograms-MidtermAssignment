@@ -125,6 +125,7 @@ export default function Index() {
         total={Math.ceil(totalPage.current / size)}
         onPageChange={(e) => setPageNum(e)}
       />
+      
     </>
   );
 }

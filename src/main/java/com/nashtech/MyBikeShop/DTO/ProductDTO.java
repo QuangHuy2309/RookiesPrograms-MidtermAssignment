@@ -4,6 +4,9 @@ import java.sql.Blob;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.persistence.Lob;
+
+import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ProductDTO {
@@ -16,7 +19,10 @@ public class ProductDTO {
 	private String brand;
 	private LocalDateTime createDate;
 //	private LocalDateTime updateDate;
+	@Lob
+	@Type(type="org.hibernate.type.BinaryType")
 	private byte[] photo;
+//	private Blob photo;
 
 	public ProductDTO() {
 	}
@@ -119,10 +125,20 @@ public class ProductDTO {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
+	
+//	public Blob getPhoto() {
+//		return photo;
+//	}
+//
+//	public void setPhoto(Blob photo) {
+//		this.photo = photo;
+//	}
 
 	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
+
+	
 
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;

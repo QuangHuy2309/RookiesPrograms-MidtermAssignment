@@ -38,45 +38,65 @@ const ModalExample = (props) => {
       });
     }
   }, [modal]);
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertBase64(file);
+    setBase64(base64);
+  };
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
 
-  function getBase64(file) {
-    return new Promise((resolve) => {
-      let fileInfo;
-      let baseURL = "";
-      // Make new FileReader
-      let reader = new FileReader();
-      // Convert the file to base64 text
-      reader.readAsDataURL(file);
-      // on reader load somthing...
-      reader.onload = (readerEvt) => {
-        // Make a fileInfo Object
-        let binaryString = readerEvt.target.result;
-        setBase64(btoa(binaryString));
-        baseURL = reader.result;
-        resolve(baseURL);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
       };
-      console.log(fileInfo);
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
     });
-  }
-  function changeFile(e){
-    if (e.target.files.length !== 0) {
-      console.log("CO FILE");
-      let file = e.target.files[0];
-      getBase64(file)
-        .then((result) => {
-          file["base64"] = result;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    else{ setBase64(prod.photo)}
-  }
+  };
+
+  // function getBase64(file) {
+  //   return new Promise((resolve) => {
+  //     let fileInfo;
+  //     let baseURL = "";
+  //     // Make new FileReader
+  //     let reader = new FileReader();
+  //     // Convert the file to base64 text
+  //     reader.readAsDataURL(file);
+  //     // on reader load somthing...
+  //     reader.onload = (readerEvt) => {
+  //       // Make a fileInfo Object
+  //       let binaryString = readerEvt.target.result;
+  //       setBase64(btoa(binaryString));
+  //       baseURL = reader.result;
+  //       resolve(baseURL);
+  //     };
+  //     console.log(fileInfo);
+  //   });
+  // }
+  // function changeFile(e){
+  //   if (e.target.files.length !== 0) {
+  //     console.log("CO FILE");
+  //     let file = e.target.files[0];
+  //     getBase64(file)
+  //       .then((result) => {
+  //         file["base64"] = result;
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  //   else{ setBase64(prod.photo)}
+  // }
+
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(`PHOTO PROD: ${prod.photo}`);
-    
-    
+    const byteArr = base64.split(',');
+    const photo = byteArr[1];
+    // console.log(photo);
     const body = JSON.stringify({
       id: e.target.id.value,
       name: e.target.name.value,
@@ -86,14 +106,16 @@ const ModalExample = (props) => {
       brand: e.target.brand.value,
       createDate: prod.createDate,
       categoriesId: e.target.select.value,
-      photo : base64
+      photo: photo,
     });
     console.log(body);
 
-    put("/product",body).then((response) => {
-      console.log(response.data);
-      alert("EDIT SUCCESS");
-    }).catch(error => console.log(error))
+    put("/product", body)
+      .then((response) => {
+        console.log(response.data);
+        alert("EDIT SUCCESS");
+      })
+      .catch((error) => console.log(error));
     props.onEdit(e);
   }
   return (
@@ -174,7 +196,16 @@ const ModalExample = (props) => {
             <FormGroup>
               <Label for="exampleFile">File</Label>
               <br />
-              <Input type="file" name="file" id="exampleFile" onChange={(e) => changeFile(e)}/>
+              <Input
+                type="file"
+                name="file"
+                id="exampleFile"
+                accept=".jpeg, .png, .jpg"
+                onChange={(e) => {
+                  uploadImage(e);
+                }}
+              />
+              <img src={base64} height="250px"></img>
             </FormGroup>
             <br />
             <Button color="primary" type="submit">
@@ -185,6 +216,7 @@ const ModalExample = (props) => {
             </Button>
           </Form>
         </ModalBody>
+        
       </Modal>
     </div>
   );

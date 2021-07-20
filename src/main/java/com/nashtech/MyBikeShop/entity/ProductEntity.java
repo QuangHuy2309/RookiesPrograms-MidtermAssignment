@@ -61,7 +61,9 @@ public class ProductEntity {
 	@Type(type="org.hibernate.type.BinaryType")
 	@Column(name = "photo")
 	private byte[] photo;
-
+//	private Blob photo;
+	
+	
 //	@JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
@@ -201,6 +203,14 @@ public class ProductEntity {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
+
+//	public Blob getPhoto() {
+//		return photo;
+//	}
+//
+//	public void setPhoto(Blob photo) {
+//		this.photo = photo;
+//	}
 
 	public CategoriesEntity getCategories() {
 		return categories;
