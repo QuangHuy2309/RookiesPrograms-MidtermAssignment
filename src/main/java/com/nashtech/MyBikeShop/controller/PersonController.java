@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,7 +101,11 @@ public class PersonController {
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deletePerson(@PathVariable(name = "id") int id) {
-		return personService.deletePerson(id) ? StringUtils.TRUE : StringUtils.FALSE;
+		try {
+			return personService.deletePerson(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			}catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
+				return StringUtils.FALSE;
+			}
 	}
 
 	@Operation(summary = "Update Account Infomation")
