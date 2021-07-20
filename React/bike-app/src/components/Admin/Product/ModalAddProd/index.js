@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { get, put } from "../../../Utils/httpHelper";
+import { get, post } from "../../../../Utils/httpHelper";
+import "./ModalAddProd.css";
 import {
   Button,
   Modal,
@@ -17,20 +18,11 @@ const ModalExample = (props) => {
   const { buttonLabel, id } = props;
   const [cateList, setCateList] = useState([]);
   const [modal, setModal] = useState(false);
-  const [prod, setProd] = useState(Object);
   const [base64, setBase64] = useState("");
   const toggle = () => setModal(!modal);
-  function handleFieldChange(e, key) {
-    setProd({ [key]: e.target.value });
-  }
+
   useEffect(() => {
     if (modal) {
-      get(`/public/product/search/${id}`).then((response) => {
-        if (response.status === 200) {
-          // console.log(response.data);
-          setProd(response.data);
-        }
-      });
       get("/public/categories").then((response) => {
         if (response.status === 200) {
           setCateList([...response.data]);
@@ -94,8 +86,11 @@ const ModalExample = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const byteArr = base64.split(',');
-    const photo = byteArr[1];
+    let photo;
+    if (e.target.file.files.length !== 0) {
+      const byteArr = base64.split(",");
+      photo = byteArr[1];
+    } 
     // console.log(photo);
     const body = JSON.stringify({
       id: e.target.id.value,
@@ -104,24 +99,23 @@ const ModalExample = (props) => {
       quantity: e.target.quantity.value,
       description: e.target.description.value,
       brand: e.target.brand.value,
-      createDate: prod.createDate,
+      createDate: new Date(),
       categoriesId: e.target.select.value,
       photo: photo,
     });
     console.log(body);
 
-    put("/product", body)
+    post("/product", body)
       .then((response) => {
         console.log(response.data);
-        alert("EDIT SUCCESS");
+        alert("ADD NEW PRODUCT SUCCESS");
       })
       .catch((error) => console.log(error));
-    props.onEdit(e);
   }
   return (
     <div>
-      <Button color="warning" onClick={toggle}>
-        EDIT
+      <Button color="primary" onClick={toggle} className="open-prod">
+        Add new Product
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Product Information</ModalHeader>
@@ -129,7 +123,7 @@ const ModalExample = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" value={prod.id} />
+              <Input type="text" name="id" id="exampleEmail" />
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Name</Label>
@@ -137,8 +131,7 @@ const ModalExample = (props) => {
                 type="text"
                 name="name"
                 id="examplePassword"
-                value={prod.name}
-                onChange={(e) => handleFieldChange(e, "name")}
+                
               />
             </FormGroup>
             <FormGroup>
@@ -147,8 +140,7 @@ const ModalExample = (props) => {
                 type="number"
                 name="price"
                 id="examplePrice"
-                value={prod.price}
-                onChange={(e) => handleFieldChange(e, "price")}
+                
               />
             </FormGroup>
             <FormGroup>
@@ -157,13 +149,17 @@ const ModalExample = (props) => {
                 type="number"
                 name="quantity"
                 id="exampleQuantity"
-                value={prod.quantity}
-                onChange={(e) => handleFieldChange(e, "quantity")}
+                
               />
             </FormGroup>
             <FormGroup>
               <Label for="exampleSelect">Type</Label>
-              <Input type="select" name="select" id="exampleSelect">
+              <Input
+                type="select"
+                name="select"
+                id="exampleSelect"
+                
+              >
                 {cateList.map((cate) => (
                   <option
                     key={cate.id}
@@ -179,8 +175,7 @@ const ModalExample = (props) => {
                 type="text"
                 name="brand"
                 id="exampleBrand"
-                value={prod.brand}
-                onChange={(e) => handleFieldChange(e, "brand")}
+                
               />
             </FormGroup>
             <FormGroup>
@@ -189,8 +184,7 @@ const ModalExample = (props) => {
                 type="textarea"
                 name="description"
                 id="exampleText"
-                value={prod.description}
-                onChange={(e) => handleFieldChange(e, "description")}
+                
               />
             </FormGroup>
             <FormGroup>
@@ -216,7 +210,6 @@ const ModalExample = (props) => {
             </Button>
           </Form>
         </ModalBody>
-        
       </Modal>
     </div>
   );

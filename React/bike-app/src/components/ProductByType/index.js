@@ -65,7 +65,7 @@ function handlePageChange(e){
         <div className="bike-type">
         {cateList.map((cate) => (
           <div key={cate.id}>
-          <Link to={`/Bike/${cate.id}/0`} style={{ textDecoration: "none" }}>
+          <Link to={`/Bike/${cate.id}`} style={{ textDecoration: "none" }}>
             <div>{cate.name}</div>
           </Link>
           </div>
@@ -77,7 +77,7 @@ function handlePageChange(e){
           {prodList.map((prod) => (
             <Col key={prod.id} className="col-3">
               <Card>
-                <CardImg top width="100%" src={img} alt="Card image cap" />
+              <CardImg top width="100%" src={`data:image/jpeg;base64,${prod.photo}`} alt="Card image cap" />
                 <CardBody>
                   <CardTitle tag="h3" className="card-name">
                     {prod.name}

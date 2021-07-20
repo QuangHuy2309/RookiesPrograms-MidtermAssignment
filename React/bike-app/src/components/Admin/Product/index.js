@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { get, del } from "../../../Utils/httpHelper";
 import Page from "../../Pagination";
-import Modal from "../ModalProd"
+import ModalEdt from "./ModalEdtProd";
+import ModalAdd from "./ModalAddProd";
 import { format } from "date-fns";
 import { IoReloadSharp } from "react-icons/io5";
+import "./Product.css"
 import {
   ButtonDropdown,
   DropdownToggle,
@@ -69,7 +71,7 @@ export default function Index() {
     <>
       <h2 className="title-user">PRODUCT MANAGER</h2>
       <div className="btn-list">
-        {' '}<ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+        {' '}<ButtonDropdown isOpen={dropdownOpen} toggle={toggle} >
           <DropdownToggle caret>Categories</DropdownToggle>
           <DropdownMenu>
             {cateList.map((cate) => (
@@ -81,7 +83,8 @@ export default function Index() {
               </div>
             ))}
           </DropdownMenu>
-        </ButtonDropdown>
+        </ButtonDropdown>{' '}
+        <ModalAdd></ModalAdd>
         <Button outline color="link" onClick={() => getListProd()}><IoReloadSharp/></Button>
       </div>
       <Table bordered>
@@ -114,7 +117,7 @@ export default function Index() {
                 {/* <Button color="warning" onClick={console.log("clicked")}>
                   Edit
                 </Button> */}
-                <Modal id={prod.id} onEdit={(e) => getUpdated(e)}></Modal>
+                <ModalEdt id={prod.id} onEdit={(e) => getUpdated(e)}></ModalEdt>
               </td>
             </tr>
           ))}
