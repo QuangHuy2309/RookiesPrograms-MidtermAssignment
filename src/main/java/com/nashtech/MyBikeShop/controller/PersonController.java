@@ -117,13 +117,13 @@ public class PersonController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public String editPerson(@RequestBody PersonDTO newPerson) {
 		return personService.updatePerson(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 	
 	@PutMapping("/changePassword")
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public String editPasswordPerson(@RequestBody PersonDTO newPerson) {
 		return personService.updatePassword(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}

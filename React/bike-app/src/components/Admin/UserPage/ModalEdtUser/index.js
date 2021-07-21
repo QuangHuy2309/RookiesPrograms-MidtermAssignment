@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getWithAuth, put } from "../../../../Utils/httpHelper";
 import { format } from "date-fns";
+import DatePicker from "react-datepicker";
 import "./ModalEdtUser.css"
 import {
   Button,
@@ -36,18 +37,19 @@ const ModalAdd = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // console.log(photo);
     const body = JSON.stringify({
       id: e.target.id.value,
-      name: e.target.name.value,
-      price: e.target.price.value,
-      quantity: e.target.quantity.value,
-      description: e.target.description.value,
-      brand: e.target.brand.value,
+      fullname: e.target.fullname.value,
+      email: e.target.email.value,
+      gender: e.target.radio.value,
+      dob: e.target.dob.value,
+      phonenumber: e.target.phonenumber.value,
+      address: e.target.address.value,
     });
     console.log(body);
+    // console.log(e.target.dob.value);
 
-    put("/product", body)
+    put("/persons", body)
       .then((response) => {
         console.log(response.data);
         alert("EDIT SUCCESS");
@@ -66,15 +68,16 @@ const ModalAdd = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" value={user.id} />
+              <Input type="text" name="id" id="exampleEmail" value={user.id} required />
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword">Name</Label>
+              <Label for="exampleFullName">Name</Label>
               <Input
                 type="text"
                 name="fullname"
-                id="examplePassword"
+                id="exampleFullName"
                 value={user.fullname}
+                required
                 onChange={(e) => handleFieldChange(e, "fullname")}
               />
             </FormGroup>
@@ -85,40 +88,33 @@ const ModalAdd = (props) => {
                 name="email"
                 id="examplePrice"
                 value={user.email}
+                required
                 onChange={(e) => handleFieldChange(e, "email")}
               />
             </FormGroup>
-            <FormGroup>
-              <Label for="exampleQuantity">Gender</Label>
-              <Input
-                type="number"
-                name="quantity"
-                id="exampleQuantity"
-                value={user.gender}
-                onChange={(e) => handleFieldChange(e, "gender")}
-              />
-            </FormGroup>
+            
             <FormGroup tag="fieldset" className="radioGr-user">
             <Label for="exampleQuantity">Gender</Label>
               <FormGroup check class="radioBtn-user">
                 <Label check>
-                  <Input type="radio" name="radio1" value="false"/> MALE
+                  <Input type="radio" name="radio" value="false" required/> MALE
                 </Label>
               </FormGroup>
               <FormGroup check class="radioBtn-user">
                 <Label check>
-                  <Input type="radio" name="radio1" value="true"/> FEMALE
+                  <Input type="radio" name="radio" value="true"/> FEMALE
                 </Label>
               </FormGroup>
               
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand">Day of Birth</Label>
+              <Label for="exampleBrand" >Day of Birth</Label>
               <Input
                 type="date"
                 name="dob"
                 id="exampleBrand"
-                value={user.dob}
+                value={user.dob}//{format(new Date(user.dob), "YYYY-MM-DD")}
+                //{user.dob.toISOString().substr(0,10)}
                 onChange={(e) => handleFieldChange(e, "dob")}
               />
             </FormGroup>
@@ -128,6 +124,7 @@ const ModalAdd = (props) => {
                 type="number"
                 name="phonenumber"
                 id="exampleEmail"
+                required
                 value={user.phonenumber}
               />
             </FormGroup>
@@ -138,6 +135,7 @@ const ModalAdd = (props) => {
                 name="address"
                 id="examplePassword"
                 value={user.address}
+                required
                 onChange={(e) => handleFieldChange(e, "address")}
               />
             </FormGroup>

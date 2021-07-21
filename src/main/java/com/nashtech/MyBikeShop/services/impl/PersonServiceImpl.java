@@ -72,16 +72,21 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	public boolean updatePerson(PersonDTO personDTO) {
-		boolean checkEmailChange = getPerson(personDTO.getId()).get().getEmail().equals(personDTO.getEmail());
-		PersonEntity personEntity = new PersonEntity(personDTO);
+		PersonEntity personEntity = getPerson(personDTO.getId()).get();
+		boolean checkEmailChange = personEntity.getEmail().equals(personDTO.getEmail());
+		PersonEntity person = new PersonEntity(personDTO);
+		
+		person.setPassword(personEntity.getPassword());
+		person.setRole(personEntity.getRole());
+		
 		//personEntity.setEmail(encoder.encode(personDTO.getPassword()));
 		if (checkEmailChange) {		// Không đổi email
-		personRepository.save(new PersonEntity(personDTO));
+		personRepository.save(person);
 		}
 		else { // Email được đổi, kiểm tra trùng
 			PersonEntity personCheck = personRepository.findByEmail(personDTO.getEmail());
 			if (personCheck == null) {
-				personRepository.save(new PersonEntity(personDTO));
+				personRepository.save(person);
 			}
 			else {
 				throw new ObjectAlreadyExistException("There is a user using this email");

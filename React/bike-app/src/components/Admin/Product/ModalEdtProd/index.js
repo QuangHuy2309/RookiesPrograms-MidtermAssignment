@@ -25,19 +25,26 @@ const ModalAdd = (props) => {
   }
   useEffect(() => {
     if (modal) {
-      get(`/public/product/search/${id}`).then((response) => {
-        if (response.status === 200) {
-          // console.log(response.data);
-          setProd(response.data);
-        }
-      });
+      getProdList();
       get("/public/categories").then((response) => {
         if (response.status === 200) {
-          setCateList([...response.data]);
+           setCateList([...response.data]);
         }
       });
+      
     }
   }, [modal]);
+
+  async function getProdList(){
+    get(`/public/product/search/${id}`).then((response) => {
+      if (response.status === 200) {
+        // console.log(response.data);
+        setProd(response.data, setBase64(`data:image/jpeg;base64,${prod.photo}`));
+        
+      }
+    });
+  }
+
   const uploadImage = async (e) => {
     const file = e.target.files[0];
     const base64 = await convertBase64(file);
@@ -58,49 +65,13 @@ const ModalAdd = (props) => {
     });
   };
 
-  // function getBase64(file) {
-  //   return new Promise((resolve) => {
-  //     let fileInfo;
-  //     let baseURL = "";
-  //     // Make new FileReader
-  //     let reader = new FileReader();
-  //     // Convert the file to base64 text
-  //     reader.readAsDataURL(file);
-  //     // on reader load somthing...
-  //     reader.onload = (readerEvt) => {
-  //       // Make a fileInfo Object
-  //       let binaryString = readerEvt.target.result;
-  //       setBase64(btoa(binaryString));
-  //       baseURL = reader.result;
-  //       resolve(baseURL);
-  //     };
-  //     console.log(fileInfo);
-  //   });
-  // }
-  // function changeFile(e){
-  //   if (e.target.files.length !== 0) {
-  //     console.log("CO FILE");
-  //     let file = e.target.files[0];
-  //     getBase64(file)
-  //       .then((result) => {
-  //         file["base64"] = result;
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  //   else{ setBase64(prod.photo)}
-  // }
-
   function handleSubmit(e) {
     e.preventDefault();
-    let photo;
-    if (e.target.file.files.length !== 0) {
+    
+    
       const byteArr = base64.split(",");
-      photo = byteArr[1];
-    } else {
-      photo = prod.photo;
-    }
+      let photo = byteArr[1];
+    
     // console.log(photo);
     const body = JSON.stringify({
       id: e.target.id.value,
@@ -109,7 +80,7 @@ const ModalAdd = (props) => {
       quantity: e.target.quantity.value,
       description: e.target.description.value,
       brand: e.target.brand.value,
-      createDate: prod.createDate,
+      createDate: e.target.createDate.value,
       categoriesId: e.target.select.value,
       photo: photo,
     });
@@ -143,6 +114,7 @@ const ModalAdd = (props) => {
                 name="name"
                 id="examplePassword"
                 value={prod.name}
+                required
                 onChange={(e) => handleFieldChange(e, "name")}
               />
             </FormGroup>
@@ -153,6 +125,7 @@ const ModalAdd = (props) => {
                 name="price"
                 id="examplePrice"
                 value={prod.price}
+                required
                 onChange={(e) => handleFieldChange(e, "price")}
               />
             </FormGroup>
@@ -163,7 +136,18 @@ const ModalAdd = (props) => {
                 name="quantity"
                 id="exampleQuantity"
                 value={prod.quantity}
+                required
                 onChange={(e) => handleFieldChange(e, "quantity")}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="exampleQuantity">Create Day</Label>
+              <Input
+                type="text"
+                name="createDate"
+                id="exampleQuantity"
+                value={prod.createDate}
+                required
               />
             </FormGroup>
             <FormGroup>
@@ -172,6 +156,7 @@ const ModalAdd = (props) => {
                 type="select"
                 name="select"
                 id="exampleSelect"
+                required
               >
                 {cateList.map((cate) => (
                   <option
@@ -189,6 +174,7 @@ const ModalAdd = (props) => {
                 name="brand"
                 id="exampleBrand"
                 value={prod.brand}
+                required
                 onChange={(e) => handleFieldChange(e, "brand")}
               />
             </FormGroup>
@@ -199,6 +185,7 @@ const ModalAdd = (props) => {
                 name="description"
                 id="exampleText"
                 value={prod.description}
+                required
                 onChange={(e) => handleFieldChange(e, "description")}
               />
             </FormGroup>

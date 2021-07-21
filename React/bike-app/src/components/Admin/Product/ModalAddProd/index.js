@@ -123,7 +123,7 @@ const ModalExample = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" />
+              <Input type="text" name="id" id="exampleEmail" required/>
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Name</Label>
@@ -131,7 +131,7 @@ const ModalExample = (props) => {
                 type="text"
                 name="name"
                 id="examplePassword"
-                
+                required
               />
             </FormGroup>
             <FormGroup>
@@ -140,7 +140,7 @@ const ModalExample = (props) => {
                 type="number"
                 name="price"
                 id="examplePrice"
-                
+                required
               />
             </FormGroup>
             <FormGroup>
@@ -149,7 +149,7 @@ const ModalExample = (props) => {
                 type="number"
                 name="quantity"
                 id="exampleQuantity"
-                
+                required
               />
             </FormGroup>
             <FormGroup>
@@ -158,7 +158,7 @@ const ModalExample = (props) => {
                 type="select"
                 name="select"
                 id="exampleSelect"
-                
+                required
               >
                 {cateList.map((cate) => (
                   <option
@@ -175,7 +175,7 @@ const ModalExample = (props) => {
                 type="text"
                 name="brand"
                 id="exampleBrand"
-                
+                required
               />
             </FormGroup>
             <FormGroup>

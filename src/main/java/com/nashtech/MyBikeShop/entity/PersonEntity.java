@@ -15,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -39,6 +42,8 @@ public class PersonEntity {
 	@Column(name="fullname")
 	private String fullname;
 	
+//	@DateTimeFormat(pattern="yyyy/MM/dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	@Column(name="dob")
 	private Date dob;
 	
