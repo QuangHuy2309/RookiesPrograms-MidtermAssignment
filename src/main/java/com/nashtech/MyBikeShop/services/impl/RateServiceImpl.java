@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.nashtech.MyBikeShop.DTO.RateDTO;
 import com.nashtech.MyBikeShop.entity.RateEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
+import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.RateRepository;
 import com.nashtech.MyBikeShop.services.RateService;
@@ -30,9 +31,14 @@ public class RateServiceImpl implements RateService {
 	}
 
 	public RateEntity createRate(RateDTO rateDTO) {
+			boolean checkExist = rateRepo.existsById(new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId()));
+		if (checkExist)
+			throw new ObjectAlreadyExistException("Exist a review with this customer on this product");
+		else {
 		RateEntity rate = new RateEntity(rateDTO);
 		rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
 		return rateRepo.save(rate);
+		}
 	}
 
 	public List<RateEntity> getRateProductPage(String id, int pageNum, int size) {

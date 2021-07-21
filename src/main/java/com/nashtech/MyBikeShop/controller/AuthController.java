@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,5 +101,15 @@ public class AuthController {
 		personRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+	
+	@GetMapping("/logout")
+	public String logOut(HttpServletRequest request) {
+		String token = request.getHeader("Authorization");
+		String[] arrStr = token.split(" ");
+		token = arrStr[1];
+		jwtUtils.refreshToken(token);
+		return "SUCCESS";
+		
 	}
 }

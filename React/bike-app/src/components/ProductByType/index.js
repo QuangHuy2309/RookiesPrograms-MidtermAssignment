@@ -17,14 +17,13 @@ import {
   Col,
 } from "reactstrap";
 
-
 export default function Index() {
-  const {id} = useParams();
+  const { id } = useParams();
   const [pagenum, setPageNum] = useState(0);
   const [cateList, setCateList] = useState([]);
   const [prodList, setProdList] = useState([]);
   const size = 4;
-  let totalPage =  useRef(0);
+  let totalPage = useRef(0);
   useEffect(() => {
     get(`/public/product/numTotal/${id}`).then((response) => {
       if (response.status === 200) {
@@ -43,7 +42,7 @@ export default function Index() {
         }
       }
     );
-  }, [id,pagenum]);
+  }, [id, pagenum]);
   // useEffect(()=> {
   //   get(`/public/product/page?pagenum=${pagenum}&size=10&type=${id}`).then(
   //     (response) => {
@@ -54,48 +53,61 @@ export default function Index() {
   //   );
   // }, [id,pagenum]);
 
-function handlePageChange(e){
-  console.log(`Page press is ${e}`);
+  function handlePageChange(e) {
+    console.log(`Page press is ${e}`);
     setPageNum(e);
-}
+  }
 
   return (
     <Row>
       <Col className="col-3 ">
         <div className="bike-type">
-        {cateList.map((cate) => (
-          <div key={cate.id}>
-          <Link to={`/Bike/${cate.id}`} style={{ textDecoration: "none" }}>
-            <div>{cate.name}</div>
-          </Link>
-          </div>
-        ))}
+          {cateList.map((cate) => (
+            <div key={cate.id}>
+              <Link to={`/Bike/${cate.id}`} style={{ textDecoration: "none" }}>
+                <div>{cate.name}</div>
+              </Link>
+            </div>
+          ))}
         </div>
       </Col>
       <Col>
         <Row>
           {prodList.map((prod) => (
             <Col key={prod.id} className="col-3">
-              <Card>
-              <CardImg top width="100%" src={`data:image/jpeg;base64,${prod.photo}`} alt="Card image cap" />
-                <CardBody>
-                  <CardTitle tag="h3" className="card-name">
-                    {prod.name}
-                  </CardTitle>
-                  <div className="card-info">
-                    <CardSubtitle tag="h4" className="mb-2 card-price">
-                      {prod.price}
-                    </CardSubtitle>
-                    <Link to={`/prodDetail/${prod.id}`} className="card-btn">
-                      Buy Now
-                    </Link>
-                  </div>
-                </CardBody>
-              </Card>
+              <Link
+                to={`/prodDetail/${prod.id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Card>
+                  <CardImg
+                    top
+                    width="100%"
+                    src={`data:image/jpeg;base64,${prod.photo}`}
+                    alt="Card image cap"
+                  />
+                  <CardBody>
+                    <CardTitle tag="h3" className="card-name">
+                      {prod.name}
+                    </CardTitle>
+                    <div className="card-info">
+                      <CardSubtitle tag="h4" className="mb-2 card-price">
+                        {prod.price}
+                      </CardSubtitle>
+                      <Link to={`/prodDetail/${prod.id}`} className="card-btn">
+                        Buy Now
+                      </Link>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Link>
             </Col>
           ))}
         </Row>
-        <Page total={Math.ceil(totalPage.current/size)}  onPageChange={(e) => handlePageChange(e)}/>
+        <Page
+          total={Math.ceil(totalPage.current / size)}
+          onPageChange={(e) => handlePageChange(e)}
+        />
       </Col>
     </Row>
   );

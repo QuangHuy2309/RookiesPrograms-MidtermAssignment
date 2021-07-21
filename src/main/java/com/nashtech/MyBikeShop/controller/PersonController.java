@@ -71,7 +71,16 @@ public class PersonController {
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
-
+	
+	@GetMapping("/search/email/{email}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public PersonEntity findPersonByEmail(@PathVariable(name = "email") String email) {
+		try {
+		return personService.getPerson(email);
+		} catch (NoSuchElementException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
+		}
+	}
 //	@Operation(summary = "Get create Account Infomation")
 //	@ApiResponses(value = {
 //			@ApiResponse(responseCode = "200", description = "The request has succeeded", 

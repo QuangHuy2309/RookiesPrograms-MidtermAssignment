@@ -8,6 +8,9 @@ import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
@@ -30,7 +33,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 	ProductService productService;
 
 	public List<CategoriesEntity> retrieveCategories() {
-		return categoriesRepository.findAll();
+		Sort sortable = Sort.by("id").ascending();
+		return categoriesRepository.findAll(sortable);
 	}
 
 	public Optional<CategoriesEntity> getCategories(int id) {
@@ -39,8 +43,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 	public boolean createCategories(CategoriesDTO categoriesDTO) {
 		try {
-			CategoriesEntity categoriesFind = categoriesRepository.findByName(categoriesDTO.getName());
-			if (categoriesFind == null) {
+			List<CategoriesEntity> categoriesFind = categoriesRepository.findByName(categoriesDTO.getName());
+			if (categoriesFind.size() < 2) {
 				CategoriesEntity categoriesConvert = new CategoriesEntity(categoriesDTO);
 				categoriesRepository.save(categoriesConvert);
 				return true;
@@ -56,7 +60,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 	public boolean deleteCategories(int id) {
 //		try {
 			categoriesRepository.deleteById(id);
-			return false;
+			return true;
 //		catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {		
 //			throw new ObjectNotFoundException("No product found to delete!");
 //			return false;

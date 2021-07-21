@@ -13,79 +13,48 @@ import PrivateRoute from "./components/PrivateRoute";
 import { getCookie } from "./Utils/Cookie";
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [loginStatus, setLoginStatus] = useState(getCookie("status"));
 
-  function handleStatusChange(e) {
-    setLoginStatus(true);
-    setEmail(e.email);
-    setUsername(e.username);
-  }
-  async function handleLogOut(e) {
-    console.log(`STATUS: ${loginStatus}`);
-    console.log("LOG OUT IN APP");
-    await setLoginStatus(false);
-  }
   useEffect(() => {
     console.log(`STATUS CHANE: ${loginStatus}`);
   }, [loginStatus]);
-  useEffect(() => {
-    console.log(loginStatus);
-    if (loginStatus) {
-      setUsername(getCookie("username"));
-      setEmail(getCookie("email"));
-      console.log(`${email} + ${username}`)
-    }
-  },[])
+  useEffect(() => {}, []);
+
+  function handleStatusChange(e) {
+    setLoginStatus(true);
+  }
+  function handleLogOut(e) {
+    setLoginStatus(false);
+  }
+
   return (
     <BrowserRouter>
       <div className="App">
         <Route exact path="/">
-        <Header />
-        <Navbar
-          status={loginStatus}
-          username={username}
-          email={email}
-          onLogOut={(e) => handleLogOut(e)}
-        />
+          <Header />
+          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
           <Home1 />
           <Footer />
         </Route>
         <Route exact path="/Bike/:id">
-        <Header />
-        <Navbar
-          status={loginStatus}
-          username={username}
-          email={email}
-          onLogOut={(e) => handleLogOut(e)}
-        />
+          <Header />
+          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
           <ProductByType />
           <Footer />
         </Route>
         <Route exact path="/prodDetail/:id">
-        <Header />
-        <Navbar
-          status={loginStatus}
-          username={username}
-          email={email}
-          onLogOut={(e) => handleLogOut(e)}
-        />
+          <Header />
+          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
           <ProductDetail />
           <Footer />
         </Route>
         <Route exact path="/Login">
-        <Header />
-        <Navbar
-          status={loginStatus}
-          username={username}
-          email={email}
-          onLogOut={(e) => handleLogOut(e)}
-        />
+          <Header />
+          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
           <Login onStatus={(e) => handleStatusChange(e)} />
           <Footer />
         </Route>
-        <PrivateRoute exact path="/Admin" component={Admin}/>
+        <PrivateRoute exact path="/Admin" component={Admin} />
       </div>
     </BrowserRouter>
   );

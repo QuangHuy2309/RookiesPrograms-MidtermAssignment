@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.nashtech.MyBikeShop.security.services.UserDetailsImpl;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -58,4 +59,20 @@ public class JwtUtils {
 
 		return false;
 	}
+	
+	private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    }
+	
+	 public String refreshToken(String token) {
+	        final Date createdDate = new Date();
+	        final Date expirationDate = new Date(createdDate.getTime() + jwtExpirationMs * 1000);
+
+	        final Claims claims = getAllClaimsFromToken(token);
+	        claims.setIssuedAt(createdDate);
+	        claims.setExpiration(expirationDate);
+
+	        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+	 }
+	    
 }

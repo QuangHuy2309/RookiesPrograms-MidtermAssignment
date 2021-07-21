@@ -24,6 +24,7 @@ import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectContainNullException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
 import com.nashtech.MyBikeShop.payload.request.LoginRequest;
 import com.nashtech.MyBikeShop.services.CategoriesService;
 
@@ -62,7 +63,6 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping
-	@PutMapping
 	@PreAuthorize("hasRole('ADMIN')")
 	public String createCategories(@RequestBody CategoriesDTO newOrder) {
 		try {
@@ -87,8 +87,8 @@ public class CategoriesController {
 		try {
 			String result = cateService.deleteCategories(id) ? StringUtils.TRUE : StringUtils.FALSE;
 			return result;
-		} catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {
-			throw new ObjectNotFoundException("No product found to delete!");
+		} catch (DataIntegrityViolationException ex) {
+			throw new ObjectViolateForeignKeyException("This category had at least a product. Delete Product first!");
 		}
 	}
 }

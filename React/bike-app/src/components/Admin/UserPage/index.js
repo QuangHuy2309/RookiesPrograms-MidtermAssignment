@@ -79,7 +79,7 @@ export default function Index() {
         </thead>
         <tbody>
           {userList.map((user) => (
-            <tr>
+            <tr key={user.id}>
               <td>{user.fullname}</td>
               <td>{user.email}</td>
               <td>{format(new Date(user.dob), "dd/MM/yyyy")}</td>

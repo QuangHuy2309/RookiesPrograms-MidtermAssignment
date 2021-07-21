@@ -7,6 +7,22 @@
     padding: 1rem;
     text-align: left;
 }
+.reviewInput-card{
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    margin-inline: 5rem;
+    padding: 1rem;
+    text-align: left;
+}
+.btnInput-card{
+    text-align: right;
+}
+.rateNum{
+    text-align: left;
+}
+.inputForm{
+    height: 120px;
+}
 .col-review{
     margin-left: 2rem;
 }
@@ -18,4 +34,5 @@
 }
 .name-review{
     margin:0;
+    text-align: left;
 }

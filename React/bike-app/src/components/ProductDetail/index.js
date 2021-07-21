@@ -27,7 +27,7 @@ export default function Index() {
     <div>
       <Row>
         <Col className="col-5">
-          <img src={img} id="img-prod" alt="" />
+          <img src={`data:image/jpeg;base64,${prod.photo}`} id="img-prod" alt="" />
         </Col>
         <Col>
           <div className="info-prod">

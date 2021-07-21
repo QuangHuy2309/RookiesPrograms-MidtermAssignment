@@ -73,7 +73,8 @@ public class CategoriesServiceImplTest {
 		assertNotNull(categoriesService);
 		CategoriesEntity cateEntity = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(cateEntity);
+		List<CategoriesEntity> listCate = Arrays.asList(cateEntity);
+		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(listCate);
 		try {
 			assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
 		} catch (ObjectAlreadyExistException e) {

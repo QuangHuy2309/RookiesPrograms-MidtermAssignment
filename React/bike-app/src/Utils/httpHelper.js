@@ -38,9 +38,9 @@ export function postAuth(url, body) {
 }
 export function put(url, body) {
   return axios.put(endpoint + url, body, {
-    "Access-Control-Allow-Origin": "*",
     headers: { 
       Authorization: `Bearer ${token}` ,
+      "Access-Control-Allow-Origin": "*",
       'Content-Type': 'application/json; charset=utf-8',
     },
   });

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "reactstrap";
-import Sidebar from "./Sidebar"
-import Product from "./Product"
-import User from "./UserPage"
+import Sidebar from "./Sidebar";
+import Product from "./Product";
+import User from "./UserPage";
+import Cate from "./Categories";
 import { Route } from "react-router-dom";
 
 
@@ -17,6 +18,7 @@ export default function Index() {
   function showRoute(name){
     if (choice === "PRODUCT") {return (<Product/>)}
     else if (choice === "USER") {return (<User/>)}
+    else if (choice === "CATE") {return (<Cate/>)}
   }
   function handleChoiceChange(e){
       console.log(e);

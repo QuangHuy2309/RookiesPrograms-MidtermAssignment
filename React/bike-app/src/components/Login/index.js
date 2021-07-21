@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { Redirect, useHistory   } from "react-router-dom";
 import "./Login.css";
+import ModalAdd from "./ModalAddUser"
 import { postAuth } from "../../Utils/httpHelper";
 
 export default function Index(props) {
@@ -26,7 +27,7 @@ export default function Index(props) {
         document.cookie = `token=${response.data.accessToken}; max-age=86400; path=/;`;
         document.cookie = `username=${response.data.username}; max-age=86400; path=/;`;
         document.cookie = `email=${response.data.email}; max-age=86400; path=/;`;
-        document.cookie = `role=${response.data.roles[0]}; max-age=86400; path=/;`;
+        document.cookie = `role=${response.data.roles[0]}; max-age=86400; path=/;`; 
         document.cookie = `status=true; max-age=86400; path=/;`;
         alert("Loggin Success!");
         props.onStatus(response.data);
@@ -81,8 +82,9 @@ export default function Index(props) {
             </Col>
           </Row>
         </FormGroup>
-        <Button type="submit">Submit</Button>
+        <Button outline color="info" type="submit">Submit</Button>
       </Form>
+      <ModalAdd />
     </div>
   );
 }

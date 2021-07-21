@@ -12,3 +12,11 @@ export function isLogin() {
       return false;
     }
 }
+
+export function logOut(){
+  document.cookie = `token=; max-age=86400; path=/;`;
+    document.cookie = `username=; max-age=86400; path=/;`;
+    document.cookie = `email=; max-age=86400; path=/;`;
+    document.cookie = `role=; max-age=86400; path=/;`;
+    document.cookie = `status=false; max-age=86400; path=/;`;
+}

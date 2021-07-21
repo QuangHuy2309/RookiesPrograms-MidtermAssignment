@@ -84,7 +84,7 @@ export default function Index() {
             ))}
           </DropdownMenu>
         </ButtonDropdown>{' '}
-        <ModalAdd></ModalAdd>
+        <ModalAdd/>
         <Button outline color="link" onClick={() => getListProd()}><IoReloadSharp/></Button>
       </div>
       <Table bordered>

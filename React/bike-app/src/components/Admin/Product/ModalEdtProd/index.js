@@ -35,12 +35,12 @@ const ModalAdd = (props) => {
     }
   }, [modal]);
 
-  async function getProdList(){
+  function getProdList(){
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         // console.log(response.data);
-        setProd(response.data, setBase64(`data:image/jpeg;base64,${prod.photo}`));
-        
+        setProd(response.data);
+        setBase64(`data:image/jpeg;base64,${response.data.photo}`);
       }
     });
   }

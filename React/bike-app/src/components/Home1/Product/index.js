@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { get } from "../../../Utils/httpHelper";
+import { Link } from "react-router-dom";
 import img from "../../../assets/img/test.jpg";
 import "./Product.css";
-import { Link } from "react-router-dom";
 import {
   Card,
   CardImg,
@@ -36,6 +36,7 @@ export default class index extends Component {
       <Row>
         {this.state.prodList.map((prod) => (
           <Col key={prod.id} className="col-3">
+            <Link to={`/prodDetail/${prod.id}`} style={{ textDecoration: "none" }}>
             <Card>
               <CardImg top width="100%" src={`data:image/jpeg;base64,${prod.photo}`} alt="Card image cap" />
               <CardBody>
@@ -50,6 +51,7 @@ export default class index extends Component {
                 </div>
               </CardBody>
             </Card>
+            </Link>
           </Col>
         ))}
       </Row>
