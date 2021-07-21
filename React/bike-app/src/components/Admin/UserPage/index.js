@@ -4,7 +4,8 @@ import { getWithAuth, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./UserPage.css";
 import ModalEdt from "./ModalEdtUser";
-
+import ModalAdd from "./ModalAddUser";
+import Page from "../../Pagination";
 
 
 export default function Index() {
@@ -62,6 +63,7 @@ export default function Index() {
         <Button outline color="primary" onClick={() => setChoice("ADMIN")}>
           Employee List
         </Button>
+        <ModalAdd onEdit={(e) => getUpdated(e)}/>
       </div>
       <Table bordered>
         <thead>
@@ -97,6 +99,10 @@ export default function Index() {
           ))}
         </tbody>
       </Table>
+      <Page
+        total={Math.ceil(totalPage.current / size)}
+        onPageChange={(e) => setPageNum(e)}
+      />
     </div>
   );
 }
