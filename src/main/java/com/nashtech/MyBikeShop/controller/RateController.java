@@ -56,7 +56,7 @@ public class RateController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@DeleteMapping
+	@PostMapping("/delete")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public String deleteRateOfProduct(@RequestBody RateKey rate) {
 		return rateService.deleteRate(rate) ? StringUtils.TRUE : StringUtils.FALSE;

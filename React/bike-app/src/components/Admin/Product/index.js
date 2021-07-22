@@ -112,7 +112,7 @@ export default function Index() {
                 {format(new Date(prod.createDate), "dd/MM/yyyy HH:mm:ss")}
               </td>
               <td> {format(new Date(prod.updateDate), "dd/MM/yyyy HH:mm:ss")}</td>
-              <td> <ModalReview/></td>
+              <td> <ModalReview  id={prod.id}/></td>
               <td>
                 <Button color="danger" onClick={() => handleDelete(prod.id)}>
                   Delete

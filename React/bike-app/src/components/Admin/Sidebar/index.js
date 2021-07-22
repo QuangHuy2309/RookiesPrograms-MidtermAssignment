@@ -8,6 +8,7 @@ import { GiDutchBike } from "react-icons/gi";
 import { BiUserPin } from "react-icons/bi";
 import { logOut } from "../../../Utils/Auth";
 import { AiFillDatabase } from "react-icons/ai";
+import { MdBorderColor } from "react-icons/md";
 
 export default function Index(props) {
   const history = useHistory();
@@ -19,14 +20,17 @@ export default function Index(props) {
   return (
     <ProSidebar>
       <Menu iconShape="square">
+        <MenuItem icon={<AiFillDatabase />}>
+          <p onClick={() => props.onChoice("CATE")}>CATEGORIES</p>
+        </MenuItem>
         <MenuItem icon={<GiDutchBike />}>
           <p onClick={() => props.onChoice("PRODUCT")}>PRODUCT MANAGER</p>
         </MenuItem>
+        <MenuItem icon={<MdBorderColor />}>
+          <p onClick={() => props.onChoice("ORDER")}>ORDER MANAGER</p>
+        </MenuItem>
         <MenuItem icon={<BiUserPin />}>
           <p onClick={() => props.onChoice("USER")}>USER MANAGER</p>
-        </MenuItem>
-        <MenuItem icon={<AiFillDatabase />}>
-          <p onClick={() => props.onChoice("CATE")}>CATEGORIES</p>
         </MenuItem>
         <SubMenu title="Account">
           <MenuItem>Edit Information</MenuItem>

@@ -25,7 +25,7 @@ export default function Index() {
     }
     getProduct();
   }, [id]);
-  function addProductIdToCookie(){
+  function addProductIdToCookie() {
     let cartCookie = getCookie("cart");
     let check = cartCookie.trim().includes(id);
     if (!check) {
@@ -42,7 +42,7 @@ export default function Index() {
     addProductIdToCookie();
     history.push(`/Ordering`);
   }
-
+  
   return (
     <div>
       <Row>
@@ -70,11 +70,17 @@ export default function Index() {
                 color="info"
                 className="addtoCard-btn"
                 onClick={() => handleAddCart()}
+                disabled={prod.quantity === 0 ? "true" : ""}
               >
-                <FaCartPlus /> Add to Cart
+                <FaCartPlus /> {prod.quantity === 0 ? ("Out of stock ") :("Add to Cart")}
               </Button>
-              <Button color="info" onClick={() => handleOrder()} className="buyNow-btn">
-                Buy Now
+              <Button
+                color="info"
+                disabled={prod.quantity === 0 ? "true" : ""}
+                onClick={() => handleOrder()}
+                className="buyNow-btn"
+              >
+                {prod.quantity === 0 ? ("Out of stock ") :("Buy Now")} 
               </Button>
             </div>
           </div>

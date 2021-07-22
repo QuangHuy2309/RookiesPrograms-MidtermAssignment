@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 
 const ModalAdd = (props) => {
-  const { buttonLabel, id } = props;
+  const { id } = props;
   const [cateList, setCateList] = useState([]);
   const [modal, setModal] = useState(false);
   const [prod, setProd] = useState(Object);
@@ -28,14 +28,13 @@ const ModalAdd = (props) => {
       getProd();
       get("/public/categories").then((response) => {
         if (response.status === 200) {
-           setCateList([...response.data]);
+          setCateList([...response.data]);
         }
       });
-      
     }
   }, [modal]);
 
-  function getProd(){
+  function getProd() {
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         // console.log(response.data);
@@ -67,11 +66,10 @@ const ModalAdd = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    
-    
-      const byteArr = base64.split(",");
-      let photo = byteArr[1];
-    
+
+    const byteArr = base64.split(",");
+    let photo = byteArr[1];
+
     // console.log(photo);
     const body = JSON.stringify({
       id: e.target.id.value,
@@ -152,12 +150,7 @@ const ModalAdd = (props) => {
             </FormGroup>
             <FormGroup>
               <Label for="exampleSelect">Type</Label>
-              <Input
-                type="select"
-                name="select"
-                id="exampleSelect"
-                required
-              >
+              <Input type="select" name="select" id="exampleSelect" required>
                 {cateList.map((cate) => (
                   <option
                     key={cate.id}

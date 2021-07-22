@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 import Product from "./Product";
 import User from "./UserPage";
 import Cate from "./Categories";
+import Order from "./Order";
 import { Route } from "react-router-dom";
 
 
@@ -19,6 +20,7 @@ export default function Index() {
     if (choice === "PRODUCT") {return (<Product/>)}
     else if (choice === "USER") {return (<User/>)}
     else if (choice === "CATE") {return (<Cate/>)}
+    else if (choice === "ORDER") {return (<Order/>)}
   }
   function handleChoiceChange(e){
       console.log(e);

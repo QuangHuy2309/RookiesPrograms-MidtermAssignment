@@ -54,3 +54,12 @@ export function del(url) {
     },
   });
 }
+export function delWithBody(url, body) {
+  return axios.delete(endpoint + url, body, {
+    headers: { 
+      Authorization: `Bearer ${token}` ,
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  });
+}
