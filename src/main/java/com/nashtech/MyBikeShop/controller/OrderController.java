@@ -176,4 +176,15 @@ public class OrderController {
 	public List<OrderEntity> getOrder(@RequestParam(name = "pagenum") int page, @RequestParam(name = "size") int size) {
 		return orderService.getOrderPage(page, size);
 	}
+	
+	@PutMapping("updateStatus/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String updateStatusOrder(@PathVariable(name = "id") int id) {
+		try {
+			String result = orderService.updateStatusOrder(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			return result;
+		} catch (NoSuchElementException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
+		}
+	}
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function Order() {
+export default function index() {
     return (
         <div>
-            Hello, I'm Order
+            Hello, change pass
         </div>
     )
 }

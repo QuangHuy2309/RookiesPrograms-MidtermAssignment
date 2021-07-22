@@ -15,6 +15,7 @@ public interface OrderService {
 	public OrderEntity createOrder(OrderDTO order);
 	public boolean deleteOrder(int id);
 	public boolean updateOrder(OrderDTO order);
+	public boolean updateStatusOrder(int id);
 	public List<OrderEntity> findOrderByCustomer(int num, int size, String email);
 //	public OrderEntity findOrderByProducts(String id);
 }

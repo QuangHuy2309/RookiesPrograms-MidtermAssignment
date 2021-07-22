@@ -20,20 +20,22 @@ export default function Index(props) {
   return (
     <ProSidebar>
       <Menu iconShape="square">
-        <MenuItem icon={<AiFillDatabase />}>
-          <p onClick={() => props.onChoice("CATE")}>CATEGORIES</p>
+        <MenuItem icon={<AiFillDatabase/>} onClick={() => props.onChoice("CATE")}>
+         CATEGORIES
         </MenuItem>
-        <MenuItem icon={<GiDutchBike />}>
-          <p onClick={() => props.onChoice("PRODUCT")}>PRODUCT MANAGER</p>
+        <MenuItem icon={<GiDutchBike/>} onClick={() => props.onChoice("PRODUCT")}>
+          PRODUCT MANAGER
         </MenuItem>
-        <MenuItem icon={<MdBorderColor />}>
-          <p onClick={() => props.onChoice("ORDER")}>ORDER MANAGER</p>
+        <MenuItem icon={<MdBorderColor />} onClick={() => props.onChoice("ORDER")}>
+         ORDER MANAGER
         </MenuItem>
-        <MenuItem icon={<BiUserPin />}>
-          <p onClick={() => props.onChoice("USER")}>USER MANAGER</p>
+        <MenuItem icon={<BiUserPin />} onClick={() => props.onChoice("USER")}>
+          USER MANAGER
         </MenuItem>
         <SubMenu title="Account">
           <MenuItem>Edit Information</MenuItem>
+          <MenuItem onClick={() => props.onChoice("CHANGEPASS")}> 
+          Change Password</MenuItem>
           <MenuItem onClick={() => LogOut()}>Log Out</MenuItem>
         </SubMenu>
       </Menu>

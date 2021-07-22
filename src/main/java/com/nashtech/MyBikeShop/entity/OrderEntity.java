@@ -49,11 +49,11 @@ public class OrderEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "customerid")
-	@JsonBackReference
+//	@JsonBackReference
 	private PersonEntity customers;
 
 //	@JsonManagedReference
-	@JsonIgnore
+//	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
 	Set<OrderDetailEntity> orderDetails = new HashSet<>();
 

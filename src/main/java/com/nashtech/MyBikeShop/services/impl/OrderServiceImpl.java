@@ -159,7 +159,12 @@ public class OrderServiceImpl implements OrderService {
 //			throw new JsonGetDataException(ex.getMessage());
 //		} 
 	}
-
+	public boolean updateStatusOrder(int id) {
+		OrderEntity order = getOrders(id).get();
+		order.setStatus(!order.isStatus());
+		orderRepository.save(order);
+		return true;
+	}
 	public List<OrderEntity> findOrderByCustomer(int num, int size, String email) {
 		// PersonEntity person = personService.getPerson(email);
 		Sort sortable = Sort.by("timebought").descending();

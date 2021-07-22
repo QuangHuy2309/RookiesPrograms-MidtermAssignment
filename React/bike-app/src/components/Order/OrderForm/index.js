@@ -8,7 +8,7 @@ import "./Order.css";
 export default function Index() {
   const [prodList, setProdList] = useState([]);
   const [user, setUser] = useState(Object);
-  const [quantity, setQuantity] = useState([]);
+  // const [quantity, setQuantity] = useState([]);
   let totalCost = useRef(0);
 
   useEffect(() => {
