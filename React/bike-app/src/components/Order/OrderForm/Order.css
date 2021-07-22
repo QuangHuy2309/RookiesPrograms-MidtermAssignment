@@ -1,0 +1,34 @@
+.login{
+    display: flex;
+    margin:3rem;
+}
+.login-form{
+    width: 70%;
+    margin: auto;
+    border: 1px solid #333;
+    border-width: medium;
+    padding: 2rem;
+    margin-bottom: 5rem;
+}
+.head-login{
+    margin-bottom: 3rem;
+}
+.input-login{
+    width: 12rem;
+}
+.img-order{
+    text-align: left;
+    height: 200px;
+}
+.prod-form{
+    border: 0.25px solid #333;
+    border-width: medium;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+.info-prod-order{
+    text-align: left;
+}
+.quantity-prod{
+    width: 2rem;
+}

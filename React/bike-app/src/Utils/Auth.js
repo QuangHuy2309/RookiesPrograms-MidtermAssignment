@@ -1,10 +1,20 @@
 import { getCookie } from "./Cookie";
 
-export function isLogin() {
+export function isAdminLogin() {
   const status = getCookie("status");
   const role = getCookie("role");
   if ((status === "true") && (role === "ROLE_ADMIN")) {
-    console.log("isLogin TRUE");  
+    return true;
+}
+  else {
+    console.log("isLogin FALSE");  
+      return false;
+    }
+}
+export function isCustomerLogin() {
+  const status = getCookie("status");
+  const role = getCookie("role");
+  if ((status === "true") && (role === "ROLE_USER")) {
     return true;
 }
   else {
@@ -18,5 +28,6 @@ export function logOut(){
     document.cookie = `username=; max-age=86400; path=/;`;
     document.cookie = `email=; max-age=86400; path=/;`;
     document.cookie = `role=; max-age=86400; path=/;`;
+    document.cookie = `cart=; max-age=86400; path=/;`;
     document.cookie = `status=false; max-age=86400; path=/;`;
 }

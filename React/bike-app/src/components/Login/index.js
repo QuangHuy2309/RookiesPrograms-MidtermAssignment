@@ -5,11 +5,10 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText,
   Row,
   Col,
 } from "reactstrap";
-import { Redirect, useHistory   } from "react-router-dom";
+import { useHistory   } from "react-router-dom";
 import "./Login.css";
 import ModalAdd from "./ModalAddUser"
 import { postAuth } from "../../Utils/httpHelper";
@@ -29,6 +28,7 @@ export default function Index(props) {
         document.cookie = `email=${response.data.email}; max-age=86400; path=/;`;
         document.cookie = `role=${response.data.roles[0]}; max-age=86400; path=/;`; 
         document.cookie = `status=true; max-age=86400; path=/;`;
+        document.cookie = `cart=; max-age=86400; path=/;`;
         alert("Loggin Success!");
         props.onStatus(response.data);
         if (response.data.roles[0] === "ROLE_USER"){

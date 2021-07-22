@@ -15,29 +15,14 @@ import {
 } from "reactstrap";
 
 const ModalAdd = (props) => {
-  const { id } = props;
   const [modal, setModal] = useState(false);
-  const [cate, setCate] = useState(Object);
   const toggle = () => setModal(!modal);
 
-  function handleFieldChange(e, key) {
-    setCate({ [key]: e.target.value });
-  }
-  useEffect(() => {
-    if (modal) {
-      getWithAuth(`/categories/${id}`).then((response) => {
-        if (response.status === 200) {
-          // console.log(response.data);
-          setCate(response.data);
-        }
-      });
-    }
-  }, [modal]);
+
 
   function handleSubmit(e) {
     e.preventDefault();
     const body = JSON.stringify({
-      id: e.target.id.value,
       name: e.target.name.value,
       description: e.target.description.value,
     });
@@ -70,9 +55,7 @@ const ModalAdd = (props) => {
                 type="text"
                 name="name"
                 id="exampleFullName"
-                value={cate.name}
                 required
-                onChange={(e) => handleFieldChange(e, "name")}
               />
             </FormGroup>
             <FormGroup>
@@ -81,9 +64,7 @@ const ModalAdd = (props) => {
                 type="textarea"
                 name="description"
                 id="exampleText"
-                value={cate.description}
                 required
-                onChange={(e) => handleFieldChange(e, "description")}
               />
             </FormGroup>
             <br />

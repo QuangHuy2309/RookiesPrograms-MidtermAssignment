@@ -25,7 +25,7 @@ const ModalAdd = (props) => {
   }
   useEffect(() => {
     if (modal) {
-      getProdList();
+      getProd();
       get("/public/categories").then((response) => {
         if (response.status === 200) {
            setCateList([...response.data]);
@@ -35,7 +35,7 @@ const ModalAdd = (props) => {
     }
   }, [modal]);
 
-  function getProdList(){
+  function getProd(){
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         // console.log(response.data);

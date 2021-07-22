@@ -76,17 +76,18 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Transactional
 	public OrderEntity createOrder(OrderDTO orderDTO) {
+		
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
 		orderEntity.setTimebought(LocalDateTime.now());
+		PersonEntity person = personService.getPerson(orderDTO.getCustomersEmail());
+		orderEntity.setCustomers(person);
 		OrderEntity orderSaved = orderRepository.save(orderEntity);
 		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
 			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
-
 			OrderDetailsKey id = new OrderDetailsKey(orderSaved.getId(),detailDTO.getProductId() );
 			detail.setId(id);
 			boolean result = orderDetailService.createDetail(detail);
 			if (!result) throw new ObjectPropertiesIllegalException("Failed in create detail order");
-
 		}
 		return orderRepository.getById(orderSaved.getId());
 	}

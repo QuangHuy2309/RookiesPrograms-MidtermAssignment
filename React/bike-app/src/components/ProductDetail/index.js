@@ -1,33 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Button } from "reactstrap";
 import { Link } from "react-router-dom";
-import img from "../../assets/img/test.jpg";
+import { useHistory } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
 import { FaCartPlus } from "react-icons/fa";
-import Review from "./Review/"
+import Review from "./Review/";
 import "./ProductDetail.css";
+import { getCookie } from "../../Utils/Cookie";
 
 export default function Index() {
+  const history = useHistory();
   let { id } = useParams();
   const [prod, setProd] = useState(Object);
-  
+
   useEffect(() => {
-      async function getProduct(){
-        await get(`/public/product/search/${id}`).then((response) => {
+    async function getProduct() {
+      await get(`/public/product/search/${id}`).then((response) => {
         if (response.status === 200) {
           console.log(response.data);
           setProd(response.data);
         }
       });
-      } 
-      getProduct()
+    }
+    getProduct();
   }, [id]);
+  function addProductIdToCookie(){
+    let cartCookie = getCookie("cart");
+    let check = cartCookie.trim().includes(id);
+    if (!check) {
+      cartCookie = cartCookie.concat(` ${id}`);
+      cartCookie = cartCookie.trim();
+      document.cookie = `cart=${cartCookie}; max-age=86400; path=/;`;
+    }
+  }
+  function handleAddCart() {
+    addProductIdToCookie();
+    history.push(`/`);
+  }
+  function handleOrder() {
+    addProductIdToCookie();
+    history.push(`/Ordering`);
+  }
+
   return (
     <div>
       <Row>
         <Col className="col-5">
-          <img src={`data:image/jpeg;base64,${prod.photo}`} id="img-prod" alt="" />
+          <img
+            src={`data:image/jpeg;base64,${prod.photo}`}
+            id="img-prod"
+            alt=""
+          />
         </Col>
         <Col>
           <div className="info-prod">
@@ -41,20 +65,25 @@ export default function Index() {
             <h5>BRAND :: {prod.brand}</h5>
             {/* <h5>TYPE :: {prod.categories.name}</h5> */}
             <div className="prod-btn">
-            <Link to={`/prodDetail/${prod.id}`} className="addtoCard-btn">
-                    <FaCartPlus/>  Add to Cart
-                    </Link>
-            <Link to={`/Ordering/${prod.id}`} className="buyNow-btn">
-                    Buy Now
-                    </Link>
-                    </div>
+              <Button
+                outline
+                color="info"
+                className="addtoCard-btn"
+                onClick={() => handleAddCart()}
+              >
+                <FaCartPlus /> Add to Cart
+              </Button>
+              <Button color="info" onClick={() => handleOrder()} className="buyNow-btn">
+                Buy Now
+              </Button>
+            </div>
           </div>
         </Col>
       </Row>
-      <br/>
+      <br />
       <h4 className="descrip-prod">{prod.description}</h4>
       <div>
-        <Review id={prod.id}/>
+        <Review id={prod.id} />
       </div>
     </div>
   );

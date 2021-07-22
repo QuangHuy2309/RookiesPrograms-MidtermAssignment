@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
 import { getCookie } from "../../Utils/Cookie";
 import { logOut } from "../../Utils/Auth";
@@ -11,21 +11,20 @@ import {
   NavbarToggler,
   NavbarBrand,
   Nav,
-  NavItem,
-  NavLink,
+  Button,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavbarText,
 } from "reactstrap";
 import { TiShoppingCart } from "react-icons/ti";
 
 export default function Index(props) {
+  const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
   const [cateList, setCateList] = useState([]);
   const [status, setStatus] = useState([getCookie("status")]);
-  let username, email, role;
+  let email;
   useEffect(() => {
     get("/public/categories").then((response) => {
       if (response.status === 200) {
@@ -36,9 +35,9 @@ export default function Index(props) {
   }, []);
   useEffect(() => {
     if (status){
-      username = getCookie("username");
+      // username = getCookie("username");
       email = getCookie("email");
-      role = getCookie("role");
+      // role = getCookie("role");
     }
   }, [status]);
 
@@ -48,8 +47,13 @@ export default function Index(props) {
     logOut();
     props.onLogOut(e);
   }
+  function handleOrder() {
+    let cartCookie = getCookie("cart");
+    if (cartCookie.trim().length !== 0){
+      history.push(`/Ordering`);
+    }
+  }
   function isLogging() {
-    console.log(`IS LOGGING STATUS ${status}`)
     const name = getCookie("username");
     if (status && name !== "") {
       return (
@@ -115,42 +119,11 @@ export default function Index(props) {
         </Collapse>
         {
           isLogging()
-          // props.status ? (
-          // <>
-          // {/* <Collapse isOpen={isOpen} navbar> */}
-          // <Nav className="mr-auto" navbar>
-          //   <UncontrolledDropdown nav inNavbar>
-          //     <DropdownToggle nav caret>
-          //       Hello, {props.username}
-          //     </DropdownToggle>
-          //     <DropdownMenu>
-          //       <DropdownItem divider />
-          //       <DropdownItem>
-          //         <Link
-          //           to={`/Info/${props.email}`}
-          //           style={{ textDecoration: "none" }}
-          //         >
-          //           Information
-          //         </Link>
-          //       </DropdownItem>
-          //       <DropdownItem divider />
-          //       <DropdownItem>
-          //         <p onClick={(e) => handleLogOut(e)}>LogOut</p>
-          //       </DropdownItem>
-          //     </DropdownMenu>
-          //   </UncontrolledDropdown>
-          // </Nav>
-          // {/* </Collapse> */}
-          // </>
-          // ) : (
-          //   <Link to={`/Login`} style={{ textDecoration: "none" }}>
-          //     Login
-          //   </Link>
-          // )
+          
         }
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <Button color="link" onClick={() => handleOrder()} >
           <TiShoppingCart size={50} />
-        </Link>
+        </Button>
       </Navbar>
     </>
   );

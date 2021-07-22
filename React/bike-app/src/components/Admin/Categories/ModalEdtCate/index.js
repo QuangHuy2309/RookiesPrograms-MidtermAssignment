@@ -15,8 +15,24 @@ import {
 } from "reactstrap";
 
 const ModalAdd = (props) => {
+  const { id } = props;
   const [modal, setModal] = useState(false);
+  const [cate, setCate] = useState(Object);
   const toggle = () => setModal(!modal);
+
+  function handleFieldChange(e, key) {
+    setCate({ [key]: e.target.value });
+  }
+  useEffect(() => {
+    if (modal) {
+      getWithAuth(`/categories/${id}`).then((response) => {
+        if (response.status === 200) {
+          // console.log(response.data);
+          setCate(response.data);
+        }
+      });
+    }
+  }, [modal]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -31,15 +47,15 @@ const ModalAdd = (props) => {
     post("/categories", body)
       .then((response) => {
         console.log(response.data);
-        alert("EDIT SUCCESS");
+        alert("ADDING SUCCESS");
       })
       .catch((error) => console.log(error));
     // props.onEdit(e);
   }
   return (
     <div>
-      <Button color="warning" onClick={toggle}>
-        EDIT
+      <Button  color="warning" onClick={toggle} >
+        Edit
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Cate Information</ModalHeader>
@@ -47,11 +63,24 @@ const ModalAdd = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" required />
+              <Input
+                type="text"
+                name="id"
+                id="exampleEmail"
+                value={cate.id}
+                required
+              />
             </FormGroup>
             <FormGroup>
               <Label for="exampleFullName">Name</Label>
-              <Input type="text" name="name" id="exampleFullName" required />
+              <Input
+                type="text"
+                name="name"
+                id="exampleFullName"
+                value={cate.name}
+                required
+                onChange={(e) => handleFieldChange(e, "name")}
+              />
             </FormGroup>
             <FormGroup>
               <Label for="exampleText">Description</Label>
@@ -59,7 +88,9 @@ const ModalAdd = (props) => {
                 type="textarea"
                 name="description"
                 id="exampleText"
+                value={cate.description}
                 required
+                onChange={(e) => handleFieldChange(e, "description")}
               />
             </FormGroup>
             <br />

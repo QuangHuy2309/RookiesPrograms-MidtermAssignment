@@ -76,7 +76,7 @@ public class OrderControllerTest {
 	@WithMockUser(roles = "USER") 
 	public void createOrderTest() throws Exception {
 		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
-		OrderDTO orderDTO = new OrderDTO((float) 3.5, "ABC", true,customers);
+		OrderDTO orderDTO = new OrderDTO((float) 3.5, "ABC", true,"lqhuy2309@gmail.com");
 		OrderEntity order = new OrderEntity(1,(float) 3.5, "ABC", true, new PersonEntity(customers));
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		

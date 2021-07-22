@@ -4,12 +4,14 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Admin from "./components/Admin";
+import Order from "./components/Order";
 import ProductByType from "./components/ProductByType";
 import ProductDetail from "./components/ProductDetail";
 import Home1 from "./components/Home1/Home1";
 import { BrowserRouter, Route } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
+import PrivateRouteUser from "./components/PrivateRouteUser";
 import { getCookie } from "./Utils/Cookie";
 
 function App() {
@@ -54,7 +56,8 @@ function App() {
           <Login onStatus={(e) => handleStatusChange(e)} />
           <Footer />
         </Route>
-        <PrivateRoute exact path="/Admin" component={Admin} />
+        <PrivateRouteAdmin exact path="/Admin" component={Admin} />
+        <PrivateRouteUser exact path="/Ordering" component={Order} />
       </div>
     </BrowserRouter>
   );

@@ -77,11 +77,9 @@ public class OrderEntity {
 	public OrderEntity(OrderDTO order) {
 		super();
 		this.id = order.getId();
-		this.timebought = order.getTimebought();
 		this.totalCost = order.getTotalCost();
 		this.address = order.getAddress();
 		this.status = order.isStatus();
-		this.customers = new PersonEntity(order.getCustomers());
 	}
 
 

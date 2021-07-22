@@ -3,6 +3,7 @@ import { get, del } from "../../../Utils/httpHelper";
 import Page from "../../Pagination";
 import ModalEdt from "./ModalEdtProd";
 import ModalAdd from "./ModalAddProd";
+import ModalReview from "./ModalReview";
 import { format } from "date-fns";
 import { IoReloadSharp } from "react-icons/io5";
 import "./Product.css"
@@ -96,6 +97,7 @@ export default function Index() {
             <th>PRICE</th>
             <th>CREATE DAY</th>
             <th>LAST UPDATE DAY</th>
+            <th>Review</th>
             <th></th>
           </tr>
         </thead>
@@ -110,6 +112,7 @@ export default function Index() {
                 {format(new Date(prod.createDate), "dd/MM/yyyy HH:mm:ss")}
               </td>
               <td> {format(new Date(prod.updateDate), "dd/MM/yyyy HH:mm:ss")}</td>
+              <td> <ModalReview/></td>
               <td>
                 <Button color="danger" onClick={() => handleDelete(prod.id)}>
                   Delete
