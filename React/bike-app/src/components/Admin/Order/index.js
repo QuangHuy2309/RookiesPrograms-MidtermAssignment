@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Page from "../../Pagination";
-import { getWithAuth, put, get } from "../../../Utils/httpHelper";
+import { getWithAuth, put, get, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./Order.css";
 import {
@@ -20,8 +20,16 @@ export default function Order() {
   let totalPage = useRef(0);
 
   useEffect(() => {
+    getWithAuth(`/order/totalOrder`).then((response) => {
+      if (response.status === 200) {
+        totalPage.current = response.data;
+      }
+    });
     getListOrder();
   }, []);
+  useEffect(() => {
+    getListOrder();
+  }, [pagenum]);
 
   function getListOrder(){
     getWithAuth(`/order?pagenum=${pagenum}&size=${size}`).then((response) => {
@@ -60,6 +68,18 @@ export default function Order() {
   function handleProductList(index){
     getProdList(index);
     setStatusListProd(true);
+  }
+  function handleDelete(id) {
+    del(`/order/${id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          alert("DELETE SUCCES");
+          getListOrder();
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
   }
   function showList(){
       if(statusListProd){
@@ -100,6 +120,7 @@ export default function Order() {
             <th>ADDRESS</th>
             <th>PRODUCT</th>
             <th>STATUS</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -120,6 +141,11 @@ export default function Order() {
                 ) : (
                     <Button color="warning" onClick={() => handleDeliveryButton(order.id, index)}>Not Delivery</Button>
                 )}
+              </td>
+              <td>
+              <Button color="danger" onClick={() => handleDelete(order.id)}>
+                  Delete
+                </Button>
               </td>
             </tr>
           ))}

@@ -6,7 +6,7 @@ import User from "./UserPage";
 import Cate from "./Categories";
 import Order from "./Order";
 import ChangePass from "./ChangePassword";
-import { Route } from "react-router-dom";
+import "./Admin.css"
 
 
 export default function Index() {
@@ -49,7 +49,7 @@ export default function Index() {
         <Col className="col-2">
             <Sidebar onChoice={(e) => handleChoiceChange(e)} />
         </Col>
-        <Col>
+        <Col className="col">
         {showRoute()}
         </Col>
       </Row>
