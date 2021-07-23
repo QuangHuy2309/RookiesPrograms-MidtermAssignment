@@ -36,7 +36,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1")
 public class AuthController {
 
 	final private AuthenticationManager authenticationManager;
@@ -63,7 +63,7 @@ public class AuthController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized, Login Failed!", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Login not found", content = @Content),
 			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
-	@PostMapping("/signin")
+	@PostMapping("/auth/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -86,7 +86,7 @@ public class AuthController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
-	@PostMapping("/signup")
+	@PostMapping("/auth/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody PersonDTO signUpRequest) {
 
 		if (personRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -103,7 +103,7 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 	
-	@GetMapping("/logout")
+	@GetMapping("/auth/logout")
 	public String logOut(HttpServletRequest request) {
 		String token = request.getHeader("Authorization");
 		String[] arrStr = token.split(" ");

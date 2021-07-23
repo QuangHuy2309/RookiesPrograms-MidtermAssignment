@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
@@ -36,7 +37,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1")
 public class CategoriesController {
 	@Autowired
 	CategoriesService cateService;
@@ -48,13 +49,20 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/{id}")
+	@GetMapping("/categories/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public CategoriesEntity findCategories(@PathVariable(name = "id") int id) {
 		return cateService.getCategories(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find categories with Id: " + id));
 	}
-
+	
+	@GetMapping("/categories/checkName")
+	@PreAuthorize("hasRole('ADMIN')")
+	public boolean findCategories(@RequestParam(name = "name") String name, 
+			@RequestParam(name = "id") int id) {
+		return cateService.checkExistName(id,name);
+	}
+	
 	@Operation(summary = "Create/Update Categories")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriesEntity.class)) }),
@@ -62,7 +70,7 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PostMapping
+	@PostMapping("/categories")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String createCategories(@RequestBody CategoriesDTO newOrder) {
 		try {
@@ -73,7 +81,19 @@ public class CategoriesController {
 			return StringUtils.FALSE;
 		}
 	}
+	
+	@PutMapping("/categories/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public String updateCategories(@RequestBody CategoriesDTO newOrder, @PathVariable(name = "id") int id) {
+		try {
+			String result = cateService.updateCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
+			return result;
 
+		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
+			return StringUtils.FALSE;
+		}
+	}
+	
 	@Operation(summary = "Delete Categories")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = CategoriesEntity.class)) }),
@@ -81,7 +101,7 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/categories/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteCategories(@PathVariable(name = "id") int id) {
 		try {

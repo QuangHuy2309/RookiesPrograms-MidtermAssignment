@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { get, del } from "../../../Utils/httpHelper";
 import ModalEdt from "./ModalEdtCate"
 import ModalAdd from "./ModalAddCate"
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { MdDelete } from "react-icons/md";
 import {
     ButtonDropdown,
     DropdownToggle,
@@ -11,6 +14,7 @@ import {
     Button,
   } from "reactstrap";
 
+  toast.configure()
 export default function Index() {
   const [cateList, setCateList] = useState([]);
 
@@ -24,8 +28,13 @@ export default function Index() {
         }
       });
   }
+  const notify = () =>{
+    toast('Delete successfully!!!', {position: toast.POSITION.TOP_RIGHT});
+  }
   function handleDelete(id){
-      console.log("DELETE CLICKED");
+      // console.log("DELETE CLICKED");
+      // notify();
+     
       del(`/categories/${id}`)
       .then((response) => {
         if (response.status === 200) {

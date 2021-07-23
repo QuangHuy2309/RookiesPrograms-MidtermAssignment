@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	OrderService orderService;
-	
+
 	@Autowired
 	CategoriesService cateService;
 
@@ -78,16 +78,23 @@ public class ProductServiceImpl implements ProductService {
 
 	public ProductEntity createProduct(ProductDTO productDTO) {
 		try {
-			ProductEntity productCheck = productRepository.findById(productDTO.getId()).orElse(null);
-			if (productCheck == null) {
+			boolean checkName = existName(productDTO.getName());
+			boolean checkId = existId(productDTO.getId());
+			if (checkId) {
+				throw new ObjectAlreadyExistException(
+						"Failed! There is a product with this id. Please change product id");
+			}
+			else if (checkName) {
+				throw new ObjectAlreadyExistException(
+						"Failed! There is a product with this name. Please change product name");
+			}
+			else{
 				CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
 				ProductEntity productEntity = new ProductEntity(productDTO, cate);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
 				return productRepository.save(productEntity);
-			} else
-				throw new ObjectAlreadyExistException(
-						"Failed! There is a product with this id. Please change product ID");
+			} 
 		} catch (DataAccessException ex) {
 			throw new ObjectNotFoundException("Failed!" + ex.getMessage());
 		} catch (IllegalArgumentException ex) {
@@ -127,10 +134,11 @@ public class ProductServiceImpl implements ProductService {
 		product.setUpdateDate(LocalDateTime.now());
 		return product;
 	}
+
 	public int getNumProductByCategories(int id) {
 		return productRepository.countByCategoriesId(id);
 	}
-	
+
 	public boolean storeImage(MultipartFile file, String prodId) throws IOException {
 //		byte[] fileContent = FileUtils.readFileToByteArray((File) file);
 //		ProductEntity prod = productRepository.getById(prodId);
@@ -141,6 +149,13 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
+	public boolean existName(String name) {
+		return productRepository.existsByName(name);
+	}
+
+	public boolean existId(String id) {
+		return productRepository.existsById(id);
+	}
 //	public MultipartFile convertToImg(String encodedString) throws IOException {
 //		Date date = Calendar.getInstance().getTime();
 //		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getWithAuth, post } from "../../../../Utils/httpHelper";
+import { getWithAuth, post, put } from "../../../../Utils/httpHelper";
 import "./ModalEdtCate.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Modal,
@@ -14,51 +16,82 @@ import {
   FormText,
 } from "reactstrap";
 
-const ModalAdd = (props) => {
+toast.configure();
+const ModalEdt = (props) => {
   const { id } = props;
   const [modal, setModal] = useState(false);
   const [cate, setCate] = useState(Object);
+  const [checkName, setCheckName] = useState(true);
+  const [nameError, setNameError] = useState("");
   const toggle = () => setModal(!modal);
 
-  function handleFieldChange(e, key) {
-    setCate({ [key]: e.target.value });
-  }
   useEffect(() => {
     if (modal) {
       getWithAuth(`/categories/${id}`).then((response) => {
         if (response.status === 200) {
           // console.log(response.data);
           setCate(response.data);
+
         }
       });
+      setNameError("");
     }
   }, [modal]);
+  function handleFieldChange(e, key) {
+    setCate({ [key]: e.target.value });
+    if (key === "name") {
+      if (e.target.value.trim() == "") {
+        setNameError("Categories name must not blank");
+      }
+      else {
+        setNameError("");
+        setCheckName(true);
+      }
+    }
+  }
 
+  function checkNameCate(name, id) {
+    getWithAuth(`/categories/checkName?name=${name}&id=${id}`).then(
+      (response) => {
+        if (response.status === 200) {
+          if (response.data) setNameError("");
+          else {
+            setNameError("Categories name is duplicated. Choose another name");
+            setCheckName(false);
+          }
+        }
+      }
+    );
+  }
   function handleSubmit(e) {
     e.preventDefault();
-    const body = JSON.stringify({
-      id: e.target.id.value,
-      name: e.target.name.value,
-      description: e.target.description.value,
-    });
-    console.log(body);
-    // console.log(e.target.dob.value);
-
-    post("/categories", body)
-      .then((response) => {
-        console.log(response.data);
-        alert("ADDING SUCCESS");
+    const name = e.target.name.value.trim();
+    const id = e.target.id.value;
+    checkNameCate(name, id);
+    if (checkName) {
+      const body = JSON.stringify({
+        id: e.target.id.value,
+        name: e.target.name.value,
+        description: e.target.description.value,
+      });
+      put(`/categories/${id}`, body)
+        .then((response) => {
+          console.log(response.data);
+      toast("Edit successfully!!!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
       })
       .catch((error) => console.log(error));
-    // props.onEdit(e);
+    }
   }
   return (
     <div>
-      <Button  color="warning" onClick={toggle} >
+      <Button color="warning" onClick={toggle}>
         Edit
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Cate Information</ModalHeader>
+        <ModalHeader toggle={toggle}>Categories Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -69,6 +102,7 @@ const ModalAdd = (props) => {
                 id="exampleEmail"
                 value={cate.id}
                 required
+                disabled
               />
             </FormGroup>
             <FormGroup>
@@ -81,6 +115,7 @@ const ModalAdd = (props) => {
                 required
                 onChange={(e) => handleFieldChange(e, "name")}
               />
+              <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="exampleText">Description</Label>
@@ -107,4 +142,4 @@ const ModalAdd = (props) => {
   );
 };
 
-export default ModalAdd;
+export default ModalEdt;

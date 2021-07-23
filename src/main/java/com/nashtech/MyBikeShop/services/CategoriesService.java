@@ -12,5 +12,6 @@ public interface CategoriesService {
 	public Optional<CategoriesEntity> getCategories(int id);
 	public boolean createCategories(CategoriesDTO categories);
 	public boolean deleteCategories(int id);
-//	public boolean updateCategories(CategoriesDTO categories);
+	public boolean checkExistName(int id, String name);
+	public boolean updateCategories(CategoriesDTO categories);
 }

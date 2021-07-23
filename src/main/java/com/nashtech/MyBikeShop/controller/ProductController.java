@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/v1")
 public class ProductController {
 	@Autowired
 	private ProductService productService;
@@ -50,10 +50,21 @@ public class ProductController {
 			@ApiResponse(responseCode = "403", description = "Forbidden: Only ADMIN can create Product", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PostMapping
+	@PostMapping("/product")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ProductEntity saveProduct(@RequestBody ProductDTO newProduct) {
 				return productService.createProduct(newProduct);
+	}
+	
+	@GetMapping("/product/checkExistId/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public boolean checkExistId(@PathVariable(name = "id") String id) {
+				return productService.existId(id);
+	}
+	@GetMapping("/product/checkExistName/{name}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public boolean checkExistName(@PathVariable(name = "name") String name) {
+				return productService.existName(name);
 	}
 
 	@Operation(summary = "Delete a Product by id")
@@ -64,7 +75,7 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/product/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteProduct(@PathVariable(name = "id") String id) {
 		try {
@@ -82,9 +93,9 @@ public class ProductController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PutMapping
+	@PutMapping("/product/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String editProduct(@RequestBody ProductDTO product) {
+	public String editProduct(@RequestBody ProductDTO product, @PathVariable(name = "id") String id) {
 		return productService.updateProduct(product) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 	

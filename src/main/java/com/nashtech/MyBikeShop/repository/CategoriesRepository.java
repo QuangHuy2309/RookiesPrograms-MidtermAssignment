@@ -9,7 +9,7 @@ import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 
 @Repository
 public interface CategoriesRepository extends JpaRepository<CategoriesEntity, Integer> {
-
-	List<CategoriesEntity> findByName(String name);
-
+	Boolean existsByName(String name);
+	CategoriesEntity findByName(String name);
+	int countByName(String name);
 }

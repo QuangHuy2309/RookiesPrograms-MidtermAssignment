@@ -43,8 +43,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 	public boolean createCategories(CategoriesDTO categoriesDTO) {
 		try {
-			List<CategoriesEntity> categoriesFind = categoriesRepository.findByName(categoriesDTO.getName());
-			if (categoriesFind.size() < 2) {
+			boolean checkName = categoriesRepository.existsByName(categoriesDTO.getName());
+			if (!checkName) {
 				CategoriesEntity categoriesConvert = new CategoriesEntity(categoriesDTO);
 				categoriesRepository.save(categoriesConvert);
 				return true;
@@ -52,21 +52,40 @@ public class CategoriesServiceImpl implements CategoriesService {
 				throw new ObjectAlreadyExistException("There is a category with the same Name");
 		} catch (IllegalArgumentException | ConstraintViolationException ex) {
 			return false;
-			//throw new ObjectContainNullException(ex.getMessage());
+			// throw new ObjectContainNullException(ex.getMessage());
 		}
 
 	}
 
+	public boolean checkExistName(int id, String name) {
+		CategoriesEntity cate = categoriesRepository.findByName(name);
+		if (cate == null) return true;
+		else if (cate.getId() != id) return false;
+		return true;
+	}
+
 	public boolean deleteCategories(int id) {
 //		try {
-			categoriesRepository.deleteById(id);
-			return true;
+		categoriesRepository.deleteById(id);
+		return true;
 //		catch (EmptyResultDataAccessException | DataIntegrityViolationException ex) {		
 //			throw new ObjectNotFoundException("No product found to delete!");
 //			return false;
 //		}
 	}
-//	public boolean updateCategories(CategoriesDTO categories) {
-//		return createCategories(categories);
-//	}
+
+	public boolean updateCategories(CategoriesDTO categoriesDTO) {
+		try {
+			boolean check = checkExistName(categoriesDTO.getId(), categoriesDTO.getName());
+			if (check) {
+				CategoriesEntity categoriesConvert = new CategoriesEntity(categoriesDTO);
+				categoriesRepository.save(categoriesConvert);
+				return true;
+			} else
+				throw new ObjectAlreadyExistException("There is a category with the same Name");
+		} catch (IllegalArgumentException | ConstraintViolationException ex) {
+			return false;
+			// throw new ObjectContainNullException(ex.getMessage());
+		}
+	}
 }

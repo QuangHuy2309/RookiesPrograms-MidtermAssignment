@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/api/v1/public")
 public class PublicController {
 	@Autowired
 	private ProductService productService;

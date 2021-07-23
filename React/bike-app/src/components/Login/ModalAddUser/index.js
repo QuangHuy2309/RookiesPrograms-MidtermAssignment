@@ -41,7 +41,9 @@ const ModalAdd = (props) => {
         console.log(response.data);
         alert("CREATE ACCOUNT SUCCESS");
       })
-      .catch((error) => console.log(error));
+      .catch((error) =>{ 
+        alert("ERROR! SIGN UP FAILED");
+        console.log(error)});
   }
   return (
     <div>
@@ -107,7 +109,7 @@ const ModalAdd = (props) => {
             </FormGroup>
             <br />
             <Button color="primary" type="submit">
-              Submit
+              Sign Up
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

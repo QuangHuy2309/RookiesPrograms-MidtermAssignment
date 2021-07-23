@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/persons")
+@RequestMapping("/api/v1")
 public class PersonController {
 	@Autowired
 	private PersonService personService;
@@ -47,7 +47,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping
+	@GetMapping("/persons")
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<PersonEntity> getPersonbyRole(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "role") String role) {
@@ -62,7 +62,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/search/{id}")
+	@GetMapping("/persons/search/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public PersonEntity findPerson(@PathVariable(name = "id") int id) {
 		try {
@@ -72,7 +72,7 @@ public class PersonController {
 		}
 	}
 	
-	@GetMapping("/search/email/{email}")
+	@GetMapping("/persons/search/email/{email}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public PersonEntity findPersonByEmail(@PathVariable(name = "email") String email) {
 		try {
@@ -107,7 +107,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/persons/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deletePerson(@PathVariable(name = "id") int id) {
 		try {
@@ -125,19 +125,19 @@ public class PersonController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PutMapping
+	@PutMapping("/persons/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public String editPerson(@RequestBody PersonDTO newPerson) {
+	public String editPerson(@RequestBody PersonDTO newPerson, @PathVariable(name = "id") int id) {
 		return personService.updatePerson(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 	
-	@PutMapping("/changePassword")
+	@PutMapping("/persons/changePassword/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public String editPasswordPerson(@RequestBody PersonDTO newPerson) {
+	public String editPasswordPerson(@RequestBody PersonDTO newPerson, @PathVariable(name = "id") int id) {
 		return personService.updatePassword(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 	
-	@GetMapping("/countByRole/{role}")
+	@GetMapping("/persons/countByRole/{role}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public int getTotalByRole(@PathVariable(name = "role") String role) {
 		return personService.getTotalByRole(role);

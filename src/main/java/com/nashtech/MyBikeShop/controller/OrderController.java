@@ -34,7 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/v1")
 public class OrderController {
 	@Autowired
 	private OrderService orderService;
@@ -53,7 +53,7 @@ public class OrderController {
 //			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
 //			content = @Content)
 //	})
-	@GetMapping("/totalOrder")
+	@GetMapping("/order/totalOrder")
 	@PreAuthorize("hasRole('ADMIN')")
 	public long getNumberOfOrders() {
 		return  orderService.countTotal();
@@ -73,7 +73,7 @@ public class OrderController {
 //			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
 //			content = @Content)
 //	})
-	@GetMapping("/{id}")
+	@GetMapping("/order/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
 		return orderService.getOrders(id)
@@ -88,7 +88,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PostMapping
+	@PostMapping("/order")
 	@PreAuthorize("hasRole('USER')")
 	public OrderEntity createOrder(@RequestBody OrderDTO newOrder) {
 		return orderService.createOrder(newOrder);
@@ -102,7 +102,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/order/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteOrder(@PathVariable(name = "id") int id) {
 		try {
@@ -121,9 +121,9 @@ public class OrderController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PutMapping
+	@PutMapping("/order/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String updateOrder(@RequestBody OrderDTO order) {
+	public String updateOrder(@RequestBody OrderDTO order, @PathVariable(name = "id") int id) {
 		try {
 			return orderService.updateOrder(order) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (NoSuchElementException ex) {
@@ -141,7 +141,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/customeremail")
+	@GetMapping("/order/customeremail")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public List<OrderEntity> findListOrderedByCustomerEmail(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "email") String email) {
@@ -156,7 +156,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping("/customerid")
+	@GetMapping("/order/customerid")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public List<OrderEntity> findListOrderedByCustomerId(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "id") int id) {
@@ -171,7 +171,7 @@ public class OrderController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@GetMapping
+	@GetMapping("/order")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public List<OrderEntity> getOrder(@RequestParam(name = "pagenum") int page, @RequestParam(name = "size") int size) {
 		return orderService.getOrderPage(page, size);
@@ -183,7 +183,7 @@ public class OrderController {
 //		orderService.sendSimpleMessage("A", "B", "C");
 //	}
 	
-	@PutMapping("updateStatus/{id}")
+	@PutMapping("/order/updateStatus/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String updateStatusOrder(@PathVariable(name = "id") int id) {
 		try {

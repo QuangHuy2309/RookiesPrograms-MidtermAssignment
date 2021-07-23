@@ -71,6 +71,7 @@ export default function Index() {
           ))}
         </div>
       </Col>
+      
       <Col>
         <Row>
           {prodList.map((prod) => (
