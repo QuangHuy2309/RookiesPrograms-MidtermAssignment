@@ -14,4 +14,5 @@ public interface RateService {
 	public boolean deleteRate(RateKey id);
 	public boolean updateRate(RateDTO rate);
 	public int getNumRate(String id);
+	public boolean checkExist(RateKey id);
 }

@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -54,7 +55,7 @@ public class OrderEntity {
 
 //	@JsonManagedReference
 //	@JsonIgnore
-	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	Set<OrderDetailEntity> orderDetails = new HashSet<>();
 
 	public OrderEntity() {

@@ -71,7 +71,9 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findById(id);
 
 	}
-
+	public long countTotal() {
+		return orderRepository.count();
+	}
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);

@@ -20,5 +20,6 @@ public interface OrderService {
 	public boolean updateStatusOrder(int id);
 	public List<OrderEntity> findOrderByCustomer(int num, int size, String email);
 	public void sendSimpleMessage(String to, String listProd) throws MessagingException; 
+	public long countTotal();
 //	public OrderEntity findOrderByProducts(String id);
 }

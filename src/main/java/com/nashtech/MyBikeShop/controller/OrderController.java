@@ -53,11 +53,11 @@ public class OrderController {
 //			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
 //			content = @Content)
 //	})
-//	@GetMapping
-//	@PreAuthorize("hasRole('ADMIN')")
-//	public List<OrderEntity> retrieveOrders() {
-//		return  orderService.retrieveOrders();
-//	}
+	@GetMapping("/totalOrder")
+	@PreAuthorize("hasRole('ADMIN')")
+	public long getNumberOfOrders() {
+		return  orderService.countTotal();
+	}
 
 //	@Operation(summary = "Get Order by ID")
 //	@ApiResponses(value = {

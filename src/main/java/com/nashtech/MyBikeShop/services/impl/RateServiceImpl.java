@@ -30,14 +30,18 @@ public class RateServiceImpl implements RateService {
 		return rateRepo.findByIdProductId(id);
 	}
 
+	public boolean checkExist(RateKey id) {
+		return rateRepo.existsById(id);
+	}
+
 	public RateEntity createRate(RateDTO rateDTO) {
-			boolean checkExist = rateRepo.existsById(new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId()));
+		boolean checkExist = rateRepo.existsById(new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId()));
 		if (checkExist)
 			throw new ObjectAlreadyExistException("Exist a review with this customer on this product");
 		else {
-		RateEntity rate = new RateEntity(rateDTO);
-		rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
-		return rateRepo.save(rate);
+			RateEntity rate = new RateEntity(rateDTO);
+			rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
+			return rateRepo.save(rate);
 		}
 	}
 

@@ -48,6 +48,12 @@ public class RateController {
 		return rateService.createRate(rate);
 	}
 	
+	@PostMapping("/checkExist")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public boolean checkExistRate(@RequestBody RateKey rate) {
+		return rateService.checkExist(rate);
+	}
+	
 	@Operation(summary = "Create a Rate for Product")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
