@@ -4,7 +4,6 @@ import { get } from "../../Utils/httpHelper";
 import Product from "./Product";
 import "./Home.css";
 
-
 export default function Home1() {
   const [cateList, setCateList] = useState([]);
   //   const [prodList, setProdList] = useState([]);
@@ -24,16 +23,16 @@ export default function Home1() {
           let prodList = [];
           console.log(prodList);
           return (
-              <div key={cate.id}>
-            <div  className="title-bike-type">
-              <Link
-                to={`/Bike/${cate.id}`}
-                style={{ textDecoration: "none" }}
-              >
-                <h2>{cate.name}</h2>
-              </Link>
-            </div>
-            <Product id = {cate.id}/>
+            <div key={cate.id}>
+              <div className="title-bike-type">
+                <Link
+                  to={`/Bike/${cate.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <h2>{cate.name}</h2>
+                </Link>
+              </div>
+              <Product id={cate.id} />
             </div>
           );
         })

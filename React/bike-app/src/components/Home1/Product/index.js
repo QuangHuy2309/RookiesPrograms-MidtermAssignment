@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { get } from "../../../Utils/httpHelper";
+import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { Link } from "react-router-dom";
-import img from "../../../assets/img/test.jpg";
+
 import "./Product.css";
 import {
   Card,
@@ -30,7 +31,12 @@ export default class index extends Component {
       }
     });
   }
-
+  // numberFormat = (value) =>
+  // new Intl.NumberFormat('en-IN', {
+  //   style: 'currency',
+  //   currency: 'VND'
+  // }).format(value);
+  
   render() {
     return (
       <Row>
@@ -45,7 +51,7 @@ export default class index extends Component {
                 </CardTitle>
                 <div className="card-info">
                   <CardSubtitle tag="h4" className="mb-2 card-price">
-                    {prod.price}
+                    {numberFormat(prod.price)} 
                   </CardSubtitle>
                   <Link to={`/prodDetail/${prod.id}`} className="card-btn">Buy Now</Link>
                 </div>

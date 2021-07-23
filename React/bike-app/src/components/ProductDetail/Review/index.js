@@ -14,7 +14,7 @@ export default function Index(props) {
   const [reviewList, setReviewList] = useState([]);
   const [rating, setRating] = useState(3);
   const [user, setUser] = useState(Object);
-
+  const [check, setCheck] = useState(false);
   let totalPage = useRef(0);
   const size = 2;
 
@@ -34,7 +34,9 @@ export default function Index(props) {
       }
     });
     getUserDetail();
+    checkReview();
   }, [pagenum, props.id]);
+
   function getUserDetail() {
     const emailUser = getCookie("email");
     getWithAuth(`/persons/search/email/${emailUser}`).then((response) => {
@@ -43,6 +45,19 @@ export default function Index(props) {
         setUser(response.data);
       }
     });
+  }
+  function checkReview(){
+    const body = JSON.stringify({
+      productId: props.id,
+      customerId: user.id,
+    });
+    post(`/product/rate/checkExist`, body)
+      .then((response) => {
+        if (response.status === 200) {
+          // console.log(response.data);
+          setCheck(response.data);
+        }
+      });
   }
   function handlePageChange(e) {
     console.log(`Page press is ${e}`);
@@ -76,8 +91,11 @@ export default function Index(props) {
   function customerReview() {
     const name = getCookie("username");
     const role = getCookie("role");
-
-    if ((role === "ROLE_ADMIN") || (role === "ROLE_USER") && (name !== ""))
+    const status = getCookie("status");
+    
+    // if ((!checkReview()) && (role === "ROLE_ADMIN") || (role === "ROLE_USER") && (name !== ""))
+    const open = (!check && status);
+    if (open)
     return (
       <div className="reviewInput-card">
         <Row>

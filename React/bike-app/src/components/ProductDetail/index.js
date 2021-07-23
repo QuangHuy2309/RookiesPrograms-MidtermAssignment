@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Row, Col, Button } from "reactstrap";
-import { Link } from "react-router-dom";
+import { numberFormat } from "../../Utils/ConvertToCurrency";
 import { useHistory } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
 import { FaCartPlus } from "react-icons/fa";
@@ -57,13 +57,11 @@ export default function Index() {
           <div className="info-prod">
             <h2 className="name-prod">{prod.name}</h2>
             <h1 className="price-prod">
-              {prod.price}
-              <p className="currency-prod">VNĐ</p>
+            {numberFormat(prod.price)} 
             </h1>
             <h5>MODEL :: {prod.id} </h5>
             <h5>Remain :: {prod.quantity} </h5>
             <h5>BRAND :: {prod.brand}</h5>
-            {/* <h5>TYPE :: {prod.categories.name}</h5> */}
             <div className="prod-btn">
               <Button
                 outline

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
-import img from "../../assets/img/test.jpg";
+import { numberFormat } from "../../Utils/ConvertToCurrency";
 import Page from "../Pagination";
 import "./ProductByType.css";
 import {
@@ -92,7 +92,7 @@ export default function Index() {
                     </CardTitle>
                     <div className="card-info">
                       <CardSubtitle tag="h4" className="mb-2 card-price">
-                        {prod.price}
+                      {numberFormat(prod.price)} 
                       </CardSubtitle>
                       <Link to={`/prodDetail/${prod.id}`} className="card-btn">
                         Buy Now
