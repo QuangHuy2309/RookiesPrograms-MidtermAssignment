@@ -3,6 +3,8 @@ package com.nashtech.MyBikeShop.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 
@@ -17,5 +19,6 @@ public interface OrderService {
 	public boolean updateOrder(OrderDTO order);
 	public boolean updateStatusOrder(int id);
 	public List<OrderEntity> findOrderByCustomer(int num, int size, String email);
+	public void sendSimpleMessage(String to, String listProd) throws MessagingException; 
 //	public OrderEntity findOrderByProducts(String id);
 }

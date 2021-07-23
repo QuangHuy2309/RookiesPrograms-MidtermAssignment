@@ -177,6 +177,12 @@ public class OrderController {
 		return orderService.getOrderPage(page, size);
 	}
 	
+//	@GetMapping("/testSendEmail")
+//	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//	public void testSendMail() {
+//		orderService.sendSimpleMessage("A", "B", "C");
+//	}
+	
 	@PutMapping("updateStatus/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String updateStatusOrder(@PathVariable(name = "id") int id) {
