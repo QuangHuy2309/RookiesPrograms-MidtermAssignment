@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -66,12 +67,12 @@ public class ProductEntity {
 	
 //	@JsonManagedReference
 	@JsonIgnore
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	Set<OrderDetailEntity> orderDetails;
 
 //	@JsonManagedReference
 	@JsonIgnore
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
 	Set<RateEntity> reviews;
 
 //	@JsonBackReference
