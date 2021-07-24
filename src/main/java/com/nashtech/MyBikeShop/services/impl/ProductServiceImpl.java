@@ -83,18 +83,16 @@ public class ProductServiceImpl implements ProductService {
 			if (checkId) {
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product id");
-			}
-			else if (checkName) {
+			} else if (checkName) {
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this name. Please change product name");
-			}
-			else{
+			} else {
 				CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
 				ProductEntity productEntity = new ProductEntity(productDTO, cate);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
 				return productRepository.save(productEntity);
-			} 
+			}
 		} catch (DataAccessException ex) {
 			throw new ObjectNotFoundException("Failed!" + ex.getMessage());
 		} catch (IllegalArgumentException ex) {
@@ -108,10 +106,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean updateProduct(ProductDTO productDTO) {
-		CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
-		ProductEntity product = new ProductEntity(productDTO, cate);
-		productRepository.save(updateDate(product));
-		return true;
+		boolean check = existNameUpdate(productDTO.getId(), productDTO.getName());
+		if (check) {
+			CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
+			ProductEntity product = new ProductEntity(productDTO, cate);
+			productRepository.save(updateDate(product));
+			return true;
+		} else
+			throw new ObjectAlreadyExistException("There is a product with the same Name");
 	}
 
 	public boolean updateProductQuantity(String id, int numberChange) {
@@ -148,22 +150,21 @@ public class ProductServiceImpl implements ProductService {
 		return true;
 
 	}
-	
-	
-	
+
 	public boolean existNameUpdate(String id, String name) {
 		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
 		if (prodList.isEmpty())
 			return true;
 		else if ((prodList.size() > 1) || ((prodList.size() == 1) && (!prodList.get(0).getId().equalsIgnoreCase(id))))
 			return false;
-		else return true;
+		else
+			return true;
 	}
 
 	public boolean existId(String id) {
 		return productRepository.existsById(id);
 	}
-	
+
 	public boolean existName(String name) {
 		return productRepository.existsByName(name);
 	}

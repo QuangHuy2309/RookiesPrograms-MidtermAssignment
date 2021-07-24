@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { get, put } from "../../../../Utils/httpHelper";
+import { get, put, getWithAuth } from "../../../../Utils/httpHelper";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Modal,
@@ -13,6 +15,7 @@ import {
   FormText,
 } from "reactstrap";
 
+toast.configure();
 const ModalAdd = (props) => {
   const { id } = props;
   const [cateList, setCateList] = useState([]);
@@ -20,9 +23,11 @@ const ModalAdd = (props) => {
   const [prod, setProd] = useState(Object);
   const [base64, setBase64] = useState("");
   const toggle = () => setModal(!modal);
-  function handleFieldChange(e, key) {
-    setProd({ [key]: e.target.value });
-  }
+  const [checkName, setCheckName] = useState(true);
+  const [nameError, setNameError] = useState("");
+  const [brandError, setBrandError] = useState("");
+  const [checkBrand, setCheckBrand] = useState(true);
+
   useEffect(() => {
     if (modal) {
       getProd();
@@ -31,9 +36,46 @@ const ModalAdd = (props) => {
           setCateList([...response.data]);
         }
       });
+      setNameError("");
+      setBrandError("");
     }
   }, [modal]);
-
+  function handleFieldChange(e, key) {
+    setProd({ [key]: e.target.value });
+    if (key === "name") {
+      if (e.target.value.trim() == "") {
+        setNameError("Product name must not blank");
+        setCheckName(false);
+      } else {
+        setNameError("");
+        setCheckName(true);
+      }
+    } else if (key === "brand") {
+      if (e.target.value.trim() == "") {
+        setBrandError("Product brand must not blank");
+        setCheckBrand(false);
+      } else {
+        setBrandError("");
+        setCheckBrand(true);
+      }
+    }
+  }
+  function checkNameProd(name, id) {
+    if (checkName && checkBrand)
+    getWithAuth(`/product/checkExistNameUpdate?name=${name}&id=${id}`).then(
+      (response) => {
+        if (response.status === 200) {
+          if (response.data) {
+            setNameError("");
+            setCheckName(true);
+          } else {
+            setNameError("Product name is duplicated");
+            setCheckName(false);
+          }
+        }
+      }
+    );
+  }
   function getProd() {
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
@@ -66,30 +108,36 @@ const ModalAdd = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault();
+    checkNameProd(e.target.name.value.trim(), e.target.id.value);
+    const check = checkBrand && checkName;
+    if (check) {
+      const byteArr = base64.split(",");
+      let photo = byteArr[1];
 
-    const byteArr = base64.split(",");
-    let photo = byteArr[1];
+      console.log("SUBMIT");
+      const body = JSON.stringify({
+        id: e.target.id.value,
+        name: e.target.name.value.trim(),
+        price: e.target.price.value,
+        quantity: e.target.quantity.value,
+        description: e.target.description.value.trim(),
+        brand: e.target.brand.value.trim(),
+        createDate: e.target.createDate.value,
+        categoriesId: e.target.select.value,
+        photo: photo,
+      });
+      // console.log(body);
 
-    console.log("SUBMIT");
-    // const body = JSON.stringify({
-    //   id: e.target.id.value,
-    //   name: e.target.name.value,
-    //   price: e.target.price.value,
-    //   quantity: e.target.quantity.value,
-    //   description: e.target.description.value,
-    //   brand: e.target.brand.value,
-    //   createDate: e.target.createDate.value,
-    //   categoriesId: e.target.select.value,
-    //   photo: photo,
-    // });
-    // console.log(body);
-
-    // put("/product", body)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     alert("EDIT SUCCESS");
-    //   })
-    //   .catch((error) => console.log(error));
+      put(`/product/${props.id}`, body)
+        .then((response) => {
+          console.log(response.data);
+          if(response.data === "SUCCESS")  toast("Edit successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        })
+        .catch((error) => console.log(error));
+    }
   }
   return (
     <div>
@@ -102,7 +150,13 @@ const ModalAdd = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" value={prod.id} disabled />
+              <Input
+                type="text"
+                name="id"
+                id="exampleEmail"
+                value={prod.id}
+                disabled
+              />
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Name</Label>
@@ -114,6 +168,7 @@ const ModalAdd = (props) => {
                 required="required"
                 onChange={(e) => handleFieldChange(e, "name")}
               />
+              <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="examplePrice">Price</Label>
@@ -172,6 +227,7 @@ const ModalAdd = (props) => {
                 required="required"
                 onChange={(e) => handleFieldChange(e, "brand")}
               />
+              <div style={{ color: "red" }}>{brandError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="exampleText">Description</Label>

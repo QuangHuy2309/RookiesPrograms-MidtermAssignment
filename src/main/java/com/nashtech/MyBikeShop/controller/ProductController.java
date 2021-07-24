@@ -2,6 +2,8 @@ package com.nashtech.MyBikeShop.controller;
 
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -101,7 +103,11 @@ public class ProductController {
 	@PutMapping("/product/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public String editProduct(@RequestBody ProductDTO product, @PathVariable(name = "id") String id) {
+		try {
 		return productService.updateProduct(product) ? StringUtils.TRUE : StringUtils.FALSE;
+		} catch (ObjectAlreadyExistException ex) {
+			return StringUtils.FALSE;
+		}
 	}
 	
 //	@PostMapping("/img")
