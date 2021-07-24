@@ -70,27 +70,26 @@ const ModalAdd = (props) => {
     const byteArr = base64.split(",");
     let photo = byteArr[1];
 
-    // console.log(photo);
-    const body = JSON.stringify({
-      id: e.target.id.value,
-      name: e.target.name.value,
-      price: e.target.price.value,
-      quantity: e.target.quantity.value,
-      description: e.target.description.value,
-      brand: e.target.brand.value,
-      createDate: e.target.createDate.value,
-      categoriesId: e.target.select.value,
-      photo: photo,
-    });
-    console.log(body);
+    console.log("SUBMIT");
+    // const body = JSON.stringify({
+    //   id: e.target.id.value,
+    //   name: e.target.name.value,
+    //   price: e.target.price.value,
+    //   quantity: e.target.quantity.value,
+    //   description: e.target.description.value,
+    //   brand: e.target.brand.value,
+    //   createDate: e.target.createDate.value,
+    //   categoriesId: e.target.select.value,
+    //   photo: photo,
+    // });
+    // console.log(body);
 
-    put("/product", body)
-      .then((response) => {
-        console.log(response.data);
-        alert("EDIT SUCCESS");
-      })
-      .catch((error) => console.log(error));
-    props.onEdit(e);
+    // put("/product", body)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     alert("EDIT SUCCESS");
+    //   })
+    //   .catch((error) => console.log(error));
   }
   return (
     <div>
@@ -103,7 +102,7 @@ const ModalAdd = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" value={prod.id} />
+              <Input type="text" name="id" id="exampleEmail" value={prod.id} disabled />
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Name</Label>
@@ -112,7 +111,7 @@ const ModalAdd = (props) => {
                 name="name"
                 id="examplePassword"
                 value={prod.name}
-                required
+                required="required"
                 onChange={(e) => handleFieldChange(e, "name")}
               />
             </FormGroup>
@@ -123,7 +122,8 @@ const ModalAdd = (props) => {
                 name="price"
                 id="examplePrice"
                 value={prod.price}
-                required
+                required="required"
+                min="0"
                 onChange={(e) => handleFieldChange(e, "price")}
               />
             </FormGroup>
@@ -134,18 +134,20 @@ const ModalAdd = (props) => {
                 name="quantity"
                 id="exampleQuantity"
                 value={prod.quantity}
-                required
+                required="required"
+                min="0"
                 onChange={(e) => handleFieldChange(e, "quantity")}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleQuantity">Create Day</Label>
+              <Label for="exampleCreateDay">Create Day</Label>
               <Input
                 type="text"
                 name="createDate"
-                id="exampleQuantity"
+                id="exampleCreateDay"
                 value={prod.createDate}
-                required
+                disabled
+                required="required"
               />
             </FormGroup>
             <FormGroup>
@@ -167,7 +169,7 @@ const ModalAdd = (props) => {
                 name="brand"
                 id="exampleBrand"
                 value={prod.brand}
-                required
+                required="required"
                 onChange={(e) => handleFieldChange(e, "brand")}
               />
             </FormGroup>

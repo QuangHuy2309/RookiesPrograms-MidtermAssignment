@@ -6,6 +6,7 @@ import ModalAdd from "./ModalAddProd";
 import ModalReview from "./ModalReview";
 import { format } from "date-fns";
 import { IoReloadSharp } from "react-icons/io5";
+import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import "./Product.css"
 import {
   ButtonDropdown,
@@ -108,7 +109,7 @@ export default function Index() {
               <th scope="row">{prod.id}</th>
               <td>{prod.name}</td>
               <td>{prod.quantity}</td>
-              <td>{prod.price}</td>
+              <td>{numberFormat(prod.price)}</td>
               <td>
                 {format(new Date(prod.createDate), "dd/MM/yyyy HH:mm:ss")}
               </td>

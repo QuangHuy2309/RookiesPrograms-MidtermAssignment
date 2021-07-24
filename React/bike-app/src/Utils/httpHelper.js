@@ -12,7 +12,7 @@ export function get(url) {
   });
 }
 export function getWithAuth(url) {
-  
+  const token = getCookie("token");
   return axios.get(endpoint + url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -22,6 +22,7 @@ export function getWithAuth(url) {
   });
 }
 export function post(url, body) {
+  const token = getCookie("token");
   return axios.post(endpoint + url, body, {
     "Access-Control-Allow-Origin": "*",
     headers: {
@@ -31,6 +32,7 @@ export function post(url, body) {
   });
 }
 export function postAuth(url, body) {
+  const token = getCookie("token");
   return axios.post(endpoint + url, body, {
     headers: {
       "Access-Control-Allow-Origin": "*",
@@ -39,6 +41,7 @@ export function postAuth(url, body) {
   });
 }
 export function put(url, body) {
+  const token = getCookie("token");
   return axios.put(endpoint + url, body, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -48,6 +51,7 @@ export function put(url, body) {
   });
 }
 export function putNoBody(url) {
+  const token = getCookie("token");
   return axios.put(endpoint + url, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,6 +61,7 @@ export function putNoBody(url) {
   });
 }
 export function del(url) {
+  const token = getCookie("token");
   return axios.delete(endpoint + url, {
     "Access-Control-Allow-Origin": "*",
     headers: {
@@ -66,6 +71,7 @@ export function del(url) {
   });
 }
 export function delWithBody(url, body) {
+  const token = getCookie("token");
   return axios.delete(endpoint + url, body, {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getWithAuth, post } from "../../../../Utils/httpHelper";
 import "./ModalAddCate.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Modal,
@@ -14,14 +16,22 @@ import {
   FormText,
 } from "reactstrap";
 
+toast.configure();
 const ModalAdd = (props) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
+  const [checkName, setCheckName] = useState(true);
+  const [nameError, setNameError] = useState("");
 
-
+  useEffect(() => {
+    if (modal) {
+      setNameError("");
+    }
+  }, [modal]);
 
   function handleSubmit(e) {
     e.preventDefault();
+    checkNameCate(e.target.name.value);
     const body = JSON.stringify({
       name: e.target.name.value,
       description: e.target.description.value,
@@ -32,23 +42,46 @@ const ModalAdd = (props) => {
     post("/categories", body)
       .then((response) => {
         console.log(response.data);
-        alert("ADDING SUCCESS");
+        if (response.data === "SUCCESS")
+          toast("Add successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
       })
       .catch((error) => console.log(error));
-    // props.onEdit(e);
+  }
+
+  function checkNameCate(name, id) {
+    getWithAuth(`/categories/checkName?name=${name}&id=0`).then((response) => {
+      if (response.status === 200) {
+        if (response.data) {
+          setNameError("");
+          setCheckName(true);
+        } else {
+          setNameError("Categories name is duplicated. Choose another name");
+          setCheckName(false);
+        }
+      }
+    });
+  }
+  function handleFieldChange(e) {
+    if (e.target.value.trim() == "") {
+      setNameError("Categories name must not blank");
+    } else {
+      setNameError("");
+    }
   }
   return (
     <div>
       <div className="btn-modal">
-      <Button outline color="info" onClick={toggle} className="btn-modal">
-        ADD
-      </Button>
+        <Button outline color="info" onClick={toggle} className="btn-modal">
+          ADD
+        </Button>
       </div>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Cate Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
-            
             <FormGroup>
               <Label for="exampleFullName">Name</Label>
               <Input
@@ -56,7 +89,9 @@ const ModalAdd = (props) => {
                 name="name"
                 id="exampleFullName"
                 required
+                onChange={(e) => handleFieldChange(e)}
               />
+              <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="exampleText">Description</Label>
