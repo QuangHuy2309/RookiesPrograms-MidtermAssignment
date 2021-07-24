@@ -10,6 +10,6 @@ import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 @Repository
 public interface CategoriesRepository extends JpaRepository<CategoriesEntity, Integer> {
 	Boolean existsByName(String name);
-	CategoriesEntity findByName(String name);
+	List<CategoriesEntity> findByNameIgnoreCase(String name);
 	int countByName(String name);
 }

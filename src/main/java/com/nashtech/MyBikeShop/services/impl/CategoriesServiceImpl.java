@@ -1,5 +1,6 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,8 +44,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 	public boolean createCategories(CategoriesDTO categoriesDTO) {
 		try {
-			boolean checkName = categoriesRepository.existsByName(categoriesDTO.getName());
-			if (!checkName) {
+			boolean checkName = checkExistName(0,categoriesDTO.getName());
+			if (checkName) {
 				CategoriesEntity categoriesConvert = new CategoriesEntity(categoriesDTO);
 				categoriesRepository.save(categoriesConvert);
 				return true;
@@ -58,10 +59,12 @@ public class CategoriesServiceImpl implements CategoriesService {
 	}
 
 	public boolean checkExistName(int id, String name) {
-		CategoriesEntity cate = categoriesRepository.findByName(name);
-		if (cate == null) return true;
-		else if (cate.getId() != id) return false;
-		return true;
+		List<CategoriesEntity> cateList = categoriesRepository.findByNameIgnoreCase(name);
+		if (cateList.isEmpty())
+			return true;
+		else if ((cateList.size() > 1) || ((cateList.size() == 1) && (cateList.get(0).getId() != id)))
+			return false;
+		else return true;
 	}
 
 	public boolean deleteCategories(int id) {

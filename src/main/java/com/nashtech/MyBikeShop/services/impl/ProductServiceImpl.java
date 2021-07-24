@@ -148,13 +148,24 @@ public class ProductServiceImpl implements ProductService {
 		return true;
 
 	}
-
-	public boolean existName(String name) {
-		return productRepository.existsByName(name);
+	
+	
+	
+	public boolean existNameUpdate(String id, String name) {
+		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
+		if (prodList.isEmpty())
+			return true;
+		else if ((prodList.size() > 1) || ((prodList.size() == 1) && (!prodList.get(0).getId().equalsIgnoreCase(id))))
+			return false;
+		else return true;
 	}
 
 	public boolean existId(String id) {
 		return productRepository.existsById(id);
+	}
+	
+	public boolean existName(String name) {
+		return productRepository.existsByName(name);
 	}
 //	public MultipartFile convertToImg(String encodedString) throws IOException {
 //		Date date = Calendar.getInstance().getTime();

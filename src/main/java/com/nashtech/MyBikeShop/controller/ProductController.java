@@ -66,7 +66,12 @@ public class ProductController {
 	public boolean checkExistName(@PathVariable(name = "name") String name) {
 				return productService.existName(name);
 	}
-
+	@GetMapping("/product/checkExistNameUpdate")
+	@PreAuthorize("hasRole('ADMIN')")
+	public boolean checkExistName(@RequestParam(name = "name") String name, 
+			@RequestParam(name = "id") String id) {
+				return productService.existNameUpdate(id, name);
+	}
 	@Operation(summary = "Delete a Product by id")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {

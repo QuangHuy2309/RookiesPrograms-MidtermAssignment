@@ -74,8 +74,7 @@ public class CategoriesController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String createCategories(@RequestBody CategoriesDTO newOrder) {
 		try {
-			String result = cateService.createCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
-			return result;
+			return cateService.createCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
 
 		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
 			return StringUtils.FALSE;
@@ -86,8 +85,7 @@ public class CategoriesController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String updateCategories(@RequestBody CategoriesDTO newOrder, @PathVariable(name = "id") int id) {
 		try {
-			String result = cateService.updateCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
-			return result;
+			return cateService.updateCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
 
 		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
 			return StringUtils.FALSE;

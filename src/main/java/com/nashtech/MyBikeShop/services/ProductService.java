@@ -23,6 +23,7 @@ public interface ProductService {
 	public ProductEntity updateDate(ProductEntity product);
 	public boolean storeImage(MultipartFile file, String id) throws IOException;
 	public int getNumProductByCategories(int id);
+	public boolean existNameUpdate(String id, String name);
 	public boolean existName(String name);
 	public boolean existId(String id);
 //	public MultipartFile convertToImg(String encodedString) throws IOException;

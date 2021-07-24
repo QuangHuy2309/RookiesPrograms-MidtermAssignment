@@ -71,9 +71,10 @@ public class CategoriesServiceImplTest {
 	public void testCreateCategories_WhenNameExisted() {
 		assertNotNull(categoriesRepo);
 		assertNotNull(categoriesService);
-		CategoriesEntity cateEntity = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
+		CategoriesEntity cate = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(cateEntity);
+		List<CategoriesEntity> list = Arrays.asList(cate);
+		when(categoriesRepo.findByNameIgnoreCase(Mockito.anyString())).thenReturn(list);
 		try {
 			assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
 		} catch (ObjectAlreadyExistException e) {
@@ -88,9 +89,8 @@ public class CategoriesServiceImplTest {
 		assertNotNull(categoriesRepo);
 		assertNotNull(categoriesService);
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepo.findByName(Mockito.anyString())).thenReturn(null);
+		when(categoriesRepo.findByNameIgnoreCase(Mockito.anyString())).thenReturn(null);
 		
-		System.out.println(categoriesRepo.findByName(Mockito.anyString()));
 		try {
 			System.out.println(categoriesService.createCategories(cateDTO));
 		} catch (ObjectAlreadyExistException e) {

@@ -91,8 +91,8 @@ public class AuthController {
 			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
 	@PostMapping("/auth/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody PersonDTO signUpRequest) {
-
-		if (personRepository.existsByEmail(signUpRequest.getEmail())) {
+		
+		if (personRepository.existsByEmail(signUpRequest.getEmail().toLowerCase())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 		}
 
@@ -108,7 +108,7 @@ public class AuthController {
 	
 	@GetMapping("/auth/checkEmail/{email}")
 	public boolean checkExistEmailSignUp(@PathVariable(name = "email") String email) {
-		return personRepository.existsByEmail(email);
+		return personRepository.existsByEmail(email.toLowerCase());
 	}
 	
 	@GetMapping("/auth/logout")
