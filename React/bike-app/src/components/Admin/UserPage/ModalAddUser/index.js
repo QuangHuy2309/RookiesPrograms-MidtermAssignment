@@ -81,12 +81,12 @@ const ModalAdd = (props) => {
             
             <FormGroup tag="fieldset" className="radioGr-user">
             <Label for="exampleQuantity">Gender</Label>
-              <FormGroup check class="radioBtn-user">
+              <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="radio" value="false" required/> MALE
                 </Label>
               </FormGroup>
-              <FormGroup check class="radioBtn-user">
+              <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="radio" value="true"/> FEMALE
                 </Label>

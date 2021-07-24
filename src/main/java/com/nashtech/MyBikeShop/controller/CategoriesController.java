@@ -58,7 +58,7 @@ public class CategoriesController {
 	
 	@GetMapping("/categories/checkName")
 	@PreAuthorize("hasRole('ADMIN')")
-	public boolean findCategories(@RequestParam(name = "name") String name, 
+	public boolean checkExistCategoriesByName(@RequestParam(name = "name") String name, 
 			@RequestParam(name = "id") int id) {
 		return cateService.checkExistName(id,name);
 	}

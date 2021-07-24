@@ -9,7 +9,10 @@ import Review from "./Review/";
 import "./ProductDetail.css";
 import { getCookie } from "../../Utils/Cookie";
 import { isLogin } from "../../Utils/Auth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+toast.configure();
 export default function Index() {
   const history = useHistory();
   let { id } = useParams();
@@ -26,33 +29,45 @@ export default function Index() {
     }
     getProduct();
   }, [id]);
-  function addProductIdToCookie() {
+  function addProductIdToCookie(type) {
     let cartCookie = getCookie("cart");
     let check = cartCookie.trim().includes(id);
     if (!check) {
       cartCookie = cartCookie.concat(` ${id}`);
       cartCookie = cartCookie.trim();
       document.cookie = `cart=${cartCookie}; max-age=86400; path=/;`;
+      toast.dark("Product have been add to cart", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+    else {
+      if (type === "Add") {toast.info("This product is already in your cart", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
     }
   }
   function handleAddCart() {
-    if (isLogin()) addProductIdToCookie();
+    if (isLogin()) addProductIdToCookie("Add");
     else {
-      return (
-        <div className="p-3 bg-info my-2 rounded">
-          <Toast>
-            <ToastHeader>Reactstrap</ToastHeader>
-            <ToastBody>
-              This is a toast on an info background — check it out!
-            </ToastBody>
-          </Toast>
-        </div>
-      );
+      toast.warning("You need to login first!!!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
     }
   }
   function handleOrder() {
-    addProductIdToCookie();
-    history.push(`/Ordering`);
+    if (isLogin()) {
+      addProductIdToCookie("Order");
+      history.push(`/Ordering`);
+    } else {
+      toast.warning("You need to login first!!!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
   }
 
   return (

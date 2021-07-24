@@ -92,11 +92,12 @@ export default function Index(props) {
     const name = getCookie("username");
     const role = getCookie("role");
     const status = getCookie("status");
-    
+    checkReview();
     // if ((!checkReview()) && (role === "ROLE_ADMIN") || (role === "ROLE_USER") && (name !== ""))
-    const open = (!check && status);
+    const checkBoolean = (!check);
+    const open = ((!check) && (status==="true"));
     if (open)
-    return (
+    {return (
       <div className="reviewInput-card">
         <Row>
           <Col className="col-1">
@@ -132,7 +133,7 @@ export default function Index(props) {
           </Col>
         </Row>
       </div>
-    );
+    );}
   }
 
   return (
