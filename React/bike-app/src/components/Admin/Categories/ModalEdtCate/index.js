@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { getWithAuth, post, put } from "../../../../Utils/httpHelper";
+import { getWithAuth, put } from "../../../../Utils/httpHelper";
 import "./ModalEdtCate.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MdModeEdit } from "react-icons/md";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
 toast.configure();
@@ -88,10 +87,10 @@ const ModalEdt = (props) => {
   return (
     <div>
       <Button color="warning" onClick={toggle}>
-        Edit
+        <MdModeEdit/>
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Categories Information</ModalHeader>
+        <ModalHeader toggle={toggle}><MdModeEdit/> Categories Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -129,8 +128,8 @@ const ModalEdt = (props) => {
               />
             </FormGroup>
             <br />
-            <Button color="primary" type="submit">
-              Submit
+            <Button outline color="warning" type="submit">
+            <MdModeEdit/>Edit
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

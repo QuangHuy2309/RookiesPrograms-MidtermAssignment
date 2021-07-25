@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -59,12 +60,12 @@ public class PersonEntity {
 	@Column(name="role")
 	private String role;
 	
-	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER , cascade = CascadeType.ALL)
 	@JsonIgnore
 //	@JsonManagedReference
 	private Set<OrderEntity> orders;
 	
-	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER , cascade = CascadeType.ALL)
 //	@JsonManagedReference
 	@JsonIgnore
 	Set<RateEntity> reviews;

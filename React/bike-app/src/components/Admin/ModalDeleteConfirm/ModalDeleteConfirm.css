@@ -1,0 +1,14 @@
+.radioGr-user{
+    display: flex;
+    
+}
+.btn-modal{
+    text-align: left;
+    margin:1rem;    
+}
+.radioGr-user > Label{
+margin-right: 1rem;
+}
+.radioBtn-user{
+    margin: 1rem;
+}

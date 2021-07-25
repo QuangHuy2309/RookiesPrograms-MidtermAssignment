@@ -6,7 +6,11 @@ import "./UserPage.css";
 import ModalEdt from "./ModalEdtUser";
 import ModalAdd from "./ModalAddUser";
 import Page from "../../Pagination";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ModalDeleteConfirm from "../ModalDeleteConfirm";
 
+toast.configure()
 
 export default function Index() {
   const [choice, setChoice] = useState("USER");
@@ -35,17 +39,25 @@ export default function Index() {
     );
   }
 
-  function handleDelete(id) {
+  function handleDelete(e, id) {
+    if (e === "OK") {
     del(`/persons/${id}`)
       .then((response) => {
         if (response.status === 200) {
-          alert("DELETE SUCCES");
+          toast.success("Delete successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
           getListUser();
         }
       })
       .catch((error) => {
-        alert("FAILED! This user is having a RATE/ORDER. Please delete it first");
+        toast.error(`Error: ${error}`, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       });
+    }
   }
 
   function getUpdated(e){
@@ -87,9 +99,10 @@ export default function Index() {
               <td>{user.address}</td>
               <td>{user.phonenumber}</td>
               <td>
-                <Button color="danger" onClick={() => handleDelete(user.id)}>
+                {/* <Button color="danger" onClick={() => handleDelete(user.id)}>
                   Delete
-                </Button>
+                </Button> */}
+                <ModalDeleteConfirm onChoice={(e) => handleDelete(e,user.id)} />
                 {/* <Button color="warning" onClick={console.log("clicked")}>
                   Edit
                 </Button> */}

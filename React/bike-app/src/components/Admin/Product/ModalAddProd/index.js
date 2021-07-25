@@ -3,17 +3,17 @@ import { get, post, getWithAuth } from "../../../../Utils/httpHelper";
 import "./ModalAddProd.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { IoAddOutline } from "react-icons/io5";
+import { GrBike } from "react-icons/gr";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
 toast.configure();
@@ -149,7 +149,7 @@ const ModalExample = (props) => {
           });
         })
         .catch((error) => {
-          toast.danger("Add failed, please check again", {
+          toast.error("Add failed, please check again", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
@@ -159,10 +159,10 @@ const ModalExample = (props) => {
   return (
     <div>
       <Button color="primary" onClick={toggle} className="open-prod">
-        Add new Product
+       <IoAddOutline/> Add new Product
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Product Information</ModalHeader>
+        <ModalHeader toggle={toggle}><GrBike/> Product Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -256,7 +256,7 @@ const ModalExample = (props) => {
             </FormGroup>
             <br />
             <Button color="primary" type="submit">
-              Submit
+            <IoAddOutline/> ADD
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

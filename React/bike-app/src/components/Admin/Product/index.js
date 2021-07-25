@@ -7,7 +7,11 @@ import ModalReview from "./ModalReview";
 import { format } from "date-fns";
 import { IoReloadSharp } from "react-icons/io5";
 import { numberFormat } from "../../../Utils/ConvertToCurrency";
-import "./Product.css"
+import ModalDeleteConfirm from "../ModalDeleteConfirm";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlineAppstore } from "react-icons/ai";
+import "./Product.css";
 import {
   ButtonDropdown,
   DropdownToggle,
@@ -17,6 +21,8 @@ import {
   Button,
 } from "reactstrap";
 
+
+toast.configure()
 export default function Index() {
   const [choice, setChoice] = useState("1");
   const [pagenum, setPageNum] = useState(0);
@@ -42,10 +48,9 @@ export default function Index() {
     });
   }, []);
   useEffect(() => {
-    
     getListProd();
   }, [choice, pagenum]);
-  function getUpdated(e){
+  function getUpdated(e) {
     getListProd();
   }
   function getListProd() {
@@ -57,25 +62,34 @@ export default function Index() {
       }
     });
   }
-  function handleDelete(id) {
-    del(`/product/${id}`)
-      .then((response) => {
-        if (response.status === 200) {
-          alert("DELETE SUCCES");
-          getListProd();
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
+  function handleDelete(e, id) {
+    if (e === "OK") {
+      del(`/product/${id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Delete successfully!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            getListProd();
+          }
+        })
+        .catch((error) => {
+          toast.error(`Error: ${error}`, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        });
+    }
   }
 
   return (
     <>
       <h2 className="title-user">PRODUCT MANAGER</h2>
       <div className="btn-list">
-        {' '}<ButtonDropdown isOpen={dropdownOpen} toggle={toggle} >
-          <DropdownToggle caret>Categories</DropdownToggle>
+        {" "}
+        <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+          <DropdownToggle caret><AiOutlineAppstore/>Categories</DropdownToggle>
           <DropdownMenu>
             {cateList.map((cate) => (
               <div key={cate.id}>
@@ -86,9 +100,11 @@ export default function Index() {
               </div>
             ))}
           </DropdownMenu>
-        </ButtonDropdown>{' '}
-        <ModalAdd/>
-        <Button outline color="link" onClick={() => getListProd()}><IoReloadSharp/></Button>
+        </ButtonDropdown>{" "}
+        <ModalAdd />
+        <Button outline color="link" onClick={() => getListProd()}>
+          <IoReloadSharp />
+        </Button>
       </div>
       <Table bordered>
         <thead>
@@ -113,12 +129,18 @@ export default function Index() {
               <td>
                 {format(new Date(prod.createDate), "dd/MM/yyyy HH:mm:ss")}
               </td>
-              <td> {format(new Date(prod.updateDate), "dd/MM/yyyy HH:mm:ss")}</td>
-              <td> <ModalReview  id={prod.id}/></td>
               <td>
-                <Button color="danger" onClick={() => handleDelete(prod.id)}>
-                  Delete
-                </Button>
+                {" "}
+                {format(new Date(prod.updateDate), "dd/MM/yyyy HH:mm:ss")}
+              </td>
+              <td>
+                {" "}
+                <ModalReview id={prod.id} />
+              </td>
+              <td>
+                <ModalDeleteConfirm
+                  onChoice={(e) => handleDelete(e, prod.id)}
+                />
                 {/* <Button color="warning" onClick={console.log("clicked")}>
                   Edit
                 </Button> */}
@@ -133,7 +155,6 @@ export default function Index() {
         total={Math.ceil(totalPage.current / size)}
         onPageChange={(e) => setPageNum(e)}
       />
-      
     </>
   );
 }

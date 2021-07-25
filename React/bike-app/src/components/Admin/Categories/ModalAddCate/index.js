@@ -3,17 +3,16 @@ import { getWithAuth, post } from "../../../../Utils/httpHelper";
 import "./ModalAddCate.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AiOutlineAppstoreAdd } from "react-icons/ai";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
 toast.configure();
@@ -43,7 +42,7 @@ const ModalAdd = (props) => {
       .then((response) => {
         console.log(response.data);
         if (response.data === "SUCCESS")
-          toast("Add successfully!!!", {
+          toast.success("Add successfully!!!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
@@ -75,11 +74,11 @@ const ModalAdd = (props) => {
     <div>
       <div className="btn-modal">
         <Button outline color="info" onClick={toggle} className="btn-modal">
-          ADD
+          <AiOutlineAppstoreAdd/> ADD
         </Button>
       </div>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Cate Information</ModalHeader>
+        <ModalHeader toggle={toggle}><AiOutlineAppstoreAdd/> Cate Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -104,7 +103,7 @@ const ModalAdd = (props) => {
             </FormGroup>
             <br />
             <Button color="primary" type="submit">
-              Submit
+            <AiOutlineAppstoreAdd/> ADD
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

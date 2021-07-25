@@ -73,6 +73,13 @@ export default function Index() {
       </Col>
       
       <Col>
+      {cateList.filter(cate => cate.id==id).map(filterCate => (
+        <>
+        <h2>{filterCate.name}</h2>
+        <br/>
+        </>
+      ))
+      }
         <Row>
           {prodList.map((prod) => (
             <Col key={prod.id} className="col-3">

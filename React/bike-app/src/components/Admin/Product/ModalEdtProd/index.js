@@ -2,17 +2,16 @@ import React, { useState, useEffect } from "react";
 import { get, put, getWithAuth } from "../../../../Utils/httpHelper";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MdModeEdit } from "react-icons/md";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
 toast.configure();
@@ -131,21 +130,27 @@ const ModalAdd = (props) => {
       put(`/product/${props.id}`, body)
         .then((response) => {
           console.log(response.data);
-          if(response.data === "SUCCESS")  toast("Edit successfully!!!", {
+          if(response.data === "SUCCESS")  toast.success("Edit successfully!!!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          toast.error("Add failed, please check again", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+          console.log(error);
+        });
     }
   }
   return (
     <div>
       <Button color="warning" onClick={toggle}>
-        EDIT
+        <MdModeEdit/>
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Product Information</ModalHeader>
+        <ModalHeader toggle={toggle}><MdModeEdit/> Product Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -255,8 +260,8 @@ const ModalAdd = (props) => {
               <img src={base64} height="250px"></img>
             </FormGroup>
             <br />
-            <Button color="primary" type="submit">
-              Submit
+            <Button outline color="warning" type="submit">
+              <MdModeEdit/> Edit
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

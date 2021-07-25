@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { postAuth } from "../../../../Utils/httpHelper";
-import { format } from "date-fns";
-import DatePicker from "react-datepicker";
+import { IoPersonAddSharp } from "react-icons/io5";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./ModalAddUser.css"
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
+toast.configure();
 const ModalAdd = (props) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
@@ -41,19 +41,25 @@ const ModalAdd = (props) => {
 
     postAuth("/auth/signup", body)
       .then((response) => {
-        console.log(response.data);
-        alert("ADD ADMIN ACCOUNT SUCCESS");
+        if(response.status === 200)  toast("Add successfully!!!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       })
-      .catch((error) => console.log(error));
-    props.onEdit(e);
+      .catch((error) => {
+        toast.error("Add failed, please check again", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+        console.log(error)});
   }
   return (
     <div>
       <Button color="info" onClick={toggle}>
-        Add admin account
+      <IoPersonAddSharp/> Add admin account
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>User Information</ModalHeader>
+        <ModalHeader toggle={toggle}><IoPersonAddSharp/> User Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -121,7 +127,7 @@ const ModalAdd = (props) => {
             </FormGroup>
             <br />
             <Button color="primary" type="submit">
-              Submit
+            <IoPersonAddSharp/> ADD
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

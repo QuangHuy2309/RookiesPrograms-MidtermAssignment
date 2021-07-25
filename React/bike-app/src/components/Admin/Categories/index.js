@@ -4,14 +4,9 @@ import ModalEdt from "./ModalEdtCate"
 import ModalAdd from "./ModalAddCate"
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MdDelete } from "react-icons/md";
+import ModalDeleteConfirm from "../ModalDeleteConfirm";
 import {
-    ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     Table,
-    Button,
   } from "reactstrap";
 
   toast.configure()
@@ -31,21 +26,28 @@ export default function Index() {
   const notify = () =>{
     toast('Delete successfully!!!', {position: toast.POSITION.TOP_RIGHT});
   }
-  function handleDelete(id){
+  function handleDelete(e,id){
       // console.log("DELETE CLICKED");
       // notify();
-     
+      if (e === "OK") {
       del(`/categories/${id}`)
       .then((response) => {
         if (response.status === 200) {
-          alert("DELETE SUCCES");
+          toast.success("Delete successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
           getListCate();
         }
       })
       .catch((error) => {
         if (error.response.status === 409)
-        alert("This category had at least a product. Delete Product have this category first!");
+        toast.error("Please delete product with this Categories first", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       });
+    }
   }
   function getUpdated(e){
     getListCate();
@@ -70,10 +72,11 @@ export default function Index() {
               <th scope="row">{cate.id}</th>
               <td>{cate.name}</td>
               <td>{cate.description}</td>
-              <td>
-                <Button color="danger" onClick={() => handleDelete(cate.id)}>
+              <td style={{display:"flex", "text-align":"center"}}>
+                <ModalDeleteConfirm onChoice={(e) => handleDelete(e,cate.id)} />
+                {/* <Button color="danger" onClick={() => handleDelete(cate.id)}>
                   Delete
-                </Button>
+                </Button> */}
                 <ModalEdt id={cate.id} onEdit={(e) => getUpdated(e)}></ModalEdt>
               </td>
             </tr>

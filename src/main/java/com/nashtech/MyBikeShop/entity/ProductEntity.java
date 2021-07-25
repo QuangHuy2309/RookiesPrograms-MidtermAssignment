@@ -67,12 +67,12 @@ public class ProductEntity {
 	
 //	@JsonManagedReference
 	@JsonIgnore
-	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	Set<OrderDetailEntity> orderDetails;
 
 //	@JsonManagedReference
 	@JsonIgnore
-	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	Set<RateEntity> reviews;
 
 //	@JsonBackReference

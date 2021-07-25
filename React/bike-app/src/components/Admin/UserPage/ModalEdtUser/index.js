@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { getWithAuth, put } from "../../../../Utils/httpHelper";
-import "./ModalEdtUser.css"
+import "./ModalEdtUser.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { MdModeEdit } from "react-icons/md";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
   Input,
-  FormText,
 } from "reactstrap";
 
+toast.configure();
 const ModalAdd = (props) => {
   const { buttonLabel, id } = props;
   const [modal, setModal] = useState(false);
@@ -50,18 +52,27 @@ const ModalAdd = (props) => {
     put("/persons", body)
       .then((response) => {
         console.log(response.data);
-        alert("EDIT SUCCESS");
+        if(response.data === "SUCCESS")  toast.success("Edit successfully!!!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        toast.error("Add failed, please check again", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+        console.log(error);
+      });
     props.onEdit(e);
   }
   return (
     <div>
       <Button color="warning" onClick={toggle}>
-        EDIT
+        <MdModeEdit/>
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>User Information</ModalHeader>
+        <ModalHeader toggle={toggle}><MdModeEdit/> User Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -139,8 +150,8 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <br />
-            <Button color="primary" type="submit">
-              Submit
+            <Button outline color="warning" type="submit">
+            <MdModeEdit/> Edit
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

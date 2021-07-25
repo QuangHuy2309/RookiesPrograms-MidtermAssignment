@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getCookie } from "./Cookie";
 const endpoint = "http://localhost:8080/api/v1";
-const token = getCookie("token");
+
 
 export function get(url) {
-  const token = getCookie("token");
+  // const token = getCookie("token");
   return axios.get(endpoint + url, {
     headers: {
       "Access-Control-Allow-Origin": "*",
@@ -32,7 +32,7 @@ export function post(url, body) {
   });
 }
 export function postAuth(url, body) {
-  const token = getCookie("token");
+  // const token = getCookie("token");
   return axios.post(endpoint + url, body, {
     headers: {
       "Access-Control-Allow-Origin": "*",

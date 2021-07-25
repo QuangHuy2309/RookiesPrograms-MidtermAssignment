@@ -9,10 +9,9 @@ import ProductByType from "./components/ProductByType";
 import ProductDetail from "./components/ProductDetail";
 import Home1 from "./components/Home1/Home1";
 import { BrowserRouter, Route } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import PrivateRouteUser from "./components/PrivateRouteUser";
-import { getCookie } from "./Utils/Cookie";
 
 function App() {
   // const [loginStatus, setLoginStatus] = useState(getCookie("status"));

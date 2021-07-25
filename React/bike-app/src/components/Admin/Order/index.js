@@ -3,6 +3,7 @@ import Page from "../../Pagination";
 import { getWithAuth, put, get, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./Order.css";
+import ModalDeleteConfirm from "../ModalDeleteConfirm";
 import {
   Row,
   Col,
@@ -143,9 +144,7 @@ export default function Order() {
                 )}
               </td>
               <td>
-              <Button color="danger" onClick={() => handleDelete(order.id)}>
-                  Delete
-                </Button>
+              <ModalDeleteConfirm/>
               </td>
             </tr>
           ))}
