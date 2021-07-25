@@ -1,0 +1,20 @@
+.popoverCart{
+    width: 20rem;
+    /* transform: translateX(-30px); */
+}
+.popover{
+    max-width:20rem !important;
+    /* transform: translateX(-30px) !important; */
+}
+.img-cart{
+    width: 5rem;
+}
+.quantityCart{
+    width: 50px !important;
+}
+.cart-form{
+    /* border: 1px solid #333;
+    border-width: medium; */
+    padding: 0.15rem;
+    margin-bottom: 0.5rem;
+}

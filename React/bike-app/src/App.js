@@ -45,7 +45,7 @@ function App() {
         </Route>
         <Route exact path="/prodDetail/:id">
           <Header />
-          <Navbar />
+          
           <ProductDetail />
           <Footer />
         </Route>

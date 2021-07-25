@@ -5,6 +5,9 @@ import { get } from "../../Utils/httpHelper";
 import { getCookie } from "../../Utils/Cookie";
 import { logOut } from "../../Utils/Auth";
 import ModalConfirm from "../ModalConfirm";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Cart from "../ModalCart";
 import {
   Collapse,
   Navbar,
@@ -17,14 +20,14 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import { TiShoppingCart } from "react-icons/ti";
 
+
+toast.configure();
 export default function Index(props) {
   const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
   const [cateList, setCateList] = useState([]);
   const [status, setStatus] = useState([getCookie("status")]);
-  let email;
   useEffect(() => {
     get("/public/categories").then((response) => {
       if (response.status === 200) {
@@ -45,6 +48,7 @@ export default function Index(props) {
     console.log("LOG OUT PRESS");
     if (e === "OK") {
       setStatus(false);
+      history.push("/");
       logOut();
     }
   }
@@ -52,6 +56,12 @@ export default function Index(props) {
     let cartCookie = getCookie("cart");
     if (cartCookie.trim().length !== 0) {
       history.push(`/Ordering`);
+    }
+    else {
+      toast.info("🦄 Cart is empty. Fill it in righ away", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
     }
   }
   function isLogging() {
@@ -117,9 +127,10 @@ export default function Index(props) {
           </Nav>
         </Collapse>
         {isLogging()}
-        <Button color="link" onClick={() => handleOrder()}>
+        {/* <Button color="link" onClick={() => handleOrder()}>
           <TiShoppingCart size={50} />
-        </Button>
+        </Button> */}
+        <Cart/>
       </Navbar>
     </>
   );

@@ -11,6 +11,8 @@ import { getCookie } from "../../Utils/Cookie";
 import { isLogin } from "../../Utils/Auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "../Navbar/";
+
 
 toast.configure();
 export default function Index() {
@@ -35,7 +37,7 @@ export default function Index() {
     if (!check) {
       cartCookie = cartCookie.concat(` ${id}`);
       cartCookie = cartCookie.trim();
-      document.cookie = `cart=${cartCookie}; max-age=86400; path=/;`;
+      document.cookie = `cart=${cartCookie}-1; max-age=86400; path=/;`;
       toast.dark("Product have been add to cart", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
@@ -71,7 +73,8 @@ export default function Index() {
   }
 
   return (
-    <div>
+    <>
+      <Navbar />
       <Row>
         <Col className="col-5">
           <img
@@ -115,6 +118,6 @@ export default function Index() {
       <div>
         <Review id={prod.id} />
       </div>
-    </div>
+    </>
   );
 }
