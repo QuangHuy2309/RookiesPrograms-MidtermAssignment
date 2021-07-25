@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import { Link,useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
 import { getCookie } from "../../Utils/Cookie";
 import { logOut } from "../../Utils/Auth";
-import logo from "../../assets/img/logo.png";
+import ModalConfirm from "../ModalConfirm";
 import {
   Collapse,
   Navbar,
@@ -34,22 +34,23 @@ export default function Index(props) {
     // setStatus(getCookie("status"));
   }, []);
   useEffect(() => {
-    if (status){
+    if (status) {
       // username = getCookie("username");
-      email = getCookie("email");
+      // email = getCookie("email");
       // role = getCookie("role");
     }
   }, [status]);
 
   function handleLogOut(e) {
     console.log("LOG OUT PRESS");
-    setStatus(false);
-    logOut();
-    props.onLogOut(e);
+    if (e === "OK") {
+      setStatus(false);
+      logOut();
+    }
   }
   function handleOrder() {
     let cartCookie = getCookie("cart");
-    if (cartCookie.trim().length !== 0){
+    if (cartCookie.trim().length !== 0) {
       history.push(`/Ordering`);
     }
   }
@@ -60,21 +61,19 @@ export default function Index(props) {
         <Nav className="mr-auto" navbar>
           <UncontrolledDropdown nav inNavbar>
             <DropdownToggle nav caret>
-              Hello, {name}
+              Hi, {name}
             </DropdownToggle>
             <DropdownMenu>
-              <DropdownItem divider />
+              {/* <DropdownItem divider />
               <DropdownItem>
-                <Link
-                  to={`/Info/${email}`}
-                  style={{ textDecoration: "none" }}
-                >
+                <Link to={`/Info/${email}`} style={{ textDecoration: "none" }}>
                   Information
                 </Link>
-              </DropdownItem>
+              </DropdownItem> */}
               <DropdownItem divider />
               <DropdownItem>
-                <p onClick={(e) => handleLogOut(e)}>LogOut</p>
+                {/* <p onClick={(e) => handleLogOut(e)}>LogOut</p> */}
+                <ModalConfirm onChoice={(e) => handleLogOut(e)} />
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -117,11 +116,8 @@ export default function Index(props) {
             </UncontrolledDropdown>
           </Nav>
         </Collapse>
-        {
-          isLogging()
-          
-        }
-        <Button color="link" onClick={() => handleOrder()} >
+        {isLogging()}
+        <Button color="link" onClick={() => handleOrder()}>
           <TiShoppingCart size={50} />
         </Button>
       </Navbar>

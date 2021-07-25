@@ -9,34 +9,49 @@ import { BiUserPin } from "react-icons/bi";
 import { logOut } from "../../../Utils/Auth";
 import { AiFillDatabase } from "react-icons/ai";
 import { MdBorderColor } from "react-icons/md";
+import ModalConfirm from "../../ModalConfirm";
 
 export default function Index(props) {
   const history = useHistory();
-  function LogOut() {
-    console.log("LOG OUT");
-    logOut();
-    history.push("/");
+
+  function handleLogOut(e) {
+    if (e === "OK") {
+      logOut();
+      history.push("/");
+    }
   }
+
   return (
     <ProSidebar>
       <Menu iconShape="square">
-        <MenuItem icon={<AiFillDatabase/>} onClick={() => props.onChoice("CATE")}>
-         CATEGORIES
+        <MenuItem
+          icon={<AiFillDatabase />}
+          onClick={() => props.onChoice("CATE")}
+        >
+          CATEGORIES
         </MenuItem>
-        <MenuItem icon={<GiDutchBike/>} onClick={() => props.onChoice("PRODUCT")}>
+        <MenuItem
+          icon={<GiDutchBike />}
+          onClick={() => props.onChoice("PRODUCT")}
+        >
           PRODUCT MANAGER
         </MenuItem>
-        <MenuItem icon={<MdBorderColor />} onClick={() => props.onChoice("ORDER")}>
-         ORDER MANAGER
+        <MenuItem
+          icon={<MdBorderColor />}
+          onClick={() => props.onChoice("ORDER")}
+        >
+          ORDER MANAGER
         </MenuItem>
         <MenuItem icon={<BiUserPin />} onClick={() => props.onChoice("USER")}>
           USER MANAGER
         </MenuItem>
         <SubMenu title="Account">
-          <MenuItem>Edit Information</MenuItem>
-          <MenuItem onClick={() => props.onChoice("CHANGEPASS")}> 
-          Change Password</MenuItem>
-          <MenuItem onClick={() => LogOut()}>Log Out</MenuItem>
+          {/* <MenuItem>Edit Information</MenuItem> */}
+          {/* <MenuItem onClick={() => props.onChoice("CHANGEPASS")}> 
+          Change Password</MenuItem> */}
+          <MenuItem>
+            <ModalConfirm onChoice={(e) => handleLogOut(e)}  />
+            </MenuItem>
         </SubMenu>
       </Menu>
     </ProSidebar>

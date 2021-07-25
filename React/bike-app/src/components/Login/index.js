@@ -5,6 +5,7 @@ import ModalAdd from "./ModalAddUser"
 import { postAuth } from "../../Utils/httpHelper";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Navbar from "../Navbar";
 import {
   Button,
   Form,
@@ -36,7 +37,7 @@ export default function Index(props) {
         document.cookie = `role=${response.data.roles[0]}; max-age=86400; path=/;`; 
         document.cookie = `status=true; max-age=86400; path=/;`;
         document.cookie = `cart=; max-age=86400; path=/;`;
-        props.onStatus(response.data);
+        // props.onStatus(response.data);
         toast.info(`Welcome back, ${response.data.username}`, {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
@@ -60,6 +61,8 @@ export default function Index(props) {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="login-form">
       <h2 className="head-login">SIGN-IN</h2>
       <Row >
@@ -110,5 +113,6 @@ export default function Index(props) {
       </Form>
       <ModalAdd />
     </div>
+    </>
   );
 }

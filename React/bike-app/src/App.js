@@ -15,45 +15,45 @@ import PrivateRouteUser from "./components/PrivateRouteUser";
 import { getCookie } from "./Utils/Cookie";
 
 function App() {
-  const [loginStatus, setLoginStatus] = useState(getCookie("status"));
+  // const [loginStatus, setLoginStatus] = useState(getCookie("status"));
 
-  useEffect(() => {
-    console.log(`STATUS CHANE: ${loginStatus}`);
-  }, [loginStatus]);
-  useEffect(() => {}, []);
+  // useEffect(() => {
+  //   console.log(`STATUS CHANE: ${loginStatus}`);
+  // }, [loginStatus]);
+  // useEffect(() => {}, []);
 
-  function handleStatusChange(e) {
-    setLoginStatus(true);
-  }
-  function handleLogOut(e) {
-    setLoginStatus(false);
-  }
+  // function handleStatusChange(e) {
+  //   setLoginStatus(true);
+  // }
+  // function handleLogOut(e) {
+  //   setLoginStatus(false);
+  // }
 
   return (
     <BrowserRouter>
       <div className="App">
         <Route exact path="/">
           <Header />
-          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
+          <Navbar/>
           <Home1 />
           <Footer />
         </Route>
         <Route exact path="/Bike/:id">
           <Header />
-          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
+          <Navbar />
           <ProductByType />
           <Footer />
         </Route>
         <Route exact path="/prodDetail/:id">
           <Header />
-          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
+          <Navbar />
           <ProductDetail />
           <Footer />
         </Route>
         <Route exact path="/Login">
           <Header />
-          <Navbar status={loginStatus} onLogOut={(e) => handleLogOut(e)} />
-          <Login onStatus={(e) => handleStatusChange(e)} />
+          
+          <Login />
           <Footer />
         </Route>
         <PrivateRouteAdmin exact path="/Admin" component={Admin} />
