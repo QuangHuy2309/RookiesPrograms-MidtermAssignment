@@ -51,7 +51,7 @@ public class PersonController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<PersonEntity> getPersonbyRole(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "role") String role) {
-		return personService.getPersonsPage(page,size,role);
+		return personService.getPersonsPage(page, size, role);
 	}
 
 	@Operation(summary = "Get Account Infomation by Id")
@@ -66,21 +66,29 @@ public class PersonController {
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public PersonEntity findPerson(@PathVariable(name = "id") int id) {
 		try {
-		return personService.getPerson(id).get();
+			return personService.getPerson(id).get();
 		} catch (NoSuchElementException ex) {
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
-	
+
+	@GetMapping("/persons/checkEmailUpdate")
+	@PreAuthorize("hasRole('ADMIN')")
+	public boolean findPerson(@RequestParam(name = "email") String email, @RequestParam(name = "id") int id) {
+		return personService.checkExistEmailUpdate(email, id);
+
+	}
+
 	@GetMapping("/persons/search/email/{email}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public PersonEntity findPersonByEmail(@PathVariable(name = "email") String email) {
 		try {
-		return personService.getPerson(email);
+			return personService.getPerson(email);
 		} catch (NoSuchElementException ex) {
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
+
 //	@Operation(summary = "Get create Account Infomation")
 //	@ApiResponses(value = {
 //			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
@@ -112,9 +120,9 @@ public class PersonController {
 	public String deletePerson(@PathVariable(name = "id") int id) {
 		try {
 			return personService.deletePerson(id) ? StringUtils.TRUE : StringUtils.FALSE;
-			}catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
-				return StringUtils.FALSE;
-			}
+		} catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
+			return StringUtils.FALSE;
+		}
 	}
 
 	@Operation(summary = "Update Account Infomation")
@@ -130,13 +138,13 @@ public class PersonController {
 	public String editPerson(@RequestBody PersonDTO newPerson, @PathVariable(name = "id") int id) {
 		return personService.updatePerson(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
-	
+
 	@PutMapping("/persons/changePassword/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public String editPasswordPerson(@RequestBody PersonDTO newPerson, @PathVariable(name = "id") int id) {
 		return personService.updatePassword(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
-	
+
 	@GetMapping("/persons/countByRole/{role}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public int getTotalByRole(@PathVariable(name = "role") String role) {

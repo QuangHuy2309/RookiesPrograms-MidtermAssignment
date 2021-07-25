@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { postAuth, get } from "../../../Utils/httpHelper";
-import "./ModalAddUser.css";
+import "./ModalSignUp.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -54,11 +54,16 @@ const ModalAdd = (props) => {
 
       postAuth("/auth/signup", body)
         .then((response) => {
-          console.log(response.data);
-          alert("CREATE ACCOUNT SUCCESS");
+          if(response.status === 200)  toast.success("SignUp success!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
         })
         .catch((error) => {
-          alert("ERROR! SIGN UP FAILED");
+          toast.error("SignUp failed!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
           console.log(error);
         });
     }

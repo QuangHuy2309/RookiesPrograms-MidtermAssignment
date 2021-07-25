@@ -13,6 +13,7 @@ import com.nashtech.MyBikeShop.entity.UserEntity;
 @Repository
 public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
 	List<PersonEntity> findByRole(Pageable pageable, String role);
+	List<PersonEntity> findByEmailIgnoreCase(String email);
 	PersonEntity findByEmail(String email);
 	Boolean existsByEmail(String email);
 	int countByRole(String role);

@@ -84,8 +84,8 @@ public class PersonServiceImpl implements PersonService {
 		personRepository.save(person);
 		}
 		else { // Email được đổi, kiểm tra trùng
-			PersonEntity personCheck = personRepository.findByEmail(personDTO.getEmail());
-			if (personCheck == null) {
+			List<PersonEntity> list = personRepository.findByEmailIgnoreCase(personDTO.getEmail());
+			if (list.isEmpty()) {
 				personRepository.save(person);
 			}
 			else {
@@ -93,6 +93,16 @@ public class PersonServiceImpl implements PersonService {
 			}
 		}
 		return true;
+	}
+	
+	public boolean checkExistEmailUpdate(String email, int id) {
+		List<PersonEntity> list = personRepository.findByEmailIgnoreCase(email);
+		if (list.isEmpty()) {
+			return true;
+		}
+		else if ((list.size() > 1) || ((list.size() == 1) && (list.get(0).getId() != id)))
+			return false;
+		else return true;
 	}
 	
 	public boolean updatePassword(PersonDTO personDTO) {

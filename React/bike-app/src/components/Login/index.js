@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import { useHistory   } from "react-router-dom";
 import "./Login.css";
-import ModalAdd from "./ModalAddUser"
+import ModalAdd from "./ModalSignUp"
 import { postAuth } from "../../Utils/httpHelper";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

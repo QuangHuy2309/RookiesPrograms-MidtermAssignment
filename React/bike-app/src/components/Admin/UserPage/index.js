@@ -60,7 +60,7 @@ export default function Index() {
     }
   }
 
-  function getUpdated(e){
+  function handleUpdate(e){
     getListUser();
   }
 
@@ -75,11 +75,12 @@ export default function Index() {
         <Button outline color="primary" onClick={() => setChoice("ADMIN")}>
           Employee List
         </Button>
-        <ModalAdd onEdit={(e) => getUpdated(e)}/>
+        <ModalAdd onEdit={(e) => handleUpdate(e)}/>
       </div>
       <Table bordered>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Email</th>
             <th>Day of Birth</th>
@@ -92,6 +93,7 @@ export default function Index() {
         <tbody>
           {userList.map((user) => (
             <tr key={user.id}>
+              <td>{user.id}</td>
               <td>{user.fullname}</td>
               <td>{user.email}</td>
               <td>{format(new Date(user.dob), "dd/MM/yyyy")}</td>
@@ -106,7 +108,7 @@ export default function Index() {
                 {/* <Button color="warning" onClick={console.log("clicked")}>
                   Edit
                 </Button> */}
-                <ModalEdt id={user.id} onEdit={(e) => getUpdated(e)}></ModalEdt>
+                <ModalEdt id={user.id} onEdit={(e) => handleUpdate(e)}></ModalEdt>
               </td>
             </tr>
           ))}

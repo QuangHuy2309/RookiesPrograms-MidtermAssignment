@@ -81,7 +81,13 @@ const ModalEdt = (props) => {
           autoClose: 3000,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error)
+        toast.error(`Error: ${error}`, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      });
     }
   }
   return (

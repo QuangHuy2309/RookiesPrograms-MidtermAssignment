@@ -17,13 +17,17 @@ import {
 
 toast.configure();
 const ModalAdd = (props) => {
-  const { buttonLabel, id } = props;
+  const { id } = props;
   const [modal, setModal] = useState(false);
   const [user, setUser] = useState(Object);
+  const [checkName, setCheckName] = useState(true);
+  const [nameError, setNameError] = useState("");
+  const [checkEmail, setCheckEmail] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [addressError, setAddressError] = useState("");
+  
   const toggle = () => setModal(!modal);
-  function handleFieldChange(e, key) {
-    setUser({ [key]: e.target.value });
-  }
+  
   useEffect(() => {
     if (modal) {
       getWithAuth(`/persons/search/${id}`).then((response) => {
@@ -32,24 +36,69 @@ const ModalAdd = (props) => {
           setUser(response.data);
         }
       });
+      setNameError("");
+      setEmailError("");
+      setAddressError("");
     }
   }, [modal]);
+  async function checkEmailExist(email, id) {
+    if (checkName  && (addressError == "") )
+    getWithAuth(`/persons/checkEmailUpdate?email=${email}&id=${id}`).then(
+      (response) => {
+        if (response.status === 200) {
+          if (response.data) {
+            setCheckEmail(true);
+            // setEmailError("");
+          } else {
+            setEmailError("This email has been used");
+          }
+        }
+      }
+    );
+  }
+  async function handleFieldChange(e, key) {
+    setUser({ [key]: e.target.value });
+    if (key === "email"){
+      setEmailError("");
+    }
+    else if (key === "fullname") {
+      if (e.target.value.trim() == "") {
+        setNameError("Name must not blank");
+        setCheckName(false);
+      } else {
+        setNameError("");
+        setCheckName(true);
+      }
+    } 
+    else if (key === "address") {
+      if (e.target.value.trim() == "") {
+        setAddressError("Address must not blank");
+      } else {
+        setAddressError("");
+      }
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
+    const email = e.target.email.value.trim();
+    const id = e.target.id.value.trim();
+    
+    checkEmailExist(email,id);
+    if (checkEmail && checkName && (addressError == "")){
     const body = JSON.stringify({
       id: e.target.id.value,
-      fullname: e.target.fullname.value,
-      email: e.target.email.value,
+      fullname: e.target.fullname.value.trim(),
+      email: e.target.email.value.trim(),
       gender: e.target.radio.value,
       dob: e.target.dob.value,
       phonenumber: e.target.phonenumber.value,
-      address: e.target.address.value,
+      address: e.target.address.value.trim(),
     });
     console.log(body);
     // console.log(e.target.dob.value);
 
-    put("/persons", body)
+    put(`/persons/${id}`, body)
       .then((response) => {
         console.log(response.data);
         if(response.data === "SUCCESS")  toast.success("Edit successfully!!!", {
@@ -64,7 +113,7 @@ const ModalAdd = (props) => {
         });
         console.log(error);
       });
-    props.onEdit(e);
+  }
   }
   return (
     <div>
@@ -77,7 +126,7 @@ const ModalAdd = (props) => {
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
               <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" value={user.id} required />
+              <Input type="text" name="id" id="exampleEmail" value={user.id} required disabled />
             </FormGroup>
             <FormGroup>
               <Label for="exampleFullName">Name</Label>
@@ -86,9 +135,10 @@ const ModalAdd = (props) => {
                 name="fullname"
                 id="exampleFullName"
                 value={user.fullname}
-                required
+                required="required"
                 onChange={(e) => handleFieldChange(e, "fullname")}
               />
+              <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="examplePrice">Email</Label>
@@ -100,6 +150,7 @@ const ModalAdd = (props) => {
                 required
                 onChange={(e) => handleFieldChange(e, "email")}
               />
+              <div style={{ color: "red" }}>{emailError}</div>
             </FormGroup>
             
             <FormGroup tag="fieldset" className="radioGr-user">
@@ -139,15 +190,16 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword">Address</Label>
+              <Label for="exampleAddress">Address</Label>
               <Input
                 type="text"
                 name="address"
-                id="examplePassword"
+                id="exampleAddress"
                 value={user.address}
                 required
                 onChange={(e) => handleFieldChange(e, "address")}
               />
+              <div style={{ color: "red" }}>{addressError}</div>
             </FormGroup>
             <br />
             <Button outline color="warning" type="submit">

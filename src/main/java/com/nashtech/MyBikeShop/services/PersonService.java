@@ -18,4 +18,5 @@ public interface PersonService {
 	public boolean updatePerson(PersonDTO person);
 	public boolean updatePassword(PersonDTO person);
 	public int getTotalByRole(String role);
+	public boolean checkExistEmailUpdate(String email, int id);
 }
