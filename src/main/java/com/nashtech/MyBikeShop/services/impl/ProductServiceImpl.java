@@ -80,10 +80,10 @@ public class ProductServiceImpl implements ProductService {
 		try {
 			boolean checkName = existName(productDTO.getName());
 			boolean checkId = existId(productDTO.getId());
-			if (checkId) {
+			if (!checkId) {
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product id");
-			} else if (checkName) {
+			} else if (!checkName) {
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this name. Please change product name");
 			} else {
@@ -162,11 +162,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean existId(String id) {
-		return productRepository.existsById(id);
+		List<ProductEntity> prodList = productRepository.findByIdIgnoreCase(id);
+		return prodList.isEmpty();
 	}
 
 	public boolean existName(String name) {
-		return productRepository.existsByName(name);
+		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
+		return prodList.isEmpty();
 	}
 //	public MultipartFile convertToImg(String encodedString) throws IOException {
 //		Date date = Calendar.getInstance().getTime();

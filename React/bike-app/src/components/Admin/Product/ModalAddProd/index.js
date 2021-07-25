@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { get, post } from "../../../../Utils/httpHelper";
+import { get, post, getWithAuth } from "../../../../Utils/httpHelper";
 import "./ModalAddProd.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Button,
   Modal,
@@ -14,11 +16,18 @@ import {
   FormText,
 } from "reactstrap";
 
+toast.configure();
 const ModalExample = (props) => {
-  const { buttonLabel, id } = props;
   const [cateList, setCateList] = useState([]);
   const [modal, setModal] = useState(false);
   const [base64, setBase64] = useState("");
+  const [checkId, setCheckId] = useState(false);
+  const [idError, setIdError] = useState("");
+  const [checkName, setCheckName] = useState(false);
+  const [nameError, setNameError] = useState("");
+  const [brandError, setBrandError] = useState("");
+  const [checkBrand, setCheckBrand] = useState(true);
+
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
@@ -28,6 +37,10 @@ const ModalExample = (props) => {
           setCateList([...response.data]);
         }
       });
+      setNameError("");
+      setIdError("");
+      setBrandError("");
+      setBase64("");
     }
   }, [modal]);
   const uploadImage = async (e) => {
@@ -47,68 +60,101 @@ const ModalExample = (props) => {
       };
     });
   };
+  async function handleFieldChange(e, key) {
+    if (key === "id") {
+      if (e.target.value.trim() == "") {
+        setIdError("Product ID must not blank");
+        // setCheckId(false);
+      } else {
+        setIdError("");
+        // setCheckId(true);
+      }
+    } else if (key === "name") {
+      if (e.target.value.trim() == "") {
+        setNameError("Product name must not blank");
+        // setCheckName(false);
+      } else {
+        setNameError("");
+        // setCheckName(true);
+      }
+    } else if (key === "brand") {
+      if (e.target.value.trim() == "") {
+        setBrandError("Product brand must not blank");
+        // setCheckBrand(false);
+      } else {
+        setBrandError("");
+        // setCheckBrand(true);
+      }
+    }
+  }
+  // const checkExistProdId = async (id) => {
+  async function checkExistProdId(id) {
+      getWithAuth(`/product/checkExistId/${id}`).then((response) => {
+        if (response.status === 200) {
+          if (response.data) {
+            setCheckId(true);
+          } else {
+            setIdError("Product id is duplicated");
+          }
+        }
+      });
+    
+  }
 
-  // function getBase64(file) {
-  //   return new Promise((resolve) => {
-  //     let fileInfo;
-  //     let baseURL = "";
-  //     // Make new FileReader
-  //     let reader = new FileReader();
-  //     // Convert the file to base64 text
-  //     reader.readAsDataURL(file);
-  //     // on reader load somthing...
-  //     reader.onload = (readerEvt) => {
-  //       // Make a fileInfo Object
-  //       let binaryString = readerEvt.target.result;
-  //       setBase64(btoa(binaryString));
-  //       baseURL = reader.result;
-  //       resolve(baseURL);
-  //     };
-  //     console.log(fileInfo);
-  //   });
-  // }
-  // function changeFile(e){
-  //   if (e.target.files.length !== 0) {
-  //     console.log("CO FILE");
-  //     let file = e.target.files[0];
-  //     getBase64(file)
-  //       .then((result) => {
-  //         file["base64"] = result;
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  //   else{ setBase64(prod.photo)}
-  // }
-
+  async function checkExistProdName(name) {
+      getWithAuth(`/product/checkExistName/${name}`).then((response) => {
+        if (response.status === 200) {
+          if (response.data) {
+            setNameError("");
+            setCheckName(true);
+          } else {
+            setCheckName(false);
+            setNameError("Product name is duplicated");
+          }
+        }
+      });
+    
+  }
   function handleSubmit(e) {
     e.preventDefault();
-    let photo;
-    if (e.target.file.files.length !== 0) {
-      const byteArr = base64.split(",");
-      photo = byteArr[1];
-    } 
-    // console.log(photo);
-    const body = JSON.stringify({
-      id: e.target.id.value,
-      name: e.target.name.value,
-      price: e.target.price.value,
-      quantity: e.target.quantity.value,
-      description: e.target.description.value,
-      brand: e.target.brand.value,
-      createDate: new Date(),
-      categoriesId: e.target.select.value,
-      photo: photo,
-    });
-    console.log(body);
+    const id = e.target.id.value.trim();
+    const name = e.target.name.value.trim();
+    checkExistProdId(id);
+    checkExistProdName(name);
+    const check = checkId && checkName && checkBrand;
+    if (check) {
+      let photo;
+      if (e.target.file.files.length !== 0) {
+        const byteArr = base64.split(",");
+        photo = byteArr[1];
+      }
+      const body = JSON.stringify({
+        id: e.target.id.value,
+        name: e.target.name.value,
+        price: e.target.price.value,
+        quantity: e.target.quantity.value,
+        description: e.target.description.value,
+        brand: e.target.brand.value,
+        createDate: new Date(),
+        categoriesId: e.target.select.value,
+        photo: photo,
+      });
+      // console.log(body);
 
-    post("/product", body)
-      .then((response) => {
-        console.log(response.data);
-        alert("ADD NEW PRODUCT SUCCESS");
-      })
-      .catch((error) => console.log(error));
+      post("/product", body)
+        .then((response) => {
+          if(response.status === 200)  toast("Add successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        })
+        .catch((error) => {
+          toast.danger("Add failed, please check again", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+          console.log(error)});
+    }
   }
   return (
     <div>
@@ -120,8 +166,15 @@ const ModalExample = (props) => {
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleEmail">ID</Label>
-              <Input type="text" name="id" id="exampleEmail" required/>
+              <Label for="exampleID">ID</Label>
+              <Input
+                type="text"
+                name="id"
+                id="exampleID"
+                required="required"
+                onChange={(e) => handleFieldChange(e, "id")}
+              />
+              <div style={{ color: "red" }}>{idError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="examplePassword">Name</Label>
@@ -129,8 +182,10 @@ const ModalExample = (props) => {
                 type="text"
                 name="name"
                 id="examplePassword"
-                required
+                required="required"
+                onChange={(e) => handleFieldChange(e, "name")}
               />
+              <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="examplePrice">Price</Label>
@@ -138,7 +193,8 @@ const ModalExample = (props) => {
                 type="number"
                 name="price"
                 id="examplePrice"
-                required
+                required="required"
+                min="0"
               />
             </FormGroup>
             <FormGroup>
@@ -147,7 +203,8 @@ const ModalExample = (props) => {
                 type="number"
                 name="quantity"
                 id="exampleQuantity"
-                required
+                required="required"
+                min="0"
               />
             </FormGroup>
             <FormGroup>
@@ -156,7 +213,7 @@ const ModalExample = (props) => {
                 type="select"
                 name="select"
                 id="exampleSelect"
-                required
+                required="required"
               >
                 {cateList.map((cate) => (
                   <option
@@ -173,17 +230,14 @@ const ModalExample = (props) => {
                 type="text"
                 name="brand"
                 id="exampleBrand"
-                required
+                required="required"
+                onChange={(e) => handleFieldChange(e, "brand")}
               />
+              <div style={{ color: "red" }}>{brandError}</div>
             </FormGroup>
             <FormGroup>
               <Label for="exampleText">Description</Label>
-              <Input
-                type="textarea"
-                name="description"
-                id="exampleText"
-                
-              />
+              <Input type="textarea" name="description" id="exampleText" />
             </FormGroup>
             <FormGroup>
               <Label for="exampleFile">File</Label>
@@ -193,6 +247,7 @@ const ModalExample = (props) => {
                 name="file"
                 id="exampleFile"
                 accept=".jpeg, .png, .jpg"
+                required="required"
                 onChange={(e) => {
                   uploadImage(e);
                 }}

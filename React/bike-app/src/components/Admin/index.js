@@ -10,7 +10,7 @@ import "./Admin.css"
 
 
 export default function Index() {
-  const [choice, setChoice] = useState("");
+  const [choice, setChoice] = useState("ORDER");
   function ProductRoute(){
       return(<Product/>);
   }
