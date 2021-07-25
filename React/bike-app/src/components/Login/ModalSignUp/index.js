@@ -89,11 +89,11 @@ const ModalAdd = (props) => {
     get(`/auth/checkEmail/${email}`).then((response) => {
       if (response.status === 200) {
         if (response.data) {
-          setCheckEmail(false);
-          setEmailError("Email already used. Choose another email");
+          setCheckEmail(true);       
         }
         else {
-          setCheckEmail(true);
+          setCheckEmail(false);
+          setEmailError("Email already used. Choose another email");
         }
       }
     });

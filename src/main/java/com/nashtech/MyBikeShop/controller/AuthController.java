@@ -108,7 +108,7 @@ public class AuthController {
 	
 	@GetMapping("/auth/checkEmail/{email}")
 	public boolean checkExistEmailSignUp(@PathVariable(name = "email") String email) {
-		return personRepository.existsByEmail(email.toLowerCase());
+		return personRepository.existsByEmail(email.toLowerCase()) ? false : true;
 	}
 	
 	@GetMapping("/auth/logout")
