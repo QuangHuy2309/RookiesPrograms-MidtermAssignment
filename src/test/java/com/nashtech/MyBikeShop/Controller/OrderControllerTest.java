@@ -61,7 +61,7 @@ public class OrderControllerTest {
 		
 		Mockito.when(orderService.getOrderPage(Mockito.anyInt(), Mockito.anyInt()))
 											.thenReturn(listOrder);
-				mockMvc.perform(MockMvcRequestBuilders.get("/api/order?pagenum=4&size=4"))
+				mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/order?pagenum=4&size=4"))
 				//.contentType(MediaType.APPLICATION_JSON)
 				//.characterEncoding("UTF-8")
 		        //.accept(MediaType.APPLICATION_JSON))
@@ -82,13 +82,13 @@ public class OrderControllerTest {
 		
 		Mockito.when(orderService.createOrder(Mockito.anyObject())).thenReturn(order);
 		
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/order")
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/order")
 				.content(ow.writeValueAsString(orderDTO))
 		        .contentType(MediaType.APPLICATION_JSON)
 		        .characterEncoding("UTF-8")
 		        .accept(MediaType.APPLICATION_JSON))
 //				.andReturn().getResponse().getContentAsString());
-//				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.status().isOk())
 //				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 //				.andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)));
 		.andExpect(MockMvcResultMatchers.jsonPath("$.id",Matchers.equalTo(1)));
