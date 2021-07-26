@@ -37,14 +37,14 @@ export default function Index() {
     if (!check) {
       cartCookie = cartCookie.concat(` ${id}`);
       cartCookie = cartCookie.trim();
-      document.cookie = `cart=${cartCookie}-1; max-age=86400; path=/;`;
-      toast.dark("Product have been add to cart", {
+      document.cookie = `cart=${cartCookie}#$1; max-age=86400; path=/;`;
+      toast.info("Product have been add to cart", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });
     }
     else {
-      if (type === "Add") {toast.info("This product is already in your cart", {
+      if (type === "Add") {toast("This product is already in your cart", {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: 3000,
       });

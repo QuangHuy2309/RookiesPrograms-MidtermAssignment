@@ -17,6 +17,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
@@ -25,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 
 @Entity
 @Table(name = "products")
@@ -39,10 +42,12 @@ public class ProductEntity {
 	private String name;
 
 	@NotNull
+	@DecimalMin(value = "0", message = "Price must be not under 0")
 	@Column(name = "price")
 	private float price;
 
 	@NotNull
+	@DecimalMin(value = "0", message = "Quantity must be not under 0")
 	@Column(name = "quantity")
 	private int quantity;
 
@@ -152,7 +157,7 @@ public class ProductEntity {
 	public void changeQuantity(int numChange) {
 		boolean checkNumberChange = ((numChange < 0) && (this.quantity < Math.abs(numChange)));
 		if (checkNumberChange)
-			throw new IllegalArgumentException("The number of quantity change is invalid");
+			throw new ObjectPropertiesIllegalException("The number of quantity change is invalid");
 		this.quantity += numChange;
 	}
 

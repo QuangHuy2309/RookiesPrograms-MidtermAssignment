@@ -32,3 +32,24 @@
 .quantity-prod{
     width: 2rem;
 }
+.order{
+    margin:1rem;
+}
+.btnDelProd{
+    text-align: right;
+}
+.priceCart{
+    margin-top: 3rem;
+    
+}
+.priceTitle{
+    text-align: left;
+}
+.priceTotal{
+    display: flex;
+
+}
+.priceNumTotal{
+    margin-left: 1rem;
+    color: #ff3f00;
+}

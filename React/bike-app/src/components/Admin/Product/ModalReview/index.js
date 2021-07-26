@@ -1,7 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RatingView } from "react-simple-star-rating";
 import { get, delWithBody ,post } from "../../../../Utils/httpHelper";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Page from "../../../Pagination";
+import "./ModalReview.css";
+import ModalDeleteConfirm from "../ModalDeleteConfirm";
 import {
   Button,
   Modal,
@@ -11,8 +15,9 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import "./ModalReview.css";
 
+
+toast.configure();
 export default function Index(props) {
   const [modal, setModal] = useState(false);
   const [pagenum, setPageNum] = useState(0);
@@ -62,10 +67,14 @@ export default function Index(props) {
       productId :props.id,
     });
     console.log(body);
-    post("/product/rate/delete", body)
+    delWithBody("/product/rate/delete", body)
       .then((response) => {
         if (response.status === 200) {
-          alert("DELETE SUCCES");
+          toast.success("Delete success", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        
         }
       })
       .catch((error) => {
@@ -92,7 +101,10 @@ export default function Index(props) {
                   />
                 </Col>
                 <Col className="btnCol-ModalRv">
-                  <Button color="danger" onClick={() => handleDelete(review.id.customerId)} >Delete</Button>
+                  {/* <Button color="danger" onClick={() => handleDelete(review.id.customerId)} >Delete</Button> */}
+                  <ModalDeleteConfirm
+                  onChoice={(e) => handleDelete(e, review.id.customerId)}
+                />
                 </Col>
               </Row>
               <p>{review.rateText}</p>

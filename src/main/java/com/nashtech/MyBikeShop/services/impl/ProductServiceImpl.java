@@ -119,6 +119,9 @@ public class ProductServiceImpl implements ProductService {
 	public boolean updateProductQuantity(String id, int numberChange) {
 		try {
 			ProductEntity product = getProduct(id).get();
+			if (product.getQuantity() - numberChange < 0) {
+				throw new ObjectPropertiesIllegalException("Quantity of Product is not enought");
+			}
 			product.changeQuantity(numberChange);
 			// productRepository.save(updateDate(product));
 			return true;

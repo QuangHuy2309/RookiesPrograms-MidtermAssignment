@@ -31,7 +31,7 @@ const ModalConfirm = (props) => {
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}><RiDeleteBin2Fill/>Delete</ModalHeader>
         <ModalBody>
-          Are you sure you want to delete?
+          Are you sure you want to remove this?
         </ModalBody>
         <ModalFooter>
           <Button color="danger" onClick={()=> btnClick("OK")}>Delete</Button>{' '}

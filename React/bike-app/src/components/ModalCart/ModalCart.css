@@ -1,20 +1,29 @@
-.popoverCart{
-    width: 20rem;
-    /* transform: translateX(-30px); */
+.popoverCart {
+  width: 20rem;
+  /* transform: translateX(-30px); */
 }
-.popover{
-    max-width:20rem !important;
-    /* transform: translateX(-30px) !important; */
+.popover {
+  max-width: 20rem !important;
+  /* transform: translateX(-30px) !important; */
 }
-.img-cart{
-    width: 5rem;
+.img-cart {
+  width: 5rem;
 }
-.quantityCart{
-    width: 50px !important;
-}
-.cart-form{
-    /* border: 1px solid #333;
+
+.cart-form {
+  /* border: 1px solid #333;
     border-width: medium; */
-    padding: 0.15rem;
-    margin-bottom: 0.5rem;
+  padding: 0.15rem;
+  margin-bottom: 0.5rem;
+}
+.priceCart {
+  text-align: right;
+}
+.priceNum {
+  margin-left: 0.125em;
+  color: #ff3f00;
+}
+.totalCost {
+  text-align: center;
+  margin: auto;
 }

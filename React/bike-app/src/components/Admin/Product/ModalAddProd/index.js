@@ -27,6 +27,7 @@ const ModalExample = (props) => {
   const [nameError, setNameError] = useState("");
   const [brandError, setBrandError] = useState("");
   const [checkBrand, setCheckBrand] = useState(true);
+  const [id, setId] = useState("");
 
   const toggle = () => setModal(!modal);
 
@@ -64,9 +65,15 @@ const ModalExample = (props) => {
     if (key === "id") {
       if (e.target.value.trim() == "") {
         setIdError("Product ID must not blank");
+        setId(e.target.value);
         // setCheckId(false);
-      } else {
+      } 
+      else if (e.target.value.includes('#')) {
+        // e.target.value.replace(/\D/, "")
+      }
+      else {
         setIdError("");
+        setId(e.target.value);
         // setCheckId(true);
       }
     } else if (key === "name") {
@@ -172,6 +179,7 @@ const ModalExample = (props) => {
                 name="id"
                 id="exampleID"
                 required="required"
+                value={id}
                 onChange={(e) => handleFieldChange(e, "id")}
               />
               <div style={{ color: "red" }}>{idError}</div>
@@ -194,7 +202,7 @@ const ModalExample = (props) => {
                 name="price"
                 id="examplePrice"
                 required="required"
-                min="0"
+                min="1000"
               />
             </FormGroup>
             <FormGroup>

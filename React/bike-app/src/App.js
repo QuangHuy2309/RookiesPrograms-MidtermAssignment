@@ -14,19 +14,6 @@ import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import PrivateRouteUser from "./components/PrivateRouteUser";
 
 function App() {
-  // const [loginStatus, setLoginStatus] = useState(getCookie("status"));
-
-  // useEffect(() => {
-  //   console.log(`STATUS CHANE: ${loginStatus}`);
-  // }, [loginStatus]);
-  // useEffect(() => {}, []);
-
-  // function handleStatusChange(e) {
-  //   setLoginStatus(true);
-  // }
-  // function handleLogOut(e) {
-  //   setLoginStatus(false);
-  // }
 
   return (
     <BrowserRouter>

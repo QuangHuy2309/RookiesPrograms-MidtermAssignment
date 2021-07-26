@@ -23,9 +23,7 @@ export default function Index() {
         }
       });
   }
-  const notify = () =>{
-    toast('Delete successfully!!!', {position: toast.POSITION.TOP_RIGHT});
-  }
+
   function handleDelete(e,id){
       // console.log("DELETE CLICKED");
       // notify();
