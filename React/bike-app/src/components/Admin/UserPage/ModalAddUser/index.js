@@ -24,16 +24,20 @@ const ModalAdd = (props) => {
   const [checkEmail, setCheckEmail] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [phone, setPhonenumber] = useState("");
+  const [rePass, setRePass] = useState("");
+  const [rePassError, setRePassError] = useState("");
 
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
     if (modal) {
       setDate();
+      setRePassError("");
+      setRePass("");
     }
   }, [modal]);
 
-  function handleFieldChange(e, key) {
+  async function handleFieldChange(e, key) {
     if (key === "fullname") {
       if (e.target.value.trim() == "") {
         setNameError("Name must not blank");
@@ -44,16 +48,30 @@ const ModalAdd = (props) => {
       }
     } else if (key === "email") {
       setEmailError("");
-    } else if ((key = "phonenumber")) {
+    } else if (key === "phonenumber") {
       setPhonenumber(e.target.value.replace(/\D/, ""));
+    } 
+    else if (key === "rePass") {
+      setRePass(e.target.value);
+      setRePassError("");
+    }
+
+  }
+
+  async function checkRePass(pass){
+    if (pass !== rePass){
+      setRePassError("Please enter the same password as above")
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const email = e.target.email.value.trim();
+    const pass = e.target.password.value;
+    checkRePass(pass);
     checkExistEmail(email);
-    if (checkEmail) {
+    const check = checkEmail && checkName && (rePassError == "") && (pass === rePass);
+    if (check) {
       const body = JSON.stringify({
         id: e.target.id.value,
         fullname: e.target.fullname.value.trim(),
@@ -146,6 +164,21 @@ const ModalAdd = (props) => {
                 minLength="6"
               />
             </FormGroup>
+            <FormGroup>
+              <Label for="exampleRePassword">Confirm Password</Label>
+              <Input
+                type="password"
+                name="rePass"
+                id="exampleRePassword"
+                required="required"
+                minLength="6"
+                value={rePass}
+                onChange={(e) => handleFieldChange(e, "rePass")}
+              />
+            </FormGroup>
+            <div style={{ color: "red", "text-align": "left" }}>
+              {rePassError}
+            </div>
             <FormGroup>
               <Label for="exampleFullName">Name</Label>
               <Input

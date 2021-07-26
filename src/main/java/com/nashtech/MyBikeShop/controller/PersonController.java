@@ -24,6 +24,7 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.payload.request.ChangePassRequest;
 import com.nashtech.MyBikeShop.services.PersonService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -139,11 +140,11 @@ public class PersonController {
 		return personService.updatePerson(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 
-	@PutMapping("/persons/changePassword/{id}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	public String editPasswordPerson(@RequestBody PersonDTO newPerson, @PathVariable(name = "id") int id) {
-		return personService.updatePassword(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
-	}
+//	@PutMapping("/persons/changePassword/{id}")
+//	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//	public String editPasswordPerson(@RequestBody ChangePassRequest account, @PathVariable(name = "id") int id) {
+//		return personService.updatePassword(account) ? StringUtils.TRUE : StringUtils.FALSE;
+//	}
 
 	@GetMapping("/persons/countByRole/{role}")
 	@PreAuthorize("hasRole('ADMIN')")

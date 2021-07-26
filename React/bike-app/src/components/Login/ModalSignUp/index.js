@@ -22,22 +22,33 @@ const ModalAdd = (props) => {
   const [checkEmail, setCheckEmail] = useState(false);
   const [checkName, setCheckName] = useState(false);
   const [nameError, setNameError] = useState("");
-  const [phone,setPhonenumber] = useState("")
+  const [phone, setPhonenumber] = useState("");
+  const [rePass, setRePass] = useState("");
+  const [rePassError, setRePassError] = useState("");
   const [today, setToday] = useState("");
+  
   useEffect(() => {
-    if(modal){
-    setDate();
-    setEmailError("");
-    setPhonenumber("");
-    setCheckEmail(false);
+    if (modal) {
+      setDate();
+      setEmailError("");
+      setPhonenumber("");
+      setRePassError("");
+      setCheckEmail(false);
+      setRePass("");
     }
   }, [modal]);
-
+  async function checkRePass(pass){
+    if (pass !== rePass){
+      setRePassError("Please enter the same password as above")
+    }
+  }
   async function handleSubmit(e) {
     e.preventDefault();
     const email = e.target.email.value.trim();
+    const pass = e.target.password.value;
+    checkRePass(pass);
     await checkExistEmail(email);
-    const check = checkEmail && checkName;
+    const check = checkEmail && checkName && (rePassError == "") && (pass === rePass);
     if (check) {
       const body = JSON.stringify({
         fullname: e.target.fullname.value.trim(),
@@ -54,10 +65,11 @@ const ModalAdd = (props) => {
 
       postAuth("/auth/signup", body)
         .then((response) => {
-          if(response.status === 200)  toast.success("SignUp success!!!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
+          if (response.status === 200)
+            toast.success("SignUp success!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
         })
         .catch((error) => {
           toast.error("SignUp failed!", {
@@ -68,7 +80,7 @@ const ModalAdd = (props) => {
         });
     }
   }
-  function handleFieldChange(e, key) {
+  async function handleFieldChange(e, key) {
     if (key === "fullname") {
       if (e.target.value.trim() == "") {
         setNameError("Name must not blank");
@@ -79,9 +91,11 @@ const ModalAdd = (props) => {
       }
     } else if (key === "email") {
       setEmailError("");
-    }
-    else if (key ="phonenumber"){
-      setPhonenumber(e.target.value.replace(/\D/,''));
+    } else if (key === "phonenumber") {
+      setPhonenumber(e.target.value.replace(/\D/, ""));
+    } else if (key === "rePass") {
+      setRePass(e.target.value);
+      setRePassError("");
     }
   }
 
@@ -89,9 +103,8 @@ const ModalAdd = (props) => {
     get(`/auth/checkEmail/${email}`).then((response) => {
       if (response.status === 200) {
         if (response.data) {
-          setCheckEmail(true);       
-        }
-        else {
+          setCheckEmail(true);
+        } else {
           setCheckEmail(false);
           setEmailError("Email already used. Choose another email");
         }
@@ -147,6 +160,21 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
+              <Label for="exampleRePassword">Confirm Password</Label>
+              <Input
+                type="password"
+                name="rePass"
+                id="exampleRePassword"
+                required="required"
+                minLength="6"
+                value={rePass}
+                onChange={(e) => handleFieldChange(e, "rePass")}
+              />
+            </FormGroup>
+            <div style={{ color: "red", "text-align": "left" }}>
+              {rePassError}
+            </div>
+            <FormGroup>
               <Label for="exampleFullname">Name</Label>
               <Input
                 type="text"
@@ -190,7 +218,7 @@ const ModalAdd = (props) => {
                 name="phonenumber"
                 id="examplePhone"
                 required="required"
-                value={phone} 
+                value={phone}
                 minLength="10"
                 maxLength="10"
                 onChange={(e) => handleFieldChange(e, "phonenumber")}

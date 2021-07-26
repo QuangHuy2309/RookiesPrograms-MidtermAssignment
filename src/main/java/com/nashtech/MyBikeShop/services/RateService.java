@@ -15,4 +15,5 @@ public interface RateService {
 	public boolean updateRate(RateDTO rate);
 	public int getNumRate(String id);
 	public boolean checkExist(RateKey id);
+	public double getAverageRateNumByProduct(String id);
 }

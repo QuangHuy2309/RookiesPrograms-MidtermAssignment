@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.OptionalDouble;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,5 +98,12 @@ public class RateServiceImpl implements RateService {
 
 	public int getNumRate(String id) {
 		return rateRepo.countByIdProductId(id);
+	}
+	
+	public double getAverageRateNumByProduct(String id) {
+		List<RateEntity> list = rateRepo.findByIdProductId(id);
+		
+		OptionalDouble  avg = list.stream().map(rate -> rate.getRateNum()).mapToDouble(a -> a).average();
+		return avg.isPresent() ? avg.getAsDouble() : 0.0; 
 	}
 }

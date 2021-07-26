@@ -17,6 +17,8 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.UserEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
+import com.nashtech.MyBikeShop.payload.request.ChangePassRequest;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.services.PersonService;
 
@@ -75,43 +77,51 @@ public class PersonServiceImpl implements PersonService {
 		PersonEntity personEntity = getPerson(personDTO.getId()).get();
 		boolean checkEmailChange = personEntity.getEmail().equals(personDTO.getEmail());
 		PersonEntity person = new PersonEntity(personDTO);
-		
+
 		person.setPassword(personEntity.getPassword());
 		person.setRole(personEntity.getRole());
-		
-		//personEntity.setEmail(encoder.encode(personDTO.getPassword()));
-		if (checkEmailChange) {		// Không đổi email
-		personRepository.save(person);
-		}
-		else { // Email được đổi, kiểm tra trùng
+
+		// personEntity.setEmail(encoder.encode(personDTO.getPassword()));
+		if (checkEmailChange) { // Không đổi email
+			personRepository.save(person);
+		} else { // Email được đổi, kiểm tra trùng
 			List<PersonEntity> list = personRepository.findByEmailIgnoreCase(personDTO.getEmail());
 			if (list.isEmpty()) {
 				personRepository.save(person);
-			}
-			else {
+			} else {
 				throw new ObjectAlreadyExistException("There is a user using this email");
 			}
 		}
 		return true;
 	}
-	
+
 	public boolean checkExistEmailUpdate(String email, int id) {
 		List<PersonEntity> list = personRepository.findByEmailIgnoreCase(email);
 		if (list.isEmpty()) {
 			return true;
-		}
-		else if ((list.size() > 1) || ((list.size() == 1) && (list.get(0).getId() != id)))
+		} else if ((list.size() > 1) || ((list.size() == 1) && (list.get(0).getId() != id)))
 			return false;
-		else return true;
+		else
+			return true;
 	}
-	
-	public boolean updatePassword(PersonDTO personDTO) {
-		PersonEntity person = personRepository.findByEmail(personDTO.getEmail());
-		person.setPassword(encoder.encode(personDTO.getPassword()));
-		personRepository.save(person);
-		return true;
-	}
+
+//	public boolean updatePassword(ChangePassRequest account) {
+//		boolean check = personRepository.existsByEmail(account.getEmail());
+//		if (check) {
+//			PersonEntity person = personRepository.findByEmail(account.getEmail());
+//			if (person.getPassword().equals(encoder.encode(account.getOldPassword()))) {
+//				person.setPassword(encoder.encode(account.getNewpassword()));
+//				personRepository.save(person);
+//				return true;
+//			} else {
+//				throw new ObjectPropertiesIllegalException("Old password is incorrect");
+//			}
+//		} else {
+//			throw new ObjectNotFoundException("Not find account with this email: " + account.getEmail());
+//		}
+//	}
+
 	public int getTotalByRole(String role) {
 		return personRepository.countByRole(role);
-		}
+	}
 }

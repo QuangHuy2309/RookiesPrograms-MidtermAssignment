@@ -7,6 +7,7 @@ import com.nashtech.MyBikeShop.DTO.PersonDTO;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.payload.request.ChangePassRequest;
 
 public interface PersonService {
 	public List<PersonEntity> retrievePersons();
@@ -16,7 +17,7 @@ public interface PersonService {
 	public PersonEntity createPerson(PersonDTO person);
 	public boolean deletePerson(int id);
 	public boolean updatePerson(PersonDTO person);
-	public boolean updatePassword(PersonDTO person);
+//	public boolean updatePassword(ChangePassRequest account);
 	public int getTotalByRole(String role);
 	public boolean checkExistEmailUpdate(String email, int id);
 }

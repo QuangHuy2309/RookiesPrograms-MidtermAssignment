@@ -28,7 +28,6 @@ export default function Index(props) {
       email: e.target.email.value.trim(),
       password: e.target.password.value,
     });
-    console.log(body);
     postAuth("/auth/signin",body).then((response) => {
       if (response.status === 200) {
         document.cookie = `token=${response.data.accessToken}; max-age=86400; path=/;`;

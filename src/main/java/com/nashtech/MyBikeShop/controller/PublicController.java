@@ -136,6 +136,11 @@ public class PublicController {
 		return rateService.getNumRate(id);
 	}
 	
+	@GetMapping("/product/rateAvgProd/{id}")
+	public double getAverageRateOfProduct(@PathVariable(name = "id") String id) {
+		return rateService.getAverageRateNumByProduct(id);
+	}
+	
 	@Operation(summary = "Get a Rate for Product by Pages") 
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {

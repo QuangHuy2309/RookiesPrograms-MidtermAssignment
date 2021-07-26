@@ -27,6 +27,7 @@ const ModalAdd = (props) => {
   const [addressError, setAddressError] = useState("");
   const [today, setToday] = useState("");
 
+
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
@@ -61,8 +62,10 @@ const ModalAdd = (props) => {
   async function handleFieldChange(e, key) {
     setUser({ [key]: e.target.value });
     if (key === "email") {
+      setUser({ [key]: e.target.value });
       setEmailError("");
     } else if (key === "fullname") {
+      setUser({ [key]: e.target.value });
       if (e.target.value.trim() == "") {
         setNameError("Name must not blank");
         setCheckName(false);
@@ -71,12 +74,16 @@ const ModalAdd = (props) => {
         setCheckName(true);
       }
     } else if (key === "address") {
+      setUser({ [key]: e.target.value });
       if (e.target.value.trim() == "") {
         setAddressError("Address must not blank");
       } else {
         setAddressError("");
       }
-    }
+    } else if (key === "phonenumber") {
+      setUser({ [key]: e.target.value.replace(/\D/, "") });
+      // setPhonenumber(e.target.value.replace(/\D/, ""));
+    } 
   }
 
   function handleSubmit(e) {
@@ -206,10 +213,12 @@ const ModalAdd = (props) => {
             <FormGroup>
               <Label for="exampleEmail">Phonenumber</Label>
               <Input
-                type="number"
+                type="text"
                 name="phonenumber"
                 id="exampleEmail"
                 required
+                minLength="10"
+                maxLength="10"
                 value={user.phonenumber}
                 onChange={(e) => handleFieldChange(e, "phonenumber")}
               />

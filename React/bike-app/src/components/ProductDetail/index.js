@@ -12,25 +12,27 @@ import { isLogin } from "../../Utils/Auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../Navbar/";
-
+import { RatingView } from "react-simple-star-rating";
 
 toast.configure();
 export default function Index() {
   const history = useHistory();
   let { id } = useParams();
   const [prod, setProd] = useState(Object);
-
+  const [rateAvg, setRateAvg] = useState(0);
   useEffect(() => {
-    async function getProduct() {
-      await get(`/public/product/search/${id}`).then((response) => {
-        if (response.status === 200) {
-          console.log(response.data);
-          setProd(response.data);
-        }
-      });
-    }
+    
     getProduct();
+    getAvgRate();
   }, [id]);
+  async function getProduct() {
+    await get(`/public/product/search/${id}`).then((response) => {
+      if (response.status === 200) {
+        console.log(response.data);
+        setProd(response.data);
+      }
+    });
+  }
   function addProductIdToCookie(type) {
     let cartCookie = getCookie("cart");
     let check = cartCookie.trim().includes(id);
@@ -60,6 +62,13 @@ export default function Index() {
       });
     }
   }
+  async function getAvgRate(){
+    get(`/public/product/rateAvgProd/${id}`).then((response) => {
+      if (response.status === 200) {
+        setRateAvg(Math.round(response.data *10)/10);
+      }
+    });
+  }
   function handleOrder() {
     if (isLogin()) {
       addProductIdToCookie("Order");
@@ -71,7 +80,7 @@ export default function Index() {
       });
     }
   }
-
+  
   return (
     <>
       <Navbar />
@@ -86,6 +95,7 @@ export default function Index() {
         <Col>
           <div className="info-prod">
             <h2 className="name-prod">{prod.name}</h2>
+            <h5>{rateAvg} <RatingView ratingValue={Math.round(rateAvg)} size={20} className="" /></h5>
             <h1 className="price-prod">{numberFormat(prod.price)}</h1>
             <h5>MODEL :: {prod.id} </h5>
             <h5>Remain :: {prod.quantity} </h5>
