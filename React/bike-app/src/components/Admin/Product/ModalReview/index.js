@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RatingView } from "react-simple-star-rating";
-import { get, delWithBody ,post } from "../../../../Utils/httpHelper";
+import { get, delWithBody, post } from "../../../../Utils/httpHelper";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Page from "../../../Pagination";
 import "./ModalReview.css";
-import ModalDeleteConfirm from "../ModalDeleteConfirm";
+import ModalDeleteConfirm from "../../ModalDeleteConfirm";
 import {
   Button,
   Modal,
@@ -15,7 +15,6 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
 
 toast.configure();
 export default function Index(props) {
@@ -61,25 +60,29 @@ export default function Index(props) {
     console.log(`Page press is ${e}`);
     setPageNum(e);
   }
-  function handleDelete(customerId){
-    const body = JSON.stringify({
-      customerId : customerId,
-      productId :props.id,
-    });
-    console.log(body);
-    delWithBody("/product/rate/delete", body)
-      .then((response) => {
-        if (response.status === 200) {
-          toast.success("Delete success", {
+  function handleDelete(e, customerId) {
+    if (e === "OK") {
+      const body = JSON.stringify({
+        customerId: customerId,
+        productId: props.id,
+      });
+      console.log(body);
+      post("/product/rate/delete", body)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Delete success", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+          }
+        })
+        .catch((error) => {
+          toast.error(`Error: ${error}`, {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
-        
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
+        });
+    }
   }
   return (
     <div>
@@ -103,8 +106,8 @@ export default function Index(props) {
                 <Col className="btnCol-ModalRv">
                   {/* <Button color="danger" onClick={() => handleDelete(review.id.customerId)} >Delete</Button> */}
                   <ModalDeleteConfirm
-                  onChoice={(e) => handleDelete(e, review.id.customerId)}
-                />
+                    onChoice={(e) => handleDelete(e, review.id.customerId)}
+                  />
                 </Col>
               </Row>
               <p>{review.rateText}</p>
@@ -116,13 +119,11 @@ export default function Index(props) {
             <Page
               total={Math.ceil(totalReview.current / size)}
               onPageChange={(e) => handlePageChange(e)}
-              
             />
           </div>
-            <Button color="secondary" onClick={toggle} className="btnCancel">
+          <Button color="secondary" onClick={toggle} className="btnCancel">
             Cancel
-            </Button>
-          
+          </Button>
         </ModalFooter>
       </Modal>
     </div>

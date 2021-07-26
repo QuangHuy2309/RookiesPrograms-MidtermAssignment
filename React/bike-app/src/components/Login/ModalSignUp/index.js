@@ -142,6 +142,7 @@ const ModalAdd = (props) => {
                 type="password"
                 name="password"
                 id="examplePassword"
+                required="required"
                 minLength="6"
               />
             </FormGroup>

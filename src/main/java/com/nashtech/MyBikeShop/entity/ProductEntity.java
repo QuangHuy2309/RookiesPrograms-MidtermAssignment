@@ -226,6 +226,16 @@ public class ProductEntity {
 		this.categories = categories;
 	}
 
+	
+	
+	public Set<RateEntity> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<RateEntity> reviews) {
+		this.reviews = reviews;
+	}
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Page from "../../Pagination";
 import { getWithAuth, put, get, del } from "../../../Utils/httpHelper";
+import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { format } from "date-fns";
 import "./Order.css";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
@@ -63,7 +64,7 @@ export default function Order() {
     });
   }
   function getProdList(index) {
-      setProdList([]);
+    setProdList([]);
     orderList[index].orderDetails.map((detail) => getProd(detail.id.productId, detail.ammount));
   }
   function handleProductList(index){
@@ -100,7 +101,7 @@ export default function Order() {
                     Quantity: {prod.quantity}
                 </h6>
                 <h5>
-                    Unit Price: {prod.price} VNĐ
+                    Price: {numberFormat(prod.quantity * prod.price)}
                 </h5>
                 </Col>
                 </Row>
@@ -133,7 +134,7 @@ export default function Order() {
               <td>
                 {format(new Date(order.timebought), "dd/MM/yyyy HH:mm:ss")}
               </td>
-              <td>{order.totalCost}</td>
+              <td>{numberFormat(order.totalCost)}</td>
               <td>{order.address}</td>
               <td> <Button color="link" onClick={() => handleProductList(index)}>List Product</Button></td>
               <td>
@@ -144,7 +145,7 @@ export default function Order() {
                 )}
               </td>
               <td>
-              <ModalDeleteConfirm/>
+              {/* <ModalDeleteConfirm/> */}
               </td>
             </tr>
           ))}

@@ -115,6 +115,8 @@ const ModalCart = (props) => {
     }
   }
   function handleOrder() {
+    let cartCookie = getCookie("cart");
+    if (cartCookie.trim() != "")
     history.push(`/Ordering`);
   }
   return (

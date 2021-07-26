@@ -71,9 +71,11 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findById(id);
 
 	}
+
 	public long countTotal() {
 		return orderRepository.count();
 	}
+
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
@@ -115,6 +117,29 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return orderRepository.getById(orderSaved.getId());
 	}
+
+//	@Transactional
+//	public OrderEntity createOrder(OrderDTO orderDTO) {
+//		OrderEntity orderEntity = new OrderEntity(orderDTO);
+//		orderEntity.setTimebought(LocalDateTime.now());
+//		PersonEntity person = personService.getPerson(orderDTO.getCustomersEmail());
+//		orderEntity.setCustomers(person);
+//		StringBuilder listProd = new StringBuilder();
+//		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
+//			ProductEntity prod = productService.getProduct(detailDTO.getProductId()).get();
+//			listProd.append(
+//					"<p style=\\\"font-size: 14px; line-height: 200%;\\\"><span style=\\\"font-size: 16px; line-height: 32px;\\\">"
+//							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + "</span></p>");
+//		}
+//
+//		OrderEntity orderSaved = orderRepository.save(orderEntity);
+//		try {
+//			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString());
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		}
+//		return orderRepository.getById(orderSaved.getId());
+//	}
 
 	@Transactional
 	public boolean deleteOrder(int id) {
@@ -225,10 +250,9 @@ public class OrderServiceImpl implements OrderService {
 				+ "  <tbody>\r\n" + "    <tr>\r\n"
 				+ "      <td style=\"overflow-wrap:break-word;word-break:break-word;padding:10px 10px 26px;font-family:'Open Sans',sans-serif;\" align=\"left\">   \r\n"
 				+ "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\r\n" + "  <tr>\r\n"
-				+ "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\r\n"
-				+ "    </td>\r\n" + "  </tr>\r\n" + "</table>\r\n" + "      </td>\r\n" + "    </tr>\r\n"
-				+ "  </tbody>\r\n" + "</table>\r\n" + "  </div>\r\n" + "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n"
-				+ "</div>\r\n"
+				+ "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\r\n" + "    </td>\r\n"
+				+ "  </tr>\r\n" + "</table>\r\n" + "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n"
+				+ "</table>\r\n" + "  </div>\r\n" + "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n"
 				+ "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\r\n"
 				+ "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #f9f9f9;\">\r\n"
 				+ "    <div style=\"border-collapse: collapse;display: table;width: 100%;background-color: transparent;\">\r\n"
@@ -241,8 +265,7 @@ public class OrderServiceImpl implements OrderService {
 				+ "  <div style=\"color: #444444; line-height: 200%; text-align: center; word-wrap: break-word;\">\r\n"
 				+ "    <p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 22px; line-height: 44px;\">Hi,</span><br /><span style=\"font-size: 16px; line-height: 32px;\">Thank you again for purchase. </span></p>\r\n"
 				+ "<p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 16px; line-height: 32px;\">Your order is:</span></p>\r\n"
-				+ listProd
-				+ "  </div>\r\n" + "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n"
+				+ listProd + "  </div>\r\n" + "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n"
 				+ "  </div>\r\n" + "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n"
 				+ "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\r\n"
 				+ "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #272362;\">\r\n"

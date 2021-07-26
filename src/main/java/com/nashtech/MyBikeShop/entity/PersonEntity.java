@@ -169,6 +169,15 @@ public class PersonEntity {
 		this.role = role;
 	}
 
+	public Set<RateEntity> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(Set<RateEntity> reviews) {
+		this.reviews = reviews;
+	}
+
+	
 //	@Override
 //	public int hashCode() {
 //		return Objects.hash(address, dob, email, fullname, gender, id, orders, password, phonenumber, reviews, role);

@@ -1,9 +1,11 @@
 package com.nashtech.MyBikeShop.entity;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,8 +58,9 @@ public class OrderEntity {
 //	@JsonManagedReference
 //	@JsonIgnore
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-	Set<OrderDetailEntity> orderDetails = new HashSet<>();
-
+//	Set<OrderDetailEntity> orderDetails = new HashSet<>();
+	Set<OrderDetailEntity> orderDetails;
+	
 	public OrderEntity() {
 		super();
 	}
@@ -81,6 +84,10 @@ public class OrderEntity {
 		this.totalCost = order.getTotalCost();
 		this.address = order.getAddress();
 		this.status = order.isStatus();
+		//
+//		this.orderDetails = order.getOrderDetails().stream().map(detail -> 
+//			new OrderDetailEntity(detail)
+//		).collect(Collectors.toList());
 	}
 
 
@@ -142,10 +149,15 @@ public class OrderEntity {
 	public void setOrderDetails(Set<OrderDetailEntity> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
-//	public void setOrderDetails(Set<OrderDetailDTO> orderDetails) {
+	
+//	public List<OrderDetailEntity> getOrderDetails() {
+//		return orderDetails;
+//	}
 //
-//		this.orderDetails = orderDetails.stream().map(detail -> new OrderDetailEntity(detail))
-//				.collect(Collectors.toSet());
+//
+//
+//	public void setOrderDetails(List<OrderDetailEntity> orderDetails) {
+//		this.orderDetails = orderDetails;
 //	}
 
 	public void setTotalCost(Float totalCost) {
@@ -161,6 +173,10 @@ public class OrderEntity {
 //	public int hashCode() {
 //		return Objects.hash(address, customers, id, orderDetails, status, timebought, totalCost);
 //	}
+
+
+
+
 
 
 

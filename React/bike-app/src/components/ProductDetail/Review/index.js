@@ -7,8 +7,11 @@ import { Rating, RatingView } from "react-simple-star-rating";
 import avaImg from "../../../assets/img/smile.jpg";
 import { format } from "date-fns";
 import Page from "../../Pagination";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getCookie } from "../../../Utils/Cookie";
 
+toast.configure();
 export default function Index(props) {
   const [pagenum, setPageNum] = useState(0);
   const [reviewList, setReviewList] = useState([]);
@@ -60,7 +63,6 @@ export default function Index(props) {
       });
   }
   function handlePageChange(e) {
-    console.log(`Page press is ${e}`);
     setPageNum(e);
   }
   function handleSubmitReview(e) {
@@ -80,12 +82,18 @@ export default function Index(props) {
       .then((response) => {
         if (response.status === 200) {
           // console.log(response.data);
-          alert("Review success");
+          toast.success(`Thank for your Review`, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
         }
       })
       .catch((error) => {
         if (error.response.status === 409)
-        alert("You had review this product");
+        toast.error(`You had review this product before`, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       });
   }
   function customerReview() {

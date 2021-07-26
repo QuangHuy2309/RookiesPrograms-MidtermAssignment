@@ -14,12 +14,15 @@ export default function Index() {
   const history = useHistory();
   const [prodList, setProdList] = useState([]);
   const [user, setUser] = useState(Object);
-  // const [quantity, setQuantity] = useState([]);
+  const [nameError, setNameError] = useState("");
+  const [addressError, setAddressError] = useState("");
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     getProdList();
     getUser();
+    setNameError("");
+    setAddressError("");
   }, []);
   useEffect(() => {
     // setCartCookie();
@@ -80,36 +83,42 @@ export default function Index() {
     // const {orderDetails} = toArr();
 
     // console.log(objStr);
-    const body = JSON.stringify({
-      customersEmail: e.target.email.value,
-      totalCost: total,
-      status: false,
-      address: e.target.address.value,
-      orderDetails: toArr(),
-    });
-    console.log(body);
-    post("/order", body)
-      .then((response) => {
-        if (response.status === 200){
-        toast.success(`Other Success! A confirmation email will send to your email`, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
-
-      }
-      })
-      .catch((error) => {
-        if (error.response.status === 400){
-          toast.error(`Sorry, we dont have enought for your quantity of product.`, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-        }
-        console.log(error.response.status)
+    if (nameError == "" && addressError == "") {
+      const body = JSON.stringify({
+        customersEmail: e.target.email.value,
+        totalCost: total,
+        status: false,
+        address: e.target.address.value,
+        orderDetails: toArr(),
       });
+      console.log(body);
+      post("/order", body)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success(
+              `Other Success! A confirmation email will send to your email`,
+              {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+              }
+            );
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400) {
+            toast.error(
+              `Sorry, we dont have enought for your quantity of product.`,
+              {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+              }
+            );
+          }
+          console.log(error.response.status);
+        });
       document.cookie = `cart=; max-age=86400; path=/;`;
       history.push("/");
-
+    }
   }
   async function setCartCookie(list) {
     let strListProd = "";
@@ -133,6 +142,19 @@ export default function Index() {
   }
   function handleUserFieldChange(e, key) {
     setUser({ [key]: e.target.value });
+    if (key === "fullname") {
+      if (e.target.value.trim() == "") {
+        setNameError("Name must not blank");
+      } else {
+        setNameError("");
+      }
+    } else if (key === "address") {
+      if (e.target.value.trim() == "") {
+        setAddressError("Address must not blank");
+      } else {
+        setAddressError("");
+      }
+    }
   }
   async function handleDelete(e, index) {
     if (e === "OK") {
@@ -161,6 +183,7 @@ export default function Index() {
                 onChange={(e) => handleUserFieldChange(e, "fullname")}
                 className="input-login"
               />
+              <div style={{ color: "red" }}>{nameError}</div>
             </Col>
             <Col className="col-1"></Col>
             <Col className="col-1">
@@ -191,15 +214,16 @@ export default function Index() {
                 id="exampleAddress"
                 value={user.address}
                 onChange={(e) => handleUserFieldChange(e, "address")}
-                required
+                required="required"
               />
+              <div style={{ color: "red" }}>{addressError}</div>
             </Col>
           </Row>
         </FormGroup>
         <Row className="order">
           <Col className="col-7 priceTotal">
             <h3>Total :: </h3>{" "}
-            <h3 className="priceNumTotal"> { numberFormat(total)}</h3>
+            <h3 className="priceNumTotal"> {numberFormat(total)}</h3>
           </Col>
           <Col className="btnDelProd">
             <Button outline color="info" type="submit">
@@ -224,33 +248,33 @@ export default function Index() {
                     <Label for="exampleQuantity">Qty</Label>
                   </Col>
                   <Col className="col-3">
-                        <Input
-                          type="number"
-                          name={`quantity${index}`}
-                          id="exampleQuantity"
-                          min="1"
-                          required
-                          value={prod.quantity}
-                          onChange={(e) =>
-                            handleProdFieldChange(e, "quantity", index)
-                          }
-                        />
-                      </Col>
-                      <Col className="btnDelProd">
-                        <ModalDelte onChoice={(e) => handleDelete(e, index)} />
-                      </Col>       
-                  
-                    <Row className="priceCart">
-                        <Col className="col-3 priceTitle">
-                        <h3>Price </h3>
-                        </Col>
-                        <Col>
-                        <h3 for="exampleQuantity" className="priceNum">
-                          {" "}
-                          {numberFormat(prod.quantity * prod.price)}
-                        </h3>
-                        </Col>
-                      </Row> 
+                    <Input
+                      type="number"
+                      name={`quantity${index}`}
+                      id="exampleQuantity"
+                      min="1"
+                      required
+                      value={prod.quantity}
+                      onChange={(e) =>
+                        handleProdFieldChange(e, "quantity", index)
+                      }
+                    />
+                  </Col>
+                  <Col className="btnDelProd">
+                    <ModalDelte onChoice={(e) => handleDelete(e, index)} />
+                  </Col>
+
+                  <Row className="priceCart">
+                    <Col className="col-3 priceTitle">
+                      <h3>Price </h3>
+                    </Col>
+                    <Col>
+                      <h3 for="exampleQuantity" className="priceNum">
+                        {" "}
+                        {numberFormat(prod.quantity * prod.price)}
+                      </h3>
+                    </Col>
+                  </Row>
                 </Row>
               </Col>
             </Row>
