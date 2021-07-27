@@ -26,6 +26,7 @@ const ModalAdd = (props) => {
   const [nameError, setNameError] = useState("");
   const [brandError, setBrandError] = useState("");
   const [checkBrand, setCheckBrand] = useState(true);
+  const [selectedCate, setSelectedCate] = useState({name :"", id : ""});
 
   useEffect(() => {
     if (modal) {
@@ -75,12 +76,14 @@ const ModalAdd = (props) => {
       }
     );
   }
-  function getProd() {
+  async function getProd() {
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         // console.log(response.data);
         setProd(response.data);
         setBase64(`data:image/jpeg;base64,${response.data.photo}`);
+        setSelectedCate({name : response.data.categories.name, id : response.data.categories.id });
+        console.log(selectedCate);
       }
     });
   }
@@ -212,7 +215,9 @@ const ModalAdd = (props) => {
             </FormGroup>
             <FormGroup>
               <Label for="exampleSelect">Type</Label>
-              <Input type="select" name="select" id="exampleSelect" required>
+              <Input type="select" name="select" id="exampleSelect" required
+              // value = {{label:selectedCate.name, value : selectedCate.id}}
+              >
                 {cateList.map((cate) => (
                   <option
                     key={cate.id}

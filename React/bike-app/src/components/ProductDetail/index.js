@@ -94,12 +94,12 @@ export default function Index() {
         </Col>
         <Col>
           <div className="info-prod">
-            <h2 className="name-prod">{prod.name}</h2>
+            <h3 className="name-prod">{prod.name}</h3>
             <h5>{rateAvg} <RatingView ratingValue={Math.round(rateAvg)} size={20} className="" /></h5>
-            <h1 className="price-prod">{numberFormat(prod.price)}</h1>
-            <h5>MODEL :: {prod.id} </h5>
-            <h5>Remain :: {prod.quantity} </h5>
-            <h5>BRAND :: {prod.brand}</h5>
+            <h2 className="price-prod">{numberFormat(prod.price)}</h2>
+            <h5>Model :: {prod.id} </h5>
+            <h5>Qty :: {prod.quantity} </h5>
+            <h5>Brand :: {prod.brand}</h5>
             <div className="prod-btn">
               <Button
                 outline

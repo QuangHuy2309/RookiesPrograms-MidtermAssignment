@@ -36,27 +36,37 @@ export default class index extends Component {
   //   style: 'currency',
   //   currency: 'VND'
   // }).format(value);
-  
+
   render() {
     return (
-      <Row>
+      <Row className="mb-4">
         {this.state.prodList.map((prod) => (
           <Col key={prod.id} className="col-3">
-            <Link to={`/prodDetail/${prod.id}`} style={{ textDecoration: "none" }}>
-            <Card>
-              <CardImg top width="100%" src={`data:image/jpeg;base64,${prod.photo}`} alt="Card image cap" />
-              <CardBody>
-                <CardTitle tag="h3" className="card-name">
-                  {prod.name}
-                </CardTitle>
-                <div className="card-info">
-                  <CardSubtitle tag="h4" className="mb-2 card-price">
-                    {numberFormat(prod.price)} 
-                  </CardSubtitle>
-                  <Link to={`/prodDetail/${prod.id}`} className="card-btn">Buy Now</Link>
-                </div>
-              </CardBody>
-            </Card>
+            <Link
+              to={`/prodDetail/${prod.id}`}
+              style={{ textDecoration: "none" }}
+            >
+              <Card>
+                <CardImg
+                  top
+                  width="100%"
+                  src={`data:image/jpeg;base64,${prod.photo}`}
+                  alt="Card image cap"
+                />
+                <CardBody>
+                  <CardTitle tag="h5" className="card-name">
+                    {prod.name}
+                  </CardTitle>
+                  <div className="card-info">
+                    <CardSubtitle tag="h4" className="mb-2 card-price">
+                      {numberFormat(prod.price)}
+                    </CardSubtitle>
+                    <Link to={`/prodDetail/${prod.id}`} className="card-btn">
+                      Buy Now
+                    </Link>
+                  </div>
+                </CardBody>
+              </Card>
             </Link>
           </Col>
         ))}

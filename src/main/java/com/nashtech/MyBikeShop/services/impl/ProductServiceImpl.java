@@ -71,6 +71,22 @@ public class ProductServiceImpl implements ProductService {
 		Pageable pageable = PageRequest.of(0, size, sortable);
 		return productRepository.findByCategoriesId(pageable, categoriesId);
 	}
+	
+	public List<ProductEntity> getProductPageWithSort(int page, int size, int categoriesId, String sortType){
+		
+		if (sortType.equalsIgnoreCase("ASC")) {
+			Sort  sortable = Sort.by("price").ascending();
+			Pageable pageable = PageRequest.of(page, size, sortable);
+			return productRepository.findByCategoriesId(pageable, categoriesId);
+		}
+		else{
+			Sort sortable = Sort.by("price").descending();
+			Pageable pageable = PageRequest.of(page, size, sortable);
+			return productRepository.findByCategoriesId(pageable, categoriesId);
+		}
+		
+
+	}
 
 	public Optional<ProductEntity> getProduct(String id) {
 		return productRepository.findById(id);

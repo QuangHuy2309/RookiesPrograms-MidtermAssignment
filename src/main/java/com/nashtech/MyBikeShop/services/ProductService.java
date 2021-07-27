@@ -13,6 +13,7 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 public interface ProductService {
 	public List<ProductEntity> retrieveProducts();
 	public List<ProductEntity> getProductPage(int num, int size, int categoriesId);
+	public List<ProductEntity> getProductPageWithSort(int num, int size, int categoriesId, String sortType);
 	public List<ProductEntity> getNewestProductCategories(int idCategrories, int size);
 	public Optional<ProductEntity> getProduct(String id);
 	public ProductEntity createProduct(ProductDTO product);

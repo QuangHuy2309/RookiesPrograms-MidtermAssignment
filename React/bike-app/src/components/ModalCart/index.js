@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./ModalCart.css";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ import {
   Row,
   Label,
   Input,
+  Badge,
 } from "reactstrap";
 
 toast.configure();
@@ -24,6 +25,7 @@ const ModalCart = (props) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [prodList, setProdList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [cartSize, setCartSize] = useState(0);
   // let total = useRef(0);
 
   const toggle = () => {
@@ -33,25 +35,13 @@ const ModalCart = (props) => {
 
   useEffect(async() => {
     if (popoverOpen) {
-      //   let cartCookie = getCookie("cart");
-      //   if (cartCookie.trim().length !== 0) {
-      //     // history.push(`/Ordering`);
-      //     setProdList([]);
-      //     getProdList();
-      //   } else {
-      //     toast.info("🦄 Cart is empty. Fill it in righ away", {
-      //       position: toast.POSITION.TOP_RIGHT,
-      //       autoClose: 3000,
-      //     });
-      //   }
       await getProdList();
-      // getTotalPrice(prodList);
     }
   }, [popoverOpen]);
 
   useEffect(() => {
-    // setCartCookie();
     getTotalPrice(prodList);
+    
   }, [prodList]);
 
   async function setCartCookie(list) {
@@ -79,8 +69,6 @@ const ModalCart = (props) => {
     });
   }
   async function getProdList() {
-    // const listprod = getCookie("cart").split(" ");
-    // listprod.map((prod) => getProd(prod));
 
     let cartCookie = getCookie("cart");
     if (cartCookie.trim().length !== 0) {
@@ -95,7 +83,13 @@ const ModalCart = (props) => {
       });
     }
   }
-
+  async function getCartSize(){
+    let cartCookie = getCookie("cart");
+    if (cartCookie.trim().length !== 0) {
+      const list = getCookie("cart").split(" ");
+      setCartSize(list.length);
+    } 
+  }
   async function handleProdFieldChange(e, key, index) {
     let list = [...prodList];
     let prod = { ...list[index] };
@@ -122,7 +116,7 @@ const ModalCart = (props) => {
   return (
     <div>
       <Button id="Popover1" type="button" color="link">
-        <TiShoppingCart size={40} />
+        <TiShoppingCart size={40} /> 
       </Button>
       <Popover
         placement="left-end"

@@ -38,6 +38,7 @@ const ModalExample = (props) => {
           setCateList([...response.data]);
         }
       });
+      setId("");
       setNameError("");
       setIdError("");
       setBrandError("");
@@ -150,7 +151,7 @@ const ModalExample = (props) => {
 
       post("/product", body)
         .then((response) => {
-          if(response.status === 200)  toast("Add successfully!!!", {
+          if(response.status === 200)  toast.success("Add successfully!!!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });

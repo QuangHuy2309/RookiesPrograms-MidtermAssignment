@@ -41,12 +41,15 @@ export default function Index() {
         setCateList([...response.data]);
       }
     });
+    
+  }, []);
+  useEffect(() => {
     get(`/public/product/numTotal/${choice}`).then((response) => {
       if (response.status === 200) {
         totalPage.current = response.data;
       }
     });
-  }, []);
+  },[choice])
   useEffect(() => {
     getListProd();
   }, [choice, pagenum]);

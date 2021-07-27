@@ -2,7 +2,9 @@
     display: flex;
     justify-content: space-between;
 }
-
+.cardProd{
+    height : 400px;
+}
 .card-btn{
     align-content: flex-end;
     border: 1px solid #333;

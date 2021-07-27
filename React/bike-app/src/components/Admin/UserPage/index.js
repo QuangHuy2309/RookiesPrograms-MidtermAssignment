@@ -29,7 +29,15 @@ export default function Index() {
     getListUser();
   }, [choice, pagenum]);
 
-  function getListUser() {
+  // useEffect(() => {
+  //   get(`/public/product/numTotal/${choice}`).then((response) => {
+  //     if (response.status === 200) {
+  //       totalPage.current = response.data;
+  //     }
+  //   });
+  // },[choice])
+
+  async function getListUser() {
     getWithAuth(`/persons?pagenum=${pagenum}&size=${size}&role=${choice}`).then(
       (response) => {
         if (response.status === 200) {

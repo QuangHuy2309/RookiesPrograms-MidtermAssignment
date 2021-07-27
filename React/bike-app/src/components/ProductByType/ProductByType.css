@@ -9,3 +9,9 @@
     border: 1px solid #333;
     border-width: medium;
 }
+.cardProd{
+    height : 400px;
+}
+.cateType{
+    margin: 1rem;
+}
