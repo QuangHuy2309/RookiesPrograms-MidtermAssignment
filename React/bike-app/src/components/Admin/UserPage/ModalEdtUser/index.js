@@ -26,7 +26,7 @@ const ModalAdd = (props) => {
   const [emailError, setEmailError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [today, setToday] = useState("");
-
+  const [gender, setGener] = useState(false);
 
   const toggle = () => setModal(!modal);
 
@@ -36,6 +36,7 @@ const ModalAdd = (props) => {
         if (response.status === 200) {
           // console.log(response.data);
           setUser(response.data);
+          setGener(response.data.gender);
         }
       });
       setNameError("");
@@ -83,7 +84,15 @@ const ModalAdd = (props) => {
     } else if (key === "phonenumber") {
       setUser({ [key]: e.target.value.replace(/\D/, "") });
       // setPhonenumber(e.target.value.replace(/\D/, ""));
-    } 
+    } else if (key === "genderFemale"){
+      if (!gender){
+        setGener(true);
+      }
+    } else if (key === "genderMale"){
+      if (gender){
+        setGener(false);
+      }
+    }
   }
 
   function handleSubmit(e) {
@@ -188,13 +197,27 @@ const ModalAdd = (props) => {
               <Label for="exampleQuantity">Gender</Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
-                  <Input type="radio" name="radio" value="false" required />{" "}
+                  <Input
+                    type="radio"
+                    name="radio"
+                    value="false"
+                    required
+                    checked={!gender}
+                    onChange={(e) => handleFieldChange(e, "genderMale")}
+                  />{" "}
                   MALE
                 </Label>
               </FormGroup>
               <FormGroup check className="radioBtn-user">
                 <Label check>
-                  <Input type="radio" name="radio" value="true" /> FEMALE
+                  <Input
+                    type="radio"
+                    name="radio"
+                    value="true"
+                    checked={gender}
+                    onChange={(e) => handleFieldChange(e, "genderFemale")}
+                  />{" "}
+                  FEMALE
                 </Label>
               </FormGroup>
             </FormGroup>

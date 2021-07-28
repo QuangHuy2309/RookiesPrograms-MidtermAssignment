@@ -109,9 +109,9 @@ export default function Index() {
             </div>
           ))}
           <hr />
-          <FormGroup tag="fieldset" row>
+          <FormGroup tag="fieldset" className="sortRadio">
             <legend>Price Sort: </legend>
-            <FormGroup check>
+            <FormGroup check className="sortRadio">
               <Label check>
                 <Input
                   type="radio"
@@ -122,7 +122,7 @@ export default function Index() {
                 Ascending
               </Label>
             </FormGroup>
-            <FormGroup check>
+            <FormGroup check className="sortRadio">
               <Label check>
                 <Input
                   type="radio"
