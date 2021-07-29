@@ -17,14 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
-import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
-import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
-import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.OrderService;
-import com.nashtech.MyBikeShop.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,40 +35,40 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
-//	@Operation(summary = "Get All Order")
-//	@ApiResponses(value = {
-//			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
-//			content = { @Content(mediaType = "application/json", 
-//			schema = @Schema(implementation = OrderEntity.class))}),
-//			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
-//			content = @Content),
-//			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
-//			content = @Content),
-//			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
-//			content = @Content),
-//			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
-//			content = @Content)
-//	})
+	@Operation(summary = "Get total of Order")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@GetMapping("/order/totalOrder")
 	@PreAuthorize("hasRole('ADMIN')")
 	public long getNumberOfOrders() {
 		return  orderService.countTotal();
 	}
 
-//	@Operation(summary = "Get Order by ID")
-//	@ApiResponses(value = {
-//			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
-//			content = { @Content(mediaType = "application/json", 
-//			schema = @Schema(implementation = OrderEntity.class))}),
-//			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
-//			content = @Content),
-//			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
-//			content = @Content),
-//			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
-//			content = @Content),
-//			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
-//			content = @Content)
-//	})
+	@Operation(summary = "Find Order by ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
+			content = { @Content(mediaType = "application/json", 
+			schema = @Schema(implementation = OrderEntity.class))}),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
+			content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
+			content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
+			content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
+			content = @Content)
+	})
 	@GetMapping("/order/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
@@ -106,8 +102,7 @@ public class OrderController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deleteOrder(@PathVariable(name = "id") int id) {
 		try {
-			String result = orderService.deleteOrder(id) ? StringUtils.TRUE : StringUtils.FALSE;
-			return result;
+			return orderService.deleteOrder(id) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (NoSuchElementException ex) {
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
@@ -145,7 +140,7 @@ public class OrderController {
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public List<OrderEntity> findListOrderedByCustomerEmail(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "email") String email) {
-		return orderService.findOrderByCustomer(page, size, email);
+		return orderService.getOrderByCustomerEmail(page, size, email);
 	}
 
 	@Operation(summary = "Get Order by CustomerID ")
@@ -177,11 +172,6 @@ public class OrderController {
 		return orderService.getOrderPage(page, size);
 	}
 	
-//	@GetMapping("/testSendEmail")
-//	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//	public void testSendMail() {
-//		orderService.sendSimpleMessage("A", "B", "C");
-//	}
 	
 	@PutMapping("/order/updateStatus/{id}")
 	@PreAuthorize("hasRole('ADMIN')")

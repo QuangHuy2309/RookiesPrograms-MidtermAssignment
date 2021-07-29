@@ -1,28 +1,21 @@
 package com.nashtech.MyBikeShop.services.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParseException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
@@ -31,9 +24,6 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
-import com.nashtech.MyBikeShop.exception.JsonGetDataException;
-import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
-import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
@@ -110,36 +100,12 @@ public class OrderServiceImpl implements OrderService {
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
 		}
 		try {
-			sendSimpleMessage(orderDTO.getCustomersEmail(),listProd.toString());
+			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString());
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return orderRepository.getById(orderSaved.getId());
 	}
-
-//	@Transactional
-//	public OrderEntity createOrder(OrderDTO orderDTO) {
-//		OrderEntity orderEntity = new OrderEntity(orderDTO);
-//		orderEntity.setTimebought(LocalDateTime.now());
-//		PersonEntity person = personService.getPerson(orderDTO.getCustomersEmail());
-//		orderEntity.setCustomers(person);
-//		StringBuilder listProd = new StringBuilder();
-//		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
-//			ProductEntity prod = productService.getProduct(detailDTO.getProductId()).get();
-//			listProd.append(
-//					"<p style=\\\"font-size: 14px; line-height: 200%;\\\"><span style=\\\"font-size: 16px; line-height: 32px;\\\">"
-//							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + "</span></p>");
-//		}
-//
-//		OrderEntity orderSaved = orderRepository.save(orderEntity);
-//		try {
-//			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString());
-//		} catch (MessagingException e) {
-//			e.printStackTrace();
-//		}
-//		return orderRepository.getById(orderSaved.getId());
-//	}
 
 	@Transactional
 	public boolean deleteOrder(int id) {
@@ -183,21 +149,13 @@ public class OrderServiceImpl implements OrderService {
 		return true;
 	}
 
-	public List<OrderEntity> findOrderByCustomer(int num, int size, String email) {
-		// PersonEntity person = personService.getPerson(email);
+	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findByCustomersEmail(pageable, email);
 	}
 
 	public void sendSimpleMessage(String to, String listProd) throws MessagingException {
-//		SimpleMailMessage msg = new SimpleMailMessage();
-//        msg.setTo(to);
-//
-//        msg.setSubject("Testing from Spring Boot");
-//        msg.setText("Hello World \n Spring Boot Email");
-//
-//        javaMailSender.send(msg);
 		MimeMessage message = javaMailSender.createMimeMessage();
 
 		boolean multipart = true;
@@ -291,8 +249,4 @@ public class OrderServiceImpl implements OrderService {
 		javaMailSender.send(message);
 
 	}
-//	public OrderEntity findOrderByProducts(String id) {
-//		// return orderRepository.findByProductsId(id);
-//		return new OrderEntity();
-//	}
 }

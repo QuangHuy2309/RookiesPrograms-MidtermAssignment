@@ -22,7 +22,6 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 
-	
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(String fullname, String email, String password,
@@ -38,12 +37,15 @@ public class UserDetailsImpl implements UserDetails {
 		authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 		return new UserDetailsImpl(user.getFullname(), user.getEmail(), user.getPassword(), authorities);
 	}
+
 	public String getEmail() {
-        return email;
-    }
+		return email;
+	}
+
 	public String getName() {
 		return fullname;
 	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -53,7 +55,7 @@ public class UserDetailsImpl implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
-	
+
 	@Override
 	public String getUsername() {
 		return email;
@@ -95,6 +97,5 @@ public class UserDetailsImpl implements UserDetails {
 		UserDetailsImpl other = (UserDetailsImpl) obj;
 		return Objects.equals(email, other.email);
 	}
-	
-	
+
 }

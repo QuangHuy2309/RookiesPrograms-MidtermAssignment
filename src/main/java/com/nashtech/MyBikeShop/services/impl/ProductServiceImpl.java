@@ -1,41 +1,24 @@
 package com.nashtech.MyBikeShop.services.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
-
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
-import com.nashtech.MyBikeShop.entity.OrderEntity;
-import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
-import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
 import com.nashtech.MyBikeShop.services.CategoriesService;
 import com.nashtech.MyBikeShop.services.OrderService;
@@ -71,20 +54,18 @@ public class ProductServiceImpl implements ProductService {
 		Pageable pageable = PageRequest.of(0, size, sortable);
 		return productRepository.findByCategoriesId(pageable, categoriesId);
 	}
-	
-	public List<ProductEntity> getProductPageWithSort(int page, int size, int categoriesId, String sortType){
-		
+
+	public List<ProductEntity> getProductPageWithSort(int page, int size, int categoriesId, String sortType) {
+
 		if (sortType.equalsIgnoreCase("ASC")) {
-			Sort  sortable = Sort.by("price").ascending();
+			Sort sortable = Sort.by("price").ascending();
 			Pageable pageable = PageRequest.of(page, size, sortable);
 			return productRepository.findByCategoriesId(pageable, categoriesId);
-		}
-		else{
+		} else {
 			Sort sortable = Sort.by("price").descending();
 			Pageable pageable = PageRequest.of(page, size, sortable);
 			return productRepository.findByCategoriesId(pageable, categoriesId);
 		}
-		
 
 	}
 
@@ -94,8 +75,8 @@ public class ProductServiceImpl implements ProductService {
 
 	public ProductEntity createProduct(ProductDTO productDTO) {
 		try {
-			boolean checkName = existName(productDTO.getName());
-			boolean checkId = existId(productDTO.getId());
+			boolean checkName = checkExistName(productDTO.getName());
+			boolean checkId = checkExistId(productDTO.getId());
 			if (!checkId) {
 				throw new ObjectAlreadyExistException(
 						"Failed! There is a product with this id. Please change product id");
@@ -122,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean updateProduct(ProductDTO productDTO) {
-		boolean check = existNameUpdate(productDTO.getId(), productDTO.getName());
+		boolean check = checkExistNameUpdate(productDTO.getId(), productDTO.getName());
 		if (check) {
 			CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
 			ProductEntity product = new ProductEntity(productDTO, cate);
@@ -160,17 +141,7 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.countByCategoriesId(id);
 	}
 
-	public boolean storeImage(MultipartFile file, String prodId) throws IOException {
-//		byte[] fileContent = FileUtils.readFileToByteArray((File) file);
-//		ProductEntity prod = productRepository.getById(prodId);
-//		String encodedString = Base64.getEncoder().encodeToString(fileContent);
-//		prod.setPhoto(encodedString);
-//		productRepository.save(prod);
-		return true;
-
-	}
-
-	public boolean existNameUpdate(String id, String name) {
+	public boolean checkExistNameUpdate(String id, String name) {
 		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
 		if (prodList.isEmpty())
 			return true;
@@ -180,21 +151,13 @@ public class ProductServiceImpl implements ProductService {
 			return true;
 	}
 
-	public boolean existId(String id) {
+	public boolean checkExistId(String id) {
 		List<ProductEntity> prodList = productRepository.findByIdIgnoreCase(id);
 		return prodList.isEmpty();
 	}
 
-	public boolean existName(String name) {
+	public boolean checkExistName(String name) {
 		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
 		return prodList.isEmpty();
 	}
-//	public MultipartFile convertToImg(String encodedString) throws IOException {
-//		Date date = Calendar.getInstance().getTime();
-//		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-//		String strName = dateFormat.format(date);
-//		byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
-//
-//		FileUtils.writeByteArrayToFile(new File(strName), decodedBytes);
-//	}
 }

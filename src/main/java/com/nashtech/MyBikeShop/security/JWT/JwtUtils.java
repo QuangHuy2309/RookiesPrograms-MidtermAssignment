@@ -56,23 +56,20 @@ public class JwtUtils {
 		} catch (IllegalArgumentException e) {
 			logger.error("JWT claims string is empty: {}", e.getMessage());
 		}
-
 		return false;
 	}
-	
+
 	private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-    }
-	
-	 public String refreshToken(String token) {
-	        final Date createdDate = new Date();
-	        final Date expirationDate = new Date(createdDate.getTime() + jwtExpirationMs * 1000);
+		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+	}
 
-	        final Claims claims = getAllClaimsFromToken(token);
-	        claims.setIssuedAt(createdDate);
-	        claims.setExpiration(expirationDate);
+	public String refreshToken(String token) {
+		final Date createdDate = new Date();
+		final Date expirationDate = new Date(createdDate.getTime() + jwtExpirationMs * 1000);
+		final Claims claims = getAllClaimsFromToken(token);
+		claims.setIssuedAt(createdDate);
+		claims.setExpiration(expirationDate);
+		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+	}
 
-	        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
-	 }
-	    
 }

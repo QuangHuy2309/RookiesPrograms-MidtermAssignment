@@ -32,7 +32,7 @@ import com.nashtech.MyBikeShop.services.RateService;
 public class RateServiceImpl implements RateService {
 	@Autowired
 	RateRepository rateRepo;
-	
+
 	@Autowired
 	ProductRepository prodRepo;
 
@@ -73,14 +73,11 @@ public class RateServiceImpl implements RateService {
 			person.getReviews().remove(rate);
 			prodRepo.save(prod);
 			personRepo.save(person);
-			rateRepo.delete(rate);			
-//			rateRepo.deleteById(id);
+			rateRepo.delete(rate);
 			return true;
-		} catch (EmptyResultDataAccessException ex) {
+		} catch (EmptyResultDataAccessException | NoSuchElementException ex) {
 			throw new ObjectNotFoundException(
 					"Not found Rate with CustomerId: " + id.getCustomerId() + " - ProductId: " + id.getProductId());
-		} catch (NoSuchElementException ex) {
-			return true;
 		}
 	}
 
@@ -93,17 +90,15 @@ public class RateServiceImpl implements RateService {
 			return true;
 		}
 		return false;
-
 	}
 
 	public int getNumRate(String id) {
 		return rateRepo.countByIdProductId(id);
 	}
-	
+
 	public double getAverageRateNumByProduct(String id) {
 		List<RateEntity> list = rateRepo.findByIdProductId(id);
-		
-		OptionalDouble  avg = list.stream().map(rate -> rate.getRateNum()).mapToDouble(a -> a).average();
-		return avg.isPresent() ? avg.getAsDouble() : 0.0; 
+		OptionalDouble avg = list.stream().map(rate -> rate.getRateNum()).mapToDouble(a -> a).average();
+		return avg.isPresent() ? avg.getAsDouble() : 0.0;
 	}
 }

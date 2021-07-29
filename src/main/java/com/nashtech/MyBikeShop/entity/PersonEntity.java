@@ -1,9 +1,6 @@
 package com.nashtech.MyBikeShop.entity;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,64 +13,55 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
 
-//@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class)
 @Entity
-@Table(name="persons")
+@Table(name = "persons")
 public class PersonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
-	
-	@Column(name="email")
+
+	@Column(name = "email")
 	private String email;
-	
-	@Column(name="password")
+
+	@Column(name = "password")
 	private String password;
-	
-	@Column(name="fullname")
+
+	@Column(name = "fullname")
 	private String fullname;
-	
-//	@DateTimeFormat(pattern="yyyy/MM/dd")
-	@JsonFormat(pattern="yyyy-MM-dd")
-	@Column(name="dob")
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "dob")
 	private Date dob;
-	
-	@Column(name="gender")
+
+	@Column(name = "gender")
 	private boolean gender;
-	
-	@Column(name="address")
+
+	@Column(name = "address")
 	private String address;
-	
-	@Column(name="phonenumber")
+
+	@Column(name = "phonenumber")
 	private String phonenumber;
-	
-	@Column(name="role")
+
+	@Column(name = "role")
 	private String role;
-	
-	@OneToMany(mappedBy = "customers", fetch=FetchType.EAGER , cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "customers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
-//	@JsonManagedReference
 	private Set<OrderEntity> orders;
-	
-	@OneToMany(mappedBy = "customer", fetch=FetchType.EAGER , cascade = CascadeType.ALL)
-//	@JsonManagedReference
+
+	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	Set<RateEntity> reviews;
-	
+
 	public PersonEntity() {
 		super();
 	}
-	
+
 	public PersonEntity(int id, String email, String password, String fullname, String role) {
 		super();
 		this.id = id;
@@ -95,8 +83,7 @@ public class PersonEntity {
 		this.phonenumber = personDTO.getPhonenumber();
 		this.role = personDTO.getRole();
 	}
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -177,34 +164,4 @@ public class PersonEntity {
 		this.reviews = reviews;
 	}
 
-	
-//	@Override
-//	public int hashCode() {
-//		return Objects.hash(address, dob, email, fullname, gender, id, orders, password, phonenumber, reviews, role);
-//	}
-//
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		PersonEntity other = (PersonEntity) obj;
-//		return Objects.equals(address, other.address) && Objects.equals(dob, other.dob)
-//				&& Objects.equals(email, other.email) && Objects.equals(fullname, other.fullname)
-//				&& gender == other.gender && id == other.id && Objects.equals(orders, other.orders)
-//				&& Objects.equals(password, other.password) && Objects.equals(phonenumber, other.phonenumber)
-//				&& Objects.equals(reviews, other.reviews) && Objects.equals(role, other.role);
-//	}
-
-//	public Collection<OrderEntity> getOrdersHadBought() {
-//		return orders;
-//	}
-//
-//	public void setOrders(Collection<OrderEntity> orders) {
-//		this.orders = orders;
-//	}
-	
 }

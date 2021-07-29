@@ -1,29 +1,23 @@
 package com.nashtech.MyBikeShop.DTO;
 
 public class CategoriesDTO {
-	
+
 	private int id;
 
 	private String name;
 
 	private String description;
 
-	
-	
 	public CategoriesDTO() {
 		super();
 	}
 
-	
-	
 	public CategoriesDTO(int id, String categoriesName, String description) {
 		super();
 		this.id = id;
 		this.name = categoriesName;
 		this.description = description;
 	}
-
-
 
 	public int getId() {
 		return id;
@@ -33,13 +27,9 @@ public class CategoriesDTO {
 		this.id = id;
 	}
 
-	
-
 	public String getName() {
 		return name;
 	}
-
-
 
 	public void setName(String name) {
 		StringBuilder nameTrim = new StringBuilder();
@@ -51,8 +41,6 @@ public class CategoriesDTO {
 		this.name = name;
 	}
 
-
-
 	public String getDescription() {
 		return description;
 	}
@@ -60,6 +48,5 @@ public class CategoriesDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
 }

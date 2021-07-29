@@ -10,10 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
 
 @Entity
@@ -23,25 +21,26 @@ public class CategoriesEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@OneToMany(mappedBy = "categories", fetch = FetchType.EAGER)
-//	@JsonManagedReference
 	@JsonIgnore
 	private Collection<ProductEntity> product;
-	
+
 	public CategoriesEntity() {
 		super();
 	}
+
 	public CategoriesEntity(int id) {
 		super();
 		this.id = id;
 	}
+
 	public CategoriesEntity(CategoriesDTO categories) {
 		this.id = categories.getId();
 		this.name = categories.getName();
@@ -63,7 +62,6 @@ public class CategoriesEntity {
 		this.id = id;
 	}
 
-
 	public String getName() {
 		return name;
 	}
@@ -84,6 +82,5 @@ public class CategoriesEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
 }

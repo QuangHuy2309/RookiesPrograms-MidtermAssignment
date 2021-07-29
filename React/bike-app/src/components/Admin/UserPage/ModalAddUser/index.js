@@ -88,10 +88,12 @@ const ModalAdd = (props) => {
 
       postAuth("/auth/signup", body)
         .then((response) => {
-          if(response.status === 200)  toast("Add successfully!!!", {
+          if(response.status === 200)  {toast("Add successfully!!!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
+          toggle();
+        }
         })
         .catch((error) => {
           toast.error("Add failed, please check again", {

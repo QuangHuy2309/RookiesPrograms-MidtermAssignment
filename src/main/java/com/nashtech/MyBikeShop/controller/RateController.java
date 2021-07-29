@@ -1,11 +1,8 @@
 package com.nashtech.MyBikeShop.controller;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,7 +15,6 @@ import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
-import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.RateService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,10 +76,6 @@ public class RateController {
 	@PutMapping("/product/rate/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public String updateRateOfProduct(@RequestBody RateDTO rate, @PathVariable(name = "id") int id) {
-//		try{
 		return rateService.updateRate(rate) ? StringUtils.TRUE : StringUtils.FALSE;
-//		} catch(ObjectNotFoundException ex) {
-//			return StringUtils.FALSE+"! Object not exist.";
-//		}
 	}
 }

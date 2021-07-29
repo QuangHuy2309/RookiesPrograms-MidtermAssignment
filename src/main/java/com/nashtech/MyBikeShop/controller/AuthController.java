@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
@@ -91,7 +89,7 @@ public class AuthController {
 			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
 	@PostMapping("/auth/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody PersonDTO signUpRequest) {
-		
+
 		if (personRepository.existsByEmail(signUpRequest.getEmail().toLowerCase())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
 		}
@@ -105,35 +103,10 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
-	
+
 	@GetMapping("/auth/checkEmail/{email}")
 	public boolean checkExistEmailSignUp(@PathVariable(name = "email") String email) {
 		return personRepository.existsByEmail(email.toLowerCase()) ? false : true;
 	}
-	
-	@GetMapping("/auth/logout")
-	public String logOut(HttpServletRequest request) {
-		String token = request.getHeader("Authorization");
-		String[] arrStr = token.split(" ");
-		token = arrStr[1];
-		jwtUtils.refreshToken(token);
-		return "SUCCESS";
-		
-	}
-	
-//	@PostMapping("/checkPass")
-//	public ResponseEntity<?> checkPassUser(@Valid @RequestBody LoginRequest loginRequest) {
-//		Authentication authentication = authenticationManager.authenticate(
-//				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-//
-//		// if go there, the user/password is correct
-//		SecurityContextHolder.getContext().setAuthentication(authentication);
-//		// generate jwt to return to client
-//		String jwt = jwtUtils.generateJwtToken(authentication);
-//
-//		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-//				.collect(Collectors.toList());
-//		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getName(), userDetails.getEmail(), roles));
-//	}
+
 }

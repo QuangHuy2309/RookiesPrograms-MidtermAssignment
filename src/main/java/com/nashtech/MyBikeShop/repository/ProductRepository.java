@@ -9,11 +9,16 @@ import org.springframework.stereotype.Repository;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 @Repository
-public interface ProductRepository extends JpaRepository<ProductEntity, String>{
+public interface ProductRepository extends JpaRepository<ProductEntity, String> {
 	List<ProductEntity> findByCategoriesId(int id);
+
 	List<ProductEntity> findByCategoriesId(Pageable pageable, int id);
+
 	List<ProductEntity> findByNameIgnoreCase(String name);
+
 	List<ProductEntity> findByIdIgnoreCase(String name);
+
 	int countByCategoriesId(int id);
+
 	boolean existsByName(String name);
 }

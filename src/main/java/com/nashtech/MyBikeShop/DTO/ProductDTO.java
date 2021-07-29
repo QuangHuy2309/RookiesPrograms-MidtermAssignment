@@ -1,13 +1,10 @@
 package com.nashtech.MyBikeShop.DTO;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.persistence.Lob;
 
 import org.hibernate.annotations.Type;
-import org.springframework.web.multipart.MultipartFile;
 
 public class ProductDTO {
 	private String id;
@@ -20,9 +17,8 @@ public class ProductDTO {
 	private LocalDateTime createDate;
 //	private LocalDateTime updateDate;
 	@Lob
-	@Type(type="org.hibernate.type.BinaryType")
+	@Type(type = "org.hibernate.type.BinaryType")
 	private byte[] photo;
-//	private Blob photo;
 
 	public ProductDTO() {
 	}
@@ -47,7 +43,6 @@ public class ProductDTO {
 		this.description = description;
 		this.brand = brand;
 		this.createDate = createDate;
-//		this.updateDate = updateDate;
 		this.photo = photo;
 	}
 
@@ -117,7 +112,6 @@ public class ProductDTO {
 		this.brand = brand;
 	}
 
-
 	public byte[] getPhoto() {
 		return photo;
 	}
@@ -125,20 +119,10 @@ public class ProductDTO {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
-	
-//	public Blob getPhoto() {
-//		return photo;
-//	}
-//
-//	public void setPhoto(Blob photo) {
-//		this.photo = photo;
-//	}
 
 	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
-
-	
 
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;

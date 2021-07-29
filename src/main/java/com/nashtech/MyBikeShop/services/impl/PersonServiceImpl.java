@@ -1,6 +1,5 @@
 package com.nashtech.MyBikeShop.services.impl;
 
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
-import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
-import com.nashtech.MyBikeShop.entity.UserEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
-import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
-import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
-import com.nashtech.MyBikeShop.payload.request.ChangePassRequest;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.services.PersonService;
 
@@ -39,16 +33,10 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	public Optional<PersonEntity> getPerson(int id) {
-//		Optional<Person> optperson = personRepository.findById(email);
-//		Person person = optperson.get();
-//		return person;
 		return personRepository.findById(id);
 	}
 
 	public PersonEntity getPerson(String email) {
-//		Optional<Person> optperson = personRepository.findById(email);
-//		Person person = optperson.get();
-//		return person;
 		return personRepository.findByEmail(email);
 	}
 
@@ -81,7 +69,6 @@ public class PersonServiceImpl implements PersonService {
 		person.setPassword(personEntity.getPassword());
 		person.setRole(personEntity.getRole());
 
-		// personEntity.setEmail(encoder.encode(personDTO.getPassword()));
 		if (checkEmailChange) { // Không đổi email
 			personRepository.save(person);
 		} else { // Email được đổi, kiểm tra trùng
@@ -104,22 +91,6 @@ public class PersonServiceImpl implements PersonService {
 		else
 			return true;
 	}
-
-//	public boolean updatePassword(ChangePassRequest account) {
-//		boolean check = personRepository.existsByEmail(account.getEmail());
-//		if (check) {
-//			PersonEntity person = personRepository.findByEmail(account.getEmail());
-//			if (person.getPassword().equals(encoder.encode(account.getOldPassword()))) {
-//				person.setPassword(encoder.encode(account.getNewpassword()));
-//				personRepository.save(person);
-//				return true;
-//			} else {
-//				throw new ObjectPropertiesIllegalException("Old password is incorrect");
-//			}
-//		} else {
-//			throw new ObjectNotFoundException("Not find account with this email: " + account.getEmail());
-//		}
-//	}
 
 	public int getTotalByRole(String role) {
 		return personRepository.countByRole(role);

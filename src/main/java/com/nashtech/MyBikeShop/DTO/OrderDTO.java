@@ -1,13 +1,7 @@
 package com.nashtech.MyBikeShop.DTO;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
-import com.nashtech.MyBikeShop.entity.PersonEntity;
-import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 public class OrderDTO {
 	private int id;

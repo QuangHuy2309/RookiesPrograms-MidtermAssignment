@@ -1,9 +1,5 @@
 package com.nashtech.MyBikeShop.DTO;
 
-import com.nashtech.MyBikeShop.entity.OrderEntity;
-import com.nashtech.MyBikeShop.entity.ProductEntity;
-import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
-
 public class OrderDetailDTO {
 	private int orderId;
 	private String productId;
@@ -19,7 +15,6 @@ public class OrderDetailDTO {
 		this.productId = productId;
 		this.ammount = ammount;
 	}
-
 
 	public int getOrderId() {
 		return orderId;
@@ -37,7 +32,6 @@ public class OrderDetailDTO {
 		this.productId = productId;
 	}
 
-
 	public int getAmmount() {
 		return ammount;
 	}
@@ -45,5 +39,5 @@ public class OrderDetailDTO {
 	public void setAmmount(int ammount) {
 		this.ammount = ammount;
 	}
-	
+
 }

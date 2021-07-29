@@ -151,10 +151,12 @@ const ModalExample = (props) => {
 
       post("/product", body)
         .then((response) => {
-          if(response.status === 200)  toast.success("Add successfully!!!", {
+          if(response.status === 200) {toast.success("Add successfully!!!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
+          toggle();
+        } 
         })
         .catch((error) => {
           toast.error("Add failed, please check again", {

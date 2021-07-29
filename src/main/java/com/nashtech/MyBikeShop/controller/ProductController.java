@@ -61,18 +61,18 @@ public class ProductController {
 	@GetMapping("/product/checkExistId/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public boolean checkExistId(@PathVariable(name = "id") String id) {
-				return productService.existId(id);
+				return productService.checkExistId(id);
 	}
 	@GetMapping("/product/checkExistName/{name}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public boolean checkExistName(@PathVariable(name = "name") String name) {
-				return productService.existName(name);
+				return productService.checkExistName(name);
 	}
 	@GetMapping("/product/checkExistNameUpdate")
 	@PreAuthorize("hasRole('ADMIN')")
 	public boolean checkExistName(@RequestParam(name = "name") String name, 
 			@RequestParam(name = "id") String id) {
-				return productService.existNameUpdate(id, name);
+				return productService.checkExistNameUpdate(id, name);
 	}
 	@Operation(summary = "Delete a Product by id")
 	@ApiResponses(value = {

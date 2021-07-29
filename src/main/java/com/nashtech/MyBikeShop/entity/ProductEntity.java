@@ -1,16 +1,12 @@
 package com.nashtech.MyBikeShop.entity;
 
-import java.sql.Blob;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -18,14 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 
@@ -64,25 +57,19 @@ public class ProductEntity {
 	private LocalDateTime updateDate;
 
 	@Lob
-	@Type(type="org.hibernate.type.BinaryType")
+	@Type(type = "org.hibernate.type.BinaryType")
 	@Column(name = "photo")
 	private byte[] photo;
-//	private Blob photo;
-	
-	
-//	@JsonManagedReference
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	Set<OrderDetailEntity> orderDetails;
 
-//	@JsonManagedReference
 	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	Set<RateEntity> reviews;
 
-//	@JsonBackReference
 	@ManyToOne
-//	@JsonIgnore
 	@JoinColumn(name = "producttype")
 	private CategoriesEntity categories;
 
@@ -200,8 +187,6 @@ public class ProductEntity {
 		this.updateDate = updateDate;
 	}
 
-	
-
 	public byte[] getPhoto() {
 		return photo;
 	}
@@ -209,14 +194,6 @@ public class ProductEntity {
 	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
-
-//	public Blob getPhoto() {
-//		return photo;
-//	}
-//
-//	public void setPhoto(Blob photo) {
-//		this.photo = photo;
-//	}
 
 	public CategoriesEntity getCategories() {
 		return categories;
@@ -226,8 +203,6 @@ public class ProductEntity {
 		this.categories = categories;
 	}
 
-	
-	
 	public Set<RateEntity> getReviews() {
 		return reviews;
 	}
@@ -238,8 +213,6 @@ public class ProductEntity {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		// return super.toString();
 		return "ID: " + this.id + "\t Name: " + this.name + "\t Price:" + this.price + "\t Quantity: " + this.quantity
 				+ "\t Type: " + this.categories.getName() + "\t Brand: " + this.brand;
 	}

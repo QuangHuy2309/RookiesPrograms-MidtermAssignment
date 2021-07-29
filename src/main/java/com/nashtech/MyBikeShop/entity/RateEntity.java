@@ -11,32 +11,28 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.nashtech.MyBikeShop.DTO.RateDTO;
 
 @Entity
-@Table(name="review")
+@Table(name = "review")
 public class RateEntity {
 	@EmbeddedId
 	private RateKey id;
-	
-//	@JsonBackReference
+
 	@ManyToOne
-    @JoinColumn(name = "customerid", insertable = false, updatable = false)
+	@JoinColumn(name = "customerid", insertable = false, updatable = false)
 	private PersonEntity customer;
-	
-//	@JsonBackReference
+
 	@ManyToOne
-    @JoinColumn(name = "productid", insertable = false, updatable = false)
-    private ProductEntity product;
-	
+	@JoinColumn(name = "productid", insertable = false, updatable = false)
+	private ProductEntity product;
+
 	@Column(name = "rate_num")
 	private int rateNum;
-	
+
 	@Column(name = "rate_text")
 	private String rateText;
-	
-	
+
 	@Column(name = "datereview")
 	private Date dateReview;
 
@@ -49,7 +45,7 @@ public class RateEntity {
 
 		@Column(name = "productid")
 		private String productId;
-		
+
 		public RateKey() {
 			super();
 		}
@@ -77,11 +73,10 @@ public class RateEntity {
 		}
 	}
 
-	
 	public RateEntity() {
 		super();
 	}
-	
+
 	public RateEntity(RateKey id, PersonEntity customer, ProductEntity product, int rateNum, String rateText,
 			Date datereview) {
 		super();
@@ -95,10 +90,7 @@ public class RateEntity {
 
 	public RateEntity(RateDTO rateDTO) {
 		super();
-//		this.id.customerId = rateDTO.getCustomerId();
-//		this.id.productId = rateDTO.getProductId();
 		this.id = new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId());
-		//this.id.setProductId(rateDTO.getProductId());
 		this.rateNum = rateDTO.getRateNum();
 		this.rateText = rateDTO.getRateText();
 	}
@@ -150,6 +142,5 @@ public class RateEntity {
 	public void setDateReview(Date dateReview) {
 		this.dateReview = dateReview;
 	}
-	
-	
+
 }

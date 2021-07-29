@@ -50,6 +50,7 @@ const ModalAdd = (props) => {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
+            toggle();
         })
         .catch((error) => {
         toast.error("SignUp failed!", {
