@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.services.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
@@ -109,13 +110,15 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public boolean deleteOrder(int id) {
-		OrderEntity orderEntity = getOrders(id).get();
-		if (!orderEntity.isStatus()) { // False = Not delivery yet
+		OrderEntity order = getOrders(id).get();
+		PersonEntity person = personService.getPerson(order.getCustomers().getId()).get();
+		if (!order.isStatus()) { // False = Not delivery yet
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
 			}
 		}
-		orderRepository.delete(orderEntity);
+		person.getOrders().remove(order);
+		orderRepository.delete(order);
 		return true;
 	}
 

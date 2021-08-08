@@ -164,4 +164,13 @@ public class PersonEntity {
 		this.reviews = reviews;
 	}
 
+	public Set<OrderEntity> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<OrderEntity> orders) {
+		this.orders = orders;
+	}
+	
+	
 }

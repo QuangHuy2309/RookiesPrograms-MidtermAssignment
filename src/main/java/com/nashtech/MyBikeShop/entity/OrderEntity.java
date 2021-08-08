@@ -42,7 +42,7 @@ public class OrderEntity {
 	@JoinColumn(name = "customerid")
 	private PersonEntity customers;
 
-	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	Set<OrderDetailEntity> orderDetails;
 
 	public OrderEntity() {

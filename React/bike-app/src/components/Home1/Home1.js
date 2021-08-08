@@ -36,17 +36,6 @@ export default function Home1() {
             </div>
           );
         })
-        //   cateList.map((cate) => (
-        //     <div key={cate.id} class="title-bike-type">
-        //       <Link
-        //         to={`product/type/${cate.id}`}
-        //         style={{ textDecoration: "none" }}
-        //       >
-        //         <h2>{cate.name}</h2>
-
-        //       </Link>
-        //     </div>
-        //   ))
       }
     </div>
   );

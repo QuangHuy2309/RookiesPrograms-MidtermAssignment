@@ -5,14 +5,16 @@ import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { format } from "date-fns";
 import "./Order.css";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
+import {toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Row,
   Col,
   Table,
   Button,
 } from "reactstrap";
-import Index from "../../Navbar";
 
+toast.configure()
 export default function Order() {
   const [pagenum, setPageNum] = useState(0);
   const [statusListProd, setStatusListProd] = useState(false);
@@ -71,17 +73,25 @@ export default function Order() {
     getProdList(index);
     setStatusListProd(true);
   }
-  function handleDelete(id) {
+  function handleDelete(e, id) {
+    if (e === "OK") {
     del(`/order/${id}`)
       .then((response) => {
         if (response.status === 200) {
-          alert("DELETE SUCCES");
+          toast.success("Delete successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
           getListOrder();
         }
       })
       .catch((error) => {
-        alert(error);
+        toast.error(error, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
       });
+    }
   }
   function showList(){
       if(statusListProd){
@@ -145,7 +155,7 @@ export default function Order() {
                 )}
               </td>
               <td>
-              {/* <ModalDeleteConfirm/> */}
+              <ModalDeleteConfirm onChoice={(e) => handleDelete(e,order.id)} />
               </td>
             </tr>
           ))}
