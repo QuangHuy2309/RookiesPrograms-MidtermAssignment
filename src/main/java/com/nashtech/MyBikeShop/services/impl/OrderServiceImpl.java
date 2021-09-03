@@ -96,12 +96,12 @@ public class OrderServiceImpl implements OrderService {
 			ProductEntity prod = productService.getProduct(detailDTO.getProductId()).get();
 			listProd.append(
 					"<p style=\\\"font-size: 14px; line-height: 200%;\\\"><span style=\\\"font-size: 16px; line-height: 32px;\\\">"
-							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + "</span></p>");
+							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Price: "+ prod.getPrice() +"</span></p>");
 			if (!result)
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
 		}
 		try {
-			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString());
+			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString(), orderDTO.getTotalCost());
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
@@ -158,16 +158,16 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findByCustomersEmail(pageable, email);
 	}
 
-	public void sendSimpleMessage(String to, String listProd) throws MessagingException {
+	public void sendSimpleMessage(String to, String listProd, float totalCost) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
 
 		boolean multipart = true;
 
 		MimeMessageHelper helper = new MimeMessageHelper(message, multipart, "utf-8");
 
-		String htmlMsg = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n"
+		String htmlMsg = "<!DOCTYPE HTML >\r\n"
 				+ "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\r\n"
-				+ "<head>\r\n" + "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\r\n"
+				+ "<head>\r\n" + "  <meta charset=\"utf-8\">\r\n"
 				+ "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n"
 				+ "  <meta name=\"x-apple-disable-message-reformatting\">\r\n"
 				+ "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n" + "  <title></title>\r\n"
@@ -226,7 +226,7 @@ public class OrderServiceImpl implements OrderService {
 				+ "  <div style=\"color: #444444; line-height: 200%; text-align: center; word-wrap: break-word;\">\r\n"
 				+ "    <p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 22px; line-height: 44px;\">Hi,</span><br /><span style=\"font-size: 16px; line-height: 32px;\">Thank you again for purchase. </span></p>\r\n"
 				+ "<p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 16px; line-height: 32px;\">Your order is:</span></p>\r\n"
-				+ listProd + "  </div>\r\n" + "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n"
+				+ listProd+"\r\n\r\nTOTAL: "+totalCost + "  </div>\r\n" + "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n"
 				+ "  </div>\r\n" + "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n"
 				+ "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\r\n"
 				+ "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #272362;\">\r\n"
@@ -243,7 +243,7 @@ public class OrderServiceImpl implements OrderService {
 				+ "  </div>\r\n" + "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n" + "    </td>\r\n"
 				+ "  </tr>\r\n" + "  </tbody>\r\n" + "  </table>\r\n" + "</body>\r\n" + "</html>\r\n" + "";
 
-		message.setContent(htmlMsg, "text/html");
+		message.setContent(htmlMsg, "text/html; charset=utf-8");
 
 		helper.setTo(to);
 

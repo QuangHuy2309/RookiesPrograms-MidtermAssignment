@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { get, post, getWithAuth } from "../../../Utils/httpHelper";
+import { useHistory } from "react-router-dom";
 import { Row, Col, Button, Form, FormGroup, Input } from "reactstrap";
 import Avatar from "react-avatar";
 import "./Review.css";
@@ -18,6 +19,7 @@ export default function Index(props) {
   const [rating, setRating] = useState(3);
   const [user, setUser] = useState(Object);
   const [check, setCheck] = useState(false);
+  const history = useHistory();
   let totalPage = useRef(0);
   const size = 2;
 
@@ -86,6 +88,7 @@ export default function Index(props) {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
+          history.push(`/prodDetail/${props.id}`);
         }
       })
       .catch((error) => {

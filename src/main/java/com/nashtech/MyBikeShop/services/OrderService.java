@@ -27,7 +27,7 @@ public interface OrderService {
 
 	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email);
 
-	public void sendSimpleMessage(String to, String listProd) throws MessagingException;
+	public void sendSimpleMessage(String to, String listProd, float totalCost) throws MessagingException;
 
 	public long countTotal();
 }
