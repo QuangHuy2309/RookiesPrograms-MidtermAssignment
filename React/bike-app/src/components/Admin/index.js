@@ -6,7 +6,7 @@ import User from "./UserPage";
 import Cate from "./Categories";
 import Order from "./Order";
 import OrderImport from "./OrderImport/OrderImport.js";
-import ChangePass from "./ChangePassword";
+import Report from "./Report/Report.js";
 import "./Admin.css"
 
 
@@ -30,8 +30,8 @@ export default function Index() {
       return (<Order/>);
       case 'ORDER IMPORT':
       return (<OrderImport/>);
-      case 'CHANGEPASS':
-      return (<ChangePass/>);
+      case 'REPORT':
+      return (<Report/>);
     }
     // if (choice === "PRODUCT") {return (<Product/>)}
     // else if (choice === "USER") {return (<User/>)}

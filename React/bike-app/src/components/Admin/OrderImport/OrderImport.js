@@ -23,7 +23,7 @@ export default function OrderImport() {
   <>
    <h2 className="title-user">ORDER MANAGER</h2>
    <ModalAdd />
-      <Table bordered>
+      <Table bordered className="tableImport">
         <thead>
           <tr>
             <th>ID</th>

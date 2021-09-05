@@ -8,7 +8,7 @@ import { GiDutchBike } from "react-icons/gi";
 import { GiTruck } from "react-icons/gi";
 import { BiUserPin } from "react-icons/bi";
 import { logOut } from "../../../Utils/Auth";
-import { AiFillDatabase } from "react-icons/ai";
+import { AiFillDatabase, AiOutlineLineChart } from "react-icons/ai";
 import { MdBorderColor } from "react-icons/md";
 import ModalConfirm from "../../ModalConfirm";
 
@@ -51,6 +51,12 @@ export default function Index(props) {
         </MenuItem>
         <MenuItem icon={<BiUserPin />} onClick={() => props.onChoice("USER")}>
           USER MANAGER
+        </MenuItem>
+        <MenuItem
+          icon={<AiOutlineLineChart />}
+          onClick={() => props.onChoice("REPORT")}
+        >
+          REPORT
         </MenuItem>
         <SubMenu title="Account">
           {/* <MenuItem>Edit Information</MenuItem> */}

@@ -85,7 +85,7 @@ export default function Index() {
         </Button>
         <ModalAdd onEdit={(e) => handleUpdate(e)}/>
       </div>
-      <Table bordered>
+      <Table bordered className="tableUser">
         <thead>
           <tr>
             <th>ID</th>

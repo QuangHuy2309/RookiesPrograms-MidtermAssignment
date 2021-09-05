@@ -1,24 +1,26 @@
-.title-user{
-    margin:2rem;
+.title-user {
+  margin: 2rem;
 }
-.btn-list{
-    display: flex;
-    text-align: left;
-    margin: 1rem;
-    margin-left: 3rem;
+.btn-list {
+  display: flex;
+  text-align: left;
+  margin: 1rem;
+  margin-left: 3rem;
 }
-.img-order{
-    text-align: left;
-    height: 200px;
+.img-order {
+  text-align: left;
+  height: 200px;
 }
-#prodOrder-form{
-    border: 0.25px solid #333;
-    border-width: medium;
-    padding: 1rem;
-    margin-left: 3rem;
-    margin-bottom: 2rem;
+#prodOrder-form {
+  border: 0.25px solid #333;
+  border-width: medium;
+  padding: 1rem;
+  margin-left: 3rem;
+  margin-bottom: 2rem;
 }
-.info-prod-order{
-    text-align: left;
+.info-prod-order {
+  text-align: left;
 }
-
+.tableOrder {
+  margin-left: 1rem;
+}

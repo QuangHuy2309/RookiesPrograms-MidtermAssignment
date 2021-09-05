@@ -121,7 +121,7 @@ export default function Order() {
   return (
     <>
       <h2 className="title-user">ORDER MANAGER</h2>
-      <Table bordered>
+      <Table bordered className="tableOrder">
         <thead>
           <tr>
             <th>ID</th>

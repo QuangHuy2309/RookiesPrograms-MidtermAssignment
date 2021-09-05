@@ -109,7 +109,7 @@ export default function Index() {
           <IoReloadSharp />
         </Button>
       </div>
-      <Table bordered>
+      <Table bordered className="tableProd">
         <thead>
           <tr>
             <th>ID</th>
