@@ -45,7 +45,7 @@ public class OrderImportServiceImpl implements OrderImportService {
 	@Override
 	@Transactional
 	public OrderImportEntity createOrderImport(OrderImportEntity orderImport) {
-		if(orderImport.isStatus()) {
+		if (orderImport.isStatus()) {
 			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true);
 		}
 		orderImport.setTimeimport(LocalDateTime.now());
@@ -88,15 +88,29 @@ public class OrderImportServiceImpl implements OrderImportService {
 		for (OrderImportDetailEntity importDetail : importDetailList) {
 			ProductEntity product = productService.getProduct(importDetail.getProduct().getId()).orElse(null);
 			int productNewQuantity = product.getQuantity();
-			if(isAdd) {
+			if (isAdd) {
 				productNewQuantity += importDetail.getAmmount();
 			} else {
 				productNewQuantity -= importDetail.getAmmount();
 			}
 			product.setQuantity(productNewQuantity);
-			
+
 			productService.updateProductWithoutCheckAnything(product);
 		}
+	}
+
+	@Override
+	@Transactional
+	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId) {
+		OrderImportEntity orderImport = findOrderImportById(orderImportId);
+		
+		if(!orderImport.isStatus()&&orderImportDto.isStatus()) {
+			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true);
+		}
+		
+		orderImport.setStatus(true);
+		
+		return orderImportRepo.save(orderImport);
 	}
 
 }

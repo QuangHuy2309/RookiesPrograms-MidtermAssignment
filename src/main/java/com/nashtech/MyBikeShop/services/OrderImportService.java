@@ -16,4 +16,6 @@ public interface OrderImportService {
 	
 	public OrderImportEntity findOrderImportById (int importId);
 	
+	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId);
+	
 }
