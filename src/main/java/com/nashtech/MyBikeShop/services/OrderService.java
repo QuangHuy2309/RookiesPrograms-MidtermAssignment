@@ -30,4 +30,6 @@ public interface OrderService {
 	public void sendSimpleMessage(String to, String listProd, float totalCost) throws MessagingException;
 
 	public long countTotal();
+	
+	public long countTotalOrderByUser(String email);
 }

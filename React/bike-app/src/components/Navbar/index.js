@@ -66,6 +66,7 @@ export default function Index(props) {
   }
   function isLogging() {
     const name = getCookie("username");
+    // const email = getCookie("email");
     if (status && name !== "") {
       return (
         <Nav className="mr-auto" navbar>
@@ -74,12 +75,12 @@ export default function Index(props) {
               Hi, {name}
             </DropdownToggle>
             <DropdownMenu>
-              {/* <DropdownItem divider />
+              <DropdownItem divider />
               <DropdownItem>
-                <Link to={`/Info/${email}`} style={{ textDecoration: "none" }}>
-                  Information
+                <Link to={`/OrderHistory`} style={{ textDecoration: "none" }}>
+                  Order History
                 </Link>
-              </DropdownItem> */}
+              </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
                 {/* <p onClick={(e) => handleLogOut(e)}>LogOut</p> */}

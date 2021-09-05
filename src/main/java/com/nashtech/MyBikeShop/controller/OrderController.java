@@ -54,7 +54,13 @@ public class OrderController {
 	public long getNumberOfOrders() {
 		return  orderService.countTotal();
 	}
-
+	
+	@GetMapping("/order/totalOrderByUser/{email}")
+	@PreAuthorize("hasRole('USER')")
+	public long getNumberOfOrdersByUser(@PathVariable(name = "email") String email) {
+		return  orderService.countTotalOrderByUser(email);
+	}
+	
 	@Operation(summary = "Find Order by ID")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", 

@@ -13,4 +13,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 	List<OrderEntity> findByCustomersEmail(Pageable pageable, String email);
 
 	List<OrderEntity> findByCustomersId(Pageable pageable, int id);
+	
+	long countByCustomersEmail(String email);
 }

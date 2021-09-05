@@ -1,0 +1,36 @@
+.prod-form{
+    text-align: left;
+    right: 3rem;
+    border: 0.25px solid #333;
+    border-width: medium;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 70%;
+}
+.status-order{
+    display: flex;
+}
+.status-true{
+    margin-left: 1rem;
+    color: yellowgreen;
+}
+.status-false{
+    margin-left: 1rem;
+    color: orangered;
+}
+.orderHistory{
+    display: flex; 
+    justify-content: flex-end;
+    margin-right: 3rem;
+}
+
+.priceTotal{
+    justify-content: flex-end;
+}
+.priceNumTotal{
+    margin-left: 1rem;
+    color: #ff3f00;
+}
+.info-prod-order{
+    text-align: left;
+}
