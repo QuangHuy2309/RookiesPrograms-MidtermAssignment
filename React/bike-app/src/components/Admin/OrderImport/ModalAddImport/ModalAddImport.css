@@ -1,0 +1,27 @@
+.btn-modal{
+    text-align: left;
+    margin:1rem;
+}
+.scrollable {
+    overflow: scroll;
+    height: 15rem;
+    width: 100%;
+  }
+.radioGr-user{
+    display: flex;
+    order: 3;
+    flex-wrap:wrap;
+  }
+.btn-addProd{
+    margin-right: 1rem;
+    text-align: right;
+    justify-content: flex-end;
+}
+.btn-removeProd{
+  transform: scale(0.7);
+  width: fit-content;
+  /* height: fit-content; */
+}
+.prodName-title{
+  width: 25rem;
+}

@@ -8,6 +8,8 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 public interface ProductService {
 	public List<ProductEntity> retrieveProducts();
+	
+	public List<ProductEntity> retrieveProductsByType(int categoriesId);
 
 	public List<ProductEntity> getProductPage(int num, int size, int categoriesId);
 

@@ -60,6 +60,11 @@ public class PublicController {
 	public List<ProductEntity> retrieveProducts() {
 		return productService.retrieveProducts();
 	}
+	
+	@GetMapping("/product/{cateId}")
+	public List<ProductEntity> retrieveProductsByType(@PathVariable(name = "cateId") int id) {
+		return productService.retrieveProductsByType(id);
+	}
 
 	@Operation(summary = "Get a Product Infomation by ID")
 	@ApiResponses(value = {

@@ -42,6 +42,10 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductEntity> retrieveProducts() {
 		return productRepository.findAll();
 	}
+	
+	public List<ProductEntity> retrieveProductsByType(int categoriesId){
+		return productRepository.findByCategoriesId(categoriesId);
+	}
 
 	public List<ProductEntity> getProductPage(int page, int size, int categoriesId) {
 		Sort sortable = Sort.by("updateDate").descending();

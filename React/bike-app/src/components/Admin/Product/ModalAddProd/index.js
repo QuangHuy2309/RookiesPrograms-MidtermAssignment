@@ -168,7 +168,7 @@ const ModalExample = (props) => {
   }
   return (
     <div>
-      <Button color="primary" onClick={toggle} className="open-prod">
+      <Button color="info" onClick={toggle} className="open-prod">
        <IoAddOutline/> Add new Product
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
@@ -205,7 +205,8 @@ const ModalExample = (props) => {
                 name="price"
                 id="examplePrice"
                 required="required"
-                min="1000"
+                min="500000"
+                step="1000"
               />
             </FormGroup>
             <FormGroup>

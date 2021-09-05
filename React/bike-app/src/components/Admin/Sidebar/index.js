@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import { GiDutchBike } from "react-icons/gi";
+import { GiTruck } from "react-icons/gi";
 import { BiUserPin } from "react-icons/bi";
 import { logOut } from "../../../Utils/Auth";
 import { AiFillDatabase } from "react-icons/ai";
@@ -42,6 +43,12 @@ export default function Index(props) {
         >
           ORDER MANAGER
         </MenuItem>
+        <MenuItem
+          icon={<GiTruck />}
+          onClick={() => props.onChoice("ORDER IMPORT")}
+        >
+          ORDER IMPORT
+        </MenuItem>
         <MenuItem icon={<BiUserPin />} onClick={() => props.onChoice("USER")}>
           USER MANAGER
         </MenuItem>
@@ -50,8 +57,8 @@ export default function Index(props) {
           {/* <MenuItem onClick={() => props.onChoice("CHANGEPASS")}> 
           Change Password</MenuItem> */}
           <MenuItem>
-            <ModalConfirm onChoice={(e) => handleLogOut(e)}  />
-            </MenuItem>
+            <ModalConfirm onChoice={(e) => handleLogOut(e)} />
+          </MenuItem>
         </SubMenu>
       </Menu>
     </ProSidebar>

@@ -186,7 +186,8 @@ const ModalAdd = (props) => {
                 id="examplePrice"
                 value={prod.price}
                 required="required"
-                min="1000"
+                min="500000"
+                step="1000"
                 onChange={(e) => handleFieldChange(e, "price")}
               />
             </FormGroup>

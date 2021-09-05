@@ -85,7 +85,7 @@ const ModalAdd = (props) => {
   return (
     <div>
       <div className="btn-modal">
-        <Button outline color="info" onClick={toggle} className="btn-modal">
+        <Button color="info" onClick={toggle} className="btn-modal">
           <AiOutlineAppstoreAdd /> ADD
         </Button>
       </div>

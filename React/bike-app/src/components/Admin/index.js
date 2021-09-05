@@ -5,6 +5,7 @@ import Product from "./Product";
 import User from "./UserPage";
 import Cate from "./Categories";
 import Order from "./Order";
+import OrderImport from "./OrderImport/OrderImport.js";
 import ChangePass from "./ChangePassword";
 import "./Admin.css"
 
@@ -27,6 +28,8 @@ export default function Index() {
       return (<User/>);
       case 'ORDER':
       return (<Order/>);
+      case 'ORDER IMPORT':
+      return (<OrderImport/>);
       case 'CHANGEPASS':
       return (<ChangePass/>);
     }
