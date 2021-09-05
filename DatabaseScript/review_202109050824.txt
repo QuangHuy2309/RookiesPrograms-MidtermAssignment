@@ -1,7 +1,0 @@
-|productid|customerid|rate_num|rate_text      |datereview|
-|---------|----------|--------|---------------|----------|
-|A3       |2         |3       |Normal         |2021-07-10|
-|A9       |3         |4       |A              |2021-07-31|
-|A3       |23        |5       |Awesome Bike!!!|2021-09-03|
-|B        |23        |3       |Beautiful      |2021-09-03|
-|A9       |23        |3       |Loba bike      |2021-09-03|
