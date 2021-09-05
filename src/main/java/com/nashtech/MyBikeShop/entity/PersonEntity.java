@@ -53,6 +53,10 @@ public class PersonEntity {
 	@OneToMany(mappedBy = "customers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<OrderEntity> orders;
+	
+	@OneToMany(mappedBy = "employee", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<OrderImportEntity> ordersImport;
 
 	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore

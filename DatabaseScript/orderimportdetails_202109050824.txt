@@ -1,0 +1,2 @@
+|orderimportid|productid|amount|price|
+|-------------|---------|------|-----|

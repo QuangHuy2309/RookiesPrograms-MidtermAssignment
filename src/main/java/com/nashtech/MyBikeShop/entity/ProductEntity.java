@@ -64,6 +64,10 @@ public class ProductEntity {
 	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 	Set<OrderDetailEntity> orderDetails;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	Set<OrderImportDetailEntity> orderImportDetails;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -209,6 +213,24 @@ public class ProductEntity {
 
 	public void setReviews(Set<RateEntity> reviews) {
 		this.reviews = reviews;
+	}
+	
+	
+	
+	public Set<OrderDetailEntity> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(Set<OrderDetailEntity> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+
+	public Set<OrderImportDetailEntity> getOrderImportDetails() {
+		return orderImportDetails;
+	}
+
+	public void setOrderImportDetails(Set<OrderImportDetailEntity> orderImportDetails) {
+		this.orderImportDetails = orderImportDetails;
 	}
 
 	@Override
