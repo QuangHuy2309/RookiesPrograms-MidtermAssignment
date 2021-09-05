@@ -38,4 +38,6 @@ public interface ProductService {
 	public boolean checkExistName(String name);
 
 	public boolean checkExistId(String id);
+	
+	public ProductEntity updateProductWithoutCheckAnything (ProductEntity product);
 }
