@@ -1,7 +1,6 @@
 package com.nashtech.MyBikeShop.entity;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,8 +25,8 @@ public class OrderImportEntity {
 	@Column(name = "id")
 	private int id;
 
-	@Column(name = "timeimport ")
-	private LocalDateTime timeimport ;
+	@Column(name = "timeimport")
+	private LocalDateTime timeimport;
 
 	@Column(name = "totalcost")
 	private Float totalCost;

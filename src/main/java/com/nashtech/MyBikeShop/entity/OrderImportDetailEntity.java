@@ -8,6 +8,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -25,11 +26,13 @@ public class OrderImportDetailEntity {
 	@Column(name = "price")
 	private Float price;
 
+	@MapsId("orderId")
 	@ManyToOne
 	@JoinColumn(name = "orderimportid", insertable = false, updatable = false)
 	@JsonBackReference
 	private OrderImportEntity order;
 
+	@MapsId("productId")
 	@ManyToOne
 	@JsonBackReference
 	@JoinColumn(name = "productid", insertable = false, updatable = false)
@@ -40,10 +43,10 @@ public class OrderImportDetailEntity {
 
 		private static final long serialVersionUID = -4415409401138657585L;
 
-		@Column(name = "orderimportid")
+		@Column(name = "orderimportid", nullable = false, updatable = false)
 		private int orderId;
 
-		@Column(name = "productid")
+		@Column(name = "productid", nullable = false, updatable = false)
 		private String productId;
 
 		public OrderImportDetailsKey() {

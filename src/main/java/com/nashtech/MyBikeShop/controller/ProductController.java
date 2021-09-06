@@ -1,13 +1,8 @@
 package com.nashtech.MyBikeShop.controller;
 
-import java.util.List;
-
-import javax.validation.ConstraintViolationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
-import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
-import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;

@@ -164,4 +164,9 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
 		return prodList.isEmpty();
 	}
+
+	@Override
+	public ProductEntity updateProductWithoutCheckAnything(ProductEntity product) {
+		return productRepository.save(product);
+	}
 }
