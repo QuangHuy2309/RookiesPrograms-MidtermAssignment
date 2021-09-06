@@ -102,7 +102,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/imports")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getOrderImport(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size) {
 		List<OrderImportEntity> orderImportEntity = orderImportService.getOrderImportPage(page, size);
@@ -119,7 +119,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/imports/{importId}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize(" hasRole('ADMIN')")
 	public ResponseEntity<?> getOrderImportDetail(@PathVariable int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
