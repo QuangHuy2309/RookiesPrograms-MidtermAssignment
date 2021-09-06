@@ -24,4 +24,10 @@ public class ReportController {
 	public List<Float> profitByYear(@PathVariable(name = "year") int year){
 		return reportService.profitByYear(year);
 	}
+	
+	@GetMapping("/report/purchasecost/{year}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<Float> purchaseCostByYear(@PathVariable(name = "year") int year){
+		return reportService.purchaseCostByYear(year);
+	}
 }
