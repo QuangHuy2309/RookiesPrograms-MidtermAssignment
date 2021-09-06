@@ -113,4 +113,14 @@ public class OrderImportServiceImpl implements OrderImportService {
 		return orderImportRepo.save(orderImport);
 	}
 
+	@Override
+	public boolean deleteOrderImport(int orderImportId) {
+		return orderImportRepo.findById(orderImportId).map(order -> {
+			PersonEntity person = personService.getPerson(order.getEmployee().getId()).get();
+			person.getOrdersImport().remove(order);
+			orderImportRepo.delete(order);
+			return true;
+		}).orElse(false);
+	}
+
 }
