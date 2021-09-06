@@ -67,22 +67,22 @@ export default function OrderImport() {
   }
   function handleDelete(e, id) {
     if (e === "OK") {
-    // del(`/order/${id}`)
-    //   .then((response) => {
-    //     if (response.status === 200) {
-    //       toast.success("Delete successfully!!!", {
-    //         position: toast.POSITION.TOP_RIGHT,
-    //         autoClose: 3000,
-    //       });
-    //       getListOrder();
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     toast.error(error, {
-    //       position: toast.POSITION.TOP_RIGHT,
-    //       autoClose: 3000,
-    //     });
-    //   });
+    del(`/imports/${id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success("Delete successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+          getOrderImportList();
+        }
+      })
+      .catch((error) => {
+        toast.error(error, {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      });
     }
   }
   function showList(){
@@ -99,6 +99,18 @@ export default function OrderImport() {
               <h4>
                 {prod.name}
               </h4>
+              <Row>
+                <Col className="col-2">
+                  <h6>
+                  Model: 
+                  </h6>
+              </Col>
+              <Col>
+              <h6>
+                  {prod.id}
+              </h6>
+              </Col>
+              </Row>
               <Row>
                 <Col className="col-2">
                   <h6>
@@ -167,7 +179,7 @@ export default function OrderImport() {
                 )}
               </td>
               <td>
-              <ModalDeleteConfirm onChoice={(e) => handleDelete(e,order.id)} />
+              <ModalDeleteConfirm disable={order.status} onChoice={(e) => handleDelete(e,order.id)} />
               </td>
          </tr>
          ))}

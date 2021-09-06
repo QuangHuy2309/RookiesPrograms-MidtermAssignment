@@ -27,7 +27,7 @@ const ModalConfirm = (props) => {
   }
   return (
     <div>
-      <Button color="danger" onClick={toggle}><RiDeleteBin2Fill/></Button>
+      <Button color="danger" disabled={props.disable} onClick={toggle}><RiDeleteBin2Fill/></Button>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}><RiDeleteBin2Fill/>Delete</ModalHeader>
         <ModalBody>
