@@ -20,4 +20,6 @@ public interface OrderImportService {
 	
 	public boolean deleteOrderImport (int orderImportId);
 	
+	public float purchaseCostByMonth (int month, int year);
+	
 }

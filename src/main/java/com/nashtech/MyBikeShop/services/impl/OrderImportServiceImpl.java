@@ -123,4 +123,11 @@ public class OrderImportServiceImpl implements OrderImportService {
 		}).orElse(false);
 	}
 
+	@Override
+	public float purchaseCostByMonth(int month, int year) {
+		Float result= orderImportRepo.purchaseCostByMonth(month, year);
+		if (result == null) result = (float) 0;
+		return result;
+	}
+
 }
