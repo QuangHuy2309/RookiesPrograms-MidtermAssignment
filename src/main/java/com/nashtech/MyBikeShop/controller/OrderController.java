@@ -20,6 +20,7 @@ import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.services.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -188,5 +189,13 @@ public class OrderController {
 		} catch (NoSuchElementException ex) {
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
+	}
+	
+	@GetMapping("/order/report/profitByMonth")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public float getProfitByMonth(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year) {
+		if (month > 12 || month < 1) throw new ObjectPropertiesIllegalException("Month must from 1 to 12");
+		if (year == 0 || year < 2000) throw new ObjectPropertiesIllegalException("Year is invalid");
+		return orderService.profitByMonth(month, year);
 	}
 }
