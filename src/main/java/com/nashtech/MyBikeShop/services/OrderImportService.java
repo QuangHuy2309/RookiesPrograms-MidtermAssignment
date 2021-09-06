@@ -18,4 +18,6 @@ public interface OrderImportService {
 	
 	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId);
 	
+	public boolean deleteOrderImport (int orderImportId);
+	
 }

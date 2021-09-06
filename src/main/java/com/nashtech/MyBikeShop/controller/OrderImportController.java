@@ -2,7 +2,6 @@ package com.nashtech.MyBikeShop.controller;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,11 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDetailDTO;
-import com.nashtech.MyBikeShop.Utils.StringUtils;
-import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderImportEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
@@ -61,7 +58,7 @@ public class OrderImportController {
 
 	@Operation(summary = "Create Order import")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
-			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportEntity.class)) }),
+			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
@@ -150,6 +147,30 @@ public class OrderImportController {
 		}
 		
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportUpdate), HttpStatus.OK);
-		
+	}
+	
+	@Operation(summary = "Delete Order import by ID")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
+	@DeleteMapping("/imports/{importId}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> deleteOrderImport (@PathVariable(name = "importId") int importId) {
+		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
+		if(orderImport == null) {
+			throw new ObjectNotFoundException("Order import not found!");
+		}
+		if(orderImport.isStatus()) {
+			return ResponseEntity.badRequest().body(new MessageResponse("Import order is delivered. Cannot delete!"));
+		}
+		boolean result = orderImportService.deleteOrderImport(importId);
+		if(!result) {
+			return ResponseEntity.internalServerError().body(new MessageResponse("Delete fail!"));
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }
