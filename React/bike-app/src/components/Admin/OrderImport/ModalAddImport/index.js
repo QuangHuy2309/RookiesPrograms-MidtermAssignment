@@ -89,28 +89,27 @@ const ModalExample = (props) => {
     const emailUser = getCookie("email");
     const body = JSON.stringify({
       employeeEmail: emailUser,
-      totalPrice: total,
+      totalCost: total,
       status : e.target.status.value,
       orderImportDetails : toArr(),
     });
-    console.log(body);
-    // post("/product", body)
-    //   .then((response) => {
-    //     if (response.status === 200) {
-    //       toast.success("Add successfully!!!", {
-    //         position: toast.POSITION.TOP_RIGHT,
-    //         autoClose: 3000,
-    //       });
-    //       toggle();
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     toast.error("Add failed, please check again", {
-    //       position: toast.POSITION.TOP_RIGHT,
-    //       autoClose: 3000,
-    //     });
-    //     console.log(error);
-    //   });
+    post("/imports", body)
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success("Add successfully!!!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+          toggle();
+        }
+      })
+      .catch((error) => {
+        toast.error("Add failed, please check again", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+        console.log(error);
+      });
   }
 
   async function getTotalPrice(list) {

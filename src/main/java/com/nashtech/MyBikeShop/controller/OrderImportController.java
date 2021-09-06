@@ -108,7 +108,8 @@ public class OrderImportController {
 		List<OrderImportEntity> orderImportEntity = orderImportService.getOrderImportPage(page, size);
 		List<OrderImportDTO> orderImportDto = orderImportEntity.stream().map(orderImportService::convertToDto)
 				.collect(Collectors.toList());
-		return new ResponseEntity<List<OrderImportDTO>>(orderImportDto, HttpStatus.OK);
+//		return new ResponseEntity<List<OrderImportDTO>>(orderImportDto, HttpStatus.OK);
+		return new ResponseEntity<List<OrderImportEntity>>(orderImportEntity, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Get Order import detail")

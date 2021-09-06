@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line } from "react-chartjs-2";
+import { getAuth } from "../../../Utils/httpHelper";
 import "./Report.css";
 import {Input,} from "reactstrap";
 export default function Report() {
@@ -43,6 +44,7 @@ export default function Report() {
   }
   async function handleSelectDate(e){
     console.log(e.target.value);
+    // getAuth
   }
     return (
         <div>
