@@ -175,6 +175,16 @@ public class PersonEntity {
 	public void setOrders(Set<OrderEntity> orders) {
 		this.orders = orders;
 	}
+
+	public Set<OrderImportEntity> getOrdersImport() {
+		return ordersImport;
+	}
+
+	public void setOrdersImport(Set<OrderImportEntity> ordersImport) {
+		this.ordersImport = ordersImport;
+	}
+	
+	
 	
 	
 }
