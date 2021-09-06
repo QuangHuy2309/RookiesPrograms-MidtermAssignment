@@ -41,17 +41,20 @@ export default function Report() {
     today = yyyy + "-" + mm + "-" + dd;
     setToday(today);
   }
+  async function handleSelectDate(e){
+    console.log(e.target.value);
+  }
     return (
         <div>
             <h2 className="title-user">REPORT</h2>
             <div className="datepicker">
             <Input
                 type="month"
-                name="dob"
+                name="dateselect"
                 id="exampleBrand"
                 required="required"
-                // 
                 max={today}
+                onChange={(e) => handleSelectDate(e)}
               />
               </div>
             <div className="chart-div">
