@@ -161,7 +161,12 @@ public class OrderServiceImpl implements OrderService {
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findByCustomersEmail(pageable, email);
 	}
-
+	public float profitByMonth(int month, int year) {
+		Float result=orderRepository.profitByMonth(month, year);
+		if (result == null) result = (float) 0;
+		return result;
+	}
+	
 	public void sendSimpleMessage(String to, String listProd, float totalCost) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
 

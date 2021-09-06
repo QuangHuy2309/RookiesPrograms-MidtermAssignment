@@ -116,7 +116,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/imports/{importId}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(" hasRole('ADMIN')")
 	public ResponseEntity<?> getOrderImportDetail(@PathVariable int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {

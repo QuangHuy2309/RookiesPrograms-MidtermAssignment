@@ -32,4 +32,6 @@ public interface OrderService {
 	public long countTotal();
 	
 	public long countTotalOrderByUser(String email);
+	
+	public float profitByMonth(int month, int year);
 }
