@@ -42,6 +42,10 @@ public class OrderImportServiceImpl implements OrderImportService {
 	@Autowired
 	OrderImportDetailService orderImportDetailService;
 
+	public long countTotal() {
+		return orderImportRepo.count();
+		}
+	
 	@Override
 	@Transactional
 	public OrderImportEntity createOrderImport(OrderImportEntity orderImport) {

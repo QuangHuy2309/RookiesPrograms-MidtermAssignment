@@ -69,9 +69,11 @@ export default function Index() {
   }
 
   function handleUpdate(e){
-    getListUser();
+    if (e) getListUser();
   }
-
+  function handleAdd(e){
+    if (e) getListUser();
+  }
 
   return (
     <div>
@@ -83,7 +85,7 @@ export default function Index() {
         <Button outline color="primary" onClick={() => setChoice("ADMIN")}>
           Employee List
         </Button>
-        <ModalAdd onEdit={(e) => handleUpdate(e)}/>
+        <ModalAdd onAdd={(e) => handleAdd(e)}/>
       </div>
       <Table bordered className="tableUser">
         <thead>

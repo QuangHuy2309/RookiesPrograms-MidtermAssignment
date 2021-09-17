@@ -92,6 +92,7 @@ const ModalAdd = (props) => {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
+          props.onAdd(true);
           toggle();
         }
         })
@@ -120,7 +121,7 @@ const ModalAdd = (props) => {
     let today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear();
+    let yyyy = today.getFullYear()-18;
     if (dd < 10) {
       dd = "0" + dd;
     }

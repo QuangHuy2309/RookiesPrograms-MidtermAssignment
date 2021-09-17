@@ -22,4 +22,6 @@ public interface OrderImportService {
 	
 	public float purchaseCostByMonth (int month, int year);
 	
+	public long countTotal();
+	
 }

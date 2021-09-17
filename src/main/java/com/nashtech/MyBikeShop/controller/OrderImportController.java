@@ -55,7 +55,13 @@ public class OrderImportController {
 
 	@Autowired
 	PersonService personService;
-
+	
+	@GetMapping("/orderImport/totalOrder")
+	@PreAuthorize("hasRole('ADMIN')")
+	public long getNumberOfOrders() {
+		return  orderImportService.countTotal();
+	}
+	
 	@Operation(summary = "Create Order import")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),

@@ -84,12 +84,12 @@ const ModalAdd = (props) => {
     } else if (key === "phonenumber") {
       setUser({ [key]: e.target.value.replace(/\D/, "") });
       // setPhonenumber(e.target.value.replace(/\D/, ""));
-    } else if (key === "genderFemale"){
-      if (!gender){
+    } else if (key === "genderFemale") {
+      if (!gender) {
         setGener(true);
       }
-    } else if (key === "genderMale"){
-      if (gender){
+    } else if (key === "genderMale") {
+      if (gender) {
         setGener(false);
       }
     }
@@ -117,11 +117,14 @@ const ModalAdd = (props) => {
       put(`/persons/${id}`, body)
         .then((response) => {
           console.log(response.data);
-          if (response.data === "SUCCESS")
+          if (response.data === "SUCCESS") {
             toast.success("Edit successfully!!!", {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
+            props.onEdit("true");
+            toggle();
+          }
         })
         .catch((error) => {
           toast.error("Add failed, please check again", {
@@ -136,7 +139,7 @@ const ModalAdd = (props) => {
     let today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear();
+    let yyyy = today.getFullYear() - 18;
     if (dd < 10) {
       dd = "0" + dd;
     }

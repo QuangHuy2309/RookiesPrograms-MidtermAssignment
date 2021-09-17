@@ -86,6 +86,13 @@ const ModalExample = (props) => {
   }
   function handleSubmit(e) {
     e.preventDefault();
+    if (prodPickedList.length < 1) {
+      toast.error("You need add at least one product!", {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 3000,
+      });
+    }
+    else{
     const emailUser = getCookie("email");
     const body = JSON.stringify({
       employeeEmail: emailUser,
@@ -100,6 +107,7 @@ const ModalExample = (props) => {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
+          props.onAdd(true);
           toggle();
         }
       })
@@ -110,6 +118,7 @@ const ModalExample = (props) => {
         });
         console.log(error);
       });
+    }
   }
 
   async function getTotalPrice(list) {

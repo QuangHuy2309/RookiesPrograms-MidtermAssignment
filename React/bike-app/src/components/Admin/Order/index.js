@@ -107,14 +107,49 @@ export default function Order() {
                 <h4>
                   {prod.name}
                 </h4>
-                <h6>
-                    Quantity: {prod.quantity}
-                </h6>
-                <h5>
-                    Price: {numberFormat(prod.quantity * prod.price)}
-                </h5>
-                </Col>
-                </Row>
+                <Row>
+                <Col className="col-2">
+                  <h6>
+                  Model: 
+                  </h6>
+              </Col>
+              <Col>
+              <h6>
+                  {prod.id}
+              </h6>
+              </Col>
+              </Row>
+              <Row>
+                <Col className="col-2">
+                  <h6>
+                  Quantity: 
+                  </h6>
+              </Col>
+              <Col>
+              <h6>
+                  {prod.quantity}
+              </h6>
+              </Col>
+              </Row>
+              <h6>
+                  <Row>
+                <Col className="col-2">
+                  <h6>
+                  Unit Price: 
+                  </h6>
+              </Col>
+              <Col>
+              <h6>
+              {numberFormat(prod.price)}
+              </h6>
+              </Col>
+              </Row>
+              </h6>
+              <h5>
+                  Total Price: {numberFormat(prod.quantity * prod.price)}
+              </h5>
+              </Col>
+              </Row>
       )))
         };
   }

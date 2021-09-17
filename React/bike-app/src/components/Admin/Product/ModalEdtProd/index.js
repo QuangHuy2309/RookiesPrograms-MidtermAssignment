@@ -26,7 +26,7 @@ const ModalAdd = (props) => {
   const [nameError, setNameError] = useState("");
   const [brandError, setBrandError] = useState("");
   const [checkBrand, setCheckBrand] = useState(true);
-  const [selectedCate, setSelectedCate] = useState({name :"", id : ""});
+  const [selectedCate, setSelectedCate] = useState({ name: "", id: "" });
 
   useEffect(() => {
     if (modal) {
@@ -62,19 +62,19 @@ const ModalAdd = (props) => {
   }
   function checkNameProd(name, id) {
     if (checkName && checkBrand)
-    getWithAuth(`/product/checkExistNameUpdate?name=${name}&id=${id}`).then(
-      (response) => {
-        if (response.status === 200) {
-          if (response.data) {
-            setNameError("");
-            setCheckName(true);
-          } else {
-            setNameError("Product name is duplicated");
-            setCheckName(false);
+      getWithAuth(`/product/checkExistNameUpdate?name=${name}&id=${id}`).then(
+        (response) => {
+          if (response.status === 200) {
+            if (response.data) {
+              setNameError("");
+              setCheckName(true);
+            } else {
+              setNameError("Product name is duplicated");
+              setCheckName(false);
+            }
           }
         }
-      }
-    );
+      );
   }
   async function getProd() {
     get(`/public/product/search/${id}`).then((response) => {
@@ -82,7 +82,10 @@ const ModalAdd = (props) => {
         // console.log(response.data);
         setProd(response.data);
         setBase64(`data:image/jpeg;base64,${response.data.photo}`);
-        setSelectedCate({name : response.data.categories.name, id : response.data.categories.id });
+        setSelectedCate({
+          name: response.data.categories.name,
+          id: response.data.categories.id,
+        });
         console.log(selectedCate);
       }
     });
@@ -133,10 +136,14 @@ const ModalAdd = (props) => {
       put(`/product/${props.id}`, body)
         .then((response) => {
           console.log(response.data);
-          if(response.data === "SUCCESS")  toast.success("Edit successfully!!!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
+          if (response.data === "SUCCESS") {
+            toast.success("Edit successfully!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            props.onEdit("true");
+            toggle();
+          }
         })
         .catch((error) => {
           toast.error("Add failed, please check again", {
@@ -150,10 +157,12 @@ const ModalAdd = (props) => {
   return (
     <div>
       <Button color="warning" onClick={toggle}>
-        <MdModeEdit/>
+        <MdModeEdit />
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}><MdModeEdit/> Product Information</ModalHeader>
+        <ModalHeader toggle={toggle}>
+          <MdModeEdit /> Product Information
+        </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
@@ -216,8 +225,12 @@ const ModalAdd = (props) => {
             </FormGroup>
             <FormGroup>
               <Label for="exampleSelect">Type</Label>
-              <Input type="select" name="select" id="exampleSelect" required
-              // value = {{label:selectedCate.name, value : selectedCate.id}}
+              <Input
+                type="select"
+                name="select"
+                id="exampleSelect"
+                required
+                // value = {{label:selectedCate.name, value : selectedCate.id}}
               >
                 {cateList.map((cate) => (
                   <option
@@ -267,7 +280,7 @@ const ModalAdd = (props) => {
             </FormGroup>
             <br />
             <Button outline color="warning" type="submit">
-              <MdModeEdit/> Edit
+              <MdModeEdit /> Edit
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
               Cancel

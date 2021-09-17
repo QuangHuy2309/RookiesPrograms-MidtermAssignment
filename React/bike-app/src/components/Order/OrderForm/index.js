@@ -233,7 +233,7 @@ export default function Index() {
         </Row>
         <FormGroup>
           {prodList.map((prod, index) => (
-            <Row className="prod-form" key={prod.id}>
+            <Row className="prod-form-orderUser" key={prod.id}>
               <Col className="col-3">
                 <img
                   src={`data:image/jpeg;base64,${prod.photo}`}

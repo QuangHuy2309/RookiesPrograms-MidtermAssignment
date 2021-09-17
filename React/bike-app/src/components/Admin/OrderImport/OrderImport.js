@@ -19,8 +19,19 @@ export default function OrderImport() {
   const size = 6;
   let totalPage = useRef(0);
   useEffect(() => {
+    getCountTotalOrderImport();
     getOrderImportList();
   }, []);
+  useEffect(() => {
+    getOrderImportList();
+  }, [pagenum]);
+  async function getCountTotalOrderImport(){
+    getWithAuth(`/orderImport/totalOrder`).then((response) => {
+      if (response.status === 200) {
+        totalPage.current = response.data;
+      }
+    });
+  }
   async function getOrderImportList(){
     getWithAuth(`/imports?pagenum=${pagenum}&size=${size}`).then((response) => {
       if (response.status === 200) {
@@ -145,10 +156,13 @@ export default function OrderImport() {
     )))
       };
 }
+function handleAdd(e){
+  if (e) getOrderImportList();
+}
   return (
   <>
    <h2 className="title-user">ORDER IMPORT MANAGER</h2>
-   <ModalAdd />
+   <ModalAdd onAdd={(e) => handleAdd(e)}/>
       <Table bordered className="tableImport">
         <thead>
           <tr>
@@ -185,6 +199,10 @@ export default function OrderImport() {
          ))}
          </tbody>
         </Table>
+        <Page
+        total={Math.ceil(totalPage.current / size)}
+        onPageChange={(e) => setPageNum(e)}
+      />
         {showList()}
         </>
         );

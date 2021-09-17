@@ -39,7 +39,7 @@ export default function Report() {
       
       getProfitList(year);
       getPurchaseList(year);
-      calProfit(month);
+      await calProfit(month);
   }, [selectedDate]);
   async function calProfit(month){
     if (profit.length < 1) setProfitNum(0);
@@ -64,8 +64,9 @@ export default function Report() {
     setToday(today);
   }
   async function handleSelectDate(e){
-    
     setSelectedDate(e.target.value);
+    let month = e.target.value.slice(5);
+    calProfit(month);
   }
   async function getProfitList(year){
     setProfit([]);

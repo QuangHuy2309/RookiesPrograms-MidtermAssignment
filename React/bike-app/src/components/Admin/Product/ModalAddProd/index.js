@@ -155,6 +155,7 @@ const ModalExample = (props) => {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
+          props.onAdd(true);
           toggle();
         } 
         })

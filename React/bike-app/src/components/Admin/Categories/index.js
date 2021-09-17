@@ -48,13 +48,16 @@ export default function Index() {
     }
   }
   function getUpdated(e){
-    getListCate();
+    if (e) getListCate();
+  }
+  function handleAdd(e){
+    if (e) getListCate();
   }
   return (
     <div>
       <h2 className="title-user">CATEGORIES MANAGER</h2>
         <br/>
-        <ModalAdd/>
+        <ModalAdd onAdd={(e) => handleAdd(e)}/>
       <Table bordered>
         <thead>
           <tr>

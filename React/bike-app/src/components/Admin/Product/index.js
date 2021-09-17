@@ -53,9 +53,11 @@ export default function Index() {
   useEffect(() => {
     getListProd();
   }, [choice, pagenum]);
+
   function getUpdated(e) {
-    getListProd();
+    if (e) getListProd();
   }
+  
   function getListProd() {
     get(
       `/public/product/page?pagenum=${pagenum}&size=${size}&type=${choice}`
@@ -85,7 +87,9 @@ export default function Index() {
         });
     }
   }
-
+  function handleAdd(e){
+    if (e) getListProd();
+  }
   return (
     <>
       <h2 className="title-user">PRODUCT MANAGER</h2>
@@ -104,7 +108,7 @@ export default function Index() {
             ))}
           </DropdownMenu>
         </ButtonDropdown>{" "}
-        <ModalAdd />
+        <ModalAdd onAdd={(e) => handleAdd(e)}/>
         <Button outline color="link" onClick={() => getListProd()}>
           <IoReloadSharp />
         </Button>

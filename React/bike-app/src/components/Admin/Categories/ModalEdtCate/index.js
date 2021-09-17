@@ -76,10 +76,12 @@ const ModalEdt = (props) => {
       put(`/categories/${id}`, body)
         .then((response) => {
           console.log(response.data);
-          if(response.data === "SUCCESS")  toast("Edit successfully!!!", {
+          if(response.data === "SUCCESS")  toast.success("Edit successfully!!!", {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 3000,
         });
+        props.onEdit("true");
+        toggle();
       })
       .catch((error) => {
         console.log(error)

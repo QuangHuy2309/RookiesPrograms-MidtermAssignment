@@ -167,10 +167,10 @@ export default function Index(props) {
           </Row>
         </div>
       ))}
-      <Page
+      { (reviewList.length <1)? null :  <Page
         total={Math.ceil(totalPage.current / size)}
         onPageChange={(e) => handlePageChange(e)}
-      />
+      />}
     </>
   );
 }

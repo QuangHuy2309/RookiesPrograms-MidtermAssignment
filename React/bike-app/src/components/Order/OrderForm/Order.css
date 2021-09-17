@@ -20,11 +20,13 @@
     text-align: left;
     height: 200px;
 }
-.prod-form{
+.prod-form-orderUser{
     border: 0.25px solid #333;
     border-width: medium;
     padding: 1rem;
     margin-bottom: 1rem;
+    text-align: left;
+    right: 3rem;
 }
 .info-prod-order{
     text-align: left;
