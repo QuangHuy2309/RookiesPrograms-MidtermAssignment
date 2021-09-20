@@ -2,8 +2,9 @@
     margin:2rem;
 }
 .btn-list{
-    display: flex;
-    text-align: left;
+    /* display: flex; */
+    /* text-align: left; */
+    width: 100%;
     margin: 1rem;
     margin-left: 3rem;
 }

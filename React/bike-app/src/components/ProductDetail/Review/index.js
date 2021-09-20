@@ -101,12 +101,9 @@ export default function Index(props) {
   }
   function customerReview() {
     const name = getCookie("username");
-    // const role = getCookie("role");
     const status = getCookie("status");
     checkReview();
-    // if ((!checkReview()) && (role === "ROLE_ADMIN") || (role === "ROLE_USER") && (name !== ""))
-    // const checkBoolean = (!check);
-    const open = ((!check) && (status==="true"));
+    const open = ((check) && (status==="true"));
     if (open)
     {return (
       <div className="reviewInput-card">

@@ -61,6 +61,14 @@ public class PublicController {
 		return productService.retrieveProducts();
 	}
 	
+	@GetMapping("/product/search")
+	public List<ProductEntity> searchProducts(@RequestParam(name = "keyword") String keyword,
+			@RequestParam(name = "type", required = false) Integer type) {
+		if (type != null)
+		return productService.searchProductByType(keyword,type);
+		else return productService.searchProduct(keyword);
+	}
+	
 	@GetMapping("/product/{cateId}")
 	public List<ProductEntity> retrieveProductsByType(@PathVariable(name = "cateId") int id) {
 		return productService.retrieveProductsByType(id);

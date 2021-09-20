@@ -1,10 +1,14 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.text.NumberFormat;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -66,11 +70,11 @@ public class OrderServiceImpl implements OrderService {
 	public long countTotal() {
 		return orderRepository.count();
 	}
-	
+
 	public long countTotalOrderByUser(String email) {
 		return orderRepository.countByCustomersEmail(email);
 	}
-	
+
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
@@ -78,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public List<OrderEntity> getOrderPage(int num, int size) {
-		Sort sortable = Sort.by("timebought").descending().and(Sort.by("status"));
+		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findAll(pageable).stream().collect(Collectors.toList());
 	}
@@ -100,7 +104,9 @@ public class OrderServiceImpl implements OrderService {
 			ProductEntity prod = productService.getProduct(detailDTO.getProductId()).get();
 			listProd.append(
 					"<p style=\\\"font-size: 14px; line-height: 200%;\\\"><span style=\\\"font-size: 16px; line-height: 32px;\\\">"
-							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Price: "+ prod.getPrice() +"</span></p>");
+							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Price: "
+							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(prod.getPrice())
+							+ "</span></p>");
 			if (!result)
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
 		}
@@ -116,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
 	public boolean deleteOrder(int id) {
 		OrderEntity order = getOrders(id).get();
 		PersonEntity person = personService.getPerson(order.getCustomers().getId()).get();
-		if (!order.isStatus()) { // False = Not delivery yet
+		if (order.getStatus() != 4) { // False = Not delivery yet
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount());
 			}
@@ -149,9 +155,23 @@ public class OrderServiceImpl implements OrderService {
 		return true;
 	}
 
-	public boolean updateStatusOrder(int id) {
+	public boolean updateStatusOrder(int id, int status) {
 		OrderEntity order = getOrders(id).get();
-		order.setStatus(!order.isStatus());
+		if (status == 4 && order.getStatus() != 4) {
+			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
+				boolean result = orderDetailService.updateDetailCancel(detail);
+				if (!result)
+					return false;
+			}
+		}
+		else if (status != 4 && order.getStatus() == 4) {
+			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
+				boolean result = orderDetailService.updateDetail(detail);
+				if (!result)
+					return false;
+			}
+		}
+		order.setStatus(status);
 		orderRepository.save(order);
 		return true;
 	}
@@ -161,13 +181,15 @@ public class OrderServiceImpl implements OrderService {
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findByCustomersEmail(pageable, email);
 	}
+
 	public float profitByMonth(int month, int year) {
-		Float result=orderRepository.profitByMonth(month, year);
-		if (result == null) result = (float) 0;
+		Float result = orderRepository.profitByMonth(month, year);
+		if (result == null)
+			result = (float) 0;
 		return result;
 	}
-	
-	public void sendSimpleMessage(String to, String listProd, float totalCost) throws MessagingException {
+
+	public void sendSimpleMessage(String to, String listProd, Double totalCost) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
 
 		boolean multipart = true;
@@ -235,8 +257,10 @@ public class OrderServiceImpl implements OrderService {
 				+ "  <div style=\"color: #444444; line-height: 200%; text-align: center; word-wrap: break-word;\">\r\n"
 				+ "    <p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 22px; line-height: 44px;\">Hi,</span><br /><span style=\"font-size: 16px; line-height: 32px;\">Thank you again for purchase. </span></p>\r\n"
 				+ "<p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 16px; line-height: 32px;\">Your order is:</span></p>\r\n"
-				+ listProd+"\r\n\r\nTOTAL: "+totalCost + "  </div>\r\n" + "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n"
-				+ "  </div>\r\n" + "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n"
+				+ listProd + "\r\n\r\nTOTAL: "
+				+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(totalCost) + "  </div>\r\n"
+				+ "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n" + "  </div>\r\n"
+				+ "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n"
 				+ "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\r\n"
 				+ "  <div class=\"u-row\" style=\"Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #272362;\">\r\n"
 				+ "    <div style=\"border-collapse: collapse;display: table;width: 100%;background-color: transparent;\">\r\n"

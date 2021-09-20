@@ -5,23 +5,30 @@ import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { format } from "date-fns";
 import "./Order.css";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
-import {toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Row,
   Col,
   Table,
   Button,
+  DropdownItem,
+  DropdownMenu,
+  ButtonDropdown,
+  DropdownToggle,
 } from "reactstrap";
 
-toast.configure()
+toast.configure();
 export default function Order() {
   const [pagenum, setPageNum] = useState(0);
   const [statusListProd, setStatusListProd] = useState(false);
+  const [dropdownOpen, setOpen] = useState(false);
   const [orderList, setOrderList] = useState([]);
   const [prodList, setProdList] = useState([]);
   const size = 6;
   let totalPage = useRef(0);
+
+  const toggle = () => setOpen(!dropdownOpen);
 
   useEffect(() => {
     getWithAuth(`/order/totalOrder`).then((response) => {
@@ -35,26 +42,14 @@ export default function Order() {
     getListOrder();
   }, [pagenum]);
 
-  function getListOrder(){
+  function getListOrder() {
     getWithAuth(`/order?pagenum=${pagenum}&size=${size}`).then((response) => {
-        if (response.status === 200) {
-          setOrderList([...response.data]);
-        }
-      });
+      if (response.status === 200) {
+        setOrderList([...response.data]);
+      }
+    });
   }
-  function handleDeliveryButton(id, index){
-    put(`/order/updateStatus/${id}`,"").then((response) => {
-        if (response.status === 200) {
-          console.log(response.data);
-        }
-      });
-      let list = [...orderList];
-      let order = { ...list[index] };
-      order.status = !order.status;
-      list[index] = order;
-      setOrderList(list);
-      
-  }
+
   function getProd(id, ammount) {
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
@@ -67,91 +62,116 @@ export default function Order() {
   }
   function getProdList(index) {
     setProdList([]);
-    orderList[index].orderDetails.map((detail) => getProd(detail.id.productId, detail.ammount));
+    orderList[index].orderDetails.map((detail) =>
+      getProd(detail.id.productId, detail.ammount)
+    );
   }
-  function handleProductList(index){
+  function handleProductList(index) {
     getProdList(index);
     setStatusListProd(true);
   }
   function handleDelete(e, id) {
     if (e === "OK") {
-    del(`/order/${id}`)
-      .then((response) => {
-        if (response.status === 200) {
-          toast.success("Delete successfully!!!", {
+      del(`/order/${id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Delete successfully!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            getListOrder();
+          }
+        })
+        .catch((error) => {
+          toast.error(error, {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
-          getListOrder();
-        }
-      })
-      .catch((error) => {
-        toast.error(error, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
         });
-      });
     }
   }
-  function showList(){
-      if(statusListProd){
-          return (prodList.map((prod) => (
-            <Row id="prodOrder-form" key={prod.id}>
-              <Col className="col-3">
-                <img
-                  src={`data:image/jpeg;base64,${prod.photo}`}
-                  className="img-order"
-                />
-              </Col>
-              <Col className="info-prod-order">
-                <h4>
-                  {prod.name}
-                </h4>
-                <Row>
-                <Col className="col-2">
-                  <h6>
-                  Model: 
-                  </h6>
+  function showList() {
+    if (statusListProd) {
+      return prodList.map((prod) => (
+        <Row id="prodOrder-form" key={prod.id}>
+          <Col className="col-3">
+            <img
+              src={`data:image/jpeg;base64,${prod.photo}`}
+              className="img-order"
+            />
+          </Col>
+          <Col className="info-prod-order">
+            <h4>{prod.name}</h4>
+            <Row>
+              <Col className="col-2">
+                <h6>Model:</h6>
               </Col>
               <Col>
-              <h6>
-                  {prod.id}
-              </h6>
+                <h6>{prod.id}</h6>
               </Col>
-              </Row>
+            </Row>
+            <Row>
+              <Col className="col-2">
+                <h6>Quantity:</h6>
+              </Col>
+              <Col>
+                <h6>{prod.quantity}</h6>
+              </Col>
+            </Row>
+            <h6>
               <Row>
                 <Col className="col-2">
-                  <h6>
-                  Quantity: 
-                  </h6>
-              </Col>
-              <Col>
-              <h6>
-                  {prod.quantity}
-              </h6>
-              </Col>
+                  <h6>Unit Price:</h6>
+                </Col>
+                <Col>
+                  <h6>{numberFormat(prod.price)}</h6>
+                </Col>
               </Row>
-              <h6>
-                  <Row>
-                <Col className="col-2">
-                  <h6>
-                  Unit Price: 
-                  </h6>
-              </Col>
-              <Col>
-              <h6>
-              {numberFormat(prod.price)}
-              </h6>
-              </Col>
-              </Row>
-              </h6>
-              <h5>
-                  Total Price: {numberFormat(prod.quantity * prod.price)}
-              </h5>
-              </Col>
-              </Row>
-      )))
-        };
+            </h6>
+            <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+          </Col>
+        </Row>
+      ));
+    }
+  }
+  function setStatusChoice(id, e) {
+    console.log(`${id}  + ${e.target.value}`);
+    put(`/order/updateStatus/${id}?status=${e.target.value}`, "").then((response) => {
+      if (response.status === 200) {
+        getListOrder();
+      }
+    });
+    
+  }
+  function dropDownStatus(id, state) {
+    let stateClass;
+    switch (state) {
+      case 1:
+        stateClass = "statusColor-InProcess";
+        break;
+      case 2:
+        stateClass = "statusColor-Delivery";
+        break;
+      case 3:
+        stateClass = "statusColor-Complete";
+        break;
+      case 4:
+        stateClass = "statusColor-Canceled";
+        break;
+    }
+    return (
+      <select
+        value={state}
+        selected={state}
+        className={stateClass}
+        onChange={(e) => setStatusChoice(id, e)}
+      >
+        <option value={1}>In process</option>
+        <option value={2}>Delivering</option>
+        <option value={3}>Completed</option>
+        <option value={4}>Canceled</option>
+      </select>
+    );
   }
   return (
     <>
@@ -167,7 +187,7 @@ export default function Order() {
             <th>ADDRESS</th>
             <th>PRODUCT</th>
             <th>STATUS</th>
-            <th></th>
+            {/* <th></th> */}
           </tr>
         </thead>
         <tbody>
@@ -181,17 +201,35 @@ export default function Order() {
               </td>
               <td>{numberFormat(order.totalCost)}</td>
               <td>{order.address}</td>
-              <td> <Button color="link" onClick={() => handleProductList(index)}>List Product</Button></td>
               <td>
-                {order.status ? (
-                  <Button color="success" onClick={() => handleDeliveryButton(order.id, index)}>Delivered</Button>
+                {" "}
+                <Button color="link" onClick={() => handleProductList(index)}>
+                  List Product
+                </Button>
+              </td>
+              <td>
+                {/* {order.status ? (
+                  <Button
+                    color="success"
+                    onClick={() => handleDeliveryButton(order.id, index)}
+                  >
+                    Delivered
+                  </Button>
                 ) : (
-                    <Button color="warning" onClick={() => handleDeliveryButton(order.id, index)}>Not Delivery</Button>
-                )}
+                  <Button
+                    color="warning"
+                    onClick={() => handleDeliveryButton(order.id, index)}
+                  >
+                    Not Delivery
+                  </Button>
+                )} */}
+                {dropDownStatus(order.id, order.status)}
               </td>
-              <td>
-              <ModalDeleteConfirm onChoice={(e) => handleDelete(e,order.id)} />
-              </td>
+              {/* <td>
+                <ModalDeleteConfirm
+                  onChoice={(e) => handleDelete(e, order.id)}
+                />
+              </td> */}
             </tr>
           ))}
         </tbody>

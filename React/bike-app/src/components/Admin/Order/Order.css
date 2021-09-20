@@ -24,3 +24,15 @@
 .tableOrder {
   margin-left: 1rem;
 }
+.statusColor-InProcess{
+  background-color: #FFFEB7;
+}
+.statusColor-Delivery{
+  background-color: #39A2DB;
+}
+.statusColor-Complete{
+  background-color: #6ECB63;
+}
+.statusColor-Canceled{
+  background-color: #FF5C58;
+}

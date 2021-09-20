@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
+import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
 
 @Entity
 @Table(name = "orderimport")
@@ -29,7 +30,7 @@ public class OrderImportEntity {
 	private LocalDateTime timeimport;
 
 	@Column(name = "totalcost")
-	private Float totalCost;
+	private Double totalCost;
 
 	@Column(name = "status")
 	private boolean status;
@@ -47,7 +48,7 @@ public class OrderImportEntity {
 
 
 
-	public OrderImportEntity(int id, LocalDateTime timeimport, Float totalCost, boolean status, PersonEntity employee,
+	public OrderImportEntity(int id, LocalDateTime timeimport, Double totalCost, boolean status, PersonEntity employee,
 			Set<OrderImportDetailEntity> orderDetails) {
 		super();
 		this.id = id;
@@ -60,7 +61,7 @@ public class OrderImportEntity {
 
 
 
-	public OrderImportEntity(OrderDTO order) {
+	public OrderImportEntity(OrderImportDTO order) {
 		super();
 		this.id = order.getId();
 		this.totalCost = order.getTotalCost();
@@ -99,11 +100,11 @@ public class OrderImportEntity {
 
 
 
-	public float getTotalCost() {
+	public Double getTotalCost() {
 		return totalCost;
 	}
 
-	public void setTotalCost(float totalCost) {
+	public void setTotalCost(Double totalCost) {
 		if (totalCost < 0) {
 			throw new IllegalArgumentException("Total must not below zero");
 		}
@@ -128,13 +129,5 @@ public class OrderImportEntity {
 	public void setOrderImportDetails(Set<OrderImportDetailEntity> orderImportDetails) {
 		this.orderImportDetails = orderImportDetails;
 	}
-
-	public void setTotalCost(Float totalCost) {
-		if (totalCost < 0) {
-			throw new IllegalArgumentException("Total must not below zero");
-		}
-		this.totalCost = totalCost;
-	}
-
 
 }

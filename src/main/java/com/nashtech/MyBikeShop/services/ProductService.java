@@ -16,6 +16,10 @@ public interface ProductService {
 	public List<ProductEntity> getProductPageWithSort(int num, int size, int categoriesId, String sortType);
 
 	public List<ProductEntity> getNewestProductCategories(int idCategrories, int size);
+	
+	public List<ProductEntity> searchProduct(String keyword);
+	
+	public List<ProductEntity> searchProductByType(String keyword, int type);
 
 	public Optional<ProductEntity> getProduct(String id);
 

@@ -13,4 +13,8 @@ public interface OrderDetailService {
 	public boolean createDetail(OrderDetailEntity orDetail);
 
 	public boolean deleteDetail(OrderDetailEntity orderDetailEntity);
+	
+	public boolean updateDetail(OrderDetailEntity orderDetailEntity);
+	
+	public boolean updateDetailCancel(OrderDetailEntity orderDetailEntity);
 }

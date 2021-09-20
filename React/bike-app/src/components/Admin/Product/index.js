@@ -8,8 +8,8 @@ import { format } from "date-fns";
 import { IoReloadSharp } from "react-icons/io5";
 import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
-import {toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineAppstore } from "react-icons/ai";
 import "./Product.css";
 import {
@@ -19,10 +19,12 @@ import {
   DropdownItem,
   Table,
   Button,
+  Row,
+  Col,
+  Input,
 } from "reactstrap";
 
-
-toast.configure()
+toast.configure();
 export default function Index() {
   const [choice, setChoice] = useState("1");
   const [pagenum, setPageNum] = useState(0);
@@ -41,7 +43,6 @@ export default function Index() {
         setCateList([...response.data]);
       }
     });
-    
   }, []);
   useEffect(() => {
     get(`/public/product/numTotal/${choice}`).then((response) => {
@@ -49,7 +50,7 @@ export default function Index() {
         totalPage.current = response.data;
       }
     });
-  },[choice])
+  }, [choice]);
   useEffect(() => {
     getListProd();
   }, [choice, pagenum]);
@@ -57,7 +58,7 @@ export default function Index() {
   function getUpdated(e) {
     if (e) getListProd();
   }
-  
+
   function getListProd() {
     get(
       `/public/product/page?pagenum=${pagenum}&size=${size}&type=${choice}`
@@ -87,31 +88,57 @@ export default function Index() {
         });
     }
   }
-  function handleAdd(e){
+  function handleAdd(e) {
     if (e) getListProd();
+  }
+  function handleSearchChange(e) {
+    setProdList([]);
+    get(`/public/product/search?keyword=${e.target.value}&type=${choice}`).then(
+      (response) => {
+        if (response.status === 200) {
+          setProdList([...response.data]);
+        }
+      }
+    );
   }
   return (
     <>
       <h2 className="title-user">PRODUCT MANAGER</h2>
-      <div className="btn-list">
-        {" "}
-        <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle caret><AiOutlineAppstore/>Categories</DropdownToggle>
-          <DropdownMenu>
-            {cateList.map((cate) => (
-              <div key={cate.id}>
-                <DropdownItem onClick={() => setChoice(cate.id)}>
-                  {cate.name}
-                </DropdownItem>
-                <DropdownItem divider />
-              </div>
-            ))}
-          </DropdownMenu>
-        </ButtonDropdown>{" "}
-        <ModalAdd onAdd={(e) => handleAdd(e)}/>
-        <Button outline color="link" onClick={() => getListProd()}>
+      <div>
+        <Row>
+          <Col className="col-7 btn-list">
+            <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+              <DropdownToggle caret>
+                <AiOutlineAppstore />
+                Categories
+              </DropdownToggle>
+              <DropdownMenu>
+                {cateList.map((cate) => (
+                  <div key={cate.id}>
+                    <DropdownItem onClick={() => setChoice(cate.id)}>
+                      {cate.name}
+                    </DropdownItem>
+                    <DropdownItem divider />
+                  </div>
+                ))}
+              </DropdownMenu>
+            </ButtonDropdown>{" "}
+            <ModalAdd onAdd={(e) => handleAdd(e)} />
+          </Col>
+          <Col>
+            <Input
+              type="email"
+              name="email"
+              id="exampleEmail"
+              required="required"
+              placeholder="Search Product by name"
+              onChange={(e) => handleSearchChange(e)}
+            />
+          </Col>
+        </Row>
+        {/* <Button outline color="link" onClick={() => getListProd()}>
           <IoReloadSharp />
-        </Button>
+        </Button> */}
       </div>
       <Table bordered className="tableProd">
         <thead>

@@ -76,7 +76,15 @@ public class ProductServiceImpl implements ProductService {
 	public Optional<ProductEntity> getProduct(String id) {
 		return productRepository.findById(id);
 	}
-
+	
+	public List<ProductEntity> searchProduct(String keyword){
+		return productRepository.searchProduct(keyword.toUpperCase());
+	}
+	
+	public List<ProductEntity> searchProductByType(String keyword, int type){
+		return productRepository.searchProduct(keyword.toUpperCase(), type);
+	}
+	
 	public ProductEntity createProduct(ProductDTO productDTO) {
 		try {
 			boolean checkName = checkExistName(productDTO.getName());

@@ -38,16 +38,14 @@ export default function Index() {
         setCateList([...response.data]);
       }
     });
-    if (checkRadioAsc){
+    if (checkRadioAsc) {
       getSortListProd("ASC");
-    }
-    else if (checkRadioDes){
+    } else if (checkRadioDes) {
       getSortListProd("DES");
-    }
-    else getProductList();
+    } else getProductList();
   }, [id, pagenum]);
 
-  async function getProductList(){
+  async function getProductList() {
     get(`/public/product/page?pagenum=${pagenum}&size=${size}&type=${id}`).then(
       (response) => {
         if (response.status === 200) {
@@ -62,34 +60,41 @@ export default function Index() {
   }
   async function handleSortClick(e) {
     console.log(e);
-    if (e === "ASC"){
-      if (checkRadioAsc){
+    if (e === "ASC") {
+      if (checkRadioAsc) {
         setCheckRadioAsc(false);
         getProductList();
-      }
-      else{
+      } else {
         setCheckRadioAsc(true);
         setCheckRadioDes(false);
         getSortListProd(e);
       }
-    }
-    else if (e === "DES"){
-      if (checkRadioDes){
+    } else if (e === "DES") {
+      if (checkRadioDes) {
         setCheckRadioDes(false);
         getProductList();
-      }
-      else{
+      } else {
         setCheckRadioDes(true);
         setCheckRadioAsc(false);
         getSortListProd(e);
       }
     }
   }
-  async function getSortListProd(typeSort){
+  async function getSortListProd(typeSort) {
     let sort;
-    if (typeSort === "ASC") sort = "ASC"
-    else sort = "DES"
-    get(`/public/productSort/page?pagenum=${pagenum}&size=${size}&type=${id}&sort=${sort}`).then(
+    if (typeSort === "ASC") sort = "ASC";
+    else sort = "DES";
+    get(
+      `/public/productSort/page?pagenum=${pagenum}&size=${size}&type=${id}&sort=${sort}`
+    ).then((response) => {
+      if (response.status === 200) {
+        setProdList([...response.data]);
+      }
+    });
+  }
+  function handleSearchChange(e) {
+    setProdList([]);
+    get(`/public/product/search?keyword=${e.target.value}&type=${id}`).then(
       (response) => {
         if (response.status === 200) {
           setProdList([...response.data]);
@@ -134,6 +139,17 @@ export default function Index() {
               </Label>
             </FormGroup>
           </FormGroup>
+        </div>
+        <div className="searchField-ProductType mx-3">
+          <Label>Search: </Label>
+          <Input
+            type="email"
+            name="email"
+            id="exampleEmail"
+            required="required"
+            placeholder="Search Product by name"
+            onChange={(e) => handleSearchChange(e)}
+          />
         </div>
       </Col>
 

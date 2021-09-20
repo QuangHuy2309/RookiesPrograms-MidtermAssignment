@@ -23,11 +23,11 @@ public interface OrderService {
 
 	public boolean updateOrder(OrderDTO order);
 
-	public boolean updateStatusOrder(int id);
+	public boolean updateStatusOrder(int id, int status);
 
 	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email);
 
-	public void sendSimpleMessage(String to, String listProd, float totalCost) throws MessagingException;
+	public void sendSimpleMessage(String to, String listProd, Double totalCost) throws MessagingException;
 
 	public long countTotal();
 	

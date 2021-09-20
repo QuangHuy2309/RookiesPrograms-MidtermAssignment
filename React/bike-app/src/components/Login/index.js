@@ -32,6 +32,7 @@ export default function Index(props) {
       if (response.status === 200) {
         document.cookie = `token=${response.data.accessToken}; max-age=86400; path=/;`;
         document.cookie = `username=${response.data.username}; max-age=86400; path=/;`;
+        document.cookie = `id=${response.data.id}; max-age=86400; path=/;`;
         document.cookie = `email=${response.data.email}; max-age=86400; path=/;`;
         document.cookie = `role=${response.data.roles[0]}; max-age=86400; path=/;`; 
         document.cookie = `status=true; max-age=86400; path=/;`;

@@ -123,9 +123,7 @@ const ModalCart = (props) => {
         isOpen={popoverOpen}
         target="Popover1"
         toggle={toggle}
-        // className="popoverCart"
       >
-        {/* <PopoverHeader className="popoverCart">Shopping Cart</PopoverHeader> */}
         <PopoverBody className="popoverCart">
           {prodList.map((prod, index) => (
             <div key={index}>
@@ -187,7 +185,6 @@ const ModalCart = (props) => {
             <p>{numberFormat(total)}</p>
             </Col>
           </Row>
-          
         </PopoverBody>
       </Popover>
     </div>

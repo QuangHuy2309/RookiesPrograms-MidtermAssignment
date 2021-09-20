@@ -17,6 +17,9 @@
     text-align: right;
     justify-content: flex-end;
 }
+.btnModal{
+  width: 75%;
+}
 .btn-removeProd{
   transform: scale(0.7);
   width: fit-content;

@@ -1,10 +1,10 @@
 .bike-type{
     width: 90%;
-    text-align: center;
+    text-align: left;
     margin-inline: auto;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.45rem;
     font-family: 'Droid serif', serif;
     border: 1px solid #333;
     border-width: medium;
@@ -13,9 +13,14 @@
     height : 400px;
 }
 .cateType{
-    margin: 1rem;
+    margin-left: 1.85rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 .sortRadio{
     text-align: left;
     margin-left : 2rem;
+}
+.searchField-ProductType{
+    text-align: left;
 }

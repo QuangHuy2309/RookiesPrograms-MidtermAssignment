@@ -127,7 +127,7 @@ const ModalAdd = (props) => {
           }
         })
         .catch((error) => {
-          toast.error("Add failed, please check again", {
+          toast.error("Edit failed, please check again", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
@@ -152,9 +152,16 @@ const ModalAdd = (props) => {
   }
   return (
     <div>
-      <Button color="warning" onClick={toggle}>
-        <MdModeEdit />
-      </Button>
+      {props.isUser == null ? (
+        <Button color="warning" onClick={toggle}>
+          <MdModeEdit />
+        </Button>
+      ) : (
+        <p onClick={toggle} className="edtUser-text">
+          Information{" "}
+        </p>
+      )}
+
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>
           <MdModeEdit /> User Information

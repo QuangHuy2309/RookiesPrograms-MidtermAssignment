@@ -24,4 +24,6 @@ public interface PersonService {
 	public int getTotalByRole(String role);
 
 	public boolean checkExistEmailUpdate(String email, int id);
+	
+	public PersonEntity changePassword(String email, String oldPassword, String newPassword);
 }

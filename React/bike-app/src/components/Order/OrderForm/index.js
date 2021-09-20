@@ -87,7 +87,7 @@ export default function Index() {
       const body = JSON.stringify({
         customersEmail: e.target.email.value,
         totalCost: total,
-        status: false,
+        status: 0,
         address: e.target.address.value,
         orderDetails: toArr(),
       });

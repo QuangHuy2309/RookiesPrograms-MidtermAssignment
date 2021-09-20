@@ -1,36 +1,55 @@
-.prod-form{
-    text-align: left;
-    right: 3rem;
-    border: 0.25px solid #333;
-    border-width: medium;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    width: 70%;
+.prod-form {
+  text-align: left;
+  right: 3rem;
+  border: 0.25px solid #333;
+  border-width: medium;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: 70%;
 }
-.status-order{
-    display: flex;
+.status-order {
+  display: flex;
 }
-.status-true{
-    margin-left: 1rem;
-    color: yellowgreen;
+.status-true {
+  margin-left: 1rem;
+  color: yellowgreen;
 }
-.status-false{
-    margin-left: 1rem;
-    color: orangered;
+.status-false {
+  margin-left: 1rem;
+  color: orangered;
 }
-.orderHistory{
-    display: flex; 
-    justify-content: center;
-    margin-right: 3rem;
+.orderHistory {
+  display: flex;
+  justify-content: center;
+  margin-right: 3rem;
 }
 
-.priceTotal{
-    justify-content: flex-end;
+.priceTotal {
+  justify-content: flex-end;
 }
-.priceNumTotal{
-    margin-left: 1rem;
-    color: #ff3f00;
+.priceNumTotal {
+  margin-left: 1rem;
+  color: #ff3f00;
 }
-.info-prod-order{
-    text-align: left;
+.info-prod-order {
+  text-align: left;
+}
+.cancelBtn-historyUser {
+  text-align: right;
+}
+.statusUserHistoryColor-InProcess {
+  margin-left: 1rem;
+  color: #FFB319;
+}
+.statusUserHistoryColor-Delivery {
+  margin-left: 1rem;
+  color: #185ADB;
+}
+.statusUserHistoryColor-Complete {
+  margin-left: 1rem;
+  color: #6ECB63;
+}
+.statusUserHistoryColor-Canceled {
+  margin-left: 1rem;
+  color: #FF0000;
 }

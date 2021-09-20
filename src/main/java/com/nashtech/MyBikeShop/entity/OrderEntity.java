@@ -30,13 +30,13 @@ public class OrderEntity {
 	private LocalDateTime timebought;
 
 	@Column(name = "totalcost")
-	private Float totalCost;
+	private Double totalCost;
 
 	@Column(name = "address")
 	private String address;
 
 	@Column(name = "status")
-	private boolean status;
+	private int status;
 
 	@ManyToOne
 	@JoinColumn(name = "customerid")
@@ -49,7 +49,7 @@ public class OrderEntity {
 		super();
 	}
 
-	public OrderEntity(int id, Float totalCost, String address, boolean status, PersonEntity customers) {
+	public OrderEntity(int id, Double totalCost, String address, int status, PersonEntity customers) {
 		super();
 		this.id = id;
 		this.totalCost = totalCost;
@@ -90,11 +90,11 @@ public class OrderEntity {
 		this.timebought = timebought;
 	}
 
-	public float getTotalCost() {
+	public Double getTotalCost() {
 		return totalCost;
 	}
 
-	public void setTotalCost(float totalCost) {
+	public void setTotalCost(Double totalCost) {
 		if (totalCost < 0) {
 			throw new IllegalArgumentException("Total must not below zero");
 		}
@@ -109,11 +109,11 @@ public class OrderEntity {
 		this.address = address;
 	}
 
-	public boolean isStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -123,13 +123,6 @@ public class OrderEntity {
 
 	public void setOrderDetails(Set<OrderDetailEntity> orderDetails) {
 		this.orderDetails = orderDetails;
-	}
-
-	public void setTotalCost(Float totalCost) {
-		if (totalCost < 0) {
-			throw new IllegalArgumentException("Total must not below zero");
-		}
-		this.totalCost = totalCost;
 	}
 
 	@Override

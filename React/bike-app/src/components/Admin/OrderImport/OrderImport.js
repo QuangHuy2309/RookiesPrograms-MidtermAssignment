@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Row, Col, Table, Button } from "reactstrap";
 import "./OrderImport.css";
 import ModalAdd from "./ModalAddImport";
+import ModalEdt from "./ModalEdtImport";
 
 toast.configure();
 export default function OrderImport() {
@@ -25,21 +26,21 @@ export default function OrderImport() {
   useEffect(() => {
     getOrderImportList();
   }, [pagenum]);
-  async function getCountTotalOrderImport(){
+  async function getCountTotalOrderImport() {
     getWithAuth(`/orderImport/totalOrder`).then((response) => {
       if (response.status === 200) {
         totalPage.current = response.data;
       }
     });
   }
-  async function getOrderImportList(){
+  async function getOrderImportList() {
     getWithAuth(`/imports?pagenum=${pagenum}&size=${size}`).then((response) => {
       if (response.status === 200) {
         setOrderList([...response.data]);
       }
     });
   }
-  function getProd(id, ammount,price) {
+  function getProd(id, ammount, price) {
     get(`/public/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         let prod = response.data;
@@ -51,118 +52,104 @@ export default function OrderImport() {
   }
   function getProdList(index) {
     setProdList([]);
-    orderList[index].orderImportDetails.map((detail) => getProd(detail.id.productId, detail.ammount, detail.price));
+    orderList[index].orderImportDetails.map((detail) =>
+      getProd(detail.id.productId, detail.ammount, detail.price)
+    );
   }
-  async function handleProductList(id, index){
+  async function handleProductList(id, index) {
     getProdList(index);
     setStatusListProd(true);
   }
-  function handleDeliveryButton(id, index){
-
+  function handleDeliveryButton(id, index) {
     const body = JSON.stringify({
       id: id,
       status: !orderList[index].status,
     });
-    put(`/imports/${id}`,body).then((response) => {
-
-        if (response.status === 200) {
-          console.log(response.data);
-        }
-      });
-      let list = [...orderList];
-      let order = { ...list[index] };
-      order.status = !order.status;
-      list[index] = order;
-      setOrderList(list);
-      
+    put(`/imports/${id}`, body).then((response) => {
+      if (response.status === 200) {
+        console.log(response.data);
+      }
+    });
+    let list = [...orderList];
+    let order = { ...list[index] };
+    order.status = !order.status;
+    list[index] = order;
+    setOrderList(list);
   }
   function handleDelete(e, id) {
     if (e === "OK") {
-    del(`/imports/${id}`)
-      .then((response) => {
-        if (response.status === 200) {
-          toast.success("Delete successfully!!!", {
+      del(`/imports/${id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Delete successfully!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            getOrderImportList();
+          }
+        })
+        .catch((error) => {
+          toast.error(error, {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
-          getOrderImportList();
-        }
-      })
-      .catch((error) => {
-        toast.error(error, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
         });
-      });
     }
   }
-  function showList(){
-    if(statusListProd){
-        return (prodList.map((prod) => (
-          <Row id="prodOrder-form" key={prod.id}>
-            <Col className="col-3">
-              <img
-                src={`data:image/jpeg;base64,${prod.photo}`}
-                className="img-order"
-              />
-            </Col>
-            <Col className="info-prod-order">
-              <h4>
-                {prod.name}
-              </h4>
+  function showList() {
+    if (statusListProd) {
+      return prodList.map((prod) => (
+        <Row id="prodOrder-form" key={prod.id}>
+          <Col className="col-3">
+            <img
+              src={`data:image/jpeg;base64,${prod.photo}`}
+              className="img-order"
+            />
+          </Col>
+          <Col className="info-prod-order">
+            <h4>{prod.name}</h4>
+            <Row>
+              <Col className="col-2">
+                <h6>Model:</h6>
+              </Col>
+              <Col>
+                <h6>{prod.id}</h6>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="col-2">
+                <h6>Quantity:</h6>
+              </Col>
+              <Col>
+                <h6>{prod.quantity}</h6>
+              </Col>
+            </Row>
+            <h6>
               <Row>
                 <Col className="col-2">
-                  <h6>
-                  Model: 
-                  </h6>
-              </Col>
-              <Col>
-              <h6>
-                  {prod.id}
-              </h6>
-              </Col>
+                  <h6>Unit Price:</h6>
+                </Col>
+                <Col>
+                  <h6>{numberFormat(prod.price)}</h6>
+                </Col>
               </Row>
-              <Row>
-                <Col className="col-2">
-                  <h6>
-                  Quantity: 
-                  </h6>
-              </Col>
-              <Col>
-              <h6>
-                  {prod.quantity}
-              </h6>
-              </Col>
-              </Row>
-              <h6>
-                  <Row>
-                <Col className="col-2">
-                  <h6>
-                  Unit Price: 
-                  </h6>
-              </Col>
-              <Col>
-              <h6>
-              {numberFormat(prod.price)}
-              </h6>
-              </Col>
-              </Row>
-              </h6>
-              <h5>
-                  Total Price: {numberFormat(prod.quantity * prod.price)}
-              </h5>
-              </Col>
-              </Row>
-    )))
-      };
-}
-function handleAdd(e){
-  if (e) getOrderImportList();
-}
+            </h6>
+            <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+          </Col>
+        </Row>
+      ));
+    }
+  }
+  function handleAdd(e) {
+    if (e) getOrderImportList();
+  }
+  function handleEdt(e) {
+    if (e) getOrderImportList();
+  }
   return (
-  <>
-   <h2 className="title-user">ORDER IMPORT MANAGER</h2>
-   <ModalAdd onAdd={(e) => handleAdd(e)}/>
+    <>
+      <h2 className="title-user">ORDER IMPORT MANAGER</h2>
+      <ModalAdd onAdd={(e) => handleAdd(e)} />
       <Table bordered className="tableImport">
         <thead>
           <tr>
@@ -173,37 +160,61 @@ function handleAdd(e){
             <th>TOTAL PRICE</th>
             <th>PRODUCT</th>
             <th>STATUS</th>
-            <th></th>
+            {/* <th></th> */}
           </tr>
         </thead>
         <tbody>
-        {orderList.map((order, index) => (
-          <tr key={order.id}>
-            <th scope="row">{order.id}</th>
-            <td>{order.employee.email}</td>
-            <td>{order.employee.fullname}</td>
-            <td>{format(new Date(order.timeimport), "dd/MM/yyyy HH:mm:ss")}</td>
-            <td>{numberFormat(order.totalCost)}</td>
-            <td> <Button color="link" onClick={() => handleProductList(order.id, index)}>List Product</Button></td>
-            <td>
-                {order.status ? (
-                  <Button color="success" disabled="true" onClick={() => handleDeliveryButton(order.id, index)}>Delivered</Button>
-                ) : (
-                    <Button color="warning" onClick={() => handleDeliveryButton(order.id, index)}>Not Delivery</Button>
-                )}
+          {orderList.map((order, index) => (
+            <tr key={order.id}>
+              <th scope="row">{order.id}</th>
+              <td>{order.employee.email}</td>
+              <td>{order.employee.fullname}</td>
+              <td>
+                {format(new Date(order.timeimport), "dd/MM/yyyy HH:mm:ss")}
+              </td>
+              <td>{numberFormat(order.totalCost)}</td>
+              <td>
+                {" "}
+                <Button
+                  color="link"
+                  onClick={() => handleProductList(order.id, index)}
+                >
+                  List Product
+                </Button>
               </td>
               <td>
-              <ModalDeleteConfirm disable={order.status} onChoice={(e) => handleDelete(e,order.id)} />
+                {/* {order.status ? ( */}
+                  <Button
+                    color="success"
+                    disabled="true"
+                    onClick={() => handleDeliveryButton(order.id, index)}
+                  >
+                    Completed
+                   </Button>
+                {/*) : (
+                  <ModalEdt id={order.id} onEdt={(e) => handleEdt(e)} />
+                    
+                )} */}
               </td>
-         </tr>
-         ))}
-         </tbody>
-        </Table>
-        <Page
+              {/* <td>
+                {order.status ? null : (
+                  <>
+                    <ModalDeleteConfirm
+                      disable={order.status}
+                      onChoice={(e) => handleDelete(e, order.id)}
+                    />
+                  </>
+                )}
+              </td> */}
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <Page
         total={Math.ceil(totalPage.current / size)}
         onPageChange={(e) => setPageNum(e)}
       />
-        {showList()}
-        </>
-        );
+      {showList()}
+    </>
+  );
 }

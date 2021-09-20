@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { get, post } from "../../../../Utils/httpHelper";
+import { get, post, getWithAuth } from "../../../../Utils/httpHelper";
 import { getCookie } from "../../../../Utils/Cookie";
 import { numberFormat } from "../../../../Utils/ConvertToCurrency";
-import "./ModalAddImport.css";
+import "./ModalEdtImport.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoAddOutline } from "react-icons/io5";
@@ -49,6 +49,7 @@ const ModalExample = (props) => {
         }
       });
       getProductList();
+      getProdPickedList();
     }
   }, [modal]);
 
@@ -100,7 +101,7 @@ const ModalExample = (props) => {
       const body = JSON.stringify({
         employeeEmail: emailUser,
         totalCost: total,
-        status: true,//e.target.status.value,
+        status: e.target.status.value,
         orderImportDetails: toArr(),
       });
       post("/imports", body)
@@ -148,6 +149,7 @@ const ModalExample = (props) => {
     setProdPickedList(list);
   }
   function handleSearchChange(e) {
+    console.log(e.target.value);
     setProdList([]);
     get(`/public/product/search?keyword=${e.target.value}&type=${choice}`).then((response) => {
       if (response.status === 200) {
@@ -155,11 +157,35 @@ const ModalExample = (props) => {
       }
     });
   }
+  function getProd(id, ammount, price) {
+    get(`/public/product/search/${id}`).then((response) => {
+      if (response.status === 200) {
+        let prod = response.data;
+        prod.quantity = ammount;
+        prod.price = price;
+        setProdPickedList((oldArr) => [...oldArr, prod]);
+      }
+    });
+  }
+  function getProdPickedList() {
+    setProdPickedList([]);
+    let order;
+    getWithAuth(`/imports/${props.id}`).then((response) => {
+      if (response.status === 200) {
+        order = response.data;
+      }
+    });
+    if (order !== undefined){
+    order.orderImportDetails.map((detail) =>
+      getProd(detail.id.productId, detail.ammount, detail.price)
+    );
+  }
+  }
   return (
     <div>
-      <div className="btn-modal">
-        <Button color="info" onClick={toggle} className="btn-modal">
-          <IoAddOutline /> Add new Import Order
+      <div >
+        <Button color="warning" onClick={toggle} className="btnModal mx-3">
+           Draft
         </Button>
       </div>
       <Modal isOpen={modal} toggle={toggle} size="lg">
@@ -291,7 +317,7 @@ const ModalExample = (props) => {
                 ))}
               </tbody>
             </Table>
-            {/* <FormGroup tag="fieldset" className="radioGr-user">
+            <FormGroup tag="fieldset" className="radioGr-user">
               <Label for="exampleQuantity">Status</Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
@@ -304,7 +330,7 @@ const ModalExample = (props) => {
                   <Input type="radio" name="status" value="true" /> Completed
                 </Label>
               </FormGroup>
-            </FormGroup> */}
+            </FormGroup>
             <Row>
               <Col className="priceTotal">
                 <h4 className="priceTitle">Total: </h4>

@@ -21,6 +21,7 @@ import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
+import com.nashtech.MyBikeShop.exception.WrongInputTypeException;
 import com.nashtech.MyBikeShop.services.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -181,10 +182,11 @@ public class OrderController {
 	
 	
 	@PutMapping("/order/updateStatus/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String updateStatusOrder(@PathVariable(name = "id") int id) {
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public String updateStatusOrder(@PathVariable(name = "id") int id, @RequestParam(name = "status") int status) {
+		if (status <0 || status > 4) throw new WrongInputTypeException("Wrong status");
 		try {
-			String result = orderService.updateStatusOrder(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			String result = orderService.updateStatusOrder(id,status) ? StringUtils.TRUE : StringUtils.FALSE;
 			return result;
 		} catch (NoSuchElementException ex) {
 			throw new ObjectNotFoundException(ex.getMessage());

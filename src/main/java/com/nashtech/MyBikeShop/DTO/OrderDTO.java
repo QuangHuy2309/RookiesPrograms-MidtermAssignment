@@ -5,23 +5,23 @@ import java.util.Objects;
 
 public class OrderDTO {
 	private int id;
-	private float totalCost;
+	private Double totalCost;
 	private String address;
-	private boolean status;
+	private int status;
 	private String customersEmail;
 	private List<OrderDetailDTO> orderDetails;
 
 	public OrderDTO() {
 	}
 	
-	public OrderDTO(float totalCost, String address, boolean status, String customersEmail) {
+	public OrderDTO(Double totalCost, String address, int status, String customersEmail) {
 		super();
 		this.totalCost = totalCost;
 		this.status = status;
 		this.customersEmail = customersEmail;
 	}
 
-	public OrderDTO(int id, float totalCost, String address, boolean status,
+	public OrderDTO(int id, Double totalCost, String address, int status,
 			String customersEmail, List<OrderDetailDTO> orderdetail) {
 		super();
 		this.id = id;
@@ -42,11 +42,11 @@ public class OrderDTO {
 
 	
 
-	public float getTotalCost() {
+	public Double getTotalCost() {
 		return totalCost;
 	}
 
-	public void setTotalCost(float totalCost) {
+	public void setTotalCost(Double totalCost) {
 		this.totalCost = totalCost;
 	}
 
@@ -58,11 +58,11 @@ public class OrderDTO {
 		this.address = address;
 	}
 
-	public boolean isStatus() {
+	public int isStatus() {
 		return status;
 	}
 
-	public void setStatus(boolean status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -97,7 +97,6 @@ public class OrderDTO {
 			return false;
 		OrderDTO other = (OrderDTO) obj;
 		return Objects.equals(address, other.address) && id == other.id
-				&& Objects.equals(orderDetails, other.orderDetails) && status == other.status
-				&& Float.floatToIntBits(totalCost) == Float.floatToIntBits(other.totalCost);
+				&& Objects.equals(orderDetails, other.orderDetails) && status == other.status;
 	}
 }

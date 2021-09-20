@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,8 @@ import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.PersonService;
+import com.nashtech.MyBikeShop.payload.response.MessageResponse;
+import com.nashtech.MyBikeShop.payload.request.ChangePasswordRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -122,5 +125,21 @@ public class PersonController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public int getTotalByRole(@PathVariable(name = "role") String role) {
 		return personService.getTotalByRole(role);
+	}
+
+	@PutMapping("/persons/updatePassword/{email}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<?> updatePassword(@PathVariable String email,
+			@RequestBody ChangePasswordRequest changePasswordRequest) {
+		try {
+			PersonEntity updateAccount = personService.changePassword(email, changePasswordRequest.getOldPassword(),
+					changePasswordRequest.getNewPassword());
+			if (updateAccount == null)
+				return ResponseEntity.badRequest().body(new MessageResponse("Error: Change password failed."));
+			return ResponseEntity.ok().body(new MessageResponse("Update password successfully."));
+		} catch (NoSuchElementException ex) {
+			throw new ObjectNotFoundException("Error: Not found account with email: " + email);
+		}
+
 	}
 }

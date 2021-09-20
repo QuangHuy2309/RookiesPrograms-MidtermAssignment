@@ -11,17 +11,20 @@ import { logOut } from "../../../Utils/Auth";
 import { AiFillDatabase, AiOutlineLineChart } from "react-icons/ai";
 import { MdBorderColor } from "react-icons/md";
 import ModalConfirm from "../../ModalConfirm";
+import ModalChangePass from "../../ModalChangePass";
+import ModalEdtUser from "../UserPage/ModalEdtUser";
+import { getCookie } from "../../../Utils/Cookie";
 
 export default function Index(props) {
   const history = useHistory();
-
+  const id = getCookie("id");
   function handleLogOut(e) {
     if (e === "OK") {
       logOut();
       history.push("/");
     }
   }
-
+  function handleUpdate(e){}
   return (
     <ProSidebar>
       <Menu iconShape="square">
@@ -62,6 +65,12 @@ export default function Index(props) {
           {/* <MenuItem>Edit Information</MenuItem> */}
           {/* <MenuItem onClick={() => props.onChoice("CHANGEPASS")}> 
           Change Password</MenuItem> */}
+          <MenuItem>
+            <ModalEdtUser isUser = "true" id={id} onEdit={(e) => handleUpdate(e)} />
+          </MenuItem>
+          <MenuItem>
+            <ModalChangePass />
+          </MenuItem>
           <MenuItem>
             <ModalConfirm onChoice={(e) => handleLogOut(e)} />
           </MenuItem>

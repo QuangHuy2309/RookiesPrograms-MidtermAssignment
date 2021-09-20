@@ -44,7 +44,8 @@ public class RateServiceImpl implements RateService {
 	}
 
 	public boolean checkExist(RateKey id) {
-		return rateRepo.existsById(id);
+		return (!rateRepo.existsById(id)) && (rateRepo.checkUserOrdered(id.getProductId(),id.getCustomerId()) > 0);
+//		return (rateRepo.checkUserOrdered(id.getProductId(),id.getCustomerId()) > 0);
 	}
 
 	public RateEntity createRate(RateDTO rateDTO) {

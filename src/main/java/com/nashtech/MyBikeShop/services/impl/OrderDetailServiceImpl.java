@@ -51,7 +51,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 	public boolean deleteDetail(OrderDetailEntity orderDetailEntity) {
 		int orderId = orderDetailEntity.getId().getOrderId();
 		OrderEntity orderEntity = orderService.getOrders(orderId).get();
-		if (!orderEntity.isStatus()) { // False = Not delivery yet
+		if (orderEntity.getStatus() != 4) { // False = Not delivery yet
 			boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
 					orderDetailEntity.getAmmount());
 			if (!result)
@@ -59,6 +59,24 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 		}
 		orderDetailRepo.delete(orderDetailEntity);
+		return true;
+	}
+	
+	@Transactional
+	public boolean updateDetailCancel(OrderDetailEntity orderDetailEntity) {
+			boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
+					orderDetailEntity.getAmmount());
+			if (!result)
+				return false;
+		return true;
+	}
+	
+	@Transactional
+	public boolean updateDetail(OrderDetailEntity orderDetailEntity) {
+			boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
+					orderDetailEntity.getAmmount()*(-1));
+			if (!result)
+				return false;
 		return true;
 	}
 }

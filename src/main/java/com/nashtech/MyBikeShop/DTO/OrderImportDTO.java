@@ -6,7 +6,7 @@ import java.util.Set;
 public class OrderImportDTO {
 	private int id;
 	private LocalDateTime timeimport ;
-	private Float totalCost;
+	private Double totalCost;
 	private boolean status;
 	private String employeeEmail;
 	private String employeeFullName;
@@ -15,7 +15,7 @@ public class OrderImportDTO {
 	public OrderImportDTO() {
 	}
 	
-	public OrderImportDTO(int id, LocalDateTime timeimport, Float totalCost, boolean status, String employeeEmail,
+	public OrderImportDTO(int id, LocalDateTime timeimport, Double totalCost, boolean status, String employeeEmail,
 			String employeeFullName, Set<OrderImportDetailDTO> orderImportDetails) {
 		super();
 		this.id = id;
@@ -39,10 +39,10 @@ public class OrderImportDTO {
 	public void setTimeimport(LocalDateTime timeimport) {
 		this.timeimport = timeimport;
 	}
-	public Float getTotalCost() {
+	public Double getTotalCost() {
 		return totalCost;
 	}
-	public void setTotalCost(Float totalCost) {
+	public void setTotalCost(Double totalCost) {
 		this.totalCost = totalCost;
 	}
 	public boolean isStatus() {

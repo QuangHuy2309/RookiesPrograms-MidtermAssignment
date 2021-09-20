@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.services.PersonService;
 
@@ -94,5 +95,16 @@ public class PersonServiceImpl implements PersonService {
 
 	public int getTotalByRole(String role) {
 		return personRepository.countByRole(role);
+	}
+	
+	public PersonEntity changePassword(String email, String oldPassword, String newPassword) {
+		PersonEntity person = getPerson(email);
+		String newPasswordEncoded = encoder.encode(newPassword);
+		boolean isMatched = encoder.matches(oldPassword, person.getPassword());
+        if (!isMatched) {
+        	throw new ObjectPropertiesIllegalException("Error: Old password is not correct.");
+        }
+        person.setPassword(newPasswordEncoded);
+        return personRepository.save(person);
 	}
 }

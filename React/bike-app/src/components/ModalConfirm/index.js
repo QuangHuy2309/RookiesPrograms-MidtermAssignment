@@ -28,7 +28,7 @@ const ModalConfirm = (props) => {
   }
   return (
     <div>
-      <p onClick={toggle}>LogOut <BiLogOut/></p>
+      <p onClick={toggle} className="logout-text">LogOut <BiLogOut/></p>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}><BiLogOut/> LogOut</ModalHeader>
         <ModalBody>
