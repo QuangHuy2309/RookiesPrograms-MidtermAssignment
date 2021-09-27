@@ -98,11 +98,11 @@ const ModalEdt = (props) => {
         <MdModeEdit/>
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}><MdModeEdit/> Categories Information</ModalHeader>
+        <ModalHeader toggle={toggle} className="title-AddCategoryAdmin"><MdModeEdit/> Categories Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleEmail">ID</Label>
+              <Label for="exampleEmail" className="titleTable-AdminCategory">ID</Label>
               <Input
                 type="text"
                 name="id"
@@ -113,7 +113,7 @@ const ModalEdt = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleFullName">Name</Label>
+              <Label for="exampleFullName" className="titleTable-AdminCategory">Name</Label>
               <Input
                 type="text"
                 name="name"
@@ -125,7 +125,7 @@ const ModalEdt = (props) => {
               <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleText">Description</Label>
+              <Label for="exampleText" className="titleTable-AdminCategory">Description</Label>
               <Input
                 type="textarea"
                 name="description"

@@ -93,6 +93,7 @@
 			<version>3.11.2</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-runner</artifactId>
@@ -119,7 +120,7 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 			<version>2.3.4.RELEASE</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
 		<dependency>
 			<groupId>org.modelmapper</groupId>

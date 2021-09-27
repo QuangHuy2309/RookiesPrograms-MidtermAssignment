@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
+import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
@@ -44,6 +46,9 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	ProductService productService;
 
+	@Autowired
+	ModelMapper mapper;
+	
 	@Autowired
 	PersonService personService;
 
@@ -75,6 +80,10 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.countByCustomersEmail(email);
 	}
 
+	public long countByStatus(int status) {
+		return orderRepository.countByStatus(status);
+	}
+	
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
@@ -86,6 +95,22 @@ public class OrderServiceImpl implements OrderService {
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findAll(pageable).stream().collect(Collectors.toList());
 	}
+	public List<OrderEntity> getOrderPageByStatus(int num, int size, int status){
+		Sort sortable = Sort.by("timebought").descending();
+		Pageable pageable = PageRequest.of(num, size, sortable);
+		return orderRepository.findByStatus(pageable, status);
+	}
+	public OrderDTO convertToDTO(OrderEntity order) {
+		OrderDTO orderDTO = mapper.map(order, OrderDTO.class);
+		double totalCost = 0;
+		for (OrderDetailEntity detail : order.getOrderDetails()) {
+			totalCost += detail.getUnitPrice() * detail.getAmmount();
+		}
+		orderDTO.setTotalCost(totalCost);
+		orderDTO.setCustomersEmail(order.getCustomers().getEmail());
+		orderDTO.setCustomersName(order.getCustomers().getFullname());
+		return orderDTO;
+	}
 
 	@Transactional
 	public OrderEntity createOrder(OrderDTO orderDTO) {
@@ -96,22 +121,24 @@ public class OrderServiceImpl implements OrderService {
 		orderEntity.setCustomers(person);
 		OrderEntity orderSaved = orderRepository.save(orderEntity);
 		StringBuilder listProd = new StringBuilder();
+		double totalCost = 0;
 		for (OrderDetailDTO detailDTO : orderDTO.getOrderDetails()) {
 			OrderDetailEntity detail = new OrderDetailEntity(detailDTO);
 			OrderDetailsKey id = new OrderDetailsKey(orderSaved.getId(), detailDTO.getProductId());
 			detail.setId(id);
 			boolean result = orderDetailService.createDetail(detail);
 			ProductEntity prod = productService.getProduct(detailDTO.getProductId()).get();
+			totalCost += detailDTO.getUnitPrice() * detailDTO.getAmmount();
 			listProd.append(
 					"<p style=\\\"font-size: 14px; line-height: 200%;\\\"><span style=\\\"font-size: 16px; line-height: 32px;\\\">"
-							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Price: "
-							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(prod.getPrice())
+							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Unit Price: "
+							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(detailDTO.getUnitPrice())
 							+ "</span></p>");
 			if (!result)
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
 		}
 		try {
-			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString(), orderDTO.getTotalCost());
+			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString(), totalCost);
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
@@ -163,8 +190,7 @@ public class OrderServiceImpl implements OrderService {
 				if (!result)
 					return false;
 			}
-		}
-		else if (status != 4 && order.getStatus() == 4) {
+		} else if (status != 4 && order.getStatus() == 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				boolean result = orderDetailService.updateDetail(detail);
 				if (!result)

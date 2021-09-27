@@ -66,18 +66,23 @@ public class AuthController {
 			@ApiResponse(responseCode = "405", description = "Method not allow. Using POST to Login", content = @Content) })
 	@PostMapping("/auth/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+		PersonEntity person = personRepository.findByEmail(loginRequest.getEmail());
+		if (person.isStatus()) {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-		// if go there, the user/password is correct
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		// generate jwt to return to client
-		String jwt = jwtUtils.generateJwtToken(authentication);
+			// if go there, the user/password is correct
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			// generate jwt to return to client
+			String jwt = jwtUtils.generateJwtToken(authentication);
 
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-				.collect(Collectors.toList());
-		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId() ,userDetails.getName(), userDetails.getEmail(), roles));
+			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+					.collect(Collectors.toList());
+			return ResponseEntity.ok(
+					new JwtResponse(jwt, userDetails.getId(), userDetails.getName(), userDetails.getEmail(), roles));
+		} else
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: This user was disable"));
 	}
 
 	@Operation(summary = "Sign up to get Authorize")

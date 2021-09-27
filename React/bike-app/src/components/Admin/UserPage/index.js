@@ -4,38 +4,40 @@ import { getWithAuth, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./UserPage.css";
 import ModalEdt from "./ModalEdtUser";
-import ModalAdd from "./ModalAddUser";
 import Page from "../../Pagination";
-import {toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
+import { getCookie } from "../../../Utils/Cookie";
 
-toast.configure()
+toast.configure();
 
 export default function Index() {
   const [choice, setChoice] = useState("USER");
   const [pagenum, setPageNum] = useState(0);
   const [userList, setUserList] = useState([]);
-
+  const role = getCookie("role");
   const size = 4;
   let totalPage = useRef(0);
 
   useEffect(() => {
+    // getWithAuth(`/persons/countByRole/${choice}`).then((response) => {
+    //   if (response.status === 200) {
+    //     totalPage.current = response.data;
+    //   }
+    // });
+    getListUser();
+  }, [choice, pagenum]);
+  useEffect(() => {
+    getTotalUser();
+  }, [userList]);
+  function getTotalUser() {
     getWithAuth(`/persons/countByRole/${choice}`).then((response) => {
       if (response.status === 200) {
         totalPage.current = response.data;
       }
     });
-    getListUser();
-  }, [choice, pagenum]);
-
-  // useEffect(() => {
-  //   get(`/public/product/numTotal/${choice}`).then((response) => {
-  //     if (response.status === 200) {
-  //       totalPage.current = response.data;
-  //     }
-  //   });
-  // },[choice])
+  }
 
   async function getListUser() {
     getWithAuth(`/persons?pagenum=${pagenum}&size=${size}&role=${choice}`).then(
@@ -49,55 +51,60 @@ export default function Index() {
 
   function handleDelete(e, id) {
     if (e === "OK") {
-    del(`/persons/${id}`)
-      .then((response) => {
-        if (response.status === 200) {
-          toast.success("Delete successfully!!!", {
+      del(`/persons/${id}`)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Delete successfully!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            getListUser();
+          }
+        })
+        .catch((error) => {
+          toast.error(`Error: ${error}`, {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
-          getListUser();
-        }
-      })
-      .catch((error) => {
-        toast.error(`Error: ${error}`, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
         });
-      });
     }
   }
 
-  function handleUpdate(e){
+  function handleUpdate(e) {
     if (e) getListUser();
   }
-  function handleAdd(e){
+  function handleAdd(e) {
     if (e) getListUser();
   }
 
   return (
     <div>
-      <h2 className="title-user">USER MANAGER</h2>
+      <h2 className="title-UserAdmin">USER MANAGER</h2>
       <div className="btn-list">
-        <Button outline color="primary" onClick={() => setChoice("USER")}>
+        {/* <Button outline color="primary" onClick={() => setChoice("USER")}>
           Customer List
-        </Button>
-        <Button outline color="primary" onClick={() => setChoice("ADMIN")}>
-          Employee List
-        </Button>
-        <ModalAdd onAdd={(e) => handleAdd(e)}/>
+        </Button> */}
+        {/* {role.includes("ADMIN") ? (
+          <>
+          <Button outline color="primary" onClick={() => setChoice("ADMIN")}>
+            Employee List
+          </Button>
+          <ModalAdd onAdd={(e) => handleAdd(e)} />
+          </>
+        ) : null} */}
+        
       </div>
       <Table bordered className="tableUser">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Day of Birth</th>
-            <th>Gender</th>
-            <th>Address</th>
-            <th>Phonenumber</th>
-            <th></th>
+            <th className="titleTable-UserAdmin">ID</th>
+            <th className="titleTable-UserAdmin">Name</th>
+            <th className="titleTable-UserAdmin">Email</th>
+            <th className="titleTable-UserAdmin">Day of Birth</th>
+            <th className="titleTable-UserAdmin">Gender</th>
+            <th className="titleTable-UserAdmin">Address</th>
+            <th className="titleTable-UserAdmin">Phonenumber</th>
+            <th className="titleTable-UserAdmin">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -107,18 +114,30 @@ export default function Index() {
               <td>{user.fullname}</td>
               <td>{user.email}</td>
               <td>{format(new Date(user.dob), "dd/MM/yyyy")}</td>
-              <td>{user.gender ? "FEMALE" : "MALE"}</td>
+              <td>{user.gender ? "Female" : "Male"}</td>
               <td>{user.address}</td>
               <td>{user.phonenumber}</td>
               <td>
                 {/* <Button color="danger" onClick={() => handleDelete(user.id)}>
                   Delete
                 </Button> */}
-                <ModalDeleteConfirm onChoice={(e) => handleDelete(e,user.id)} />
+                <ModalDeleteConfirm
+                  onChoice={(e) => handleDelete(e, user.id)}
+                />
                 {/* <Button color="warning" onClick={console.log("clicked")}>
                   Edit
                 </Button> */}
-                <ModalEdt id={user.id} onEdit={(e) => handleUpdate(e)}></ModalEdt>
+                {/* {choice.includes("ADMIN") ? (
+                  <ModalEdtAdmin
+                    id={user.id}
+                    onEdit={(e) => handleUpdate(e)}
+                  ></ModalEdtAdmin>
+                ) :  */}
+                <ModalEdt
+                  id={user.id}
+                  onEdit={(e) => handleUpdate(e)}
+                ></ModalEdt>
+              {/* } */}
               </td>
             </tr>
           ))}

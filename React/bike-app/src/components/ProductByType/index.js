@@ -5,6 +5,7 @@ import { get } from "../../Utils/httpHelper";
 import { numberFormat } from "../../Utils/ConvertToCurrency";
 import Page from "../Pagination";
 import "./ProductByType.css";
+import { ImSortNumbericDesc, ImSortNumericAsc } from "react-icons/im";
 import {
   Card,
   CardImg,
@@ -94,7 +95,7 @@ export default function Index() {
   }
   function handleSearchChange(e) {
     setProdList([]);
-    get(`/public/product/search?keyword=${e.target.value}&type=${id}`).then(
+    get(`/public/product/search?keyword=${e.target.value.trim()}&type=${id}`).then(
       (response) => {
         if (response.status === 200) {
           setProdList([...response.data]);
@@ -107,14 +108,24 @@ export default function Index() {
       <Col className="col-3 ">
         <div className="bike-type">
           {cateList.map((cate) => (
-            <div key={cate.id} className="cateType">
-              <Link to={`/Bike/${cate.id}`} style={{ textDecoration: "none" }}>
+            <div key={cate.id} className="cateType-PBT">
+              <Link
+                to={`/Bike/${cate.id}`}
+                style={{
+                  textDecoration: "none",
+                  // color: "black",
+                  // "font-family": "'Barlow Condensed', sans-serif;",
+                  // "font-size": "1.45rem",
+                  // "-webkit-text-stroke": "0.125px #FF5C58",
+                }}
+                className="cateText-PBT"
+              >
                 <div>{cate.name}</div>
               </Link>
             </div>
           ))}
           <hr />
-          <FormGroup tag="fieldset" className="sortRadio">
+          <FormGroup tag="fieldset" className="sortRadio priceSortText-PBT">
             <legend>Price Sort: </legend>
             <FormGroup check className="sortRadio">
               <Label check>
@@ -124,7 +135,7 @@ export default function Index() {
                   checked={checkRadioAsc}
                   onClick={() => handleSortClick("ASC")}
                 />{" "}
-                Ascending
+                Ascending <ImSortNumericAsc/>
               </Label>
             </FormGroup>
             <FormGroup check className="sortRadio">
@@ -135,7 +146,7 @@ export default function Index() {
                   checked={checkRadioDes}
                   onClick={() => handleSortClick("DES")}
                 />{" "}
-                Descending
+                Descending <ImSortNumbericDesc/>
               </Label>
             </FormGroup>
           </FormGroup>
@@ -158,7 +169,7 @@ export default function Index() {
           .filter((cate) => cate.id == id)
           .map((filterCate) => (
             <>
-              <h2>{filterCate.name}</h2>
+              <h2 className="titleCart-PBT">{filterCate.name}</h2>
               <br />
             </>
           ))}

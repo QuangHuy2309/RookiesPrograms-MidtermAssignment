@@ -74,8 +74,8 @@ export default function Index(props) {
       });
     }
   }
-  function handleUpdate(e){
-    
+  function handleUpdate(e) {
+    // if (e) getListUser();
   }
   function isLogging() {
     const name = getCookie("username");
@@ -84,30 +84,49 @@ export default function Index(props) {
       return (
         <Nav className="mr-auto" navbar>
           <UncontrolledDropdown nav inNavbar>
-            <DropdownToggle nav caret>
+            <DropdownToggle
+              nav
+              caret
+              style={{
+                textDecoration: "none",
+                color: "white",
+                "font-family": "'Barlow Condensed', sans-serif;",
+                "font-size": "1.45rem",
+                "-webkit-text-stroke": "0.125px #FF5C58",
+              }}
+              
+            >
               Hi, {name}
             </DropdownToggle>
-            <DropdownMenu>
-            <DropdownItem divider />
+            <DropdownMenu className="dropdownMenu-Nav">
               <DropdownItem>
-                <ModalEdtUser isUser = "true" id={id} onEdit={(e) => handleUpdate(e)}/>
+                <ModalEdtUser
+                  isUser="true"
+                  id={id}
+                  onUserSide="onUserSide"
+                  onEdit={(e) => handleUpdate(e)}
+                />
               </DropdownItem>
-            <DropdownItem divider />
+              <DropdownItem divider />
               <DropdownItem>
-                <ModalChangePass />
+                <ModalChangePass onUserSide="onUserSide" />
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
                 <Link
                   to={`/OrderHistory`}
-                  style={{ textDecoration: "none", color: "black" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "#1DB9C3",
+                    "font-weight": "600",
+                  }}
                 >
                   Order History
                 </Link>
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
-                <ModalConfirm onChoice={(e) => handleLogOut(e)} />
+                <ModalConfirm onUserSide="onUserSide" onChoice={(e) => handleLogOut(e)} />
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -115,7 +134,11 @@ export default function Index(props) {
       );
     }
     return (
-      <Link to={`/Login`} style={{ textDecoration: "none" }}>
+      <Link to={`/Login`} style={{ textDecoration: "none",
+      color: "white",
+      "font-family": "'Barlow Condensed', sans-serif;",
+      "font-size": "1.45rem",
+      "-webkit-text-stroke": "0.125px #FF5C58", }} className="Nav-HomeBtn">
         Login
       </Link>
     );
@@ -144,26 +167,55 @@ export default function Index(props) {
   return (
     <>
       <Navbar expand="md" className="fixed-nav">
-        <NavbarBrand href="/">Home</NavbarBrand>
+        <NavbarBrand
+          href="/"
+          style={{
+            textDecoration: "none",
+            color: "white",
+            "font-family": "'Barlow Condensed', sans-serif;",
+            "font-size": "1.45rem",
+            "font-weight": "600",
+            "-webkit-text-stroke": "0.125px #FF5C58",
+          }}
+          className="me-5 ms-3 Nav-HomeBtn"
+        >
+          Home
+        </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
+              <DropdownToggle
+                nav
+                caret
+                style={{
+                  textDecoration: "none",
+                  color: "white",
+                  "font-family": "'Barlow Condensed', sans-serif;",
+                  "font-size": "1.4rem",
+                  "font-weight": "500",
+                  "-webkit-text-stroke": "0.125px #FF5C58",
+                }}
+                className="Nav-HomeBtn"
+              >
                 Bicycles
               </DropdownToggle>
               <DropdownMenu>
-                {cateList.map((cate) => (
+                {cateList.map((cate, index) => (
                   <div key={cate.id}>
                     <DropdownItem>
                       <Link
                         to={`/Bike/${cate.id}`}
-                        style={{ textDecoration: "none" }}
+                        style={{
+                          textDecoration: "none",
+                          color: "#1DB9C3",
+                          "font-weight": "600",
+                        }}
                       >
                         {cate.name}
                       </Link>
                     </DropdownItem>
-                    <DropdownItem divider />
+                    {(index != (cateList.length - 1)) ? <DropdownItem divider /> : null}
                   </div>
                 ))}
               </DropdownMenu>

@@ -34,6 +34,9 @@ const ModalAdd = (props) => {
       setDate();
       setRePassError("");
       setRePass("");
+      setNameError("");
+      setEmailError("");
+      setPhonenumber("");
     }
   }, [modal]);
 
@@ -81,7 +84,8 @@ const ModalAdd = (props) => {
         dob: e.target.dob.value,
         phonenumber: e.target.phonenumber.value,
         address: e.target.address.value.trim(),
-        role: "ADMIN",
+        role: e.target.role.value,
+        status: true,
       });
       console.log(body);
       // console.log(e.target.dob.value);
@@ -135,17 +139,17 @@ const ModalAdd = (props) => {
 
   return (
     <div>
-      <Button color="info" onClick={toggle}>
-        <IoPersonAddSharp /> Add admin account
+      <Button color="success" onClick={toggle} >
+        <IoPersonAddSharp /> Add staff account
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>
+        <ModalHeader toggle={toggle} className="title-UserAddAdmin">
           <IoPersonAddSharp /> User Information
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="examplePrice">Email</Label>
+              <Label for="examplePrice" className="titleTable-UserAdmin">Email</Label>
               <Input
                 type="email"
                 name="email"
@@ -158,7 +162,7 @@ const ModalAdd = (props) => {
               </div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePasswrod">Password</Label>
+              <Label for="examplePasswrod" className="titleTable-UserAdmin">Password</Label>
               <Input
                 type="password"
                 name="password"
@@ -168,7 +172,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleRePassword">Confirm Password</Label>
+              <Label for="exampleRePassword" className="titleTable-UserAdmin">Confirm Password</Label>
               <Input
                 type="password"
                 name="rePass"
@@ -183,7 +187,7 @@ const ModalAdd = (props) => {
               {rePassError}
             </div>
             <FormGroup>
-              <Label for="exampleFullName">Name</Label>
+              <Label for="exampleFullName" className="titleTable-UserAdmin">Name</Label>
               <Input
                 type="text"
                 name="fullname"
@@ -195,22 +199,23 @@ const ModalAdd = (props) => {
                 {nameError}
               </div>
             </FormGroup>
-            <FormGroup tag="fieldset" className="radioGr-user">
-              <Label for="exampleQuantity">Gender</Label>
+            
+            <FormGroup tag="fieldset" className="radioGr-user mb-2">
+              <Label for="exampleQuantity" className="titleTable-UserAdmin">Gender</Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="radio" value="false" required />{" "}
-                  MALE
+                  Male
                 </Label>
               </FormGroup>
               <FormGroup check className="radioBtn-user">
                 <Label check>
-                  <Input type="radio" name="radio" value="true" /> FEMALE
+                  <Input type="radio" name="radio" value="true" /> Female
                 </Label>
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand" required="required">
+              <Label for="exampleBrand" required="required" className="titleTable-UserAdmin">
                 Day of Birth
               </Label>
               <Input
@@ -221,8 +226,22 @@ const ModalAdd = (props) => {
                 max={today}
               />
             </FormGroup>
+            <FormGroup tag="fieldset" className="radioGr-user mb-2">
+              <Label for="exampleQuantity" className="titleTable-UserAdmin">Role</Label>
+              <FormGroup check className="radioBtn-user">
+                <Label check>
+                  <Input type="radio" name="role" value="ADMIN" required />{" "}
+                  Admin
+                </Label>
+              </FormGroup>
+              <FormGroup check className="radioBtn-user">
+                <Label check>
+                  <Input type="radio" name="role" value="STAFF" /> Staff
+                </Label>
+              </FormGroup>
+            </FormGroup>
             <FormGroup>
-              <Label for="examplePhone">Phonenumber</Label>
+              <Label for="examplePhone" className="titleTable-UserAdmin">Phonenumber</Label>
               <Input
                 type="text"
                 name="phonenumber"
@@ -235,7 +254,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleAddress">Address</Label>
+              <Label for="exampleAddress" className="titleTable-UserAdmin">Address</Label>
               <Input
                 type="text"
                 name="address"
@@ -244,7 +263,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <br />
-            <Button color="primary" type="submit">
+            <Button color="success" type="submit">
               <IoPersonAddSharp /> ADD
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>

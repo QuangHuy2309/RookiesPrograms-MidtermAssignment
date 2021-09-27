@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
 import com.nashtech.MyBikeShop.services.ReportService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -20,14 +22,26 @@ public class ReportController {
 	ReportService reportService;
 	
 	@GetMapping("/report/profit/{year}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public List<Float> profitByYear(@PathVariable(name = "year") int year){
 		return reportService.profitByYear(year);
 	}
 	
 	@GetMapping("/report/purchasecost/{year}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public List<Float> purchaseCostByYear(@PathVariable(name = "year") int year){
 		return reportService.purchaseCostByYear(year);
+	}
+	
+	@GetMapping("/report/topProduct")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<ReportTopProduct> topProdByMonth(@RequestParam(name = "fromMonth") String fromMonth,
+			@RequestParam(name = "toMonth") String toMonth){
+		if (fromMonth.compareTo(toMonth) == 1) {
+			String temp = fromMonth;
+			fromMonth = toMonth;
+			toMonth = temp;
+		}
+		return reportService.topProductByMonth(fromMonth,toMonth);
 	}
 }

@@ -6,3 +6,8 @@
     width: 12rem;
     margin-left: 3rem; 
 }
+.title-Report{
+    margin: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #B5FFD9;
+}

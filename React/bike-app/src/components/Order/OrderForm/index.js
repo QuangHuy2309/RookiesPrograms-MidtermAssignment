@@ -70,7 +70,7 @@ export default function Index() {
   function toArr() {
     let arr = [];
     prodList.forEach((prod) => {
-      let item = { productId: prod.id, ammount: prod.quantity };
+      let item = { productId: prod.id, ammount: prod.quantity, unitPrice: prod.price };
       arr = [...arr, item];
     });
     console.log(arr);
@@ -86,8 +86,8 @@ export default function Index() {
     if (nameError == "" && addressError == "") {
       const body = JSON.stringify({
         customersEmail: e.target.email.value,
-        totalCost: total,
-        status: 0,
+        // totalCost: total,
+        status: 1,
         address: e.target.address.value,
         orderDetails: toArr(),
       });
@@ -166,12 +166,12 @@ export default function Index() {
   }
   return (
     <div className="login-form">
-      <h2 className="head-login">ORDER</h2>
+      <h2 className="head-Order">ORDER</h2>
       <Form onSubmit={(e) => handleSubmit(e)}>
         <FormGroup>
           <Row className="login">
-            <Col className="col-1">
-              <Label for="nameExample">Name</Label>
+            <Col className="col-1 priceTitle">
+              <Label for="nameExample" className="labelText-Order py-auto">Name</Label>
             </Col>
             <Col className="col-4">
               <Input
@@ -187,7 +187,7 @@ export default function Index() {
             </Col>
             <Col className="col-1"></Col>
             <Col className="col-1">
-              <Label for="exampleEmail">Email</Label>
+              <Label for="exampleEmail" className="labelText-Order py-auto">Email</Label>
             </Col>
             <Col className="col">
               <Input
@@ -205,7 +205,7 @@ export default function Index() {
         <FormGroup>
           <Row className="login">
             <Col className="col-1">
-              <Label for="exampleAddress">Address</Label>
+              <Label for="exampleAddress" className="labelText-Order py-auto">Address</Label>
             </Col>
             <Col>
               <Input
@@ -221,13 +221,13 @@ export default function Index() {
           </Row>
         </FormGroup>
         <Row className="order">
-          <Col className="col-7 priceTotal">
-            <h3>Total :: </h3>{" "}
+          <Col className="col-7 priceTotal-Order">
+            <h3 className="totalText-Order">Total :: </h3>{" "}
             <h3 className="priceNumTotal"> {numberFormat(total)}</h3>
           </Col>
           <Col className="btnDelProd">
-            <Button outline color="info" type="submit">
-              Order
+            <Button outline color="info" type="submit" className="btnOrder-Order">
+              Place an Order
             </Button>
           </Col>
         </Row>
@@ -241,11 +241,11 @@ export default function Index() {
                 />
               </Col>
               <Col className="info-prod-order">
-                <h4>{prod.name}</h4>
-                <p>MODEL :: {prod.id}</p>
+                <h5>{prod.name}</h5>
+                <p className="modalProd-Order">MODEL :: {prod.id}</p>
                 <Row>
                   <Col className="col-1">
-                    <Label for="exampleQuantity">Qty</Label>
+                    <Label for="exampleQuantity" className="pt-2">Qty</Label>
                   </Col>
                   <Col className="col-3">
                     <Input
@@ -264,12 +264,12 @@ export default function Index() {
                     <ModalDelte onChoice={(e) => handleDelete(e, index)} />
                   </Col>
 
-                  <Row className="priceCart">
+                  <Row className="priceCart mt-3">
                     <Col className="col-3 priceTitle">
-                      <h3>Price </h3>
+                      <h3 className="priceText-OrderForm">Price </h3>
                     </Col>
                     <Col>
-                      <h3 for="exampleQuantity" className="priceNum">
+                      <h3 for="exampleQuantity" className="priceNum-OrderForm">
                         {" "}
                         {numberFormat(prod.quantity * prod.price)}
                       </h3>

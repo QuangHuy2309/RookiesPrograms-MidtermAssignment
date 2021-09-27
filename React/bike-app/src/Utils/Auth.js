@@ -3,7 +3,7 @@ import { getCookie } from "./Cookie";
 export function isAdminLogin() {
   const status = getCookie("status");
   const role = getCookie("role");
-  if (status === "true" && role === "ROLE_ADMIN") {
+  if (status === "true" && (role === "ROLE_ADMIN" || role === "ROLE_STAFF")) {
     return true;
   } else {
     console.log("isLogin FALSE");

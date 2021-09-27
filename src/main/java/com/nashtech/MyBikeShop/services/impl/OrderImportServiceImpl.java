@@ -69,6 +69,11 @@ public class OrderImportServiceImpl implements OrderImportService {
 		OrderImportDTO importDto = mapper.map(orderImport, OrderImportDTO.class);
 		importDto.setEmployeeEmail(orderImport.getEmployee().getEmail());
 		importDto.setEmployeeFullName(orderImport.getEmployee().getFullname());
+		Double totalCost = 0.0;
+		for (OrderImportDetailEntity detail : orderImport.getOrderImportDetails()) {
+			totalCost += detail.getAmmount() * detail.getPrice();
+		}
+		importDto.setTotalCost(totalCost);
 		Set<OrderImportDetailEntity> orderImportDetails = orderImport.getOrderImportDetails();
 		Set<OrderImportDetailDTO> orderImportDetailsDto = orderImportDetails.stream()
 				.map(orderImportDetailService::convertToDto).collect(Collectors.toSet());

@@ -31,7 +31,7 @@ export default function Index() {
   const [cateList, setCateList] = useState([]);
   const [prodList, setProdList] = useState([]);
   const [dropdownOpen, setOpen] = useState(false);
-
+  const [showPagination, setShowPage] = useState(true);
   const size = 4;
   let totalPage = useRef(0);
 
@@ -61,7 +61,7 @@ export default function Index() {
 
   function getListProd() {
     get(
-      `/public/product/page?pagenum=${pagenum}&size=${size}&type=${choice}`
+      `/public/productDTO/page?pagenum=${pagenum}&size=${size}&type=${choice}`
     ).then((response) => {
       if (response.status === 200) {
         setProdList([...response.data]);
@@ -92,18 +92,25 @@ export default function Index() {
     if (e) getListProd();
   }
   function handleSearchChange(e) {
-    setProdList([]);
-    get(`/public/product/search?keyword=${e.target.value}&type=${choice}`).then(
-      (response) => {
+    if (e.target.value.trim().length > 0) {
+      setProdList([]);
+      get(
+        `/public/product/search?keyword=${e.target.value.trim()}&type=${choice}`
+      ).then((response) => {
         if (response.status === 200) {
           setProdList([...response.data]);
+          setShowPage(false);
+          
         }
-      }
-    );
+      });
+    } else {
+      getListProd();
+      setShowPage(true);
+    }
   }
   return (
     <>
-      <h2 className="title-user">PRODUCT MANAGER</h2>
+      <h2 className="title-ProductAdmin">PRODUCT MANAGER</h2>
       <div>
         <Row>
           <Col className="col-7 btn-list">
@@ -113,12 +120,14 @@ export default function Index() {
                 Categories
               </DropdownToggle>
               <DropdownMenu>
-                {cateList.map((cate) => (
+                {cateList.map((cate, index) => (
                   <div key={cate.id}>
                     <DropdownItem onClick={() => setChoice(cate.id)}>
                       {cate.name}
                     </DropdownItem>
-                    <DropdownItem divider />
+                    {index != cateList.length - 1 ? (
+                      <DropdownItem divider />
+                    ) : null}
                   </div>
                 ))}
               </DropdownMenu>
@@ -143,14 +152,15 @@ export default function Index() {
       <Table bordered className="tableProd">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>QUANTITY</th>
-            <th>PRICE</th>
-            <th>CREATE DAY</th>
-            <th>LAST UPDATE DAY</th>
-            <th>Review</th>
-            <th></th>
+            <th className="titleTale-ProductAdmin">ID</th>
+            <th className="titleTale-ProductAdmin">NAME</th>
+            <th className="titleTale-ProductAdmin">QUANTITY</th>
+            <th className="titleTale-ProductAdmin">PRICE</th>
+            <th className="titleTale-ProductAdmin">CREATE DAY</th>
+            <th className="titleTale-ProductAdmin">LAST UPDATE DAY</th>
+            <th className="titleTale-ProductAdmin">UPDATE BY</th>
+            <th className="titleTale-ProductAdmin">REVIEW</th>
+            <th className="titleTale-ProductAdmin">ACTION</th>
           </tr>
         </thead>
         <tbody>
@@ -167,6 +177,7 @@ export default function Index() {
                 {" "}
                 {format(new Date(prod.updateDate), "dd/MM/yyyy HH:mm:ss")}
               </td>
+              <td>{prod.nameEmployeeUpdate}</td>
               <td>
                 {" "}
                 <ModalReview id={prod.id} />
@@ -184,11 +195,12 @@ export default function Index() {
           ))}
         </tbody>
       </Table>
-
-      <Page
-        total={Math.ceil(totalPage.current / size)}
-        onPageChange={(e) => setPageNum(e)}
-      />
+      {showPagination ? (
+        <Page
+          total={Math.ceil(totalPage.current / size)}
+          onPageChange={(e) => setPageNum(e)}
+        />
+      ) : null}
     </>
   );
 }

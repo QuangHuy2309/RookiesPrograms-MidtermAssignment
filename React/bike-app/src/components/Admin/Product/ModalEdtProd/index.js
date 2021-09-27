@@ -160,13 +160,13 @@ const ModalAdd = (props) => {
         <MdModeEdit />
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>
+        <ModalHeader toggle={toggle} className="title-AddProductAdmin">
           <MdModeEdit /> Product Information
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleEmail">ID</Label>
+              <Label for="exampleEmail" className="titleTale-ProductAdmin">ID</Label>
               <Input
                 type="text"
                 name="id"
@@ -176,7 +176,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword">Name</Label>
+              <Label for="examplePassword" className="titleTale-ProductAdmin">Name</Label>
               <Input
                 type="text"
                 name="name"
@@ -188,7 +188,7 @@ const ModalAdd = (props) => {
               <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePrice">Price</Label>
+              <Label for="examplePrice" className="titleTale-ProductAdmin">Price</Label>
               <Input
                 type="number"
                 name="price"
@@ -201,19 +201,20 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleQuantity">Quantity</Label>
+              <Label for="exampleQuantity" className="titleTale-ProductAdmin">Quantity</Label>
               <Input
                 type="number"
                 name="quantity"
                 id="exampleQuantity"
                 value={prod.quantity}
+                disabled
                 required="required"
                 min="0"
                 onChange={(e) => handleFieldChange(e, "quantity")}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleCreateDay">Create Day</Label>
+              <Label for="exampleCreateDay" className="titleTale-ProductAdmin">Create Day</Label>
               <Input
                 type="text"
                 name="createDate"
@@ -224,7 +225,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleSelect">Type</Label>
+              <Label for="exampleSelect" className="titleTale-ProductAdmin">Type</Label>
               <Input
                 type="select"
                 name="select"
@@ -242,7 +243,7 @@ const ModalAdd = (props) => {
               </Input>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand">Brand</Label>
+              <Label for="exampleBrand" className="titleTale-ProductAdmin">Brand</Label>
               <Input
                 type="text"
                 name="brand"
@@ -254,7 +255,7 @@ const ModalAdd = (props) => {
               <div style={{ color: "red" }}>{brandError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleText">Description</Label>
+              <Label for="exampleText" className="titleTale-ProductAdmin">Description</Label>
               <Input
                 type="textarea"
                 name="description"
@@ -265,7 +266,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleFile">File</Label>
+              <Label for="exampleFile" className="titleTale-ProductAdmin">File</Label>
               <br />
               <Input
                 type="file"

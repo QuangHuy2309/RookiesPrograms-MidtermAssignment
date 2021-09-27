@@ -76,6 +76,10 @@ public class ProductEntity {
 	@ManyToOne
 	@JoinColumn(name = "producttype")
 	private CategoriesEntity categories;
+	
+	@ManyToOne
+	@JoinColumn(name = "updateby")
+	private PersonEntity employeeUpdate;
 
 	public ProductEntity() {
 		super();
@@ -231,6 +235,14 @@ public class ProductEntity {
 
 	public void setOrderImportDetails(Set<OrderImportDetailEntity> orderImportDetails) {
 		this.orderImportDetails = orderImportDetails;
+	}
+
+	public PersonEntity getEmployeeUpdate() {
+		return employeeUpdate;
+	}
+
+	public void setEmployeeUpdate(PersonEntity employeeUpdate) {
+		this.employeeUpdate = employeeUpdate;
 	}
 
 	@Override

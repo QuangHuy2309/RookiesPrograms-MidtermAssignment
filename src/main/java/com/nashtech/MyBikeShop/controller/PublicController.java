@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity;
@@ -99,6 +101,13 @@ public class PublicController {
 	public List<ProductEntity> getProductPage(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "type") int id) {
 		return productService.getProductPage(page, size, id);
+	}
+	
+	@GetMapping("/productDTO/page")
+	public List<ProductDTO> getProductDTOPage(@RequestParam(name = "pagenum") int page,
+			@RequestParam(name = "size") int size, @RequestParam(name = "type") int id) {
+		return productService.getProductPage(page, size, id).stream().map(productService::convertToDTO)
+				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/productSort/page")

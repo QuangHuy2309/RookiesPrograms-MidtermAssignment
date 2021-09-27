@@ -47,14 +47,14 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/categories/{id}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or  hasRole('ADMIN')")
 	public CategoriesEntity findCategories(@PathVariable(name = "id") int id) {
 		return cateService.getCategories(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find categories with Id: " + id));
 	}
 	
 	@GetMapping("/categories/checkName")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public boolean checkExistCategoriesByName(@RequestParam(name = "name") String name, 
 			@RequestParam(name = "id") int id) {
 		return cateService.checkExistName(id,name);
@@ -68,7 +68,7 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/categories")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String createCategories(@RequestBody CategoriesDTO newOrder) {
 		try {
 			return cateService.createCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
@@ -79,7 +79,7 @@ public class CategoriesController {
 	}
 	
 	@PutMapping("/categories/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String updateCategories(@RequestBody CategoriesDTO newOrder, @PathVariable(name = "id") int id) {
 		try {
 			return cateService.updateCategories(newOrder) ? StringUtils.TRUE : StringUtils.FALSE;
@@ -97,7 +97,7 @@ public class CategoriesController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/categories/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String deleteCategories(@PathVariable(name = "id") int id) {
 		try {
 			return cateService.deleteCategories(id) ? StringUtils.TRUE : StringUtils.FALSE;

@@ -6,7 +6,9 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
+import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
+import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 public interface OrderService {
 	public List<OrderEntity> retrieveOrders();
@@ -16,6 +18,8 @@ public interface OrderService {
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id);
 
 	public List<OrderEntity> getOrderPage(int num, int size);
+	
+	public List<OrderEntity> getOrderPageByStatus(int num, int size, int status);
 
 	public OrderEntity createOrder(OrderDTO order);
 
@@ -31,7 +35,11 @@ public interface OrderService {
 
 	public long countTotal();
 	
+	public long countByStatus(int status);
+	
 	public long countTotalOrderByUser(String email);
 	
 	public float profitByMonth(int month, int year);
+	
+	public OrderDTO convertToDTO(OrderEntity order);
 }

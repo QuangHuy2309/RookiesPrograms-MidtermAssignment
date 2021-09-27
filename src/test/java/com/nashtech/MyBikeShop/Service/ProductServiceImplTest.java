@@ -42,11 +42,11 @@ public class ProductServiceImplTest {
 	public void testCreateProd() {
 		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
 		ProductEntity prod1 = new ProductEntity("ProdA", "Product A", (float) 3.45, 2, cate1);
-		ProductDTO prodDTO = new ProductDTO("1","NAME",3,3,1);
+		ProductDTO prodDTO = new ProductDTO("1","NAME",3,3,1,"A");
 		//when(prodRepository.findById(Mockito.anyString())).thenReturn(null);
 //		when(cateService.getCategories(Mockito.anyInt())).thenReturn(Mockito.any(Optional.class));
 		when(prodRepository.save(Mockito.any())).thenReturn(prod1);
-		ProductEntity prod = prodService.createProduct(prodDTO);
+		ProductEntity prod = prodService.createProduct(prodDTO,"A");
 //		assertEquals("ProdA",prod.getId() );
 	}
 	

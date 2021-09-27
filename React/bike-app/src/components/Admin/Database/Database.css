@@ -1,0 +1,13 @@
+.title-database{
+    margin: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #b9e469;
+}
+.btnBackUp-DB{
+    text-align: left;
+    margin-left: 3rem;
+}
+.titleTable-Database {
+  font-weight: 600;
+  text-shadow: -2px 2px #b9e469;
+}

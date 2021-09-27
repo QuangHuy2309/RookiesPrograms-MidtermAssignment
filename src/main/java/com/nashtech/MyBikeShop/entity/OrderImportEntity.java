@@ -29,8 +29,8 @@ public class OrderImportEntity {
 	@Column(name = "timeimport")
 	private LocalDateTime timeimport;
 
-	@Column(name = "totalcost")
-	private Double totalCost;
+//	@Column(name = "totalcost")
+//	private Double totalCost;
 
 	@Column(name = "status")
 	private boolean status;
@@ -48,12 +48,12 @@ public class OrderImportEntity {
 
 
 
-	public OrderImportEntity(int id, LocalDateTime timeimport, Double totalCost, boolean status, PersonEntity employee,
+	public OrderImportEntity(int id, LocalDateTime timeimport, boolean status, PersonEntity employee,
 			Set<OrderImportDetailEntity> orderDetails) {
 		super();
 		this.id = id;
 		this.timeimport = timeimport;
-		this.totalCost = totalCost;
+//		this.totalCost = totalCost;
 		this.status = status;
 		this.employee = employee;
 		this.orderImportDetails = orderDetails;
@@ -64,7 +64,7 @@ public class OrderImportEntity {
 	public OrderImportEntity(OrderImportDTO order) {
 		super();
 		this.id = order.getId();
-		this.totalCost = order.getTotalCost();
+//		this.totalCost = order.getTotalCost();
 		this.status = order.isStatus();
 	}
 
@@ -86,31 +86,24 @@ public class OrderImportEntity {
 		this.timeimport = timeimport;
 	}
 
-
-
 	public PersonEntity getEmployee() {
 		return employee;
 	}
-
-
 
 	public void setEmployee(PersonEntity employee) {
 		this.employee = employee;
 	}
 
-
-
-	public Double getTotalCost() {
-		return totalCost;
-	}
-
-	public void setTotalCost(Double totalCost) {
-		if (totalCost < 0) {
-			throw new IllegalArgumentException("Total must not below zero");
-		}
-		this.totalCost = totalCost;
-	}
-
+//	public Double getTotalCost() {
+//		return totalCost;
+//	}
+//
+//	public void setTotalCost(Double totalCost) {
+//		if (totalCost < 0) {
+//			throw new IllegalArgumentException("Total must not below zero");
+//		}
+//		this.totalCost = totalCost;
+//	}
 
 	public boolean isStatus() {
 		return status;

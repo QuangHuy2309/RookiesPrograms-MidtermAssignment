@@ -3,10 +3,13 @@ import { Row, Col } from "reactstrap";
 import Sidebar from "./Sidebar";
 import Product from "./Product";
 import User from "./UserPage";
+import Staff from "./StaffPage";
 import Cate from "./Categories";
 import Order from "./Order";
 import OrderImport from "./OrderImport/OrderImport.js";
-import Report from "./Report/Report.js";
+import Database from "./Database/Database.js";
+import Report_RaE from "./Report_RaE/Report_RaE.js";
+import REPORT_TopProd from "./Report_TopProd/Report_TopProd.js";
 import "./Admin.css"
 
 
@@ -26,12 +29,18 @@ export default function Index() {
       return (<Cate/>);
       case 'USER':
       return (<User/>);
+      case 'EMPLOYEE':
+      return (<Staff/>);
       case 'ORDER':
       return (<Order/>);
       case 'ORDER IMPORT':
       return (<OrderImport/>);
-      case 'REPORT':
-      return (<Report/>);
+      case 'DATABASE':
+      return (<Database/>);
+      case 'REPORT_RaE':
+      return (<Report_RaE/>);
+      case 'REPORT_TopProd':
+      return (<REPORT_TopProd/>);
     }
     // if (choice === "PRODUCT") {return (<Product/>)}
     // else if (choice === "USER") {return (<User/>)}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Row, Col, Button} from "reactstrap";
+import { Row, Col, Button } from "reactstrap";
 import { numberFormat } from "../../Utils/ConvertToCurrency";
 import { useHistory } from "react-router-dom";
 import { get } from "../../Utils/httpHelper";
@@ -21,7 +21,6 @@ export default function Index() {
   const [prod, setProd] = useState(Object);
   const [rateAvg, setRateAvg] = useState(0);
   useEffect(() => {
-    
     getProduct();
     getAvgRate();
   }, [id]);
@@ -35,22 +34,26 @@ export default function Index() {
   }
   function addProductIdToCookie(type) {
     let cartCookie = getCookie("cart");
-    let check = cartCookie.trim().includes(id);
-    if (!check) {
-      cartCookie = cartCookie.concat(` ${id}`);
-      cartCookie = cartCookie.trim();
-      document.cookie = `cart=${cartCookie}#$1; max-age=86400; path=/;`;
-      toast.info("Product have been add to cart", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-      });
-    }
-    else {
-      if (type === "Add") {toast("This product is already in your cart", {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
-      });
-    }
+    const roleCookie = getCookie("role");
+    let checkRole = roleCookie.includes("ROLE_USER");
+    let checkCart = cartCookie.trim().includes(id);
+    if (checkRole) {
+      if (!checkCart) {
+        cartCookie = cartCookie.concat(` ${id}`);
+        cartCookie = cartCookie.trim();
+        document.cookie = `cart=${cartCookie}#$1; max-age=86400; path=/;`;
+        toast.info("Product have been add to cart", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 3000,
+        });
+      } else {
+        if (type === "Add") {
+          toast("This product is already in your cart", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        }
+      }
     }
   }
   function handleAddCart() {
@@ -62,10 +65,10 @@ export default function Index() {
       });
     }
   }
-  async function getAvgRate(){
+  async function getAvgRate() {
     get(`/public/product/rateAvgProd/${id}`).then((response) => {
       if (response.status === 200) {
-        setRateAvg(Math.round(response.data *10)/10);
+        setRateAvg(Math.round(response.data * 10) / 10);
       }
     });
   }
@@ -80,7 +83,7 @@ export default function Index() {
       });
     }
   }
-  
+
   return (
     <>
       <Navbar />
@@ -94,8 +97,15 @@ export default function Index() {
         </Col>
         <Col>
           <div className="info-prod">
-            <h3 className="name-prod">{prod.name}</h3>
-            <h5>{rateAvg} <RatingView ratingValue={Math.round(rateAvg)} size={20} className="" /></h5>
+            <h3 className="name-prodDetail">{prod.name}</h3>
+            <h5>
+              {rateAvg}{" "}
+              <RatingView
+                ratingValue={Math.round(rateAvg)}
+                size={20}
+                className=""
+              />
+            </h5>
             <h2 className="price-prod">{numberFormat(prod.price)}</h2>
             <h5>Model :: {prod.id} </h5>
             <h5>Qty :: {prod.quantity} </h5>

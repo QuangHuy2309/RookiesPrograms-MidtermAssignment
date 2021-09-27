@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Line } from "react-chartjs-2";
 import { getWithAuth } from "../../../Utils/httpHelper";
 import { numberFormat } from "../../../Utils/ConvertToCurrency";
-import "./Report.css";
+import "./Report_RaE.css";
 import {Col, Input, Row} from "reactstrap";
 export default function Report() {
   const [today, setToday] = useState("");
@@ -15,14 +15,14 @@ export default function Report() {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [
       {
-        label: "Profit",
+        label: "Revenue",
         data: profit,
         fill: true,
         backgroundColor: "rgba(75,192,192,0.2)",
         borderColor: "rgba(75,192,192,1)"
       },
       {
-        label: "Cost",
+        label: "Expenditure",
         data: purchase,
         fill: false,
         borderColor: "#742774"
@@ -87,7 +87,7 @@ export default function Report() {
 
     return (
         <div>
-            <h2 className="title-user">REPORT</h2>
+            <h2 className="title-Report">REVENUE & EXPENDITURE</h2>
             <Row>
               <Col className="col-5">
             <div className="datepicker">
@@ -101,10 +101,10 @@ export default function Report() {
               />
               </div>
               </Col>
-              <Col className="priceTotal">
+              {/* <Col className="priceTotal">
                 <h4 className="priceTitle">Profit: </h4>
                 <h4 className="status-false">{numberFormat(profitNum)}</h4>
-              </Col>
+              </Col> */}
               </Row>
             <div className="chart-div">
             <Line data={data} height="500" options={{

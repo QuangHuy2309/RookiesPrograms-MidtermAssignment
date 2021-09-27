@@ -19,7 +19,7 @@ export default function Index(props) {
 
   return (
 
-      <Pagination aria-label="Page navigation example" key="Page" className="pagination justify-content-center ">
+      <Pagination aria-label="Page navigation example" key="Page" className="pagination justify-content-center mb-3">
         <PaginationItem key="first">
           <PaginationLink first onClick={() => setFirstPage()} />
         </PaginationItem>

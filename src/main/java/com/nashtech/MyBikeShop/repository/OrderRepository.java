@@ -16,9 +16,13 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 
 	List<OrderEntity> findByCustomersId(Pageable pageable, int id);
 
+	List<OrderEntity> findByStatus(Pageable pageable, int status);
+
 	long countByCustomersEmail(String email);
 
-	@Query(value="select SUM(totalcost) from orderbill o "
-			+ "where EXTRACT(MONTH FROM o.timebought) = :month and EXTRACT(YEAR FROM o.timebought) = :year", nativeQuery = true)
-	Float profitByMonth(@Param("month") Integer month,@Param("year") Integer year);
+	long countByStatus(int status);
+
+	@Query(value = "select SUM(o2.amount*o2.unitprice) from orderbill o , orderdetails o2 \r\n"
+			+ "where o.id =o2.orderid and EXTRACT(MONTH FROM o.timebought) = :month and EXTRACT(YEAR FROM o.timebought) = :year", nativeQuery = true)
+	Float profitByMonth(@Param("month") Integer month, @Param("year") Integer year);
 }

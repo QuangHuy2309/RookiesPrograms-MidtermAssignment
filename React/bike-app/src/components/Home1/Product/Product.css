@@ -11,18 +11,21 @@
     background-color:black;
     color: white;
     font-family: 'Roboto', sans-serif;
+    font-weight: 600;
     padding: 0.5em;
     text-decoration: none;
 }
 .card-btn:hover{
-    border: 1px solid #FFD8CC;
-    background-color:#FFC074;
+    border: 1px solid #A2CDCD;
+    background-color: #A2CDCD;
+    text-shadow: -2.5px 2px #ff5c58;
     color: black;
 }
-.card-name{
+.card-name-prodHome{
     text-align: left;
     font-family: Arial;
     color: black;
+    font-weight: 540;
 }
 .card-price{
     align-content: flex-start;
@@ -30,4 +33,6 @@
     text-align: left;
     width: fit-content;
     color: orangered;
+    text-shadow: -2.5px 2px #A2CDCD;
+    font-weight: 550;
 }

@@ -1,5 +1,11 @@
-.title-user {
+.title-OrderAdmin {
   margin: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #FF9A3C;
+}
+.titleTable-OrderAdmin{
+  font-weight: 600;
+  text-shadow: -2px 2px #FF9A3C;
 }
 .btn-list {
   display: flex;
@@ -35,4 +41,27 @@
 }
 .statusColor-Canceled{
   background-color: #FF5C58;
+}
+.statusColorChoice-InProcess{
+  color: #FFB344;
+}
+.statusColorChoice-Delivery{
+  color: #22577A;
+}
+.statusColorChoice-Complete{
+  color: #5D8233;
+}
+.statusColorChoice-Canceled{
+  color: #FF5C58;
+}
+.statusChoice-Order{
+  display: flex;
+  text-align: left;
+  margin-left: 3rem;
+  margin-bottom: 1rem;
+}
+.statusChoiceText-Order{
+  margin-left: 1rem;
+  font-weight: 400;
+  font-size: 1.7rem;
 }

@@ -6,7 +6,7 @@
     padding:2rem;
     text-align: left;
 }
-.name-prod {
+.name-prodDetail {
     text-align: left;
 }
 .price-prod{
@@ -16,6 +16,9 @@
     margin-top: 2rem;
     margin-bottom: 2rem;
     padding-left: 2rem;
+    font-family: inherit;
+    font-weight: 550;
+    text-shadow: -2.5px 2px #B8DFD8;
     background-color: #F3F4ED;
     color: #F05945;
 }

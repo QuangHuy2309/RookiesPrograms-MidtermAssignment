@@ -41,13 +41,13 @@ public class RateController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/product/rate")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public RateEntity createRateOfProduct(@RequestBody RateDTO rate) {
 		return rateService.createRate(rate);
 	}
 	
 	@PostMapping("/product/rate/checkExist")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public boolean checkExistRate(@RequestBody RateKey rate) {
 		return rateService.checkExist(rate);
 	}
@@ -61,7 +61,7 @@ public class RateController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/product/rate/delete")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public String deleteRateOfProduct(@RequestBody RateKey rate) {
 		return rateService.deleteRate(rate) ? StringUtils.TRUE : StringUtils.FALSE;
 	}

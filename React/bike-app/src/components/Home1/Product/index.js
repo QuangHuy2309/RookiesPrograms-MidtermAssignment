@@ -54,7 +54,7 @@ export default class index extends Component {
                   alt="Card image cap"
                 />
                 <CardBody>
-                  <CardTitle tag="h5" className="card-name">
+                  <CardTitle tag="h5" className="card-name-prodHome">
                     {prod.name}
                   </CardTitle>
                   <div className="card-info">

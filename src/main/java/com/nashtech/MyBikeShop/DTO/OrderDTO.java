@@ -1,35 +1,52 @@
 package com.nashtech.MyBikeShop.DTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.Column;
 
 public class OrderDTO {
 	private int id;
 	private Double totalCost;
 	private String address;
-	private int status;
+	private Integer status;
 	private String customersEmail;
+	private String customersName;
+	private LocalDateTime timebought;
 	private List<OrderDetailDTO> orderDetails;
 
 	public OrderDTO() {
 	}
 	
-	public OrderDTO(Double totalCost, String address, int status, String customersEmail) {
+	public OrderDTO(String address, int status, String customersEmail) {
 		super();
-		this.totalCost = totalCost;
+//		this.totalCost = totalCost;
 		this.status = status;
 		this.customersEmail = customersEmail;
 	}
 
-	public OrderDTO(int id, Double totalCost, String address, int status,
+	public OrderDTO(int id, String address, int status,
 			String customersEmail, List<OrderDetailDTO> orderdetail) {
+		super();
+		this.id = id;
+		this.address = address;
+		this.status = status;
+		this.customersEmail = customersEmail;
+		this.orderDetails = orderdetail;
+	}
+
+	public OrderDTO(int id, Double totalCost, String address, Integer status, String customersEmail,
+			String customersName, LocalDateTime timebought, List<OrderDetailDTO> orderDetails) {
 		super();
 		this.id = id;
 		this.totalCost = totalCost;
 		this.address = address;
 		this.status = status;
 		this.customersEmail = customersEmail;
-		this.orderDetails = orderdetail;
+		this.customersName = customersName;
+		this.timebought = timebought;
+		this.orderDetails = orderDetails;
 	}
 
 	public int getId() {
@@ -39,8 +56,6 @@ public class OrderDTO {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	
 
 	public Double getTotalCost() {
 		return totalCost;
@@ -74,6 +89,30 @@ public class OrderDTO {
 		this.customersEmail = customersEmail;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getCustomersName() {
+		return customersName;
+	}
+
+	public void setCustomersName(String customersName) {
+		this.customersName = customersName;
+	}
+
+	public LocalDateTime getTimebought() {
+		return timebought;
+	}
+
+	public void setTimebought(LocalDateTime timebought) {
+		this.timebought = timebought;
+	}
+
 	public List<OrderDetailDTO> getOrderDetails() {
 		return orderDetails;
 	}
@@ -84,7 +123,7 @@ public class OrderDTO {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, id, orderDetails, status, totalCost);
+		return Objects.hash(address, id, orderDetails, status);
 	}
 
 	@Override

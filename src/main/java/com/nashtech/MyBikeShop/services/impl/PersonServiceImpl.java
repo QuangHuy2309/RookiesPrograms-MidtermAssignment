@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.services.impl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.services.PersonService;
@@ -38,13 +40,16 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	public PersonEntity getPerson(String email) {
-		return personRepository.findByEmail(email);
+		PersonEntity person = personRepository.findByEmail(email);
+		if (!person.isStatus()) throw new ObjectNotFoundException("This account had been disable");
+		else return person;
 	}
 
 	public List<PersonEntity> getPersonsPage(int num, int size, String role) {
 		Sort sortable = Sort.by("id").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
-		return personRepository.findByRole(pageable, role.toUpperCase());
+		if (role.equals("EMPLOYEE")) return personRepository.findByRoleNotAndStatusNot(pageable, "USER", false);
+		else return personRepository.findByRoleAndStatusNot(pageable, role.toUpperCase(), false);
 	}
 
 	public PersonEntity createPerson(PersonDTO personDTO) {
@@ -58,8 +63,14 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	public boolean deletePerson(int id) {
-		personRepository.deleteById(id);
-		return true;
+		try {
+			PersonEntity person = getPerson(id).get();
+			person.setStatus(false);
+			personRepository.save(person);
+			return true;
+		} catch (NoSuchElementException ex) {
+			throw new ObjectNotFoundException(ex.getMessage());
+		}
 	}
 
 	public boolean updatePerson(PersonDTO personDTO) {
@@ -68,7 +79,7 @@ public class PersonServiceImpl implements PersonService {
 		PersonEntity person = new PersonEntity(personDTO);
 
 		person.setPassword(personEntity.getPassword());
-		person.setRole(personEntity.getRole());
+//		person.setRole(personEntity.getRole());
 
 		if (checkEmailChange) { // Không đổi email
 			personRepository.save(person);
@@ -94,17 +105,18 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	public int getTotalByRole(String role) {
-		return personRepository.countByRole(role);
+		if (role.equals("EMPLOYEE")) return personRepository.countByRoleNotAndStatusNot("USER", false);
+		return personRepository.countByRoleAndStatusNot(role, false);
 	}
-	
+
 	public PersonEntity changePassword(String email, String oldPassword, String newPassword) {
 		PersonEntity person = getPerson(email);
 		String newPasswordEncoded = encoder.encode(newPassword);
 		boolean isMatched = encoder.matches(oldPassword, person.getPassword());
-        if (!isMatched) {
-        	throw new ObjectPropertiesIllegalException("Error: Old password is not correct.");
-        }
-        person.setPassword(newPasswordEncoded);
-        return personRepository.save(person);
+		if (!isMatched) {
+			throw new ObjectPropertiesIllegalException("Error: Old password is not correct.");
+		}
+		person.setPassword(newPasswordEncoded);
+		return personRepository.save(person);
 	}
 }

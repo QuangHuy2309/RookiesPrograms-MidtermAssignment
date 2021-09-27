@@ -1,14 +1,17 @@
-.radioGr-user{
-    display: flex;
-    
+.title-AddCategoryAdmin {
+  font-weight: 600;
+  text-shadow: -2px 2px #E1CCEC;
 }
-.btn-modal{
-    text-align: left;
-    margin:1rem;    
+.radioGr-user {
+  display: flex;
 }
-.radioGr-user > Label{
-margin-right: 1rem;
+.btn-modal {
+  text-align: left;
+  margin: 1rem;
 }
-.radioBtn-user{
-    margin: 1rem;
+.radioGr-user > Label {
+  margin-right: 1rem;
+}
+.radioBtn-user {
+  margin: 1rem;
 }

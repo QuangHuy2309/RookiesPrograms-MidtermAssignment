@@ -140,7 +140,7 @@ const ModalExample = (props) => {
         id: e.target.id.value,
         name: e.target.name.value,
         price: e.target.price.value,
-        quantity: e.target.quantity.value,
+        quantity: 0,
         description: e.target.description.value,
         brand: e.target.brand.value,
         createDate: new Date(),
@@ -173,11 +173,11 @@ const ModalExample = (props) => {
        <IoAddOutline/> Add new Product
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}><GrBike/> Product Information</ModalHeader>
+        <ModalHeader toggle={toggle} className="title-AddProductAdmin"><GrBike/> Product Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleID">ID</Label>
+              <Label for="exampleID" className="titleTale-ProductAdmin">ID</Label>
               <Input
                 type="text"
                 name="id"
@@ -189,7 +189,7 @@ const ModalExample = (props) => {
               <div style={{ color: "red" }}>{idError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword">Name</Label>
+              <Label for="examplePassword" className="titleTale-ProductAdmin">Name</Label>
               <Input
                 type="text"
                 name="name"
@@ -200,7 +200,7 @@ const ModalExample = (props) => {
               <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePrice">Price</Label>
+              <Label for="examplePrice" className="titleTale-ProductAdmin">Price</Label>
               <Input
                 type="number"
                 name="price"
@@ -210,8 +210,8 @@ const ModalExample = (props) => {
                 step="1000"
               />
             </FormGroup>
-            <FormGroup>
-              <Label for="exampleQuantity">Quantity</Label>
+            {/* <FormGroup>
+              <Label for="exampleQuantity" className="titleTale-ProductAdmin">Quantity</Label>
               <Input
                 type="number"
                 name="quantity"
@@ -219,9 +219,9 @@ const ModalExample = (props) => {
                 required="required"
                 min="0"
               />
-            </FormGroup>
+            </FormGroup> */}
             <FormGroup>
-              <Label for="exampleSelect">Type</Label>
+              <Label for="exampleSelect" className="titleTale-ProductAdmin">Type</Label>
               <Input
                 type="select"
                 name="select"
@@ -238,7 +238,7 @@ const ModalExample = (props) => {
               </Input>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand">Brand</Label>
+              <Label for="exampleBrand" className="titleTale-ProductAdmin">Brand</Label>
               <Input
                 type="text"
                 name="brand"
@@ -249,11 +249,11 @@ const ModalExample = (props) => {
               <div style={{ color: "red" }}>{brandError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleText">Description</Label>
+              <Label for="exampleText" className="titleTale-ProductAdmin">Description</Label>
               <Input type="textarea" name="description" id="exampleText" />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleFile">File</Label>
+              <Label for="exampleFile" className="titleTale-ProductAdmin">File</Label>
               <br />
               <Input
                 type="file"

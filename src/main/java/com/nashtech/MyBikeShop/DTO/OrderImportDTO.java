@@ -15,12 +15,11 @@ public class OrderImportDTO {
 	public OrderImportDTO() {
 	}
 	
-	public OrderImportDTO(int id, LocalDateTime timeimport, Double totalCost, boolean status, String employeeEmail,
+	public OrderImportDTO(int id, LocalDateTime timeimport,Double totalCost, boolean status, String employeeEmail,
 			String employeeFullName, Set<OrderImportDetailDTO> orderImportDetails) {
 		super();
 		this.id = id;
 		this.timeimport = timeimport;
-		this.totalCost = totalCost;
 		this.status = status;
 		this.employeeEmail = employeeEmail;
 		this.employeeFullName = employeeFullName;

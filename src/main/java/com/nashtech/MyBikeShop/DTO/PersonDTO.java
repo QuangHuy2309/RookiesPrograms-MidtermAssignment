@@ -23,19 +23,20 @@ public class PersonDTO {
 	private String address;
 	private String phonenumber;
 	private String role;
-	
+	private boolean status;
 	PersonDTO(){}
 	
 	
 	
 	public PersonDTO(int id, @NotBlank @Size(max = 50) @Email String email,
-			@NotBlank @Size(min = 6, max = 40) String password, @NotBlank String fullname, @NotBlank String role) {
+			@NotBlank @Size(min = 6, max = 40) String password, @NotBlank String fullname, @NotBlank String role, boolean status) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.fullname = fullname;
 		this.role = role;
+		this.status = status;
 	}
 
 
@@ -112,14 +113,18 @@ public class PersonDTO {
 		this.role = role;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
 
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(address, dob, email, fullname, gender, id, password, phonenumber, role);
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {

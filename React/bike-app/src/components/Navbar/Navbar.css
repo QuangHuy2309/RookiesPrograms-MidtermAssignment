@@ -4,17 +4,26 @@
   width: 100%;
   z-index: 10;
   padding: 2rem;
-  font-size: 20px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.3em;
+
   margin-bottom: 2rem;
-  background-color: #c9d8b6;
-  color: coral;
+  background-color: black;
+
   text-align: right;
   text-decoration: none;
-  border: 1px solid #333;
-  border-width: medium;
+  /* border: 1px solid #333;
+  border-width: medium; */
+}
+.fixed-nav:hover {
+  background-color: #63b4b8;
 }
 #card-button {
   text-align: right;
+}
+.Nav-HomeBtn {
+
+  text-shadow: -2px 1.8px #ff5c58;
 }
 
 .welcome-nav {
@@ -34,5 +43,5 @@
   /* transform: translateX(-30px) !important; */
 }
 .img-prodSearch {
-    width: 4rem;
+  width: 4rem;
 }

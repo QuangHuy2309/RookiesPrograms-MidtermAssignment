@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
@@ -22,6 +24,7 @@ import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
 import com.nashtech.MyBikeShop.services.CategoriesService;
 import com.nashtech.MyBikeShop.services.OrderService;
+import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
 
 @Service
@@ -30,10 +33,16 @@ public class ProductServiceImpl implements ProductService {
 	ProductRepository productRepository;
 
 	@Autowired
+	ModelMapper mapper;
+	
+	@Autowired
 	OrderService orderService;
 
 	@Autowired
 	CategoriesService cateService;
+	
+	@Autowired
+	PersonService personService;
 
 	public ProductServiceImpl(ProductRepository productRepository) {
 		this.productRepository = productRepository;
@@ -42,7 +51,12 @@ public class ProductServiceImpl implements ProductService {
 	public List<ProductEntity> retrieveProducts() {
 		return productRepository.findAll();
 	}
-	
+
+	public ProductDTO convertToDTO(ProductEntity product) {
+		ProductDTO productDTO = mapper.map(product, ProductDTO.class);
+		productDTO.setNameEmployeeUpdate(product.getEmployeeUpdate().getFullname());
+		return productDTO;
+	}
 	public List<ProductEntity> retrieveProductsByType(int categoriesId){
 		return productRepository.findByCategoriesId(categoriesId);
 	}
@@ -85,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.searchProduct(keyword.toUpperCase(), type);
 	}
 	
-	public ProductEntity createProduct(ProductDTO productDTO) {
+	public ProductEntity createProduct(ProductDTO productDTO, String email) {
 		try {
 			boolean checkName = checkExistName(productDTO.getName());
 			boolean checkId = checkExistId(productDTO.getId());
@@ -97,9 +111,11 @@ public class ProductServiceImpl implements ProductService {
 						"Failed! There is a product with this name. Please change product name");
 			} else {
 				CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
+				PersonEntity employee = personService.getPerson(email);
 				ProductEntity productEntity = new ProductEntity(productDTO, cate);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
+				productEntity.setEmployeeUpdate(employee);
 				return productRepository.save(productEntity);
 			}
 		} catch (DataAccessException ex) {
@@ -110,15 +126,20 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean deleteProduct(String id) {
+		ProductEntity prod = getProduct(id).get();
+		PersonEntity person = personService.getPerson(prod.getEmployeeUpdate().getId()).get();
+		person.getProduct().remove(prod);
 		productRepository.deleteById(id);
 		return true;
 	}
 
-	public boolean updateProduct(ProductDTO productDTO) {
+	public boolean updateProduct(ProductDTO productDTO, String email) {
 		boolean check = checkExistNameUpdate(productDTO.getId(), productDTO.getName());
 		if (check) {
 			CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
+			PersonEntity employee = personService.getPerson(email);
 			ProductEntity product = new ProductEntity(productDTO, cate);
+			product.setEmployeeUpdate(employee);
 			productRepository.save(updateDate(product));
 			return true;
 		} else

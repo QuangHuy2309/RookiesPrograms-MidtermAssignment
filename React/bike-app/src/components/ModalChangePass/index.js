@@ -108,7 +108,7 @@ const ModalConfirm = (props) => {
   }
   return (
     <div>
-      <p onClick={toggle} className="changepass-text">
+      <p onClick={toggle} className={`${props.onUserSide} changepass-text`}>
         Change Password <BiKey />
       </p>
       <Modal isOpen={modal} toggle={toggle}>

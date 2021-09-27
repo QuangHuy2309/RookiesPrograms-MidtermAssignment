@@ -53,7 +53,7 @@ export default function OrderImport() {
   function getProdList(index) {
     setProdList([]);
     orderList[index].orderImportDetails.map((detail) =>
-      getProd(detail.id.productId, detail.ammount, detail.price)
+      getProd(detail.productId, detail.amount, detail.unitprice)
     );
   }
   async function handleProductList(id, index) {
@@ -148,18 +148,18 @@ export default function OrderImport() {
   }
   return (
     <>
-      <h2 className="title-user">ORDER IMPORT MANAGER</h2>
+      <h2 className="title-OrderImport m-3">ORDER IMPORT MANAGER</h2>
       <ModalAdd onAdd={(e) => handleAdd(e)} />
       <Table bordered className="tableImport">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>EMPLOYEE EMAIL</th>
-            <th>EMPLOYEE NAME</th>
-            <th>TIME IMPORT</th>
-            <th>TOTAL PRICE</th>
-            <th>PRODUCT</th>
-            <th>STATUS</th>
+            <th className="titleTable-OrderImportAdmin">ID</th>
+            <th className="titleTable-OrderImportAdmin">EMPLOYEE EMAIL</th>
+            <th className="titleTable-OrderImportAdmin">EMPLOYEE NAME</th>
+            <th className="titleTable-OrderImportAdmin">TIME IMPORT</th>
+            <th className="titleTable-OrderImportAdmin">TOTAL PRICE</th>
+            <th className="titleTable-OrderImportAdmin">PRODUCT</th>
+            <th className="titleTable-OrderImportAdmin">STATUS</th>
             {/* <th></th> */}
           </tr>
         </thead>
@@ -167,8 +167,8 @@ export default function OrderImport() {
           {orderList.map((order, index) => (
             <tr key={order.id}>
               <th scope="row">{order.id}</th>
-              <td>{order.employee.email}</td>
-              <td>{order.employee.fullname}</td>
+              <td>{order.employeeEmail}</td>
+              <td>{order.employeeFullName}</td>
               <td>
                 {format(new Date(order.timeimport), "dd/MM/yyyy HH:mm:ss")}
               </td>

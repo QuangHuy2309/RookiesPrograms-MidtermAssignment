@@ -115,8 +115,8 @@ const ModalCart = (props) => {
   }
   return (
     <div>
-      <Button id="Popover1" type="button" color="link">
-        <TiShoppingCart size={40} /> 
+      <Button id="Popover1" type="button" color="link" >
+        <TiShoppingCart size={40} className="cartModal-Btn" /> 
       </Button>
       <Popover
         placement="left-end"

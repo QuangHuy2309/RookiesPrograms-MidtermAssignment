@@ -99,7 +99,7 @@ const ModalExample = (props) => {
       const emailUser = getCookie("email");
       const body = JSON.stringify({
         employeeEmail: emailUser,
-        totalCost: total,
+        // totalCost: total,
         status: true,//e.target.status.value,
         orderImportDetails: toArr(),
       });
@@ -149,7 +149,7 @@ const ModalExample = (props) => {
   }
   function handleSearchChange(e) {
     setProdList([]);
-    get(`/public/product/search?keyword=${e.target.value}&type=${choice}`).then((response) => {
+    get(`/public/product/search?keyword=${e.target.value.trim()}&type=${choice}`).then((response) => {
       if (response.status === 200) {
         setProdList([...response.data]);
       }
@@ -163,7 +163,7 @@ const ModalExample = (props) => {
         </Button>
       </div>
       <Modal isOpen={modal} toggle={toggle} size="lg">
-        <ModalHeader toggle={toggle}>
+        <ModalHeader toggle={toggle} className="title-OrderImport">
           <GrBike /> Import Order Information
         </ModalHeader>
         <ModalBody>
@@ -206,7 +206,7 @@ const ModalExample = (props) => {
               />
             </Col>
           </Row>
-          <div class="scrollable">
+          <div className="scrollable">
             {prodList.map((prod, index) => (
               <Row className="mb-3">
                 <Col className="col-9">
@@ -235,11 +235,11 @@ const ModalExample = (props) => {
             <Table bordered>
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>PRODUCT NAME</th>
-                  <th>QUANTITY</th>
-                  <th>UNIT PRICE</th>
-                  <th></th>
+                  <th className="titleTable-OrderImportAdmin">ID</th>
+                  <th className="titleTable-OrderImportAdmin">PRODUCT NAME</th>
+                  <th className="titleTable-OrderImportAdmin">QUANTITY</th>
+                  <th className="titleTable-OrderImportAdmin">UNIT PRICE</th>
+                  <th className="titleTable-OrderImportAdmin">ACTION</th>
                 </tr>
               </thead>
               <tbody>
@@ -306,9 +306,9 @@ const ModalExample = (props) => {
               </FormGroup>
             </FormGroup> */}
             <Row>
-              <Col className="priceTotal">
-                <h4 className="priceTitle">Total: </h4>
-                <h4 className="status-false">{numberFormat(total)}</h4>
+              <Col className="priceTotal-OrderAddImport">
+                <h4 className="priceTitle-OrderAddImport">Total: </h4>
+                <h4 className="priceNum-OrderAddImport">{numberFormat(total)}</h4>
               </Col>
             </Row>
             <hr />

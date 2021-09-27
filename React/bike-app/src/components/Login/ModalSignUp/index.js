@@ -31,6 +31,7 @@ const ModalAdd = (props) => {
     if (modal) {
       setDate();
       setEmailError("");
+      setNameError("");
       setPhonenumber("");
       setRePassError("");
       setCheckEmail(false);
@@ -59,6 +60,7 @@ const ModalAdd = (props) => {
         phonenumber: e.target.phonenumber.value,
         address: e.target.address.value.trim(),
         role: "USER",
+        status: true,
       });
       console.log(body);
       // console.log(e.target.dob.value);
@@ -70,6 +72,7 @@ const ModalAdd = (props) => {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
+            toggle();
         })
         .catch((error) => {
           toast.error("SignUp failed!", {
@@ -129,15 +132,15 @@ const ModalAdd = (props) => {
 
   return (
     <div>
-      <Button color="link" onClick={toggle} className="btnModal-login">
+      <Button color="link" onClick={toggle} className="btnModalSignUp-login">
         Create an Account
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>User Information</ModalHeader>
+        <ModalHeader toggle={toggle} className="titleModalSignUp-login titleTextSignUp-login">User Information</ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleEmail">Email</Label>
+              <Label for="exampleEmail" className="titleModalSignUp-login">Email</Label>
               <Input
                 type="email"
                 name="email"
@@ -150,7 +153,7 @@ const ModalAdd = (props) => {
               </div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword">Password</Label>
+              <Label for="examplePassword" className="titleModalSignUp-login">Password</Label>
               <Input
                 type="password"
                 name="password"
@@ -160,7 +163,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleRePassword">Confirm Password</Label>
+              <Label for="exampleRePassword" className="titleModalSignUp-login">Confirm Password</Label>
               <Input
                 type="password"
                 name="rePass"
@@ -175,7 +178,7 @@ const ModalAdd = (props) => {
               {rePassError}
             </div>
             <FormGroup>
-              <Label for="exampleFullname">Name</Label>
+              <Label for="exampleFullname" className="titleModalSignUp-login">Name</Label>
               <Input
                 type="text"
                 name="fullname"
@@ -188,21 +191,21 @@ const ModalAdd = (props) => {
               </div>
             </FormGroup>
             <FormGroup tag="fieldset" className="radioGr-user">
-              <Label for="exampleQuantity">Gender</Label>
+              <Label for="exampleQuantity" className="titleModalSignUp-login">Gender</Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="radio" value="false" required />{" "}
-                  MALE
+                  Male
                 </Label>
               </FormGroup>
               <FormGroup check className="radioBtn-user">
                 <Label check>
-                  <Input type="radio" name="radio" value="true" /> FEMALE
+                  <Input type="radio" name="radio" value="true" /> Female
                 </Label>
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand">Day of Birth</Label>
+              <Label for="exampleBrand" className="titleModalSignUp-login">Day of Birth</Label>
               <Input
                 type="date"
                 name="dob"
@@ -212,7 +215,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="examplePhone">Phonenumber</Label>
+              <Label for="examplePhone" className="titleModalSignUp-login">Phonenumber</Label>
               <Input
                 type="text"
                 name="phonenumber"
@@ -225,7 +228,7 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleAddress">Address</Label>
+              <Label for="exampleAddress" className="titleModalSignUp-login">Address</Label>
               <Input
                 type="text"
                 name="address"

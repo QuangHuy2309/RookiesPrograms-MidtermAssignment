@@ -15,7 +15,8 @@ public class ProductDTO {
 	private String description;
 	private String brand;
 	private LocalDateTime createDate;
-//	private LocalDateTime updateDate;
+	private LocalDateTime updateDate;
+	private String nameEmployeeUpdate;
 	@Lob
 	@Type(type = "org.hibernate.type.BinaryType")
 	private byte[] photo;
@@ -23,13 +24,14 @@ public class ProductDTO {
 	public ProductDTO() {
 	}
 
-	public ProductDTO(String id, String name, float price, int quantity, int categoriesId) {
+	public ProductDTO(String id, String name, float price, int quantity, int categoriesId, String nameEmployeeUpdate) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
 		this.categoriesId = categoriesId;
+		this.nameEmployeeUpdate = nameEmployeeUpdate;
 	}
 
 	public ProductDTO(String id, String name, float price, int quantity, int categories, String description,
@@ -43,6 +45,22 @@ public class ProductDTO {
 		this.description = description;
 		this.brand = brand;
 		this.createDate = createDate;
+		this.photo = photo;
+	}
+	
+	public ProductDTO(String id, String name, float price, int quantity, int categoriesId, String description,
+			String brand, LocalDateTime createDate, LocalDateTime updateDate, String nameEmployeeUpdate, byte[] photo) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.price = price;
+		this.quantity = quantity;
+		this.categoriesId = categoriesId;
+		this.description = description;
+		this.brand = brand;
+		this.createDate = createDate;
+		this.updateDate = updateDate;
+		this.nameEmployeeUpdate = nameEmployeeUpdate;
 		this.photo = photo;
 	}
 
@@ -127,4 +145,21 @@ public class ProductDTO {
 	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}
+
+	public String getNameEmployeeUpdate() {
+		return nameEmployeeUpdate;
+	}
+
+	public void setNameEmployeeUpdate(String nameEmployeeUpdate) {
+		this.nameEmployeeUpdate = nameEmployeeUpdate;
+	}
+
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
+	}
+	
 }

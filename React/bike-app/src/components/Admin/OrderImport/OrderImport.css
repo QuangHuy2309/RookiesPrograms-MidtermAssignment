@@ -1,26 +1,32 @@
-.title-user{
-    margin:2rem;
+.title-OrderImport {
+  font-weight: 600 !important;
+  text-shadow: -2px 2px #8ac6d1;
 }
-.btn-list{
-    display: flex;
-    text-align: left;
-    margin: 1rem;
-    margin-left: 3rem;
+.titleTable-OrderImportAdmin {
+  font-weight: 600;
+  text-shadow: -2px 2px #8ac6d1;
 }
-.img-order{
-    text-align: left;
-    height: 200px;
+
+.btn-list {
+  display: flex;
+  text-align: left;
+  margin: 1rem;
+  margin-left: 3rem;
 }
-#prodOrder-form{
-    border: 0.25px solid #333;
-    border-width: medium;
-    padding: 1rem;
-    margin-left: 3rem;
-    margin-bottom: 2rem;
+.img-order {
+  text-align: left;
+  height: 200px;
 }
-.info-prod-order{
-    text-align: left;
+#prodOrder-form {
+  border: 0.25px solid #333;
+  border-width: medium;
+  padding: 1rem;
+  margin-left: 3rem;
+  margin-bottom: 2rem;
 }
-.tableImport{
-    margin-left: 1rem;
+.info-prod-order {
+  text-align: left;
+}
+.tableImport {
+  margin-left: 1rem;
 }

@@ -1,6 +1,9 @@
+.title-UserAddAdmin {
+    font-weight: 600 !important;
+    text-shadow: -2px 2px #b1e693;
+  }
 .radioGr-user{
     display: flex;
-    
 }
 .radioGr-user > Label{
 margin-right: 1rem;

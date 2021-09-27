@@ -21,6 +21,9 @@ public class OrderDetailEntity {
 
 	@Column(name = "amount")
 	private int ammount;
+	
+	@Column(name = "unitprice")
+	private double unitPrice;
 
 	@ManyToOne
 	@JoinColumn(name = "orderid", insertable = false, updatable = false)
@@ -74,12 +77,13 @@ public class OrderDetailEntity {
 	public OrderDetailEntity() {
 	}
 
-	public OrderDetailEntity(OrderDetailsKey id, int ammount, OrderEntity order, ProductEntity product) {
+	public OrderDetailEntity(OrderDetailsKey id, int ammount, double unitPrice, OrderEntity order, ProductEntity product) {
 		super();
 		this.id = id;
 		this.ammount = ammount;
 		this.order = order;
 		this.product = product;
+		this.unitPrice = unitPrice;
 	}
 
 	public OrderDetailEntity(OrderDetailDTO orderDTO) {
@@ -117,6 +121,14 @@ public class OrderDetailEntity {
 
 	public void setAmmount(int ammount) {
 		this.ammount = ammount;
+	}
+
+	public double getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(double unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
 }

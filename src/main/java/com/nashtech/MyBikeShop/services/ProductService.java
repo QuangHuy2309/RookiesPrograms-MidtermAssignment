@@ -23,11 +23,11 @@ public interface ProductService {
 
 	public Optional<ProductEntity> getProduct(String id);
 
-	public ProductEntity createProduct(ProductDTO product);
+	public ProductEntity createProduct(ProductDTO product, String email);
 
 	public boolean deleteProduct(String id);
 
-	public boolean updateProduct(ProductDTO product);
+	public boolean updateProduct(ProductDTO product, String email);
 
 	public boolean updateProductQuantity(String id, int numberChange);
 
@@ -44,4 +44,6 @@ public interface ProductService {
 	public boolean checkExistId(String id);
 	
 	public ProductEntity updateProductWithoutCheckAnything (ProductEntity product);
+	
+	public ProductDTO convertToDTO(ProductEntity product);
 }

@@ -42,10 +42,10 @@ public class ProductControllerTest {
 	public void testCreateProd() throws Exception{
 		CategoriesEntity cate = new CategoriesEntity(1, "cate1", "cateDes");
 		ProductEntity prod = new ProductEntity("a1","PRODUCT ENTITY",(float)6.5,4,cate);
-		ProductDTO prodDTO = new ProductDTO("a1DTO","PRODUCT DTO",(float)6.5,4,1);
+		ProductDTO prodDTO = new ProductDTO("a1DTO","PRODUCT DTO",(float)6.5,4,1,"A");
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
-		Mockito.when(prodService.createProduct(Mockito.anyObject())).thenReturn(prod);
+		Mockito.when(prodService.createProduct(Mockito.anyObject(),"A")).thenReturn(prod);
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/product")
 				.content(ow.writeValueAsString(prodDTO))

@@ -1,5 +1,5 @@
 .title-bike-type{
-    width: 25rem;
+    width: 30rem;
     text-align: center;
     margin-inline: auto;
     margin-top: 1.5rem;
@@ -10,8 +10,18 @@
     border-width: medium;
 }
 .title-bike-type:hover{
-    background-color: #628395; 
+    background-color: #A2CDCD; 
+    border: 1px solid #A2CDCD;
+    border-width: medium;
 }
-h2{
+.cateName-Home{
     color: black;
+    font-weight: 900;
+    font-family:  'Raleway',sans-serif;
+    line-height: 1.5;
+    
+    
+}
+.cateName-Home:hover{
+    color:white;
 }

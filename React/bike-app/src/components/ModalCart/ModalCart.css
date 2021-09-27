@@ -26,3 +26,8 @@
   text-align: center;
   margin: auto;
 }
+.cartModal-Btn{
+  text-decoration: none;
+  color: #F3F0D7;
+  -webkit-text-stroke: 3.75px #FF7878;
+}

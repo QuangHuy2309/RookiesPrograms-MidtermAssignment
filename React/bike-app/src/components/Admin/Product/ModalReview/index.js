@@ -90,7 +90,7 @@ export default function Index(props) {
         Review
       </Button>
       <Modal isOpen={modal} toggle={toggle} className="">
-        <ModalHeader toggle={toggle}>Product Review</ModalHeader>
+        <ModalHeader toggle={toggle} className="title-AddProductAdmin">Product Review</ModalHeader>
         <ModalBody>
           {reviewList.map((review) => (
             <div class="reviewForm">

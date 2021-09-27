@@ -29,8 +29,8 @@ public class OrderEntity {
 	@Column(name = "timebought")
 	private LocalDateTime timebought;
 
-	@Column(name = "totalcost")
-	private Double totalCost;
+//	@Column(name = "totalcost")
+//	private Double totalCost;
 
 	@Column(name = "address")
 	private String address;
@@ -49,10 +49,10 @@ public class OrderEntity {
 		super();
 	}
 
-	public OrderEntity(int id, Double totalCost, String address, int status, PersonEntity customers) {
+	public OrderEntity(int id, String address, int status, PersonEntity customers) {
 		super();
 		this.id = id;
-		this.totalCost = totalCost;
+//		this.totalCost = totalCost;
 		this.address = address;
 		this.status = status;
 		this.customers = customers;
@@ -61,7 +61,7 @@ public class OrderEntity {
 	public OrderEntity(OrderDTO order) {
 		super();
 		this.id = order.getId();
-		this.totalCost = order.getTotalCost();
+//		this.totalCost = order.getTotalCost();
 		this.address = order.getAddress();
 		this.status = order.isStatus();
 	}
@@ -90,16 +90,16 @@ public class OrderEntity {
 		this.timebought = timebought;
 	}
 
-	public Double getTotalCost() {
-		return totalCost;
-	}
-
-	public void setTotalCost(Double totalCost) {
-		if (totalCost < 0) {
-			throw new IllegalArgumentException("Total must not below zero");
-		}
-		this.totalCost = totalCost;
-	}
+//	public Double getTotalCost() {
+//		return totalCost;
+//	}
+//
+//	public void setTotalCost(Double totalCost) {
+//		if (totalCost < 0) {
+//			throw new IllegalArgumentException("Total must not below zero");
+//		}
+//		this.totalCost = totalCost;
+//	}
 
 	public String getAddress() {
 		return address;
@@ -136,7 +136,7 @@ public class OrderEntity {
 		OrderEntity other = (OrderEntity) obj;
 		return Objects.equals(address, other.address) && Objects.equals(customers, other.customers) && id == other.id
 				&& Objects.equals(orderDetails, other.orderDetails) && status == other.status
-				&& Objects.equals(timebought, other.timebought) && Objects.equals(totalCost, other.totalCost);
+				&& Objects.equals(timebought, other.timebought);
 	}
 
 }

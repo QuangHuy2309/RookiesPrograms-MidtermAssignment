@@ -45,7 +45,7 @@ export default function Index(props) {
         if (response.data.roles[0] === "ROLE_USER"){
           history.goBack();
         }
-        else if (response.data.roles[0] === "ROLE_ADMIN")
+        else if (response.data.roles[0] === "ROLE_ADMIN" || response.data.roles[0] === "ROLE_STAFF")
         {
           history.push("/Admin")
         }
@@ -63,8 +63,9 @@ export default function Index(props) {
   return (
     <>
     <Navbar />
-    <div className="login-form">
-      <h2 className="head-login">SIGN-IN</h2>
+    <div className="login-form-Login">
+      <h2 className="head-login-Login">SIGN-IN</h2>
+      <hr className="hrLoginForm" />
       <Row >
             <Col className="col-1"></Col>
       <Col><div style={{ color: "red", "text-align": "left" }}>{loginError}</div></Col>
@@ -72,10 +73,10 @@ export default function Index(props) {
       <Form onSubmit={(e) => handleSubmitLogin(e)}>
         <FormGroup>
           <Row className="login">
-            <Col className="col-1">
-              <Label for="exampleEmail">Email</Label>
+            <Col className="col-2 labelText-Login">
+              <Label for="exampleEmail" className="labelText-Login">Email</Label>
             </Col>
-            <Col>
+            <Col className="me-3">
               <Input
                 type="email"
                 name="email"
@@ -85,6 +86,7 @@ export default function Index(props) {
                 className="input-login"
                 maxLength="50"
                 onChange={(e) => handleFieldChange(e)}
+                
               />
               {/* <div style={{ color: "red", "text-align": "left" }}>{emailError}</div> */}
             </Col>
@@ -92,10 +94,10 @@ export default function Index(props) {
         </FormGroup>
         <FormGroup>
           <Row className="login">
-            <Col className="col-1">
-              <Label for="examplePassword">Password</Label>
+            <Col className="col-2 labelText-Login">
+              <Label for="examplePassword " className="labelText-Login">Password</Label>
             </Col>
-            <Col>
+            <Col className="me-3">
               <Input
                 type="password"
                 name="password"
@@ -109,7 +111,7 @@ export default function Index(props) {
             </Col>
           </Row>
         </FormGroup>
-        <Button outline color="info" type="submit">SIGN IN</Button>
+        <Button outline color="info" type="submit" className="btnSignIn-Login">SIGN IN</Button>
       </Form>
       <ModalAdd />
     </div>

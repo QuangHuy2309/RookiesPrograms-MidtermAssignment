@@ -1,5 +1,7 @@
 package com.nashtech.MyBikeShop.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,7 +21,9 @@ import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.ProductService;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +38,9 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private JwtUtils jwtUtils;
+
 	@Operation(summary = "Create a Product")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -45,27 +52,31 @@ public class ProductController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/product")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ProductEntity saveProduct(@RequestBody ProductDTO newProduct) {
-				return productService.createProduct(newProduct);
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public ProductEntity saveProduct(HttpServletRequest request, @RequestBody ProductDTO newProduct) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		return productService.createProduct(newProduct, email);
 	}
-	
+
 	@GetMapping("/product/checkExistId/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public boolean checkExistId(@PathVariable(name = "id") String id) {
-				return productService.checkExistId(id);
+		return productService.checkExistId(id);
 	}
+
 	@GetMapping("/product/checkExistName/{name}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public boolean checkExistName(@PathVariable(name = "name") String name) {
-				return productService.checkExistName(name);
+		return productService.checkExistName(name);
 	}
+
 	@GetMapping("/product/checkExistNameUpdate")
-	@PreAuthorize("hasRole('ADMIN')")
-	public boolean checkExistName(@RequestParam(name = "name") String name, 
-			@RequestParam(name = "id") String id) {
-				return productService.checkExistNameUpdate(id, name);
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public boolean checkExistName(@RequestParam(name = "name") String name, @RequestParam(name = "id") String id) {
+		return productService.checkExistNameUpdate(id, name);
 	}
+
 	@Operation(summary = "Delete a Product by id")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -75,11 +86,11 @@ public class ProductController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/product/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String deleteProduct(@PathVariable(name = "id") String id) {
 		try {
-		return productService.deleteProduct(id) ? StringUtils.TRUE : StringUtils.FALSE;
-		}catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
+			return productService.deleteProduct(id) ? StringUtils.TRUE : StringUtils.FALSE;
+		} catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
 			return StringUtils.FALSE;
 		}
 	}
@@ -93,15 +104,18 @@ public class ProductController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping("/product/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String editProduct(@RequestBody ProductDTO product, @PathVariable(name = "id") String id) {
-		try {
-		return productService.updateProduct(product) ? StringUtils.TRUE : StringUtils.FALSE;
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public String editProduct(HttpServletRequest request, @RequestBody ProductDTO product,
+			@PathVariable(name = "id") String id) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		 try {
+		return productService.updateProduct(product, email) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (ObjectAlreadyExistException ex) {
 			return StringUtils.FALSE;
 		}
 	}
-	
+
 //	@PostMapping("/img")
 //	@PreAuthorize("hasRole('ADMIN')")
 //	public String saveImgProduct(@RequestParam("file") MultipartFile file, @RequestParam("id") String id) {
@@ -112,6 +126,5 @@ public class ProductController {
 //			return StringUtils.FALSE;
 //		}
 //	}
-	
-	
+
 }

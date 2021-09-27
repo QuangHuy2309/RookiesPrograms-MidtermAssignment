@@ -57,7 +57,7 @@ public class OrderImportController {
 	PersonService personService;
 	
 	@GetMapping("/orderImport/totalOrder")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public long getNumberOfOrders() {
 		return  orderImportService.countTotal();
 	}
@@ -70,7 +70,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/imports")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public ResponseEntity<?> createOrderImport(@RequestBody OrderImportDTO newOrderImportDto) {
 		PersonEntity personImport = personService.getPerson(newOrderImportDto.getEmployeeEmail());
 		if (personImport == null) {
@@ -105,14 +105,14 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/imports")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public ResponseEntity<?> getOrderImport(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size) {
 		List<OrderImportEntity> orderImportEntity = orderImportService.getOrderImportPage(page, size);
 		List<OrderImportDTO> orderImportDto = orderImportEntity.stream().map(orderImportService::convertToDto)
 				.collect(Collectors.toList());
-//		return new ResponseEntity<List<OrderImportDTO>>(orderImportDto, HttpStatus.OK);
-		return new ResponseEntity<List<OrderImportEntity>>(orderImportEntity, HttpStatus.OK);
+		return new ResponseEntity<List<OrderImportDTO>>(orderImportDto, HttpStatus.OK);
+//		return new ResponseEntity<List<OrderImportEntity>>(orderImportEntity, HttpStatus.OK);
 	}
 
 	@Operation(summary = "Get Order import detail")
@@ -123,7 +123,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/imports/{importId}")
-	@PreAuthorize(" hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public ResponseEntity<?> getOrderImportDetail(@PathVariable int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
@@ -141,7 +141,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping("/imports/{importId}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public ResponseEntity<?> updateOrder(@RequestBody OrderImportDTO orderImportDto, @PathVariable(name = "importId") int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if(orderImport == null) {
@@ -165,7 +165,7 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/imports/{importId}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public ResponseEntity<?> deleteOrderImport (@PathVariable(name = "importId") int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if(orderImport == null) {

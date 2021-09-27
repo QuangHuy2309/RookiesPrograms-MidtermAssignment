@@ -4,6 +4,7 @@ import "./ModalEdtUser.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdModeEdit } from "react-icons/md";
+import { getCookie } from "../../../../Utils/Cookie";
 import {
   Button,
   Modal,
@@ -27,16 +28,21 @@ const ModalAdd = (props) => {
   const [addressError, setAddressError] = useState("");
   const [today, setToday] = useState("");
   const [gender, setGener] = useState(false);
-
+  const [roleUpdate, setRoleUpdate] = useState("");
+  const [visibleId, setShowId] = useState("");
+  const role = getCookie("role");
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
     if (modal) {
+      
       getWithAuth(`/persons/search/${id}`).then((response) => {
         if (response.status === 200) {
           // console.log(response.data);
           setUser(response.data);
           setGener(response.data.gender);
+          setRoleUpdate(response.data.role);
+          
         }
       });
       setNameError("");
@@ -93,23 +99,31 @@ const ModalAdd = (props) => {
         setGener(false);
       }
     }
+    // if (key === "role") {
+    //   if (e.target.value === "ADMIN") {
+    //     setRoleUpdate(e.target.value);
+    //   } else if (e.target.value === "EMP") {
+    //     setRoleUpdate(e.target.value);
+    //   }
+    // }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     const email = e.target.email.value.trim();
     const id = e.target.id.value.trim();
-
     checkEmailExist(email, id);
     if (checkEmail && checkName && addressError == "") {
       const body = JSON.stringify({
         id: e.target.id.value,
         fullname: e.target.fullname.value.trim(),
         email: e.target.email.value.trim(),
-        gender: e.target.radio.value,
+        gender: gender,
         dob: e.target.dob.value,
         phonenumber: e.target.phonenumber.value,
         address: e.target.address.value.trim(),
+        status: true,
+        role: "USER",
       });
       console.log(body);
       // console.log(e.target.dob.value);
@@ -157,30 +171,34 @@ const ModalAdd = (props) => {
           <MdModeEdit />
         </Button>
       ) : (
-        <p onClick={toggle} className="edtUser-text">
+        <p onClick={toggle} className={`${props.onUserSide} edtUser-text`}>
           Information{" "}
         </p>
       )}
 
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>
+        <ModalHeader toggle={toggle} className="title-UserAddAdmin">
           <MdModeEdit /> User Information
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
+              <FormGroup className={(role.includes("USER")) ? "visibleHide" : ""}>
+                <Label for="exampleEmail" className="titleTable-UserAdmin">
+                  ID
+                </Label>
+                <Input
+                  type="text"
+                  name="id"
+                  id="exampleEmail"
+                  value={user.id}
+                  required
+                  disabled
+                />
+              </FormGroup>
             <FormGroup>
-              <Label for="exampleEmail">ID</Label>
-              <Input
-                type="text"
-                name="id"
-                id="exampleEmail"
-                value={user.id}
-                required
-                disabled
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="exampleFullName">Name</Label>
+              <Label for="exampleFullName" className="titleTable-UserAdmin">
+                Name
+              </Label>
               <Input
                 type="text"
                 name="fullname"
@@ -192,7 +210,9 @@ const ModalAdd = (props) => {
               <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePrice">Email</Label>
+              <Label for="examplePrice" className="titleTable-UserAdmin">
+                Email
+              </Label>
               <Input
                 type="email"
                 name="email"
@@ -200,39 +220,44 @@ const ModalAdd = (props) => {
                 value={user.email}
                 required
                 onChange={(e) => handleFieldChange(e, "email")}
+                disabled
               />
               <div style={{ color: "red" }}>{emailError}</div>
             </FormGroup>
             <FormGroup tag="fieldset" className="radioGr-user">
-              <Label for="exampleQuantity">Gender</Label>
+              <Label for="exampleQuantity" className="titleTable-UserAdmin">
+                Gender
+              </Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input
                     type="radio"
-                    name="radio"
+                    name="gender"
                     value="false"
                     required
                     checked={!gender}
                     onChange={(e) => handleFieldChange(e, "genderMale")}
                   />{" "}
-                  MALE
+                  Male
                 </Label>
               </FormGroup>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input
                     type="radio"
-                    name="radio"
+                    name="gender"
                     value="true"
                     checked={gender}
                     onChange={(e) => handleFieldChange(e, "genderFemale")}
                   />{" "}
-                  FEMALE
+                  Female
                 </Label>
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand">Day of Birth</Label>
+              <Label for="exampleBrand" className="titleTable-UserAdmin">
+                Day of Birth
+              </Label>
               <Input
                 type="date"
                 name="dob"
@@ -243,8 +268,42 @@ const ModalAdd = (props) => {
                 onChange={(e) => handleFieldChange(e, "dob")}
               />
             </FormGroup>
+            {/* {((role.includes("ADMIN")) && (user.role === "ADMIN")) ? (
+              <FormGroup tag="fieldset" className="radioGr-user mb-2">
+                <Label for="exampleQuantity" className="titleTable-UserAdmin">
+                  Role
+                </Label>
+                <FormGroup check className="radioBtn-user">
+                  <Label check>
+                    <Input
+                      type="radio"
+                      name="role"
+                      value="ADMIN"
+                      checked={roleUpdate === "ADMIN"}
+                      required
+                      onChange={(e) => handleFieldChange(e, "role")}
+                    />{" "}
+                    Admin
+                  </Label>
+                </FormGroup>
+                <FormGroup check className="radioBtn-user">
+                  <Label check>
+                    <Input
+                      type="radio"
+                      name="radio"
+                      value="EMP"
+                      checked={roleUpdate === "EMP"}
+                      onChange={(e) => handleFieldChange(e, "role")}
+                    />{" "}
+                    Employee
+                  </Label>
+                </FormGroup>
+              </FormGroup>
+            ) : null} */}
             <FormGroup>
-              <Label for="exampleEmail">Phonenumber</Label>
+              <Label for="exampleEmail" className="titleTable-UserAdmin">
+                Phonenumber
+              </Label>
               <Input
                 type="text"
                 name="phonenumber"
@@ -257,7 +316,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleAddress">Address</Label>
+              <Label for="exampleAddress" className="titleTable-UserAdmin">
+                Address
+              </Label>
               <Input
                 type="text"
                 name="address"
@@ -269,7 +330,7 @@ const ModalAdd = (props) => {
               <div style={{ color: "red" }}>{addressError}</div>
             </FormGroup>
             <br />
-            <Button outline color="warning" type="submit">
+            <Button outline color="success" type="submit">
               <MdModeEdit /> Edit
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>

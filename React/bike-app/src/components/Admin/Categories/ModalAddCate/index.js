@@ -91,13 +91,13 @@ const ModalAdd = (props) => {
         </Button>
       </div>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>
+        <ModalHeader toggle={toggle} className="title-AddCategoryAdmin">
           <AiOutlineAppstoreAdd /> Cate Information
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleFullName">Name</Label>
+              <Label for="exampleFullName" className="titleTable-AdminCategory">Name</Label>
               <Input
                 type="text"
                 name="name"
@@ -108,7 +108,7 @@ const ModalAdd = (props) => {
               <div style={{ color: "red" }}>{nameError}</div>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleText">Description</Label>
+              <Label for="exampleText" className="titleTable-AdminCategory">Description</Label>
               <Input
                 type="textarea"
                 name="description"

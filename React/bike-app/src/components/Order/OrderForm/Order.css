@@ -1,57 +1,103 @@
-.login{
-    display: flex;
-    margin:3rem;
+.login {
+  display: flex;
+  margin: 3rem;
 }
-.login-form{
-    width: 70%;
-    margin: auto;
-    border: 1px solid #333;
-    border-width: medium;
-    padding: 2rem;
-    margin-bottom: 5rem;
+.login-form {
+  width: 70%;
+  margin: auto;
+  border: 1px solid #333;
+  border-width: medium;
+  padding: 2rem;
+  margin-bottom: 5rem;
 }
-.head-login{
-    margin-bottom: 3rem;
+.head-Order {
+  margin-bottom: 3rem;
+  color: black;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  text-shadow: -2px 1.8px #ff5200;
 }
-.input-login{
-    width: 12rem;
+.totalText-Order {
+  margin-bottom: 3rem;
+  color: black;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 1.8px #ff5200;
 }
-.img-order{
-    text-align: left;
-    height: 200px;
+.input-login {
+  width: 12rem;
 }
-.prod-form-orderUser{
-    border: 0.25px solid #333;
-    border-width: medium;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    text-align: left;
-    right: 3rem;
+.img-order {
+  text-align: left;
+  height: 200px;
 }
-.info-prod-order{
-    text-align: left;
+.prod-form-orderUser {
+  border: 0.25px solid #333;
+  border-width: medium;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  right: 3rem;
 }
-.quantity-prod{
-    width: 2rem;
+.info-prod-order {
+  text-align: left;
 }
-.order{
-    margin:1rem;
+.quantity-prod {
+  width: 2rem;
 }
-.btnDelProd{
-    text-align: right;
+.order {
+  margin: 1rem;
 }
-.priceCart{
-    margin-top: 3rem;
-    
+.btnDelProd {
+  text-align: right;
 }
-.priceTitle{
-    text-align: left;
+.priceCart {
+  margin-top: 3rem;
 }
-.priceTotal{
-    display: flex;
-
+.priceTitle {
+  text-align: left;
 }
-.priceNumTotal{
-    margin-left: 1rem;
+.priceTotal-Order {
+  display: flex;
+  justify-content: flex-start;
+}
+.labelText-Order {
+  font-size: 1.2rem;
+  font-weight: 550;
+  text-shadow: -2px 1.8px #b1e693;
+}
+.priceNumTotal {
+  margin-left: 1rem;
+  color: #ff3f00;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #b8dfd8;
+}
+.priceText-OrderForm {
+  margin-top: 1rem;
+  color: #ff3f00;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #b8dfd8;
+}
+.priceNum-OrderForm {
+    margin-top: 1rem;
     color: #ff3f00;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-shadow: -2px 2px #80ED99;
+  }
+.btnOrder-Order {
+  text-decoration: none;
+  width: 15rem;
+  line-height: 2.45 !important;
+  background-color: #ff3f00 !important;
+  border: none !important;
+  color: white !important;
+}
+.modalProd-Order {
+  font-size: 0.85rem;
 }

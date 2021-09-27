@@ -54,9 +54,9 @@ public class OrderControllerTest {
 	@WithMockUser(username = "admin", password = "123456", roles = "ADMIN") 
 	public void testGetOrder() throws Exception {
 		PersonEntity customers = new PersonEntity(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
-		OrderEntity order1 = new OrderEntity(1, 3.5, "A", 1, customers);
-		OrderEntity order2 = new OrderEntity(2, 3.5, "B", 1, customers);
-		OrderEntity order3 = new OrderEntity(3, 3.5, "C", 1, customers);
+		OrderEntity order1 = new OrderEntity(1,  "A", 1, customers);
+		OrderEntity order2 = new OrderEntity(2, "B", 1, customers);
+		OrderEntity order3 = new OrderEntity(3,  "C", 1, customers);
 		List<OrderEntity> listOrder = Arrays.asList(order1,order2,order3);
 		
 		Mockito.when(orderService.getOrderPage(Mockito.anyInt(), Mockito.anyInt()))
@@ -75,9 +75,9 @@ public class OrderControllerTest {
 	@Test
 	@WithMockUser(roles = "USER") 
 	public void createOrderTest() throws Exception {
-		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN");
-		OrderDTO orderDTO = new OrderDTO( 3.5, "ABC", 1,"lqhuy2309@gmail.com");
-		OrderEntity order = new OrderEntity(1, 3.5, "ABC", 1, new PersonEntity(customers));
+		PersonDTO customers = new PersonDTO(1,"lqhuy2309@gmail.com","123456","A","ADMIN", true);
+		OrderDTO orderDTO = new OrderDTO(  "ABC", 1,"lqhuy2309@gmail.com");
+		OrderEntity order = new OrderEntity(1,  "ABC", 1, new PersonEntity(customers));
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
 		Mockito.when(orderService.createOrder(Mockito.anyObject())).thenReturn(order);

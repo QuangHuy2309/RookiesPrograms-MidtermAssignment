@@ -1,13 +1,19 @@
-.title-user{
-    margin:2rem;
+.title-ProductAdmin {
+  margin: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #FFAAA5;
 }
-.btn-list{
-    /* display: flex; */
-    /* text-align: left; */
-    width: 100%;
-    margin: 1rem;
-    margin-left: 3rem;
+.titleTale-ProductAdmin{
+    font-weight: 600;
+  text-shadow: -2px 2px #FFAAA5;
 }
-.tableProd{
-    margin-left: 1rem;
+.btn-list {
+  /* display: flex; */
+  /* text-align: left; */
+  width: 100%;
+  margin: 1rem;
+  margin-left: 3rem;
+}
+.tableProd {
+  margin-left: 1rem;
 }

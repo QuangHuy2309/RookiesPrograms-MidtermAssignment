@@ -5,6 +5,7 @@ import ModalAdd from "./ModalAddCate"
 import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
+import "./Categories.css"
 import {
     Table,
   } from "reactstrap";
@@ -55,16 +56,16 @@ export default function Index() {
   }
   return (
     <div>
-      <h2 className="title-user">CATEGORIES MANAGER</h2>
+      <h2 className="title-category">CATEGORIES MANAGER</h2>
         <br/>
         <ModalAdd onAdd={(e) => handleAdd(e)}/>
       <Table bordered>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>DESCRIPTION</th>
-            <th></th>
+            <th className="titleTable-AdminCategory">ID</th>
+            <th className="titleTable-AdminCategory">NAME</th>
+            <th className="titleTable-AdminCategory">DESCRIPTION</th>
+            <th className="titleTable-AdminCategory">ACTION</th>
           </tr>
         </thead>
         <tbody>
@@ -73,7 +74,7 @@ export default function Index() {
               <th scope="row">{cate.id}</th>
               <td>{cate.name}</td>
               <td>{cate.description}</td>
-              <td style={{display:"flex", "text-align":"center"}}>
+              <td style={{display:"flex", "justify-content": "center"}}>
                 <ModalDeleteConfirm onChoice={(e) => handleDelete(e,cate.id)} />
                 {/* <Button color="danger" onClick={() => handleDelete(cate.id)}>
                   Delete

@@ -1,13 +1,19 @@
-.title-user{
-    margin:2rem;
+.title-UserAdmin {
+  margin: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #b1e693;
 }
-.btn-list{
-    text-align: left;
-    margin: 1rem;
+.btn-list {
+  text-align: left;
+  margin: 1rem;
 }
 .btn-list > Button {
-    margin-left: 2rem;
+  margin-left: 2rem;
 }
-.tableUser{
-    margin-left: 1rem;
+.tableUser {
+  margin-left: 1rem;
+}
+.titleTable-UserAdmin {
+  font-weight: 600;
+  text-shadow: -2px 2px #b1e693;
 }
