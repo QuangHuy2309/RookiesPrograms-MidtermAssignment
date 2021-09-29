@@ -13,15 +13,16 @@ import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
 
 @Repository
 public interface RateRepository extends JpaRepository<RateEntity, RateKey> {
-	List<RateEntity> findByIdProductId(String id);
+	List<RateEntity> findByIdProductIdAndCustomerStatusNot(String id, boolean status);
 
-	List<RateEntity> findByIdProductId(Pageable pageable, String id);
+	List<RateEntity> findByIdProductIdAndCustomerStatusNot(Pageable pageable, String id, boolean status);
 
-	int countByIdProductId(String id);
+	int countByIdProductIdAndCustomerStatusNot(String id, boolean status);
 
 	boolean existsById(RateKey id);
 
 	@Query("select count(o) from PersonEntity p , OrderEntity o , OrderDetailEntity o2, ProductEntity p2 \r\n"
-			+ "where p.id = o.customers.id and o2.id.orderId = o.id and o2.id.productId = p2.id and p2.id = ?1 and p.id = ?2")
+			+ "where p.id = o.customers.id and o2.id.orderId = o.id and o2.id.productId = p2.id and p.status != false "
+			+ "and p2.status != false and p2.id = ?1 and p.id = ?2")
 	int checkUserOrdered(String prodId, int customerId);
 }

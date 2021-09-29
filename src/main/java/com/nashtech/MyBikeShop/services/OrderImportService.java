@@ -14,6 +14,8 @@ public interface OrderImportService {
 	
 	public List<OrderImportEntity> getOrderImportPage(int num, int size);
 	
+	public List<OrderImportEntity> searchOrderImportByEmployee(String keyword);
+	
 	public OrderImportEntity findOrderImportById (int importId);
 	
 	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId);
@@ -21,6 +23,7 @@ public interface OrderImportService {
 	public boolean deleteOrderImport (int orderImportId);
 	
 	public float purchaseCostByMonth (int month, int year);
+	
 	
 	public long countTotal();
 	

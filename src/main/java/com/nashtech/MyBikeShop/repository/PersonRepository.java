@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 
 @Repository
@@ -27,6 +28,12 @@ public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
 	int countByRoleAndStatusNot(String role, boolean status);
 
 	int countByRoleNotAndStatusNot(String role, boolean status);
+	
+	@Query("SELECT p FROM PersonEntity p WHERE (UPPER(p.fullname) LIKE %?1%) and (p.role = ?2) and (p.status != false) ORDER BY p.id DESC")
+	List<PersonEntity> searchPerson(String keyword, String role);
+	
+	@Query("SELECT p FROM PersonEntity p WHERE (UPPER(p.fullname) LIKE %?1%) and (p.role != ?2) and (p.status != false) ORDER BY p.id DESC")
+	List<PersonEntity> searchPersonRoleNot(String keyword, String role);
 
 	@Transactional
 	@Modifying

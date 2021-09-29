@@ -55,6 +55,9 @@ public class ProductEntity {
 
 	@Column(name = "updatedate")
 	private LocalDateTime updateDate;
+	
+	@Column(name = "status")
+	private boolean status;
 
 	@Lob
 	@Type(type = "org.hibernate.type.BinaryType")
@@ -203,6 +206,14 @@ public class ProductEntity {
 		this.photo = photo;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
 	public CategoriesEntity getCategories() {
 		return categories;
 	}
@@ -218,8 +229,6 @@ public class ProductEntity {
 	public void setReviews(Set<RateEntity> reviews) {
 		this.reviews = reviews;
 	}
-	
-	
 	
 	public Set<OrderDetailEntity> getOrderDetails() {
 		return orderDetails;

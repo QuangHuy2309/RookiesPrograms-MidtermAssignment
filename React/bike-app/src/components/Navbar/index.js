@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import { Link, useHistory } from "react-router-dom";
-import { get } from "../../Utils/httpHelper";
+import { get, getWithAuth } from "../../Utils/httpHelper";
 import { getCookie } from "../../Utils/Cookie";
 import { logOut } from "../../Utils/Auth";
 import ModalConfirm from "../ModalConfirm";
@@ -56,11 +56,19 @@ export default function Index(props) {
   }, [status]);
 
   function handleLogOut(e) {
-    console.log("LOG OUT PRESS");
     if (e === "OK") {
-      setStatus(false);
-      history.push("/");
-      logOut();
+      getWithAuth("/auth/logout")
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("User logged out successfully!");
+            setStatus(false);
+            history.push("/");
+            logOut();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
   function handleOrder() {
@@ -94,7 +102,6 @@ export default function Index(props) {
                 "font-size": "1.45rem",
                 "-webkit-text-stroke": "0.125px #FF5C58",
               }}
-              
             >
               Hi, {name}
             </DropdownToggle>
@@ -126,7 +133,10 @@ export default function Index(props) {
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
-                <ModalConfirm onUserSide="onUserSide" onChoice={(e) => handleLogOut(e)} />
+                <ModalConfirm
+                  onUserSide="onUserSide"
+                  onChoice={(e) => handleLogOut(e)}
+                />
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -134,11 +144,17 @@ export default function Index(props) {
       );
     }
     return (
-      <Link to={`/Login`} style={{ textDecoration: "none",
-      color: "white",
-      "font-family": "'Barlow Condensed', sans-serif;",
-      "font-size": "1.45rem",
-      "-webkit-text-stroke": "0.125px #FF5C58", }} className="Nav-HomeBtn">
+      <Link
+        to={`/Login`}
+        style={{
+          textDecoration: "none",
+          color: "white",
+          "font-family": "'Barlow Condensed', sans-serif;",
+          "font-size": "1.45rem",
+          "-webkit-text-stroke": "0.125px #FF5C58",
+        }}
+        className="Nav-HomeBtn"
+      >
         Login
       </Link>
     );
@@ -215,7 +231,9 @@ export default function Index(props) {
                         {cate.name}
                       </Link>
                     </DropdownItem>
-                    {(index != (cateList.length - 1)) ? <DropdownItem divider /> : null}
+                    {index != cateList.length - 1 ? (
+                      <DropdownItem divider />
+                    ) : null}
                   </div>
                 ))}
               </DropdownMenu>

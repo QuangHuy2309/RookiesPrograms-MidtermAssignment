@@ -7,6 +7,7 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { GiDutchBike,GiTruck } from "react-icons/gi";
 import { BiUserPin } from "react-icons/bi";
 import { logOut } from "../../../Utils/Auth";
+import {  getWithAuth } from "../../../Utils/httpHelper";
 import { HiDatabase } from "react-icons/hi";
 import { AiFillDatabase, AiOutlineLineChart } from "react-icons/ai";
 import { MdBorderColor } from "react-icons/md";
@@ -21,8 +22,17 @@ export default function Index(props) {
   const role = getCookie("role");
   function handleLogOut(e) {
     if (e === "OK") {
-      logOut();
-      history.push("/");
+      getWithAuth("/auth/logout")
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("User logged out successfully!");
+            history.push("/");
+            logOut();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
   function handleUpdate(e) {}
@@ -54,7 +64,7 @@ export default function Index(props) {
           ORDER IMPORT
         </MenuItem>
         <MenuItem icon={<BiUserPin />} onClick={() => props.onChoice("USER")}>
-          USER MANAGER
+          CUSTOMER MANAGER
         </MenuItem>
         {role.includes("ADMIN") ? (
           <>

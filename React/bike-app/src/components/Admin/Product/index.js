@@ -32,8 +32,9 @@ export default function Index() {
   const [prodList, setProdList] = useState([]);
   const [dropdownOpen, setOpen] = useState(false);
   const [showPagination, setShowPage] = useState(true);
+  const [totalPage, setTotalPage] = useState(0);
+
   const size = 4;
-  let totalPage = useRef(0);
 
   const toggle = () => setOpen(!dropdownOpen);
 
@@ -45,15 +46,19 @@ export default function Index() {
     });
   }, []);
   useEffect(() => {
-    get(`/public/product/numTotal/${choice}`).then((response) => {
-      if (response.status === 200) {
-        totalPage.current = response.data;
-      }
-    });
+    getTotalProd();
   }, [choice]);
   useEffect(() => {
     getListProd();
   }, [choice, pagenum]);
+
+  function getTotalProd(){
+    get(`/public/product/numTotal/${choice}`).then((response) => {
+      if (response.status === 200) {
+        setTotalPage(response.data);
+      }
+    });
+  }
 
   function getUpdated(e) {
     if (e) getListProd();
@@ -78,6 +83,7 @@ export default function Index() {
               autoClose: 3000,
             });
             getListProd();
+            getTotalProd();
           }
         })
         .catch((error) => {
@@ -136,7 +142,7 @@ export default function Index() {
           </Col>
           <Col>
             <Input
-              type="email"
+              type="text"
               name="email"
               id="exampleEmail"
               required="required"
@@ -197,7 +203,7 @@ export default function Index() {
       </Table>
       {showPagination ? (
         <Page
-          total={Math.ceil(totalPage.current / size)}
+          total={Math.ceil(totalPage / size)}
           onPageChange={(e) => setPageNum(e)}
         />
       ) : null}

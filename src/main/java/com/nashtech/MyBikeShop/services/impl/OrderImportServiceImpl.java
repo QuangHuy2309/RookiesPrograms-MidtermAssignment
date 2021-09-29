@@ -63,6 +63,8 @@ public class OrderImportServiceImpl implements OrderImportService {
 		orderImport.setEmployee(employee);
 		return orderImport;
 	}
+	
+	
 
 	@Override
 	public OrderImportDTO convertToDto(OrderImportEntity orderImport) {
@@ -91,6 +93,10 @@ public class OrderImportServiceImpl implements OrderImportService {
 	@Override
 	public OrderImportEntity findOrderImportById(int importId) {
 		return orderImportRepo.findById(importId).orElse(null);
+	}
+	
+	public List<OrderImportEntity> searchOrderImportByEmployee(String keyword){
+		return orderImportRepo.searchImportByEmployee(keyword.toUpperCase());
 	}
 
 	private void changeProductQuantityByDetailList(Set<OrderImportDetailEntity> importDetailList, boolean isAdd) {

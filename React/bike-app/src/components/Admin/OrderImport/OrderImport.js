@@ -6,7 +6,7 @@ import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Col, Table, Button } from "reactstrap";
+import { Row, Col, Table, Button, Input } from "reactstrap";
 import "./OrderImport.css";
 import ModalAdd from "./ModalAddImport";
 import ModalEdt from "./ModalEdtImport";
@@ -17,6 +17,7 @@ export default function OrderImport() {
   const [orderList, setOrderList] = useState([]);
   const [prodList, setProdList] = useState([]);
   const [statusListProd, setStatusListProd] = useState(false);
+  const [showPagination, setShowPage] = useState(true);
   const size = 6;
   let totalPage = useRef(0);
   useEffect(() => {
@@ -140,6 +141,22 @@ export default function OrderImport() {
       ));
     }
   }
+  async function handleSearchChange(e) {
+    if (e.target.value.trim().length > 0) {
+      setOrderList([]);
+      getWithAuth(
+        `/imports/search/ImportByEmployee/${e.target.value.trim()}`
+      ).then((response) => {
+        if (response.status === 200) {
+          setOrderList([...response.data]);
+          setShowPage(false);
+        }
+      });
+    } else {
+      setShowPage(true);
+      getOrderImportList();
+    }
+  }
   function handleAdd(e) {
     if (e) getOrderImportList();
   }
@@ -149,7 +166,21 @@ export default function OrderImport() {
   return (
     <>
       <h2 className="title-OrderImport m-3">ORDER IMPORT MANAGER</h2>
+      <Row>
+      <Col className="col-7">
       <ModalAdd onAdd={(e) => handleAdd(e)} />
+      </Col>
+      <Col>
+            <Input
+              type="text"
+              name="name"
+              id="name"
+              className="search-OrderImport"
+              placeholder="Search Import by Employee's name"
+              onChange={(e) => handleSearchChange(e)}
+            />
+          </Col>
+      </Row>
       <Table bordered className="tableImport">
         <thead>
           <tr>
@@ -210,10 +241,12 @@ export default function OrderImport() {
           ))}
         </tbody>
       </Table>
-      <Page
-        total={Math.ceil(totalPage.current / size)}
-        onPageChange={(e) => setPageNum(e)}
-      />
+      {showPagination ? (
+        <Page
+          total={Math.ceil(totalPage.current / size)}
+          onPageChange={(e) => setPageNum(e)}
+        />
+      ) : null}
       {showList()}
     </>
   );

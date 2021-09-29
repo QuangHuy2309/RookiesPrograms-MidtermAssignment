@@ -1,4 +1,5 @@
 import { getCookie } from "./Cookie";
+import { getWithAuth } from "../Utils/httpHelper";
 
 export function isAdminLogin() {
   const status = getCookie("status");
@@ -37,4 +38,5 @@ export function logOut() {
   document.cookie = `role=; max-age=86400; path=/;`;
   document.cookie = `cart=; max-age=86400; path=/;`;
   document.cookie = `status=false; max-age=86400; path=/;`;
+ 
 }

@@ -8,6 +8,7 @@ import {
   DropdownItem,
   Row,
   Col,
+  Input,
 } from "reactstrap";
 import { getWithAuth, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
@@ -28,6 +29,8 @@ export default function Index() {
   const [userList, setUserList] = useState([]);
   const [dropdownOpen, setOpen] = useState(false);
   const [totalPage, setTotalPage] = useState(0);
+  const [showPagination, setShowPage] = useState(true);
+  const [search, setSearch] = useState("");
   const role = getCookie("role");
   const size = 4;
 
@@ -38,11 +41,20 @@ export default function Index() {
     //   }
     // });
     getListUser();
-  }, [choice, pagenum]);
+  }, [pagenum]);
+
   useEffect(() => {
     getTotalUser();
   }, [userList]);
 
+  useEffect(() => {
+    if (search === "") {
+      getListUser();
+      setShowPage(true);
+    } else {
+      getSearchStaffList(search, choice);
+    }
+  }, [choice]);
   const toggle = () => setOpen(!dropdownOpen);
 
   function getTotalUser() {
@@ -85,25 +97,60 @@ export default function Index() {
   }
 
   function handleUpdate(e) {
-    if (e) getListUser();
+    if (e) {
+      getListUser();
+      setSearch("");
+      setShowPage(true);
+    }
   }
   function handleAdd(e) {
-    if (e) getListUser();
+    if (e) {
+      getListUser();
+      setSearch("");
+      setShowPage(true);
+    }
   }
-
+  async function getSearchStaffList(keyword) {
+    setUserList([]);
+    if (choice === "EMPLOYEE") {
+      getWithAuth(`/persons/search/roleNot?keyword=${keyword}&role=USER`).then(
+        (response) => {
+          if (response.status === 200) {
+            setUserList([...response.data]);
+            setShowPage(false);
+          }
+        }
+      );
+    } else {
+      getWithAuth(`/persons/search?keyword=${keyword}&role=${choice}`).then(
+        (response) => {
+          if (response.status === 200) {
+            setUserList([...response.data]);
+            setShowPage(false);
+          }
+        }
+      );
+    }
+  }
+  async function handleSearchChange(e) {
+    setSearch(e.target.value.trim());
+    if (e.target.value.trim().length > 0) {
+      getSearchStaffList(e.target.value.trim());
+    } else {
+      setShowPage(true);
+      getListUser();
+    }
+  }
   return (
     <div>
-      <h2 className="title-UserAdmin">USER MANAGER</h2>
+      <h2 className="title-UserAdmin">EMPLOYEE MANAGER</h2>
       <Row className="">
         <Col className="col-7 btn-list-StaffPage">
-        <ModalAdd onAdd={(e) => handleAdd(e)} />
-        </Col>
-        <Col className="selectRole-StaffPage">
-          {<Label className={`statusChoiceText-Order `}>Role: </Label>}
+          <Label className={`statusChoiceText-Order `}>Role </Label>
           <ButtonDropdown
             isOpen={dropdownOpen}
             toggle={toggle}
-            className="ms-3"
+            className="me-5"
           >
             <DropdownToggle caret>{choice}</DropdownToggle>
             <DropdownMenu>
@@ -120,13 +167,25 @@ export default function Index() {
               </DropdownItem>
             </DropdownMenu>
           </ButtonDropdown>{" "}
+          <ModalAdd onAdd={(e) => handleAdd(e)} />
+        </Col>
+        <Col className="selectRole-StaffPage">
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            className="search-OrderImport"
+            placeholder="Search Customer by name"
+            value={search}
+            onChange={(e) => handleSearchChange(e)}
+          />
         </Col>
       </Row>
       <Table bordered className="tableUser">
         <thead>
           <tr>
             <th className="titleTable-UserAdmin">ID</th>
-            <th className="titleTable-UserAdmin">Name</th>
+            <th className="titleTable-UserAdmin">Fullname</th>
             <th className="titleTable-UserAdmin">Email</th>
             <th className="titleTable-UserAdmin">Day of Birth</th>
             <th className="titleTable-UserAdmin">Gender</th>
@@ -148,16 +207,9 @@ export default function Index() {
               <td>{user.phonenumber}</td>
               <td>{user.role}</td>
               <td>
-                {/* <Button color="danger" onClick={() => handleDelete(user.id)}>
-                  Delete
-                </Button> */}
                 <ModalDeleteConfirm
                   onChoice={(e) => handleDelete(e, user.id)}
                 />
-                {/* <Button color="warning" onClick={console.log("clicked")}>
-                  Edit
-                </Button> */}
-
                 <ModalEdtAdmin
                   id={user.id}
                   onEdit={(e) => handleUpdate(e)}
@@ -167,10 +219,12 @@ export default function Index() {
           ))}
         </tbody>
       </Table>
-      <Page
-        total={Math.ceil(totalPage / size)}
-        onPageChange={(e) => setPageNum(e)}
-      />
+      {showPagination ? (
+        <Page
+          total={Math.ceil(totalPage / size)}
+          onPageChange={(e) => setPageNum(e)}
+        />
+      ) : null}
     </div>
   );
 }

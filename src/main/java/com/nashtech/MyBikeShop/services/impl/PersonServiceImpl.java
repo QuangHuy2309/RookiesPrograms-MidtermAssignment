@@ -39,6 +39,14 @@ public class PersonServiceImpl implements PersonService {
 		return personRepository.findById(id);
 	}
 
+	public List<PersonEntity> searchPerson(String keyword, String role){
+		return personRepository.searchPerson(keyword.toUpperCase(), role);
+	}
+	
+	public List<PersonEntity> searchPersonRoleNot(String keyword, String role){
+		return personRepository.searchPersonRoleNot(keyword.toUpperCase(), role);
+	}
+	
 	public PersonEntity getPerson(String email) {
 		PersonEntity person = personRepository.findByEmail(email);
 		if (!person.isStatus()) throw new ObjectNotFoundException("This account had been disable");

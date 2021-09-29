@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDetailDTO;
 import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
@@ -55,13 +56,13 @@ public class OrderImportController {
 
 	@Autowired
 	PersonService personService;
-	
+
 	@GetMapping("/orderImport/totalOrder")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public long getNumberOfOrders() {
-		return  orderImportService.countTotal();
+		return orderImportService.countTotal();
 	}
-	
+
 	@Operation(summary = "Create Order import")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
@@ -90,11 +91,11 @@ public class OrderImportController {
 		}
 
 		orderImport.setOrderImportDetails(importDetailEntityList);
-		
-		OrderImportEntity orderImportCreated =  orderImportService.createOrderImport(orderImport);
-		
+
+		OrderImportEntity orderImportCreated = orderImportService.createOrderImport(orderImport);
+
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportCreated), HttpStatus.OK);
-		
+
 	}
 
 	@Operation(summary = "Get Order import")
@@ -115,6 +116,13 @@ public class OrderImportController {
 //		return new ResponseEntity<List<OrderImportEntity>>(orderImportEntity, HttpStatus.OK);
 	}
 
+	@GetMapping("/imports/search/ImportByEmployee/{keyword}")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<OrderImportDTO> searchOrderByCustomer(@PathVariable(name = "keyword") String keyword) {
+		return orderImportService.searchOrderImportByEmployee(keyword).stream().map(orderImportService::convertToDto)
+				.collect(Collectors.toList());
+	}
+
 	@Operation(summary = "Get Order import detail")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
@@ -133,49 +141,48 @@ public class OrderImportController {
 	}
 
 	@Operation(summary = "Update Order import")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping("/imports/{importId}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> updateOrder(@RequestBody OrderImportDTO orderImportDto, @PathVariable(name = "importId") int importId) {
+	public ResponseEntity<?> updateOrder(@RequestBody OrderImportDTO orderImportDto,
+			@PathVariable(name = "importId") int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
-		if(orderImport == null) {
+		if (orderImport == null) {
 			throw new ObjectNotFoundException("Order import not found!");
 		}
-		
+
 		OrderImportEntity orderImportUpdate = orderImportService.updateOrderImport(orderImportDto, importId);
 		if (orderImportUpdate == null) {
 			return ResponseEntity.internalServerError().body(new MessageResponse("Update order import fail!"));
 		}
-		
+
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportUpdate), HttpStatus.OK);
 	}
-	
+
 	@Operation(summary = "Delete Order import by ID")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
 			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/imports/{importId}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> deleteOrderImport (@PathVariable(name = "importId") int importId) {
+	public ResponseEntity<?> deleteOrderImport(@PathVariable(name = "importId") int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
-		if(orderImport == null) {
+		if (orderImport == null) {
 			throw new ObjectNotFoundException("Order import not found!");
 		}
-		if(orderImport.isStatus()) {
+		if (orderImport.isStatus()) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Import order is delivered. Cannot delete!"));
 		}
 		boolean result = orderImportService.deleteOrderImport(importId);
-		if(!result) {
+		if (!result) {
 			return ResponseEntity.internalServerError().body(new MessageResponse("Delete fail!"));
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);

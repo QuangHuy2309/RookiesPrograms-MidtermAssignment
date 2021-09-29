@@ -41,50 +41,49 @@ public class OrderController {
 
 	@Operation(summary = "Get total of Order")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
-			content = { @Content(mediaType = "application/json", 
-			schema = @Schema(implementation = OrderEntity.class))}),
-			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
-			content = @Content),
-			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
-			content = @Content),
-			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
-			content = @Content),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
-			content = @Content)
-	})
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = OrderEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/order/totalOrder")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public long getNumberOfOrders() {
-		return  orderService.countTotal();
+		return orderService.countTotal();
 	}
-	
+
 	@GetMapping("/order/totalOrderByUser/{email}")
 	@PreAuthorize("hasRole('USER')")
 	public long getNumberOfOrdersByUser(@PathVariable(name = "email") String email) {
-		return  orderService.countTotalOrderByUser(email);
+		return orderService.countTotalOrderByUser(email);
 	}
-	
+
 	@GetMapping("/order/totalOrderByStatus/{status}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public long getNumberOfOrdersByStatus(@PathVariable(name = "status") int status) {
-		return  orderService.countByStatus(status);
+		return orderService.countByStatus(status);
 	}
-	
+
+	@GetMapping("/order/search/OrderByCustomer")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<OrderDTO> searchOrderByCustomer(@RequestParam(name = "keyword") String keyword,
+			@RequestParam(name = "status", required = false) Integer status) {
+		if (status == null)
+			return orderService.searchOrderByCustomer(keyword).stream().map(orderService::convertToDTO)
+					.collect(Collectors.toList());
+		return orderService.searchOrderByStatusAndCustomer(keyword,status).stream().map(orderService::convertToDTO)
+				.collect(Collectors.toList());
+	}
+
 	@Operation(summary = "Find Order by ID")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "The request has succeeded", 
-			content = { @Content(mediaType = "application/json", 
-			schema = @Schema(implementation = OrderEntity.class))}),
-			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", 
-			content = @Content),
-			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", 
-			content = @Content),
-			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", 
-			content = @Content),
-			@ApiResponse(responseCode = "500", description = "Internal Server Error", 
-			content = @Content)
-	})
+			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = OrderEntity.class)) }),
+			@ApiResponse(responseCode = "401", description = "Unauthorized, Need to login first!", content = @Content),
+			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@GetMapping("/order/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
@@ -187,34 +186,38 @@ public class OrderController {
 	public List<OrderEntity> getOrder(@RequestParam(name = "pagenum") int page, @RequestParam(name = "size") int size) {
 		return orderService.getOrderPage(page, size);
 	}
-	
+
 	@GetMapping("/orderDTO")
 	public List<OrderDTO> getProductDTOPage(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "status", required = false) Integer status) {
 		if (status == null)
-		return orderService.getOrderPage(page, size).stream().map(orderService::convertToDTO)
-				.collect(Collectors.toList());
-		else return orderService.getOrderPageByStatus(page, size, status).stream().map(orderService::convertToDTO)
-				.collect(Collectors.toList());
+			return orderService.getOrderPage(page, size).stream().map(orderService::convertToDTO)
+					.collect(Collectors.toList());
+		else
+			return orderService.getOrderPageByStatus(page, size, status).stream().map(orderService::convertToDTO)
+					.collect(Collectors.toList());
 	}
-	
+
 	@PutMapping("/order/updateStatus/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public String updateStatusOrder(@PathVariable(name = "id") int id, @RequestParam(name = "status") int status) {
-		if (status <0 || status > 4) throw new WrongInputTypeException("Wrong status");
+		if (status < 0 || status > 4)
+			throw new WrongInputTypeException("Wrong status");
 		try {
-			String result = orderService.updateStatusOrder(id,status) ? StringUtils.TRUE : StringUtils.FALSE;
+			String result = orderService.updateStatusOrder(id, status) ? StringUtils.TRUE : StringUtils.FALSE;
 			return result;
 		} catch (NoSuchElementException ex) {
 			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
-	
+
 	@GetMapping("/order/report/profitByMonth")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public float getProfitByMonth(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year) {
-		if (month > 12 || month < 1) throw new ObjectPropertiesIllegalException("Month must from 1 to 12");
-		if (year == 0 || year < 2000) throw new ObjectPropertiesIllegalException("Year is invalid");
+		if (month > 12 || month < 1)
+			throw new ObjectPropertiesIllegalException("Month must from 1 to 12");
+		if (year == 0 || year < 2000)
+			throw new ObjectPropertiesIllegalException("Year is invalid");
 		return orderService.profitByMonth(month, year);
 	}
 }

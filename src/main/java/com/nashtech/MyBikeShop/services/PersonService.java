@@ -10,6 +10,10 @@ public interface PersonService {
 	public List<PersonEntity> retrievePersons();
 
 	public List<PersonEntity> getPersonsPage(int num, int size, String role);
+	
+	public List<PersonEntity> searchPerson(String keyword, String role);
+	
+	public List<PersonEntity> searchPersonRoleNot(String keyword, String role);
 
 	public Optional<PersonEntity> getPerson(int id);
 

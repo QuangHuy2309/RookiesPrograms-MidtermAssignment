@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	ModelMapper mapper;
-	
+
 	@Autowired
 	PersonService personService;
 
@@ -83,11 +83,21 @@ public class OrderServiceImpl implements OrderService {
 	public long countByStatus(int status) {
 		return orderRepository.countByStatus(status);
 	}
-	
+
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findByCustomersId(pageable, id);
+	}
+
+	public List<OrderEntity> searchOrderByCustomer(String keyword) {
+
+		return orderRepository.searchOrderByCustomer(keyword.toUpperCase());
+	}
+	
+	public List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status) {
+
+		return orderRepository.searchOrderByStatusAndCustomer(keyword.toUpperCase(),status);
 	}
 
 	public List<OrderEntity> getOrderPage(int num, int size) {
@@ -95,11 +105,13 @@ public class OrderServiceImpl implements OrderService {
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findAll(pageable).stream().collect(Collectors.toList());
 	}
-	public List<OrderEntity> getOrderPageByStatus(int num, int size, int status){
+
+	public List<OrderEntity> getOrderPageByStatus(int num, int size, int status) {
 		Sort sortable = Sort.by("timebought").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
 		return orderRepository.findByStatus(pageable, status);
 	}
+
 	public OrderDTO convertToDTO(OrderEntity order) {
 		OrderDTO orderDTO = mapper.map(order, OrderDTO.class);
 		double totalCost = 0;

@@ -40,7 +40,7 @@ public class RateServiceImpl implements RateService {
 	PersonRepository personRepo;
 
 	public List<RateEntity> getRateByProduct(String id) {
-		return rateRepo.findByIdProductId(id);
+		return rateRepo.findByIdProductIdAndCustomerStatusNot(id, false);
 	}
 
 	public boolean checkExist(RateKey id) {
@@ -62,7 +62,7 @@ public class RateServiceImpl implements RateService {
 	public List<RateEntity> getRateProductPage(String id, int pageNum, int size) {
 		Sort sortable = Sort.by("dateReview").descending();
 		Pageable pageable = PageRequest.of(pageNum, size, sortable);
-		return rateRepo.findByIdProductId(pageable, id);
+		return rateRepo.findByIdProductIdAndCustomerStatusNot(pageable, id, false);
 	}
 
 	public boolean deleteRate(RateKey id) {
@@ -94,11 +94,11 @@ public class RateServiceImpl implements RateService {
 	}
 
 	public int getNumRate(String id) {
-		return rateRepo.countByIdProductId(id);
+		return rateRepo.countByIdProductIdAndCustomerStatusNot(id, false);
 	}
 
 	public double getAverageRateNumByProduct(String id) {
-		List<RateEntity> list = rateRepo.findByIdProductId(id);
+		List<RateEntity> list = rateRepo.findByIdProductIdAndCustomerStatusNot(id, false);
 		OptionalDouble avg = list.stream().map(rate -> rate.getRateNum()).mapToDouble(a -> a).average();
 		return avg.isPresent() ? avg.getAsDouble() : 0.0;
 	}

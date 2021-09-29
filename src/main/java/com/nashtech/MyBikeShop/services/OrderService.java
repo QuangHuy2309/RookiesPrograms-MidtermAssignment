@@ -20,6 +20,10 @@ public interface OrderService {
 	public List<OrderEntity> getOrderPage(int num, int size);
 	
 	public List<OrderEntity> getOrderPageByStatus(int num, int size, int status);
+	
+	public List<OrderEntity> searchOrderByCustomer(String keyword);
+	
+	public List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status);
 
 	public OrderEntity createOrder(OrderDTO order);
 

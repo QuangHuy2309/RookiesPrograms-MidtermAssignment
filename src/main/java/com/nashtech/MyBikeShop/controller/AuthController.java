@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import com.nashtech.MyBikeShop.payload.response.MessageResponse;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.security.services.UserDetailsImpl;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -111,5 +113,14 @@ public class AuthController {
 	public boolean checkExistEmailSignUp(@PathVariable(name = "email") String email) {
 		return personRepository.existsByEmail(email.toLowerCase()) ? false : true;
 	}
-
+	@GetMapping("/auth/logout")
+    public ResponseEntity<?> logoutUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String jwt = JwtAuthTokenFilter.parseJwt(request);
+        if (jwt != null && jwtUtils.addToBlackList(jwt)){
+            return ResponseEntity.ok(new MessageResponse("User logged out successfully!"));
+        }
+        return ResponseEntity
+                .badRequest()
+                .body(new MessageResponse("Error: Cannot add jwt token to blacklist!"));
+    }
 }

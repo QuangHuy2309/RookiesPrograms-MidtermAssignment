@@ -32,7 +32,7 @@ const ModalConfirm = (props) => {
         <ModalBody>
           Are you sure to recovery data back to day {props.id}?
           <p className="attentionNote-ModalRestore mb-0">
-            All the data at the moment will disapear. Please remember to backup
+            All data will be lost. Remember to backup
             data before restore
           </p>
         </ModalBody>
@@ -40,7 +40,7 @@ const ModalConfirm = (props) => {
           <Button color="primary" onClick={() => btnClick("OK")}>
             Yes
           </Button>{" "}
-          <Button color="secondary" onClick={() => btnClick("Cancel")}>
+          <Button color="secondary" onClick={toggle}>
             No
           </Button>
         </ModalFooter>

@@ -157,7 +157,7 @@ const ModalExample = (props) => {
   }
   return (
     <div>
-      <div className="btn-modal">
+      <div className="btn-modal-AddImport">
         <Button color="info" onClick={toggle} className="btn-modal">
           <IoAddOutline /> Add new Import Order
         </Button>

@@ -54,6 +54,20 @@ public class PersonController {
 		return personService.getPersonsPage(page, size, role);
 	}
 
+	@GetMapping("/persons/search")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<PersonEntity> searchPersonbyRole(@RequestParam(name = "keyword") String keyword,
+			@RequestParam(name = "role") String role) {
+		return personService.searchPerson(keyword, role);
+	}
+	
+	@GetMapping("/persons/search/roleNot")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<PersonEntity> searchPersonbyRoleNot(@RequestParam(name = "keyword") String keyword,
+			@RequestParam(name = "role") String role) {
+		return personService.searchPersonRoleNot(keyword, role);
+	}
+
 	@Operation(summary = "Get Account Infomation by Id")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -104,7 +118,7 @@ public class PersonController {
 			return personService.deletePerson(id) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
 			return StringUtils.FALSE;
-		} 
+		}
 	}
 
 	@Operation(summary = "Update Account Infomation")

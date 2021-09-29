@@ -45,7 +45,7 @@ const ModalAdd = (props) => {
   }
   async function handleSubmit(e) {
     e.preventDefault();
-    const email = e.target.email.value.trim();
+    const email = e.target.email.value.trim().toLowerCase();
     const pass = e.target.password.value;
     checkRePass(pass);
     await checkExistEmail(email);
@@ -53,7 +53,7 @@ const ModalAdd = (props) => {
     if (check) {
       const body = JSON.stringify({
         fullname: e.target.fullname.value.trim(),
-        email: e.target.email.value.trim(),
+        email: e.target.email.value.trim().toLowerCase(),
         password: e.target.password.value,
         gender: e.target.radio.value,
         dob: e.target.dob.value,

@@ -11,21 +11,21 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, String> {
-	List<ProductEntity> findByCategoriesId(int id);
+	List<ProductEntity> findByCategoriesIdAndStatusNot(int id, boolean status);
 
-	List<ProductEntity> findByCategoriesId(Pageable pageable, int id);
+	List<ProductEntity> findByCategoriesIdAndStatusNot(Pageable pageable, int id, boolean status);
 
-	List<ProductEntity> findByNameIgnoreCase(String name);
+	List<ProductEntity> findByNameIgnoreCaseAndStatusNot(String name, boolean status);
 
-	List<ProductEntity> findByIdIgnoreCase(String name);
+	List<ProductEntity> findByIdIgnoreCaseAndStatusNot(String name, boolean status);
 
-	int countByCategoriesId(int id);
+	int countByCategoriesIdAndStatusNot(int id, boolean status);
 
-	boolean existsByName(String name);
+	boolean existsByNameAndStatusNot(String name, boolean status);
 
-	@Query("SELECT p FROM ProductEntity p WHERE UPPER(p.name) LIKE %?1% and (p.categories.id = ?2) ORDER BY p.updateDate DESC")
+	@Query("SELECT p FROM ProductEntity p WHERE UPPER(p.name) LIKE %?1% and (p.categories.id = ?2) and p.status != false ORDER BY p.updateDate DESC")
 	List<ProductEntity> searchProduct(String keyword, int type);
 	
-	@Query("SELECT p FROM ProductEntity p WHERE UPPER(p.name) LIKE %?1% ORDER BY p.updateDate DESC")
+	@Query("SELECT p FROM ProductEntity p WHERE UPPER(p.name) LIKE %?1% and p.status != false ORDER BY p.updateDate DESC")
 	List<ProductEntity> searchProduct(String keyword);
 }

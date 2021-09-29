@@ -25,7 +25,7 @@ export default function Index(props) {
   function handleSubmitLogin(e) {
     e.preventDefault();
     const body = JSON.stringify({
-      email: e.target.email.value.trim(),
+      email: e.target.email.value.trim().toLowerCase(),
       password: e.target.password.value,
     });
     postAuth("/auth/signin",body).then((response) => {

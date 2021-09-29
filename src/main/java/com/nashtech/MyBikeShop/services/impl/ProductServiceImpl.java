@@ -58,19 +58,19 @@ public class ProductServiceImpl implements ProductService {
 		return productDTO;
 	}
 	public List<ProductEntity> retrieveProductsByType(int categoriesId){
-		return productRepository.findByCategoriesId(categoriesId);
+		return productRepository.findByCategoriesIdAndStatusNot(categoriesId,false);
 	}
 
 	public List<ProductEntity> getProductPage(int page, int size, int categoriesId) {
 		Sort sortable = Sort.by("updateDate").descending();
 		Pageable pageable = PageRequest.of(page, size, sortable);
-		return productRepository.findByCategoriesId(pageable, categoriesId);
+		return productRepository.findByCategoriesIdAndStatusNot(pageable, categoriesId, false);
 	}
 
 	public List<ProductEntity> getNewestProductCategories(int categoriesId, int size) {
 		Sort sortable = Sort.by("updateDate").descending();
 		Pageable pageable = PageRequest.of(0, size, sortable);
-		return productRepository.findByCategoriesId(pageable, categoriesId);
+		return productRepository.findByCategoriesIdAndStatusNot(pageable, categoriesId, false);
 	}
 
 	public List<ProductEntity> getProductPageWithSort(int page, int size, int categoriesId, String sortType) {
@@ -78,11 +78,11 @@ public class ProductServiceImpl implements ProductService {
 		if (sortType.equalsIgnoreCase("ASC")) {
 			Sort sortable = Sort.by("price").ascending();
 			Pageable pageable = PageRequest.of(page, size, sortable);
-			return productRepository.findByCategoriesId(pageable, categoriesId);
+			return productRepository.findByCategoriesIdAndStatusNot(pageable, categoriesId, false);
 		} else {
 			Sort sortable = Sort.by("price").descending();
 			Pageable pageable = PageRequest.of(page, size, sortable);
-			return productRepository.findByCategoriesId(pageable, categoriesId);
+			return productRepository.findByCategoriesIdAndStatusNot(pageable, categoriesId,false);
 		}
 
 	}
@@ -115,6 +115,7 @@ public class ProductServiceImpl implements ProductService {
 				ProductEntity productEntity = new ProductEntity(productDTO, cate);
 				productEntity.setCreateDate(LocalDateTime.now());
 				productEntity.setUpdateDate(LocalDateTime.now());
+				productEntity.setStatus(true);
 				productEntity.setEmployeeUpdate(employee);
 				return productRepository.save(productEntity);
 			}
@@ -127,9 +128,11 @@ public class ProductServiceImpl implements ProductService {
 
 	public boolean deleteProduct(String id) {
 		ProductEntity prod = getProduct(id).get();
-		PersonEntity person = personService.getPerson(prod.getEmployeeUpdate().getId()).get();
-		person.getProduct().remove(prod);
-		productRepository.deleteById(id);
+//		PersonEntity person = personService.getPerson(prod.getEmployeeUpdate().getId()).get();
+//		person.getProduct().remove(prod);
+//		productRepository.deleteById(id);
+		prod.setStatus(false);
+		productRepository.save(prod);
 		return true;
 	}
 
@@ -140,6 +143,7 @@ public class ProductServiceImpl implements ProductService {
 			PersonEntity employee = personService.getPerson(email);
 			ProductEntity product = new ProductEntity(productDTO, cate);
 			product.setEmployeeUpdate(employee);
+			product.setStatus(true);
 			productRepository.save(updateDate(product));
 			return true;
 		} else
@@ -152,6 +156,9 @@ public class ProductServiceImpl implements ProductService {
 			if (product.getQuantity() - numberChange < 0) {
 				throw new ObjectPropertiesIllegalException("Quantity of Product is not enought");
 			}
+			else if (!product.isStatus()) {
+				throw new ObjectNotFoundException("Product not found with id "+id);
+			}
 			product.changeQuantity(numberChange);
 			// productRepository.save(updateDate(product));
 			return true;
@@ -162,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public List<ProductEntity> findProductByCategories(int id) {
-		return productRepository.findByCategoriesId(id);
+		return productRepository.findByCategoriesIdAndStatusNot(id,false);
 	}
 
 	public ProductEntity updateDate(ProductEntity product) {
@@ -171,11 +178,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public int getNumProductByCategories(int id) {
-		return productRepository.countByCategoriesId(id);
+		return productRepository.countByCategoriesIdAndStatusNot(id, false);
 	}
 
 	public boolean checkExistNameUpdate(String id, String name) {
-		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
+		List<ProductEntity> prodList = productRepository.findByNameIgnoreCaseAndStatusNot(name, false);
 		if (prodList.isEmpty())
 			return true;
 		else if ((prodList.size() > 1) || ((prodList.size() == 1) && (!prodList.get(0).getId().equalsIgnoreCase(id))))
@@ -185,12 +192,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean checkExistId(String id) {
-		List<ProductEntity> prodList = productRepository.findByIdIgnoreCase(id);
+		List<ProductEntity> prodList = productRepository.findByIdIgnoreCaseAndStatusNot(id, false);
 		return prodList.isEmpty();
 	}
 
 	public boolean checkExistName(String name) {
-		List<ProductEntity> prodList = productRepository.findByNameIgnoreCase(name);
+		List<ProductEntity> prodList = productRepository.findByNameIgnoreCaseAndStatusNot(name, false);
 		return prodList.isEmpty();
 	}
 

@@ -17,7 +17,8 @@ import {
   ButtonDropdown,
   DropdownToggle,
   Label,
-  Dropdown
+  Input,
+  Dropdown,
 } from "reactstrap";
 
 toast.configure();
@@ -30,6 +31,8 @@ export default function Order() {
   const [dropdownOpenChoiceState, setOpenChoiceState] = useState(false);
   const [choice, setChoice] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [search, setSearch] = useState("");
+  const [showPagination, setShowPage] = useState(true);
   const size = 6;
 
   const toggle = () => setOpen(!dropdownOpen);
@@ -47,10 +50,15 @@ export default function Order() {
   }, [pagenum]);
 
   useEffect(() => {
-    getListOrder();
+    if (search === "") {
+      getListOrder();
+      setShowPage(true);
+    } else {
+      getSearchOrderList(search, choice);
+    }
   }, [choice]);
 
-  function getTotalOrderByStatus(){
+  function getTotalOrderByStatus() {
     getWithAuth(`/order/totalOrderByStatus/${choice}`).then((response) => {
       if (response.status === 200) {
         setTotalPage(response.data);
@@ -59,18 +67,18 @@ export default function Order() {
   }
 
   function getListOrder() {
-    let status="";
-    if(choice > 0) {
-      status=choice;
+    let status = "";
+    if (choice > 0) {
+      status = choice;
       getTotalOrderByStatus();
     }
-    getWithAuth(`/orderDTO?pagenum=${pagenum}&size=${size}&status=${status}`).then(
-      (response) => {
-        if (response.status === 200) {
-          setOrderList([...response.data]);
-        }
+    getWithAuth(
+      `/orderDTO?pagenum=${pagenum}&size=${size}&status=${status}`
+    ).then((response) => {
+      if (response.status === 200) {
+        setOrderList([...response.data]);
       }
-    );
+    });
   }
 
   function getProd(id, ammount, unitPrice) {
@@ -94,26 +102,26 @@ export default function Order() {
     getProdList(index);
     setStatusListProd(true);
   }
-  function handleDelete(e, id) {
-    if (e === "OK") {
-      del(`/order/${id}`)
-        .then((response) => {
-          if (response.status === 200) {
-            toast.success("Delete successfully!!!", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-            });
-            getListOrder();
-          }
-        })
-        .catch((error) => {
-          toast.error(error, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-        });
-    }
-  }
+  // function handleDelete(e, id) {
+  //   if (e === "OK") {
+  //     del(`/order/${id}`)
+  //       .then((response) => {
+  //         if (response.status === 200) {
+  //           toast.success("Delete successfully!!!", {
+  //             position: toast.POSITION.TOP_RIGHT,
+  //             autoClose: 3000,
+  //           });
+  //           getListOrder();
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         toast.error(error, {
+  //           position: toast.POSITION.TOP_RIGHT,
+  //           autoClose: 3000,
+  //         });
+  //       });
+  //   }
+  // }
   function showList() {
     if (statusListProd) {
       return prodList.map((prod) => (
@@ -168,7 +176,29 @@ export default function Order() {
       }
     );
   }
-  function setTextStatusChoice(){
+  function getSearchOrderList(keyword, status) {
+    setOrderList([]);
+    getWithAuth(
+      `/order/search/OrderByCustomer?keyword=${keyword}&status=${status}`
+    ).then((response) => {
+      if (response.status === 200) {
+        setOrderList([...response.data]);
+        setShowPage(false);
+      }
+    });
+  }
+  async function handleSearchChange(e) {
+    setSearch(e.target.value.trim());
+    if (e.target.value.trim().length > 0) {
+      let status = choice;
+      if (choice == 0) status = "";
+      getSearchOrderList(e.target.value.trim(), status);
+    } else {
+      getListOrder();
+      setShowPage(true);
+    }
+  }
+  function setTextStatusChoice() {
     let statusText;
     let stateClass;
     switch (choice) {
@@ -193,7 +223,11 @@ export default function Order() {
         stateClass = "statusColorChoice-Canceled";
         break;
     }
-    return (<Label className={`statusChoiceText-Order ${stateClass}`}>{statusText}</Label>)
+    return (
+      <Label className={`statusChoiceText-Order ${stateClass}`}>
+        {statusText}
+      </Label>
+    );
   }
 
   function dropDownStatus(id, state) {
@@ -229,28 +263,41 @@ export default function Order() {
   return (
     <>
       <h2 className="title-OrderAdmin">ORDER MANAGER</h2>
-      <div className="statusChoice-Order">
-      <Dropdown
-        isOpen={dropdownOpenChoiceState}
-        toggle={toggleChoiceState}
-        
-      >
-        <DropdownToggle caret>Order Status</DropdownToggle>
-        <DropdownMenu>
-          <DropdownItem onClick={() => setChoice(0)}>All</DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem onClick={() => setChoice(1)}>In process</DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem onClick={() => setChoice(2)}>Delivering</DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem onClick={() => setChoice(3)}>Completed</DropdownItem>
-          <DropdownItem divider />
-          <DropdownItem onClick={() => setChoice(4)}>Canceled</DropdownItem>
-          
-        </DropdownMenu>
-      </Dropdown>{" "}
-      {setTextStatusChoice()}
-      </div>
+      <Row>
+        <Col className="col-7 statusChoice-Order">
+          <Dropdown isOpen={dropdownOpenChoiceState} toggle={toggleChoiceState}>
+            <DropdownToggle caret>Order Status</DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={() => setChoice(0)}>All</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={() => setChoice(1)}>
+                In process
+              </DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={() => setChoice(2)}>
+                Delivering
+              </DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={() => setChoice(3)}>
+                Completed
+              </DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={() => setChoice(4)}>Canceled</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>{" "}
+          {setTextStatusChoice()}
+        </Col>
+        <Col>
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Search Order by Customer's name"
+            value={search}
+            onChange={(e) => handleSearchChange(e)}
+          />
+        </Col>
+      </Row>
       <Table bordered className="tableOrder">
         <thead>
           <tr>
@@ -282,37 +329,17 @@ export default function Order() {
                   List Product
                 </Button>
               </td>
-              <td>
-                {/* {order.status ? (
-                  <Button
-                    color="success"
-                    onClick={() => handleDeliveryButton(order.id, index)}
-                  >
-                    Delivered
-                  </Button>
-                ) : (
-                  <Button
-                    color="warning"
-                    onClick={() => handleDeliveryButton(order.id, index)}
-                  >
-                    Not Delivery
-                  </Button>
-                )} */}
-                {dropDownStatus(order.id, order.status)}
-              </td>
-              {/* <td>
-                <ModalDeleteConfirm
-                  onChoice={(e) => handleDelete(e, order.id)}
-                />
-              </td> */}
+              <td>{dropDownStatus(order.id, order.status)}</td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <Page
-        total={Math.ceil(totalPage / size)}
-        onPageChange={(e) => setPageNum(e)}
-      />
+      {showPagination ? (
+        <Page
+          total={Math.ceil(totalPage / size)}
+          onPageChange={(e) => setPageNum(e)}
+        />
+      ) : null}
       {showList()}
     </>
   );

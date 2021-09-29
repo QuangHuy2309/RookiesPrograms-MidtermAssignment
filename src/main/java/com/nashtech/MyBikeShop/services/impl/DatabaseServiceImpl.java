@@ -174,7 +174,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderbill": {
-				StringBuilder sql = new StringBuilder("\\copy (select customerid,timebought,address,status from orderbill order by id)" + " to '"
+				StringBuilder sql = new StringBuilder("\\copy (select customerid,timebought,address,status from orderbill order by timebought)" + " to '"
 						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)

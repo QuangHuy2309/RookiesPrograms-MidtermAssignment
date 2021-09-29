@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table, Button } from "reactstrap";
+import { Table, Button, Row, Col, Input } from "reactstrap";
 import { getWithAuth, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./UserPage.css";
@@ -17,6 +17,7 @@ export default function Index() {
   const [pagenum, setPageNum] = useState(0);
   const [userList, setUserList] = useState([]);
   const role = getCookie("role");
+  const [showPagination, setShowPage] = useState(true);
   const size = 4;
   let totalPage = useRef(0);
 
@@ -76,24 +77,41 @@ export default function Index() {
   function handleAdd(e) {
     if (e) getListUser();
   }
-
+  async function handleSearchChange(e) {
+    if (e.target.value.trim().length > 0) {
+      setUserList([]);
+      getWithAuth(
+        `/persons/search?keyword=${e.target.value.trim()}&role=USER`
+      ).then((response) => {
+        if (response.status === 200) {
+          setUserList([...response.data]);
+          setShowPage(false);
+        }
+      });
+    } else {
+      setShowPage(true);
+      getListUser();
+    }
+  }
   return (
     <div>
-      <h2 className="title-UserAdmin">USER MANAGER</h2>
-      <div className="btn-list">
-        {/* <Button outline color="primary" onClick={() => setChoice("USER")}>
-          Customer List
-        </Button> */}
-        {/* {role.includes("ADMIN") ? (
-          <>
-          <Button outline color="primary" onClick={() => setChoice("ADMIN")}>
-            Employee List
-          </Button>
-          <ModalAdd onAdd={(e) => handleAdd(e)} />
-          </>
-        ) : null} */}
-        
-      </div>
+      <h2 className="title-UserAdmin">CUSTOMER MANAGER</h2>
+      <Row className="mb-3">
+        <Col className="col-7">
+          <div className="btn-list"> </div>
+        </Col>
+        <Col>
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            className="search-OrderImport"
+            placeholder="Search Customer by name"
+            onChange={(e) => handleSearchChange(e)}
+          />
+        </Col>
+      </Row>
+
       <Table bordered className="tableUser">
         <thead>
           <tr>
@@ -137,16 +155,18 @@ export default function Index() {
                   id={user.id}
                   onEdit={(e) => handleUpdate(e)}
                 ></ModalEdt>
-              {/* } */}
+                {/* } */}
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <Page
-        total={Math.ceil(totalPage.current / size)}
-        onPageChange={(e) => setPageNum(e)}
-      />
+      {showPagination ? (
+        <Page
+          total={Math.ceil(totalPage.current / size)}
+          onPageChange={(e) => setPageNum(e)}
+        />
+      ) : null}
     </div>
   );
 }

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { getWithAuth, del, post} from "../../../Utils/httpHelper";
+import React, { useState, useEffect, useRef } from "react";
+import { getWithAuth, del, post } from "../../../Utils/httpHelper";
 import { FcDataBackup } from "react-icons/fc";
 import "./Database.css";
 import { toast } from "react-toastify";
+import Page from "../../Pagination";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
 import ModalRestore from "./ModalRestore";
 import { Table, Button } from "reactstrap";
@@ -10,14 +11,21 @@ import { Table, Button } from "reactstrap";
 toast.configure();
 export default function Database() {
   const [fileNameList, setFileNameList] = useState([]);
+  const [pagenum, setPageNum] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const size = 4;
 
   useEffect(() => {
     getListFileName();
   }, []);
+
+
+
   function getListFileName() {
     getWithAuth("/db/getBackupFileName").then((response) => {
       if (response.status === 200) {
-        setFileNameList([...response.data]);
+        setFileNameList([...response.data.sort((a1, a2) => (a1.assetId < a2.assetId ? 1 : -1))]);
+        setTotalPage(response.data.length);
       }
     });
   }
@@ -66,7 +74,7 @@ export default function Database() {
         });
     }
   }
-  function handleRestoreClick(e,fileName){
+  function handleRestoreClick(e, fileName) {
     if (e) {
       post(`/db/import/${fileName}`)
         .then((response) => {
@@ -78,14 +86,30 @@ export default function Database() {
             });
         })
         .catch((error) => {
-        toast.error("Restore failed!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
+          toast.error("Restore failed!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+          console.log(error);
         });
-        console.log(error);
-      }
-        );
-    };
+    }
+  }
+  function pagingTable() {
+    let lastIndex = (pagenum+1) * size;
+    let startIndex = lastIndex - size;
+    let fileNamePaging = fileNameList.slice(startIndex,lastIndex);
+    return fileNamePaging.map((fileName, index) => (
+      <tr key={index}>
+        <td>{dateFormat(fileName)}</td>
+        <td style={{ display: "flex", "justify-content": "center" }}>
+          <ModalRestore
+            id={dateFormat(fileName)}
+            onChoice={(e) => handleRestoreClick(e, fileName)}
+          />
+          <ModalDeleteConfirm onChoice={(e) => handleDelete(e, fileName)} />
+        </td>
+      </tr>
+    ));
   }
   return (
     <div>
@@ -104,7 +128,7 @@ export default function Database() {
           </tr>
         </thead>
         <tbody>
-          {fileNameList.map((fileName, index) => (
+          {/* {fileNameList.map((fileName, index) => (
             <tr key={index}>
               <td>{dateFormat(fileName)}</td>
               <td style={{ display: "flex", "justify-content": "center" }}>
@@ -117,9 +141,14 @@ export default function Database() {
                 />
               </td>
             </tr>
-          ))}
+          ))} */}
+          {pagingTable()}
         </tbody>
       </Table>
+      <Page
+        total={Math.ceil(totalPage / size)}
+        onPageChange={(e) => setPageNum(e)}
+      />
     </div>
   );
 }
