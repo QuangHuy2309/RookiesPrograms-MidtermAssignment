@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Row, Col, Table, Button, Input } from "reactstrap";
 import "./OrderImport.css";
 import ModalAdd from "./ModalAddImport";
+import { getCookie } from "../../../Utils/Cookie";
 import ModalEdt from "./ModalEdtImport";
 
 toast.configure();
@@ -18,6 +19,7 @@ export default function OrderImport() {
   const [prodList, setProdList] = useState([]);
   const [statusListProd, setStatusListProd] = useState(false);
   const [showPagination, setShowPage] = useState(true);
+  const role = getCookie("role");
   const size = 6;
   let totalPage = useRef(0);
   useEffect(() => {
@@ -167,19 +169,19 @@ export default function OrderImport() {
     <>
       <h2 className="title-OrderImport m-3">ORDER IMPORT MANAGER</h2>
       <Row>
-      <Col className="col-7">
-      <ModalAdd onAdd={(e) => handleAdd(e)} />
-      </Col>
-      <Col>
-            <Input
-              type="text"
-              name="name"
-              id="name"
-              className="search-OrderImport"
-              placeholder="Search Import by Employee's name"
-              onChange={(e) => handleSearchChange(e)}
-            />
-          </Col>
+        <Col className="col-7">
+          <ModalAdd onAdd={(e) => handleAdd(e)} />
+        </Col>
+        <Col>
+          <Input
+            type="text"
+            name="name"
+            id="name"
+            className="search-OrderImport"
+            placeholder="Search Import by Employee's name"
+            onChange={(e) => handleSearchChange(e)}
+          />
+        </Col>
       </Row>
       <Table bordered className="tableImport">
         <thead>
@@ -190,8 +192,9 @@ export default function OrderImport() {
             <th className="titleTable-OrderImportAdmin">TIME IMPORT</th>
             <th className="titleTable-OrderImportAdmin">TOTAL PRICE</th>
             <th className="titleTable-OrderImportAdmin">PRODUCT</th>
-            <th className="titleTable-OrderImportAdmin">STATUS</th>
-            {/* <th></th> */}
+            {/* <th className="titleTable-OrderImportAdmin"></th> */}
+
+            {role.includes("ADMIN") ? <th className="titleTable-OrderImportAdmin">ACTION</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -213,30 +216,22 @@ export default function OrderImport() {
                   List Product
                 </Button>
               </td>
-              <td>
-                {/* {order.status ? ( */}
-                  <Button
-                    color="success"
-                    disabled="true"
-                    onClick={() => handleDeliveryButton(order.id, index)}
-                  >
-                    Completed
-                   </Button>
-                {/*) : (
-                  <ModalEdt id={order.id} onEdt={(e) => handleEdt(e)} />
-                    
-                )} */}
-              </td>
               {/* <td>
-                {order.status ? null : (
-                  <>
-                    <ModalDeleteConfirm
-                      disable={order.status}
-                      onChoice={(e) => handleDelete(e, order.id)}
-                    />
-                  </>
-                )}
+                <Button
+                  color="success"
+                  disabled="true"
+                  onClick={() => handleDeliveryButton(order.id, index)}
+                >
+                  Completed
+                </Button>
               </td> */}
+              {role.includes("ADMIN") ? (
+                <td>
+                  <ModalDeleteConfirm
+                    onChoice={(e) => handleDelete(e, order.id)}
+                  />
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>

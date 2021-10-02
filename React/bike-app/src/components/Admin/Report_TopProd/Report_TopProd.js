@@ -25,6 +25,7 @@ export default function Report() {
   const [topProd, setTopProd] = useState([]);
   const [prodTopShow, setProdTopShow] = useState([]);
   const [modal, setModal] = useState(false);
+  const [size, setSize] = useState(3);
   const toggle = () => setModal(!modal);
 
   const color = [
@@ -75,19 +76,23 @@ export default function Report() {
   //   getTopProd(year);
   // }, [selectedDate]);
   useEffect(() => {
+    showReport();
+  }, [topProd]);
+
+  useEffect(() => {
+    showReport();
+  }, [size]);
+
+  async function showReport() {
+    setProdTopShow([]);
+    setLabelColChart([]);
     topProd.map((prod, index) => {
-      if (index >= 0 && index < 5) {
-        // let prodShow = {
-        //   label: prod.name,
-        //   data: prod.totalsold,
-        //   backgroundColor: color[index],
-        //   borderColor: color[index],
-        // };
+      if (index >= 0 && index < size) {
         setProdTopShow((oldArr) => [...oldArr, `${prod.totalsold}`]);
-        setLabelColChart((oldArr) => [...oldArr, `Xe ${prod.name.slice(7)}`]);
+        setLabelColChart((oldArr) => [...oldArr, `${prod.id}`]);
       }
     });
-  }, [topProd]);
+  }
   function setDate() {
     let today = new Date();
     let dd = today.getDate();
@@ -156,48 +161,66 @@ export default function Report() {
   return (
     <div>
       <h2 className="title-Report">TOP PRODUCT OF MONTH</h2>
-      <Form onSubmit={(e) => handleSubmit(e)}>
-        <div className="selectDateDiv-TopProd">
-          <FormGroup>
-            <div className="datepicker">
-              <Label for="dateFromSelect" className="">
-                From Month
-              </Label>
-              <Input
-                type="month"
-                name="dateFromSelect"
-                id="dateFromSelect"
-                required="required"
-                max={today}
-              />
+      <Row>
+      <Col className="col-7 ">
+        <Form onSubmit={(e) => handleSubmit(e)}>
+          
+            <div className="selectDateDiv-TopProd">
+              <FormGroup>
+                <div className="datepicker">
+                  <Label for="dateFromSelect" className="">
+                    From Month
+                  </Label>
+                  <Input
+                    type="month"
+                    name="dateFromSelect"
+                    id="dateFromSelect"
+                    required="required"
+                    max={today}
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup>
+                <div className="datepicker">
+                  <Label for="dateToSelect" className="">
+                    From Month
+                  </Label>
+                  <Input
+                    type="month"
+                    name="dateToSelect"
+                    id="dateToSelect"
+                    required="required"
+                    max={today}
+                  />
+                </div>
+              </FormGroup>
+              <div className="btnDiv-TopProd">
+                <Button
+                  outline
+                  color="primary"
+                  type="submit"
+                  className="btn-TopProd"
+                >
+                  Submit
+                </Button>
+              </div>
             </div>
-          </FormGroup>
-          <FormGroup>
-            <div className="datepicker">
-              <Label for="dateToSelect" className="">
-                From Month
-              </Label>
-              <Input
-                type="month"
-                name="dateToSelect"
-                id="dateToSelect"
-                required="required"
-                max={today}
-              />
-            </div>
-          </FormGroup>
-          <div className="btnDiv-TopProd">
-            <Button
-              outline
-              color="primary"
-              type="submit"
-              className="btn-TopProd"
-            >
-              Submit
-            </Button>
-          </div>
-        </div>
-      </Form>
+
+        </Form>
+        </Col>
+        <Col className="divNumProd-ReportTopProd">
+          <Label className="me-3">Top: </Label>
+          <select
+            value={size}
+            className="selectNumProd-ReportTopProd"
+            onChange={(e) => setSize(e.target.value)}
+          >
+            {(topProd.length > 3) ? <option value={3}>3</option> : null}
+            {(topProd.length > 5) ? <option value={5}>5</option> : null}
+            <option value={topProd.length}>{topProd.length}</option>
+          </select>
+        </Col>
+      </Row>
       {/* <Col className="priceTotal">
                 <h4 className="priceTitle">Profit: </h4>
                 <h4 className="status-false">{numberFormat(profitNum)}</h4>
@@ -208,7 +231,7 @@ export default function Report() {
       </div>
       <Modal isOpen={modal} toggle={toggle} className="">
         <ModalHeader toggle={toggle} className="title-AddProductAdmin">
-          Product Details 
+          Product Details
         </ModalHeader>
         <ModalBody>
           <div className="titleProdSelect-ReportTopProd">

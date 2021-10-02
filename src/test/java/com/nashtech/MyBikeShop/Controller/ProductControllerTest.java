@@ -40,7 +40,7 @@ public class ProductControllerTest {
 	@Test
 	@WithMockUser(username = "admin", password = "123456", roles = "ADMIN") 
 	public void testCreateProd() throws Exception{
-		CategoriesEntity cate = new CategoriesEntity(1, "cate1", "cateDes");
+		CategoriesEntity cate = new CategoriesEntity(1, "cate1", "cateDes",true);
 		ProductEntity prod = new ProductEntity("a1","PRODUCT ENTITY",(float)6.5,4,cate);
 		ProductDTO prodDTO = new ProductDTO("a1DTO","PRODUCT DTO",(float)6.5,4,1,"A");
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();

@@ -40,3 +40,11 @@
   margin-bottom: 0;
   /* font-weight: 400; */
 }
+.selectNumProd-ReportTopProd{
+  width: 3rem;
+  text-align: right;
+  margin-top: 2rem;
+}
+.divNumProd-ReportTopProd{
+  text-align: right;
+}

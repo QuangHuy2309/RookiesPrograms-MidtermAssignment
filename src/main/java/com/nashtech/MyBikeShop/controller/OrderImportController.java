@@ -178,9 +178,9 @@ public class OrderImportController {
 		if (orderImport == null) {
 			throw new ObjectNotFoundException("Order import not found!");
 		}
-		if (orderImport.isStatus()) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Import order is delivered. Cannot delete!"));
-		}
+//		if (orderImport.isStatus()) {
+//			return ResponseEntity.badRequest().body(new MessageResponse("Import order is delivered. Cannot delete!"));
+//		}
 		boolean result = orderImportService.deleteOrderImport(importId);
 		if (!result) {
 			return ResponseEntity.internalServerError().body(new MessageResponse("Delete fail!"));

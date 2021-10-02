@@ -40,7 +40,7 @@ public class ProductServiceImplTest {
 	
 	@Test
 	public void testCreateProd() {
-		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
+		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1",true);
 		ProductEntity prod1 = new ProductEntity("ProdA", "Product A", (float) 3.45, 2, cate1);
 		ProductDTO prodDTO = new ProductDTO("1","NAME",3,3,1,"A");
 		//when(prodRepository.findById(Mockito.anyString())).thenReturn(null);

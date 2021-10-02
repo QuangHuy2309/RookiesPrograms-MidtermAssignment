@@ -27,6 +27,9 @@ public class CategoriesEntity {
 
 	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "status")
+	private boolean status;
 
 	@OneToMany(mappedBy = "categories", fetch = FetchType.EAGER)
 	@JsonIgnore
@@ -46,12 +49,15 @@ public class CategoriesEntity {
 		this.name = categories.getName();
 		this.description = categories.getDescription();
 	}
+	
+	
 
-	public CategoriesEntity(int id, String categoriesname, String description) {
+	public CategoriesEntity(int id, String categoriesname, String description, boolean status) {
 		super();
 		this.id = id;
 		this.name = categoriesname;
 		this.description = description;
+		this.status = status;
 	}
 
 	public int getId() {
@@ -81,6 +87,22 @@ public class CategoriesEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Collection<ProductEntity> getProduct() {
+		return product;
+	}
+
+	public void setProduct(Collection<ProductEntity> product) {
+		this.product = product;
 	}
 
 }

@@ -58,9 +58,9 @@ public class CategoriesServiceImplTest {
 	@Test
 	public void testRetrieveCategories() {
 		assertNotNull(categoriesRepo);
-		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
-		CategoriesEntity cate2 = new CategoriesEntity(1, "Cate 2", "This is categories number 2");
-		CategoriesEntity cate3 = new CategoriesEntity(1, "Cate 3", "This is categories number 3");
+		CategoriesEntity cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1", true);
+		CategoriesEntity cate2 = new CategoriesEntity(1, "Cate 2", "This is categories number 2", true);
+		CategoriesEntity cate3 = new CategoriesEntity(1, "Cate 3", "This is categories number 3", true);
 		List<CategoriesEntity> listCate = Arrays.asList(cate1, cate2, cate3);
 		List<CategoriesEntity> listCate2 = Arrays.asList(cate1, cate2, cate3);
 		when(categoriesRepo.findAll()).thenReturn(listCate);
@@ -71,10 +71,10 @@ public class CategoriesServiceImplTest {
 	public void testCreateCategories_WhenNameExisted() {
 		assertNotNull(categoriesRepo);
 		assertNotNull(categoriesService);
-		CategoriesEntity cate = new CategoriesEntity(1, "Cate 1", "This is categories number 1");
+		CategoriesEntity cate = new CategoriesEntity(1, "Cate 1", "This is categories number 1", true);
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
 		List<CategoriesEntity> list = Arrays.asList(cate);
-		when(categoriesRepo.findByNameIgnoreCase(Mockito.anyString())).thenReturn(list);
+		when(categoriesRepo.findByNameIgnoreCaseAndStatusNot(Mockito.anyString(),false)).thenReturn(list);
 		try {
 			assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
 		} catch (ObjectAlreadyExistException e) {
@@ -89,7 +89,7 @@ public class CategoriesServiceImplTest {
 		assertNotNull(categoriesRepo);
 		assertNotNull(categoriesService);
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepo.findByNameIgnoreCase(Mockito.anyString())).thenReturn(null);
+		when(categoriesRepo.findByNameIgnoreCaseAndStatusNot(Mockito.anyString(),false)).thenReturn(null);
 		
 		try {
 			System.out.println(categoriesService.createCategories(cateDTO));
