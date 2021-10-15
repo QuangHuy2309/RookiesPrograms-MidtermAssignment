@@ -16,14 +16,9 @@ const ModalConfirm = (props) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
-  // useEffect(() => {
-  //   if (modal) {
-  //   }
-  // }, [modal]);
 
   function btnClick(choice){
     toggle();
-    console.log(`clicked ${choice}`);
     props.onChoice(choice);
   }
   return (

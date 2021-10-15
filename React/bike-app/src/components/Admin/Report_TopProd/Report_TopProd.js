@@ -217,7 +217,7 @@ export default function Report() {
           >
             {(topProd.length > 3) ? <option value={3}>3</option> : null}
             {(topProd.length > 5) ? <option value={5}>5</option> : null}
-            <option value={topProd.length}>{topProd.length}</option>
+            <option value={topProd.length}>All</option>
           </select>
         </Col>
       </Row>

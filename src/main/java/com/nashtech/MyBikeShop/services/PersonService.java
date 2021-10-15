@@ -3,6 +3,8 @@ package com.nashtech.MyBikeShop.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import com.nashtech.MyBikeShop.DTO.PersonDTO;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 
@@ -30,4 +32,12 @@ public interface PersonService {
 	public boolean checkExistEmailUpdate(String email, int id);
 	
 	public PersonEntity changePassword(String email, String oldPassword, String newPassword);
+	
+	public PersonEntity forgotPassword(String email, String newPassword);
+	
+	public void sendOTPEmail(String email) throws MessagingException;
+	
+	public String createOTP();
+	
+	public boolean checkOTP(String email, String otp);
 }

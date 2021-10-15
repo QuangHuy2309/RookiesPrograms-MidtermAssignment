@@ -11,7 +11,7 @@
 .btnModalSignUp-login {
   display: flex;
   text-align: left;
-  
+  text-decoration: none !important;
 }
 .titleModalSignUp-login{
     font-family: "Barlow Condensed", sans-serif;

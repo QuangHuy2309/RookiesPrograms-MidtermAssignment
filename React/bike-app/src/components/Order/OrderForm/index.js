@@ -78,11 +78,6 @@ export default function Index() {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    // console.log(prodList[0].quantity);
-
-    // const {orderDetails} = toArr();
-
-    // console.log(objStr);
     if (nameError == "" && addressError == "") {
       const body = JSON.stringify({
         customersEmail: e.target.email.value,
@@ -92,32 +87,32 @@ export default function Index() {
         orderDetails: toArr(),
       });
       console.log(body);
-      post("/order", body)
-        .then((response) => {
-          if (response.status === 200) {
-            toast.success(
-              `Other Success! A confirmation email will send to your email`,
-              {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000,
-              }
-            );
-          }
-        })
-        .catch((error) => {
-          if (error.response.status === 400) {
-            toast.error(
-              `Sorry, we dont have enought for your quantity of product.`,
-              {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000,
-              }
-            );
-          }
-          console.log(error.response.status);
-        });
-      document.cookie = `cart=; max-age=86400; path=/;`;
-      history.push("/");
+      // post("/order", body)
+      //   .then((response) => {
+      //     if (response.status === 200) {
+      //       toast.success(
+      //         `Other Success! A confirmation email will send to your email`,
+      //         {
+      //           position: toast.POSITION.TOP_RIGHT,
+      //           autoClose: 3000,
+      //         }
+      //       );
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     if (error.response.status === 400) {
+      //       toast.error(
+      //         `Sorry, we dont have enought for your quantity of product.`,
+      //         {
+      //           position: toast.POSITION.TOP_RIGHT,
+      //           autoClose: 3000,
+      //         }
+      //       );
+      //     }
+      //     console.log(error.response.status);
+      //   });
+      // document.cookie = `cart=; max-age=86400; path=/;`;
+      // history.push("/");
     }
   }
   async function setCartCookie(list) {

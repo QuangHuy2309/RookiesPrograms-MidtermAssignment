@@ -2,6 +2,9 @@
   display: flex;
   margin: 3rem;
 }
+.displayflex{
+  display: flex;
+}
 .login-form-Login {
   width: 50%;
   margin: auto;
@@ -41,5 +44,11 @@
   height: 3px !important;
   background-color: #00EAD3;
   border: 0 none;
-  
+}
+.forgotPass-Login{
+  text-align: left;
+}
+.createAcc-Login{
+  text-align: right;
+  justify-content: flex-end;
 }

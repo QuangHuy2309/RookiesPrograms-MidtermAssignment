@@ -24,12 +24,23 @@ public class PersonDTO {
 	private String phonenumber;
 	private String role;
 	private boolean status;
-	PersonDTO(){}
-	
-	
-	
+
+	PersonDTO() {
+	}
+
+	public PersonDTO(int id, @NotBlank @Size(max = 50) @Email String email, @Size(min = 6, max = 40) String password,
+			@NotBlank String fullname, String role) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.fullname = fullname;
+		this.role = role;
+	}
+
 	public PersonDTO(int id, @NotBlank @Size(max = 50) @Email String email,
-			@NotBlank @Size(min = 6, max = 40) String password, @NotBlank String fullname, @NotBlank String role, boolean status) {
+			@NotBlank @Size(min = 6, max = 40) String password, @NotBlank String fullname, @NotBlank String role,
+			boolean status) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -38,8 +49,6 @@ public class PersonDTO {
 		this.role = role;
 		this.status = status;
 	}
-
-
 
 	public int getId() {
 		return id;
@@ -140,5 +149,5 @@ public class PersonDTO {
 				&& gender == other.gender && id == other.id && Objects.equals(password, other.password)
 				&& Objects.equals(phonenumber, other.phonenumber) && Objects.equals(role, other.role);
 	}
-	
+
 }

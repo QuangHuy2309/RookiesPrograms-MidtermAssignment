@@ -10,10 +10,20 @@
 .btn-list {
   /* display: flex; */
   /* text-align: left; */
-  width: 100%;
+  /* width: 100%; */
   margin: 1rem;
   margin-left: 3rem;
 }
+.titleControl-ProdAdmin {
+  /* margin-top: 1rem; */
+  width: 100%;
+}
 .tableProd {
   margin-left: 1rem;
+}
+.divTextAlignRight{
+  text-align: right;
+}
+.divTextAlignLeft{
+  text-align: left;
 }

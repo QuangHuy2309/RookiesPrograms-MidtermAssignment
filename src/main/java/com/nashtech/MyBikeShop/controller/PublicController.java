@@ -49,6 +49,8 @@ public class PublicController {
 	public List<CategoriesEntity> retrieveCategories() {
 		return cateService.retrieveCategories();
 	}
+	
+	
 
 	@Operation(summary = "Get all Product Infomation") // PRODUCT
 	@ApiResponses(value = {

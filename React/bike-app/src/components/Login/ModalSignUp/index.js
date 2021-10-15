@@ -3,6 +3,7 @@ import { postAuth, get } from "../../../Utils/httpHelper";
 import "./ModalSignUp.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Recaptcha from "react-recaptcha";
 import {
   Button,
   Modal,
@@ -26,6 +27,8 @@ const ModalAdd = (props) => {
   const [rePass, setRePass] = useState("");
   const [rePassError, setRePassError] = useState("");
   const [today, setToday] = useState("");
+  const [verify, setVerify] = useState(false);
+  const recaptchaRef = React.createRef();
   
   useEffect(() => {
     if (modal) {
@@ -38,9 +41,17 @@ const ModalAdd = (props) => {
       setRePass("");
     }
   }, [modal]);
-  async function checkRePass(pass){
-    if (pass !== rePass){
-      setRePassError("Please enter the same password as above")
+  async function checkRePass(pass) {
+    if (pass !== rePass) {
+      setRePassError("Please enter the same password as above");
+    }
+  }
+  function captchaCallback(){
+    console.log("Load ReCaptcha success");
+  }
+  function verifyCallback(response){
+    if (response){
+      setVerify(true);
     }
   }
   async function handleSubmit(e) {
@@ -49,7 +60,12 @@ const ModalAdd = (props) => {
     const pass = e.target.password.value;
     checkRePass(pass);
     await checkExistEmail(email);
-    const check = checkEmail && checkName && (rePassError == "") && (pass === rePass);
+    const check =
+      checkEmail &&
+      checkName &&
+      rePassError == "" &&
+      pass === rePass &&
+      verify;
     if (check) {
       const body = JSON.stringify({
         fullname: e.target.fullname.value.trim(),
@@ -63,19 +79,20 @@ const ModalAdd = (props) => {
         status: true,
       });
       console.log(body);
+
       // console.log(e.target.dob.value);
 
       postAuth("/auth/signup", body)
         .then((response) => {
           if (response.status === 200)
-            toast.success("SignUp success!!!", {
+            toast.success("Sign up success!!!", {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
-            toggle();
+          toggle();
         })
         .catch((error) => {
-          toast.error("SignUp failed!", {
+          toast.error("Sign up failed!", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
@@ -131,16 +148,23 @@ const ModalAdd = (props) => {
   }
 
   return (
-    <div>
+    <>
       <Button color="link" onClick={toggle} className="btnModalSignUp-login">
         Create an Account
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle} className="titleModalSignUp-login titleTextSignUp-login">User Information</ModalHeader>
+        <ModalHeader
+          toggle={toggle}
+          className="titleModalSignUp-login titleTextSignUp-login"
+        >
+          User Information
+        </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="exampleEmail" className="titleModalSignUp-login">Email</Label>
+              <Label for="exampleEmail" className="titleModalSignUp-login">
+                Email
+              </Label>
               <Input
                 type="email"
                 name="email"
@@ -153,7 +177,9 @@ const ModalAdd = (props) => {
               </div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword" className="titleModalSignUp-login">Password</Label>
+              <Label for="examplePassword" className="titleModalSignUp-login">
+                Password
+              </Label>
               <Input
                 type="password"
                 name="password"
@@ -163,7 +189,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleRePassword" className="titleModalSignUp-login">Confirm Password</Label>
+              <Label for="exampleRePassword" className="titleModalSignUp-login">
+                Confirm Password
+              </Label>
               <Input
                 type="password"
                 name="rePass"
@@ -178,7 +206,9 @@ const ModalAdd = (props) => {
               {rePassError}
             </div>
             <FormGroup>
-              <Label for="exampleFullname" className="titleModalSignUp-login">Name</Label>
+              <Label for="exampleFullname" className="titleModalSignUp-login">
+                Name
+              </Label>
               <Input
                 type="text"
                 name="fullname"
@@ -191,7 +221,9 @@ const ModalAdd = (props) => {
               </div>
             </FormGroup>
             <FormGroup tag="fieldset" className="radioGr-user">
-              <Label for="exampleQuantity" className="titleModalSignUp-login">Gender</Label>
+              <Label for="exampleQuantity" className="titleModalSignUp-login">
+                Gender
+              </Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="radio" value="false" required />{" "}
@@ -205,7 +237,9 @@ const ModalAdd = (props) => {
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand" className="titleModalSignUp-login">Day of Birth</Label>
+              <Label for="exampleBrand" className="titleModalSignUp-login">
+                Day of Birth
+              </Label>
               <Input
                 type="date"
                 name="dob"
@@ -215,7 +249,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="examplePhone" className="titleModalSignUp-login">Phonenumber</Label>
+              <Label for="examplePhone" className="titleModalSignUp-login">
+                Phonenumber
+              </Label>
               <Input
                 type="text"
                 name="phonenumber"
@@ -228,7 +264,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleAddress" className="titleModalSignUp-login">Address</Label>
+              <Label for="exampleAddress" className="titleModalSignUp-login">
+                Address
+              </Label>
               <Input
                 type="text"
                 name="address"
@@ -236,6 +274,17 @@ const ModalAdd = (props) => {
                 required="required"
               />
             </FormGroup>
+            <br />
+            <Recaptcha
+              sitekey="6LdgzbocAAAAAO_58KW6-5BbN0DKNj4uY89_CvWq"
+              render="explicit"
+              verifyCallback={verifyCallback}
+              onloadCallback={captchaCallback}
+              ref={recaptchaRef}
+              onExpired={() => {
+                recaptchaRef.current.reset(); // here
+              }}
+            />
             <br />
             <Button color="primary" type="submit">
               Sign Up
@@ -246,7 +295,7 @@ const ModalAdd = (props) => {
           </Form>
         </ModalBody>
       </Modal>
-    </div>
+    </>
   );
 };
 

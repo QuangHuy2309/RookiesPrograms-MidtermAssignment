@@ -1,0 +1,66 @@
+.btnModalForgotPass {
+  display: flex;
+  text-align: left;
+  text-decoration: none;
+  padding-left: 0;
+}
+.titleModalForgotPass-login {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 500;
+}
+.titleModalForgotPass-login {
+  font-weight: 600 !important;
+}
+.emailForgotPass {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.otpForgotPass {
+  display: flex;
+  margin-left: 3rem;
+}
+.inputOTP-ModalForgotPass {
+  width: 7rem !important;
+  margin-left: 1rem;
+}
+.forgotpass-form {
+  width: 50%;
+  margin: auto;
+  /* border-width: medium; */
+  padding: 2rem;
+  margin-bottom: 5rem;
+}
+.inputEmail-ForgetPass {
+  width: 30%;
+  margin-left: 3rem;
+}
+.inputEmail_ForgotPass {
+  display: flex;
+  justify-content: center;
+}
+.inputOTP_ForgotPass {
+  /* display: flex; */
+  /* justify-content: flex-start; */
+  margin-left: 4.5rem;
+}
+.btnSendOTP-ForgotPass {
+  /* align-content: flex-end; */
+  /* margin-bottom: 0; */
+  margin-top: 1rem;
+}
+.divBtnSendOTP-ForgotPass {
+  text-align: left;
+  justify-content: flex-start;
+}
+.error-ForgotPass {
+  color: red;
+  text-align: left;
+  margin-left: 12.5rem;
+}
+.display-none{
+  display: none;
+}
+.inputOTP-ForgotPassword{
+  width: 30% !important;
+}

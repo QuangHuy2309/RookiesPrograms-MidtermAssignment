@@ -43,13 +43,14 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	PersonService personService;
-
-	public ProductServiceImpl(ProductRepository productRepository) {
-		this.productRepository = productRepository;
+	
+	public ProductServiceImpl() {
+		super();
 	}
 
 	public List<ProductEntity> retrieveProducts() {
-		return productRepository.findAll();
+		Sort sortable = Sort.by("id").ascending();
+		return productRepository.findByStatusNotAndCategoriesStatusNot(sortable, false, false);
 	}
 
 	public ProductDTO convertToDTO(ProductEntity product) {

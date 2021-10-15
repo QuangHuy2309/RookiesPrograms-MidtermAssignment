@@ -4,13 +4,17 @@ import Page from "../../Pagination";
 import ModalEdt from "./ModalEdtProd";
 import ModalAdd from "./ModalAddProd";
 import ModalReview from "./ModalReview";
+import ModalSelectCateExport from "./ModalSelectCateExport";
 import { format } from "date-fns";
 import { IoReloadSharp } from "react-icons/io5";
 import { numberFormat } from "../../../Utils/ConvertToCurrency";
+import { convertBase64ToFile } from "../../../Utils/ConvertBase64ToFile";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineAppstore } from "react-icons/ai";
+import { getCookie } from "../../../Utils/Cookie";
+import ReactExport from "react-data-export";
 import "./Product.css";
 import {
   ButtonDropdown,
@@ -25,6 +29,8 @@ import {
 } from "reactstrap";
 
 toast.configure();
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ExcelFile.ExcelSheet;
 export default function Index() {
   const [choice, setChoice] = useState("1");
   const [pagenum, setPageNum] = useState(0);
@@ -33,8 +39,39 @@ export default function Index() {
   const [dropdownOpen, setOpen] = useState(false);
   const [showPagination, setShowPage] = useState(true);
   const [totalPage, setTotalPage] = useState(0);
-
+  const [prodReportList, setProdReport] = useState([]);
   const size = 4;
+  const role = getCookie("role");
+  const DataSet = [
+    {
+      columns: [
+        { title: "ID" },
+        { title: "Name" },
+        { title: "Price" },
+        { title: "Quantity" },
+        { title: "Description" },
+        { title: "Brand" },
+        // { title: "Photo" },
+        { title: "Create Date" },
+        { title: "Update Date" },
+        { title: "Update By" },
+        { title: "Category" },
+      ],
+      data: prodReportList.map((report) => [
+        { value: report.id },
+        { value: report.name },
+        { value: report.price },
+        { value: report.quantity },
+        { value: report.description },
+        { value: report.brand },
+        // { value: convertBase64ToFile(report.photo, report.id) },
+        { value: format(new Date(report.createDate), "dd/MM/yyyy HH:mm:ss") },
+        { value: format(new Date(report.updateDate), "dd/MM/yyyy HH:mm:ss") },
+        { value: report.employeeUpdate.fullname },
+        { value: report.categories.name },
+      ]),
+    },
+  ];
 
   const toggle = () => setOpen(!dropdownOpen);
 
@@ -44,6 +81,12 @@ export default function Index() {
         setCateList([...response.data]);
       }
     });
+    // get(`/public/product`).then((response) => {
+    //   if (response.status === 200) {
+    //     setProdReport([...response.data]);
+    //   }
+    // });
+    getListProdReport();
   }, []);
   useEffect(() => {
     getTotalProd();
@@ -52,18 +95,38 @@ export default function Index() {
     getListProd();
   }, [choice, pagenum]);
 
-  function getTotalProd(){
+  function getTotalProd() {
     get(`/public/product/numTotal/${choice}`).then((response) => {
       if (response.status === 200) {
         setTotalPage(response.data);
       }
     });
   }
+  // const convertBase64ToFile = function (image) {
+  //   if (image != null){
+  //   const byteString = atob(image.split(',')[1]);
+  //   const ab = new ArrayBuffer(byteString.length);
+  //   const ia = new Uint8Array(ab);
+  //   for (let i = 0; i < byteString.length; i += 1) {
+  //     ia[i] = byteString.charCodeAt(i);
+  //   }
+  //   const newBlob = new Blob([ab], {
+  //     type: 'image/jpeg',
+  //   });
+  //   return newBlob;
+  // }
+  // };
 
   function getUpdated(e) {
     if (e) getListProd();
   }
-
+  function getListProdReport() {
+    get(`/public/product`).then((response) => {
+      if (response.status === 200) {
+        setProdReport([...response.data]);
+      }
+    });
+  }
   function getListProd() {
     get(
       `/public/productDTO/page?pagenum=${pagenum}&size=${size}&type=${choice}`
@@ -106,7 +169,6 @@ export default function Index() {
         if (response.status === 200) {
           setProdList([...response.data]);
           setShowPage(false);
-          
         }
       });
     } else {
@@ -118,8 +180,8 @@ export default function Index() {
     <>
       <h2 className="title-ProductAdmin">PRODUCT MANAGER</h2>
       <div>
-        <Row>
-          <Col className="col-7 btn-list">
+        <Row className="mb-3">
+          <Col className="col-6 ms-5 divTextAlignLeft">
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
               <DropdownToggle caret>
                 <AiOutlineAppstore />
@@ -140,15 +202,31 @@ export default function Index() {
             </ButtonDropdown>{" "}
             <ModalAdd onAdd={(e) => handleAdd(e)} />
           </Col>
-          <Col>
+          <Col className="col-4 divTextAlign">
             <Input
               type="text"
               name="email"
               id="exampleEmail"
               required="required"
+              className="titleControl-ProdAdmin"
               placeholder="Search Product by name"
               onChange={(e) => handleSearchChange(e)}
             />
+          </Col>
+          <Col>
+            {role.includes("ADMIN") ? (
+              // <ExcelFile
+              //   filename={`ProductList`}
+              //   element={
+              //     <Button outline color="success">
+              //       Export
+              //     </Button>
+              //   }
+              // >
+              //   <ExcelSheet dataSet={DataSet} name="Report_Sheet" />
+              // </ExcelFile>
+              <ModalSelectCateExport/>
+            ) : null}
           </Col>
         </Row>
         {/* <Button outline color="link" onClick={() => getListProd()}>

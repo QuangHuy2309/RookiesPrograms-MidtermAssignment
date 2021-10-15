@@ -183,12 +183,12 @@ const ModalExample = (props) => {
                     ))}
                 </DropdownToggle>
                 <DropdownMenu>
-                  {cateList.map((cate) => (
+                  {cateList.map((cate,index) => (
                     <div key={cate.id}>
                       <DropdownItem onClick={() => setChoice(cate.id)}>
                         {cate.name}
                       </DropdownItem>
-                      <DropdownItem divider />
+                      {(index < (cateList.length - 1))? <DropdownItem divider /> : null}
                     </div>
                   ))}
                 </DropdownMenu>

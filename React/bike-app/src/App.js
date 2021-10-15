@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
+import ForgetPassword from "./components/Login/ModalForgotPass";
 import Admin from "./components/Admin";
 import Order from "./components/Order";
 import UserOrderHistory from "./components/UserOrderHistory/UserOrderHistory.js";
@@ -13,8 +14,11 @@ import { BrowserRouter, Route } from "react-router-dom";
 import React from "react";
 import PrivateRouteAdmin from "./components/PrivateRouteAdmin";
 import PrivateRouteUser from "./components/PrivateRouteUser";
+import { useEffect } from "react/cjs/react.development";
 
 function App() {
+  useEffect(() => {
+  },[]);
   return (
     <BrowserRouter>
       <div className="App">
@@ -37,8 +41,12 @@ function App() {
         </Route>
         <Route exact path="/Login">
           <Header />
-
           <Login />
+          <Footer />
+        </Route>
+        <Route exact path="/ForgetPassword">
+          <Header />
+          <ForgetPassword />
           <Footer />
         </Route>
         <PrivateRouteAdmin exact path="/Admin" component={Admin} />
