@@ -77,6 +77,13 @@ public class OrderDetailEntity {
 	public OrderDetailEntity() {
 	}
 
+	public OrderDetailEntity(OrderDetailsKey id, int ammount, double unitPrice) {
+		super();
+		this.id = id;
+		this.ammount = ammount;
+		this.unitPrice = unitPrice;
+	}
+
 	public OrderDetailEntity(OrderDetailsKey id, int ammount, double unitPrice, OrderEntity order, ProductEntity product) {
 		super();
 		this.id = id;

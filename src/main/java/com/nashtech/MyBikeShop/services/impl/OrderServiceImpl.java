@@ -58,6 +58,10 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
+	public OrderServiceImpl() {
+		super();
+	}
+
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
 	}
