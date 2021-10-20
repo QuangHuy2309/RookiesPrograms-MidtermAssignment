@@ -62,6 +62,17 @@ public class OrderServiceImpl implements OrderService {
 		super();
 	}
 
+	public OrderServiceImpl(OrderRepository orderRepository, ProductService productService, ModelMapper mapper,
+			PersonService personService, OrderDetailService orderDetailService, JavaMailSender javaMailSender) {
+		super();
+		this.orderRepository = orderRepository;
+		this.productService = productService;
+		this.mapper = mapper;
+		this.personService = personService;
+		this.orderDetailService = orderDetailService;
+		this.javaMailSender = javaMailSender;
+	}
+
 	public OrderServiceImpl(OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
 	}
@@ -98,10 +109,10 @@ public class OrderServiceImpl implements OrderService {
 
 		return orderRepository.searchOrderByCustomer(keyword.toUpperCase());
 	}
-	
+
 	public List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status) {
 
-		return orderRepository.searchOrderByStatusAndCustomer(keyword.toUpperCase(),status);
+		return orderRepository.searchOrderByStatusAndCustomer(keyword.toUpperCase(), status);
 	}
 
 	public List<OrderEntity> getOrderPage(int num, int size) {
