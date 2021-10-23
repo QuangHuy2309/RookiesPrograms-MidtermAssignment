@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { get, getWithAuth, post } from "../../../Utils/httpHelper";
 import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { getCookie } from "../../../Utils/Cookie";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Form, FormGroup, Label, Input, Row, Col } from "reactstrap";
@@ -44,6 +44,7 @@ export default function Index() {
       if (response.status === 200) {
         // console.log(response.data);
         let prod = response.data;
+        prod.description = prod.quantity;
         prod.quantity = prodDetail[1];
         setProdList((oldArr) => [...oldArr, prod]);
       }
@@ -124,6 +125,7 @@ export default function Index() {
   }
 
   async function handleProdFieldChange(e, key, index) {
+    if (e.target.value > 0 && e.target.value <= prodList[index].description ) {
     let list = [...prodList];
     let prod = { ...list[index] };
     prod.quantity = e.target.value;
@@ -132,8 +134,7 @@ export default function Index() {
     await setProdList(list);
     setCartCookie(list);
     getTotalPrice(list);
-    // setProdList({ [key]: e.target.value });
-    // prodList[index].quantity = e.target.value;
+    }
   }
   function handleUserFieldChange(e, key) {
     setUser({ [key]: e.target.value });
@@ -230,13 +231,29 @@ export default function Index() {
           {prodList.map((prod, index) => (
             <Row className="prod-form-orderUser" key={prod.id}>
               <Col className="col-3">
+              <Link
+                    to={`/prodDetail/${prod.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                    }}
+                  >
                 <img
                   src={`data:image/jpeg;base64,${prod.photo}`}
                   className="img-order"
                 />
+                </Link>
               </Col>
               <Col className="info-prod-order">
+              <Link
+                    to={`/prodDetail/${prod.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                    }}
+                  >
                 <h5>{prod.name}</h5>
+                </Link>
                 <p className="modalProd-Order">MODEL :: {prod.id}</p>
                 <Row>
                   <Col className="col-1">
@@ -250,6 +267,7 @@ export default function Index() {
                       min="1"
                       required
                       value={prod.quantity}
+                      max={prod.description}
                       onChange={(e) =>
                         handleProdFieldChange(e, "quantity", index)
                       }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./ModalCart.css";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getCookie } from "../../Utils/Cookie";
@@ -33,7 +33,7 @@ const ModalCart = (props) => {
     if (status === "true") setPopoverOpen(!popoverOpen);
   };
 
-  useEffect(async() => {
+  useEffect(async () => {
     if (popoverOpen) {
       await getProdList();
     }
@@ -41,7 +41,6 @@ const ModalCart = (props) => {
 
   useEffect(() => {
     getTotalPrice(prodList);
-    
   }, [prodList]);
 
   async function setCartCookie(list) {
@@ -54,7 +53,9 @@ const ModalCart = (props) => {
   }
   async function getTotalPrice(list) {
     let totalCost = 0;
-    list.map((prod) => {totalCost += prod.price * prod.quantity});
+    list.map((prod) => {
+      totalCost += prod.price * prod.quantity;
+    });
     setTotal(totalCost);
   }
   async function getProd(prod) {
@@ -63,13 +64,13 @@ const ModalCart = (props) => {
       if (response.status === 200) {
         // console.log(response.data);
         let prod = response.data;
+        prod.description = prod.quantity;
         prod.quantity = prodDetail[1];
         setProdList((oldArr) => [...oldArr, prod]);
       }
     });
   }
   async function getProdList() {
-
     let cartCookie = getCookie("cart");
     if (cartCookie.trim().length !== 0) {
       // history.push(`/Ordering`);
@@ -83,22 +84,24 @@ const ModalCart = (props) => {
       });
     }
   }
-  async function getCartSize(){
+  async function getCartSize() {
     let cartCookie = getCookie("cart");
     if (cartCookie.trim().length !== 0) {
       const list = getCookie("cart").split(" ");
       setCartSize(list.length);
-    } 
+    }
   }
   async function handleProdFieldChange(e, key, index) {
-    let list = [...prodList];
-    let prod = { ...list[index] };
-    prod.quantity = e.target.value;
-    list[index] = prod;
+    if (e.target.value > 0 && e.target.value <= prodList[index].description ) {
+      let list = [...prodList];
+      let prod = { ...list[index] };
+      prod.quantity = e.target.value;
+      list[index] = prod;
 
-    await setProdList(list);
-    setCartCookie(list);
-    getTotalPrice(list);
+      await setProdList(list);
+      setCartCookie(list);
+      getTotalPrice(list);
+    }
   }
   async function handleDelete(e, index) {
     if (e === "OK") {
@@ -110,13 +113,12 @@ const ModalCart = (props) => {
   }
   function handleOrder() {
     let cartCookie = getCookie("cart");
-    if (cartCookie.trim() != "")
-    history.push(`/Ordering`);
+    if (cartCookie.trim() != "") history.push(`/Ordering`);
   }
   return (
     <div>
-      <Button id="Popover1" type="button" color="link" >
-        <TiShoppingCart size={40} className="cartModal-Btn" /> 
+      <Button id="Popover1" type="button" color="link">
+        <TiShoppingCart size={40} className="cartModal-Btn" />
       </Button>
       <Popover
         placement="left-end"
@@ -129,13 +131,29 @@ const ModalCart = (props) => {
             <div key={index}>
               <Row className="cart-form" key={prod.id}>
                 <Col className="col-4">
-                  <img
-                    src={`data:image/jpeg;base64,${prod.photo}`}
-                    className="img-cart"
-                  />
+                  <Link
+                    to={`/prodDetail/${prod.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                    }}
+                  >
+                    <img
+                      src={`data:image/jpeg;base64,${prod.photo}`}
+                      className="img-cart"
+                    />
+                  </Link>
                 </Col>
                 <Col className="infoCart">
-                  <h6>{prod.name}</h6>
+                  <Link
+                    to={`/prodDetail/${prod.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                    }}
+                  >
+                    <h6>{prod.name}</h6>
+                  </Link>
                   <Row>
                     <Col className="col-7">
                       <Label for="exampleQuantity">Qty</Label>
@@ -149,6 +167,7 @@ const ModalCart = (props) => {
                           min="1"
                           required
                           value={prod.quantity}
+                          max={prod.description}
                           onChange={(e) =>
                             handleProdFieldChange(e, "quantity", index)
                           }
@@ -159,13 +178,13 @@ const ModalCart = (props) => {
                       </Col>
                       <Row className="priceCart">
                         <Col className="col-3">
-                        <Label>Price </Label>
+                          <Label>Price </Label>
                         </Col>
                         <Col>
-                        <Label for="exampleQuantity" className="priceNum">
-                          {" "}
-                          {numberFormat(prod.quantity * prod.price)}
-                        </Label>
+                          <Label for="exampleQuantity" className="priceNum">
+                            {" "}
+                            {numberFormat(prod.quantity * prod.price)}
+                          </Label>
                         </Col>
                       </Row>
                     </Row>
@@ -177,12 +196,12 @@ const ModalCart = (props) => {
           ))}
           <Row>
             <Col>
-            <Button outline color="primary" onClick={() => handleOrder()}>
-            Order
-          </Button>
+              <Button outline color="primary" onClick={() => handleOrder()}>
+                Order
+              </Button>
             </Col>
             <Col class="totalCost">
-            <p>{numberFormat(total)}</p>
+              <p>{numberFormat(total)}</p>
             </Col>
           </Row>
         </PopoverBody>
