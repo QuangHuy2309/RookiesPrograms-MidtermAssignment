@@ -80,7 +80,12 @@ public class OrderImportDetailEntity {
 	public OrderImportDetailEntity() {
 	}
 
-
+	public OrderImportDetailEntity(OrderImportDetailsKey id, int ammount, Float price) {
+		super();
+		this.id = id;
+		this.ammount = ammount;
+		this.price = price;
+	}
 
 	public OrderImportDetailEntity(OrderImportDetailsKey id, int ammount, Float price, OrderImportEntity order,
 			ProductEntity product) {

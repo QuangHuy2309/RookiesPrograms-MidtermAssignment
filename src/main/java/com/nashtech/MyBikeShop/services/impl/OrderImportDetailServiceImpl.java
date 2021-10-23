@@ -28,6 +28,10 @@ public class OrderImportDetailServiceImpl implements OrderImportDetailService {
 	@Autowired
 	OrderImportService importService;
 
+	public OrderImportDetailServiceImpl() {
+		super();
+	}
+
 	@Override
 	public OrderImportDetailEntity convertToEntity(OrderImportDetailDTO orderImportDetailDto) {
 		OrderImportDetailEntity importDetail = mapper.map(orderImportDetailDto, OrderImportDetailEntity.class);

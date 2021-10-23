@@ -25,13 +25,16 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 	@Autowired
 	ProductService productService;
 
+	public OrderDetailServiceImpl() {
+		super();
+	}
+
 	public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepo) {
 		this.orderDetailRepo = orderDetailRepo;
 	}
 
 	public List<OrderDetailEntity> retrieveOrders() {
 		return orderDetailRepo.findAll();
-
 	}
 
 	public Set<OrderDetailEntity> getDetailOrderByOrderId(int id) {
@@ -52,7 +55,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		int orderId = orderDetailEntity.getId().getOrderId();
 		OrderEntity orderEntity = orderService.getOrders(orderId).get();
 		if (orderEntity.getStatus() != 4) { // False = Not delivery yet
-			boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
+			boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
 					orderDetailEntity.getAmmount());
 			if (!result)
 				return false;
@@ -61,22 +64,22 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 		orderDetailRepo.delete(orderDetailEntity);
 		return true;
 	}
-	
+
 	@Transactional
 	public boolean updateDetailCancel(OrderDetailEntity orderDetailEntity) {
-			boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
-					orderDetailEntity.getAmmount());
-			if (!result)
-				return false;
+		boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
+				orderDetailEntity.getAmmount());
+		if (!result)
+			return false;
 		return true;
 	}
-	
+
 	@Transactional
 	public boolean updateDetail(OrderDetailEntity orderDetailEntity) {
-			boolean result = productService.updateProductQuantity(orderDetailEntity.getProduct().getId(),
-					orderDetailEntity.getAmmount()*(-1));
-			if (!result)
-				return false;
+		boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
+				orderDetailEntity.getAmmount() * (-1));
+		if (!result)
+			return false;
 		return true;
 	}
 }

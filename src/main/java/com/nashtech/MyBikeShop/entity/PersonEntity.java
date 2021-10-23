@@ -50,18 +50,18 @@ public class PersonEntity {
 
 	@Column(name = "role")
 	private String role;
-	
+
 	@Column(name = "status")
 	private boolean status;
 
 	@OneToMany(mappedBy = "customers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<OrderEntity> orders;
-	
+
 	@OneToMany(mappedBy = "employee", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<OrderImportEntity> ordersImport;
-	
+
 	@OneToMany(mappedBy = "employeeUpdate", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<ProductEntity> product;
@@ -207,12 +207,6 @@ public class PersonEntity {
 
 	public void setProduct(Set<ProductEntity> product) {
 		this.product = product;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(address, dob, email, fullname, gender, id, orders, ordersImport, password, phonenumber,
-				product, reviews, role, status);
 	}
 
 	@Override

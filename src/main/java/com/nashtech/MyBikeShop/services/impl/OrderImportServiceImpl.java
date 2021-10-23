@@ -42,10 +42,14 @@ public class OrderImportServiceImpl implements OrderImportService {
 	@Autowired
 	OrderImportDetailService orderImportDetailService;
 
+	public OrderImportServiceImpl() {
+		super();
+	}
+
 	public long countTotal() {
 		return orderImportRepo.count();
-		}
-	
+	}
+
 	@Override
 	@Transactional
 	public OrderImportEntity createOrderImport(OrderImportEntity orderImport) {
@@ -63,8 +67,6 @@ public class OrderImportServiceImpl implements OrderImportService {
 		orderImport.setEmployee(employee);
 		return orderImport;
 	}
-	
-	
 
 	@Override
 	public OrderImportDTO convertToDto(OrderImportEntity orderImport) {
@@ -94,14 +96,14 @@ public class OrderImportServiceImpl implements OrderImportService {
 	public OrderImportEntity findOrderImportById(int importId) {
 		return orderImportRepo.findById(importId).orElse(null);
 	}
-	
-	public List<OrderImportEntity> searchOrderImportByEmployee(String keyword){
+
+	public List<OrderImportEntity> searchOrderImportByEmployee(String keyword) {
 		return orderImportRepo.searchImportByEmployee(keyword.toUpperCase());
 	}
 
 	private void changeProductQuantityByDetailList(Set<OrderImportDetailEntity> importDetailList, boolean isAdd) {
 		for (OrderImportDetailEntity importDetail : importDetailList) {
-			ProductEntity product = productService.getProduct(importDetail.getProduct().getId()).orElse(null);
+			ProductEntity product = productService.getProduct(importDetail.getId().getProductId()).orElse(null);
 			int productNewQuantity = product.getQuantity();
 			if (isAdd) {
 				productNewQuantity += importDetail.getAmmount();
@@ -118,22 +120,22 @@ public class OrderImportServiceImpl implements OrderImportService {
 	@Transactional
 	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId) {
 		OrderImportEntity orderImport = findOrderImportById(orderImportId);
-		
-		if(!orderImport.isStatus()&&orderImportDto.isStatus()) {
+
+		if (!orderImport.isStatus() && orderImportDto.isStatus()) {
 			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true);
 		}
-		
+
 		orderImport.setStatus(true);
-		
+
 		return orderImportRepo.save(orderImport);
 	}
 
 	@Override
 	public boolean deleteOrderImport(int orderImportId) {
-		
+
 		return orderImportRepo.findById(orderImportId).map(order -> {
 			for (OrderImportDetailEntity detail : order.getOrderImportDetails()) {
-				productService.updateProductQuantity(detail.getProduct().getId(), detail.getAmmount()*(-1));
+				productService.updateProductQuantity(detail.getId().getProductId(), detail.getAmmount() * (-1));
 			}
 			PersonEntity person = personService.getPerson(order.getEmployee().getId()).get();
 			person.getOrdersImport().remove(order);
@@ -144,8 +146,9 @@ public class OrderImportServiceImpl implements OrderImportService {
 
 	@Override
 	public float purchaseCostByMonth(int month, int year) {
-		Float result= orderImportRepo.purchaseCostByMonth(month, year);
-		if (result == null) result = (float) 0;
+		Float result = orderImportRepo.purchaseCostByMonth(month, year);
+		if (result == null)
+			result = (float) 0;
 		return result;
 	}
 

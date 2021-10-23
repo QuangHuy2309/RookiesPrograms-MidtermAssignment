@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.entity;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -46,7 +47,14 @@ public class OrderImportEntity {
 		super();
 	}
 
-
+	public OrderImportEntity(int id, boolean status, PersonEntity employee,
+			Set<OrderImportDetailEntity> orderImportDetails) {
+		super();
+		this.id = id;
+		this.status = status;
+		this.employee = employee;
+		this.orderImportDetails = orderImportDetails;
+	}
 
 	public OrderImportEntity(int id, LocalDateTime timeimport, boolean status, PersonEntity employee,
 			Set<OrderImportDetailEntity> orderDetails) {
@@ -58,8 +66,6 @@ public class OrderImportEntity {
 		this.employee = employee;
 		this.orderImportDetails = orderDetails;
 	}
-
-
 
 	public OrderImportEntity(OrderImportDTO order) {
 		super();
@@ -79,8 +85,6 @@ public class OrderImportEntity {
 	public LocalDateTime getTimeimport() {
 		return timeimport;
 	}
-
-
 
 	public void setTimeimport(LocalDateTime timeimport) {
 		this.timeimport = timeimport;
@@ -117,10 +121,27 @@ public class OrderImportEntity {
 		return orderImportDetails;
 	}
 
-
-
 	public void setOrderImportDetails(Set<OrderImportDetailEntity> orderImportDetails) {
 		this.orderImportDetails = orderImportDetails;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(employee, id, orderImportDetails, status, timeimport);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrderImportEntity other = (OrderImportEntity) obj;
+		return Objects.equals(employee, other.employee) && id == other.id
+				&& Objects.equals(orderImportDetails, other.orderImportDetails) && status == other.status
+				&& Objects.equals(timeimport, other.timeimport);
 	}
 
 }
