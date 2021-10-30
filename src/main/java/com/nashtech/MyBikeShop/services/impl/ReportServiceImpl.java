@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.nashtech.MyBikeShop.DTO.ReportProdProcess;
 import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
 import com.nashtech.MyBikeShop.services.OrderImportService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ReportService;
+import com.nashtech.MyBikeShop.services.impl.reportMapper.ReportProductProcessMapper;
 import com.nashtech.MyBikeShop.services.impl.reportMapper.ReportTopProductMapper;
 
 @Service
@@ -51,5 +53,33 @@ public class ReportServiceImpl implements ReportService {
 				+fromMonth+"' and '"+toMonth+"')\r\n"
 				+ "group by p.id order by totalsold desc";
 		return template.query(sqlQuery, new ReportTopProductMapper());
+	}
+	
+	public List<ReportProdProcess> productProccess(int cateId) {
+		String sqlQuery = "select p.id, p.\"name\", p.quantity , \r\n"
+				+ "	coalesce(\r\n"
+				+ "		(select SUM(o2.amount) as quantity \r\n"
+				+ "		from orderbill o, orderdetails o2\r\n"
+				+ "		where p.id = o2.productid and o.id = o2.orderid and o.status = 1\r\n"
+				+ "		group by p.id, o.status ), 0) as inprocess,\r\n"
+				+ "	coalesce(\r\n"
+				+ "		(select SUM(o2.amount) as quantity\r\n"
+				+ "		from orderbill o, orderdetails o2\r\n"
+				+ "		where p.id = o2.productid and o.id = o2.orderid and o.status = 2\r\n"
+				+ "		group by p.id, o.status ), 0) as delivery, \r\n"
+				+ "	coalesce(\r\n"
+				+ "		(select SUM(o2.amount) as quantity\r\n"
+				+ "		from orderbill o , orderdetails o2\r\n"
+				+ "		where p.id = o2.productid and o.id = o2.orderid and o.status = 3\r\n"
+				+ "		group by p.id, o.status ), 0) as completed,\r\n"
+				+ "	coalesce(\r\n"
+				+ "		(select SUM(o2.amount) as quantity\r\n"
+				+ "		from orderbill o, orderdetails o2\r\n"
+				+ "		where p.id = o2.productid and o.id = o2.orderid and o.status = 4\r\n"
+				+ "		group by p.id, o.status ), 0) as cancel\r\n"
+				+ "from\r\n"
+				+ "	products p, categories c \r\n"
+				+ "	where p.producttype = c.id and c.status != false and p.status != false and p.producttype = "+cateId+";";
+		return template.query(sqlQuery, new ReportProductProcessMapper());
 	}
 }

@@ -1,6 +1,6 @@
 export function numberFormat(value) {
-    return new Intl.NumberFormat('vi-VN', {
+    return new Intl.NumberFormat('en-EN', {
         style: 'currency',
-        currency: 'VND'
+        currency: 'USD'
       }).format(value);
 }

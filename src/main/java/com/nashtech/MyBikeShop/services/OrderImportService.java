@@ -3,6 +3,8 @@ package com.nashtech.MyBikeShop.services;
 import java.util.List;
 
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
+import org.springframework.web.multipart.MultipartFile;
+import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderImportEntity;
 
 public interface OrderImportService {
@@ -24,6 +26,7 @@ public interface OrderImportService {
 	
 	public float purchaseCostByMonth (int month, int year);
 	
+	public OrderImportEntity createOrderFromXLSS(MultipartFile reapExcelDataFile, String email);
 	
 	public long countTotal();
 	

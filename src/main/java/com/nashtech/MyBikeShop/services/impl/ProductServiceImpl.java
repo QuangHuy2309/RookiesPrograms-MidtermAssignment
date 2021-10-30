@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public List<ProductEntity> getNewestProductCategories(int categoriesId, int size) {
-		Sort sortable = Sort.by("updateDate").descending();
+		Sort sortable = Sort.by("updateDate").descending().and(Sort.by("quantity").descending());
 		Pageable pageable = PageRequest.of(0, size, sortable);
 		return productRepository.findByCategoriesIdAndStatusNot(pageable, categoriesId, false);
 	}

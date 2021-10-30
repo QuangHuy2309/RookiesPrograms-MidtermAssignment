@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.MyBikeShop.DTO.ReportProdProcess;
 import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
 import com.nashtech.MyBikeShop.services.ReportService;
 
@@ -43,5 +44,11 @@ public class ReportController {
 			toMonth = temp;
 		}
 		return reportService.topProductByMonth(fromMonth,toMonth);
+	}
+	
+	@GetMapping("/report/productProccess/{cateId}")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<ReportProdProcess> productProcess(@PathVariable(name = "cateId") int cateId){
+		return reportService.productProccess(cateId);
 	}
 }

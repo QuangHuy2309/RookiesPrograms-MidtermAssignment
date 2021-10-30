@@ -11,12 +11,14 @@ import Footer from "../Footer";
 import Page from "../Pagination";
 import ProdList from "./ProdList/ProdList.js";
 import ModalDeleteConfirm from "../Admin/ModalDeleteConfirm";
+import PayPal from "../Order/Payment/PayPal.js";
 
 export default function UserOrderHistory() {
   const [orderList, setOrderList] = useState([]);
   const [pagenum, setPageNum] = useState(0);
   const size = 3;
   let totalPage = useRef(0);
+  const paypal = useRef();
   const emailUser = getCookie("email");
   useEffect(() => {
     getOrderList();
@@ -72,14 +74,20 @@ export default function UserOrderHistory() {
         break;
       case 4:
         stateClass = "statusUserHistoryColor-Canceled";
-        stateText = "Canceled"
+        stateText = "Canceled";
         break;
     }
-    return (
-      <h5 className={stateClass}>
-        {stateText}
-      </h5>
-    );
+    return <h5 className={stateClass}>{stateText}</h5>;
+  }
+  function getTotal(list) {
+    let totalCost = 0;
+    list.forEach((detail) => {
+      totalCost += detail.ammount * detail.unitPrice;
+    });
+    return totalCost;
+  }
+  function handlePayment(e){
+    if (e) getOrderList();
   }
   return (
     <>
@@ -88,37 +96,61 @@ export default function UserOrderHistory() {
       <h1 className="mb-3">Order History</h1>
       <div>
         {orderList.map((order, index) => (
-          <div className="orderHistory">
+          <div className="orderHistory" key={index}>
             <Row className="prod-form" key={order.id}>
               <h4>{order.customers.fullname}</h4>
               <p>
                 Time bought:{" "}
                 {format(new Date(order.timebought), "dd/MM/yyyy HH:mm:ss")}
               </p>
+              <div className="payment_UserOrderHistory">
+                <p>Payment: </p>
+                <p
+                  className={
+                    order.payment
+                      ? "paymentStatusTrue_UserOrderHistory"
+                      : "paymentStatusFalse_UserOrderHistory"
+                  }
+                >
+                  {order.payment ? "Paid" : "Unpaid"}
+                </p>
+              </div>
               <p>Address: {order.address}</p>
               <Row>
                 <Col className="status-order col-7">
                   <h5>Status: </h5>
-                  {/* <h5 className={order.status ? "status-true" : "status-false"}>
-                    {order.status ? "Completed" : "In process"}
-                  </h5> */}
                   {handleStatus(order.status)}
                 </Col>
                 <Col className="priceTotal">
                   <h4 className="priceTitle">Total: </h4>
-                  <h4 className="status-false">
-                    {numberFormat(order.totalCost)}
+                  <h4 className="status-false priceTitle">
+                    {numberFormat(getTotal(order.orderDetails))}
                   </h4>
                 </Col>
               </Row>
-              {(order.status == 1) ? (
-                <div className="mb-3">
-                  <ModalDeleteConfirm
-                    cancel="true"
-                    onChoice={(e) => handleChangeStatus(e, order.id)}
-                  />
-                </div>
+
+              {(order.status == 1 && !order.payment) ? (
+                <Row>
+                  <Col>
+                    <div className="mb-3">
+                      <ModalDeleteConfirm
+                        cancel="true"
+                        onChoice={(e) => handleChangeStatus(e, order.id)}
+                      />
+                    </div>
+                  </Col>
+                  
+                    <Col className="col-6">
+                      <PayPal
+                        total={getTotal(order.orderDetails)}
+                        order_id={order.id}
+                        onPaymentChange={(e) => handlePayment(e)}
+                      />
+                    </Col>
+                 
+                </Row>
               ) : null}
+
               <ProdList orderDetail={order.orderDetails} />
             </Row>
             {/* {getProdList(index)} */}

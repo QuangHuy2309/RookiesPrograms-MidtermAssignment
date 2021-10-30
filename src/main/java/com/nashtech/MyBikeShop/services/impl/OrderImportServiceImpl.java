@@ -1,10 +1,17 @@
 package com.nashtech.MyBikeShop.services.impl;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,13 +19,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDetailDTO;
 import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
+import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity.OrderImportDetailsKey;
 import com.nashtech.MyBikeShop.entity.OrderImportEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.OrderImportRepository;
 import com.nashtech.MyBikeShop.services.OrderImportDetailService;
 import com.nashtech.MyBikeShop.services.OrderImportService;
@@ -58,6 +69,52 @@ public class OrderImportServiceImpl implements OrderImportService {
 		}
 		orderImport.setTimeimport(LocalDateTime.now());
 		return orderImportRepo.save(orderImport);
+	}
+
+	@Override
+	@Transactional
+	public OrderImportEntity createOrderFromXLSS(MultipartFile reapExcelDataFile, String email) {
+		Set<OrderImportDetailEntity> detailList = new HashSet<OrderImportDetailEntity>();
+		XSSFWorkbook workbook;
+		try {
+			workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
+		} catch (IOException e) {
+			throw new ObjectNotFoundException("File not found");
+
+		}
+		XSSFSheet worksheet = workbook.getSheetAt(0);
+		PersonEntity personImport = personService.getPerson(email);
+		OrderImportEntity orderImport = new OrderImportEntity();
+		orderImport.setTimeimport(LocalDateTime.now());
+		orderImport.setEmployee(personImport);
+		orderImport.setStatus(true);
+		OrderImportEntity orderImport_saved = orderImportRepo.save(orderImport);
+		for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+			OrderImportDetailEntity tempDetail = new OrderImportDetailEntity();
+			XSSFRow row = worksheet.getRow(i);
+			OrderImportDetailsKey keyId = new OrderImportDetailsKey(orderImport_saved.getId(),
+					row.getCell(0).getStringCellValue());
+			Optional<OrderImportDetailEntity> detailCheck = detailList.stream()
+					.filter(detail -> detail.getId().equals(keyId)).findAny();
+			if (detailCheck.isPresent()) throw new ObjectPropertiesIllegalException("Error: File wrong format, duplicate product");
+			tempDetail.setId(keyId);
+			tempDetail.setAmmount((int) row.getCell(1).getNumericCellValue());
+			tempDetail.setPrice((float) row.getCell(2).getNumericCellValue());
+			ProductEntity product = productService.getProduct(keyId.getProductId()).orElse(null);
+			if (product == null) {
+				throw new ObjectNotFoundException("Product ID " + keyId.getProductId() + " not found!");
+			}
+			tempDetail.setProduct(product);
+			tempDetail.setOrder(orderImport_saved);
+			detailList.add(tempDetail);
+		}
+		if (detailList.isEmpty()) {
+			deleteOrderImport(orderImport_saved.getId());
+			throw new ObjectNotFoundException("Error: File empty");
+		}
+		orderImport_saved.setOrderImportDetails(detailList);
+		System.out.println(orderImport_saved.toString());
+		return orderImport_saved; //orderImportRepo.save(orderImport_saved);
 	}
 
 	@Override

@@ -144,4 +144,10 @@ public class OrderImportEntity {
 				&& Objects.equals(timeimport, other.timeimport);
 	}
 
+	@Override
+	public String toString() {
+		return "OrderImportEntity [id=" + id + ", timeimport=" + timeimport + ", status=" + status + ", employee="
+				+ employee;
+	}
+
 }

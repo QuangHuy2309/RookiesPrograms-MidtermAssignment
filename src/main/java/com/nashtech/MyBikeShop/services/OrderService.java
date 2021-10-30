@@ -13,7 +13,7 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 public interface OrderService {
 	public List<OrderEntity> retrieveOrders();
 
-	public Optional<OrderEntity> getOrders(int id);
+	public Optional<OrderEntity> getOrder(int id);
 
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id);
 
@@ -30,6 +30,8 @@ public interface OrderService {
 	public boolean deleteOrder(int id);
 
 	public boolean updateOrder(OrderDTO order);
+	
+	public boolean updateOrderPayment(int id, String customerEmail);
 
 	public boolean updateStatusOrder(int id, int status);
 

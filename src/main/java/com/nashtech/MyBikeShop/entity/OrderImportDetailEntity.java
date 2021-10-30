@@ -1,6 +1,7 @@
 package com.nashtech.MyBikeShop.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -73,6 +74,23 @@ public class OrderImportDetailEntity {
 			super();
 			this.orderId = orderId;
 			this.productId = productId;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(orderId, productId);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			OrderImportDetailsKey other = (OrderImportDetailsKey) obj;
+			return orderId == other.orderId && Objects.equals(productId, other.productId);
 		}
 
 	}
@@ -155,6 +173,12 @@ public class OrderImportDetailEntity {
 
 	public void setAmmount(int ammount) {
 		this.ammount = ammount;
+	}
+
+	@Override
+	public String toString() {
+		return "OrderImportDetailEntity [id=" + id + ", ammount=" + ammount + ", price=" + price + ", order=" + order
+				+ ", product=" + product + "]";
 	}
 
 }

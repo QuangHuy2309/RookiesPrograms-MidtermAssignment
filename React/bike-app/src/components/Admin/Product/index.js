@@ -51,7 +51,6 @@ export default function Index() {
         { title: "Quantity" },
         { title: "Description" },
         { title: "Brand" },
-        // { title: "Photo" },
         { title: "Create Date" },
         { title: "Update Date" },
         { title: "Update By" },
@@ -64,7 +63,6 @@ export default function Index() {
         { value: report.quantity },
         { value: report.description },
         { value: report.brand },
-        // { value: convertBase64ToFile(report.photo, report.id) },
         { value: format(new Date(report.createDate), "dd/MM/yyyy HH:mm:ss") },
         { value: format(new Date(report.updateDate), "dd/MM/yyyy HH:mm:ss") },
         { value: report.employeeUpdate.fullname },
@@ -81,11 +79,6 @@ export default function Index() {
         setCateList([...response.data]);
       }
     });
-    // get(`/public/product`).then((response) => {
-    //   if (response.status === 200) {
-    //     setProdReport([...response.data]);
-    //   }
-    // });
     getListProdReport();
   }, []);
   useEffect(() => {
@@ -102,20 +95,6 @@ export default function Index() {
       }
     });
   }
-  // const convertBase64ToFile = function (image) {
-  //   if (image != null){
-  //   const byteString = atob(image.split(',')[1]);
-  //   const ab = new ArrayBuffer(byteString.length);
-  //   const ia = new Uint8Array(ab);
-  //   for (let i = 0; i < byteString.length; i += 1) {
-  //     ia[i] = byteString.charCodeAt(i);
-  //   }
-  //   const newBlob = new Blob([ab], {
-  //     type: 'image/jpeg',
-  //   });
-  //   return newBlob;
-  // }
-  // };
 
   function getUpdated(e) {
     if (e) getListProd();
@@ -215,16 +194,6 @@ export default function Index() {
           </Col>
           <Col>
             {role.includes("ADMIN") ? (
-              // <ExcelFile
-              //   filename={`ProductList`}
-              //   element={
-              //     <Button outline color="success">
-              //       Export
-              //     </Button>
-              //   }
-              // >
-              //   <ExcelSheet dataSet={DataSet} name="Report_Sheet" />
-              // </ExcelFile>
               <ModalSelectCateExport/>
             ) : null}
           </Col>

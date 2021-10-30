@@ -53,7 +53,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 	@Transactional
 	public boolean deleteDetail(OrderDetailEntity orderDetailEntity) {
 		int orderId = orderDetailEntity.getId().getOrderId();
-		OrderEntity orderEntity = orderService.getOrders(orderId).get();
+		OrderEntity orderEntity = orderService.getOrder(orderId).get();
 		if (orderEntity.getStatus() != 4) { // False = Not delivery yet
 			boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
 					orderDetailEntity.getAmmount());

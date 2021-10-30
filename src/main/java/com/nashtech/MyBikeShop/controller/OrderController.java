@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +26,8 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.exception.WrongInputTypeException;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
+import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.OrderService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,8 +40,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
+	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private JwtUtils jwtUtils;
 
 	@Operation(summary = "Get total of Order")
 	@ApiResponses(value = {
@@ -72,7 +80,7 @@ public class OrderController {
 		if (status == null)
 			return orderService.searchOrderByCustomer(keyword).stream().map(orderService::convertToDTO)
 					.collect(Collectors.toList());
-		return orderService.searchOrderByStatusAndCustomer(keyword,status).stream().map(orderService::convertToDTO)
+		return orderService.searchOrderByStatusAndCustomer(keyword, status).stream().map(orderService::convertToDTO)
 				.collect(Collectors.toList());
 	}
 
@@ -87,7 +95,7 @@ public class OrderController {
 	@GetMapping("/order/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public OrderEntity findOrder(@PathVariable(name = "id") int id) {
-		return orderService.getOrders(id)
+		return orderService.getOrder(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find order with Id: " + id));
 	}
 
@@ -139,6 +147,20 @@ public class OrderController {
 		} catch (NoSuchElementException ex) {
 			System.err.println(ex.getMessage());
 			throw new ObjectNotFoundException("Could not find Order with id: " + order.getId());
+		}
+
+	}
+
+	@PutMapping("/order/payment/{id}")
+	@PreAuthorize("hasRole('USER')")
+	public String updateOrderPayment(HttpServletRequest request, @PathVariable(name = "id") int id) {
+		try {
+			String jwt = JwtAuthTokenFilter.parseJwt(request);
+			String email = jwtUtils.getUserNameFromJwtToken(jwt);
+			return orderService.updateOrderPayment(id, email) ? StringUtils.TRUE : StringUtils.FALSE;
+		} catch (NoSuchElementException ex) {
+			System.err.println(ex.getMessage());
+			throw new ObjectNotFoundException("Could not find Order with id: " + id);
 		}
 
 	}

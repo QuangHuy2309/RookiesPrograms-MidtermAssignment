@@ -14,6 +14,7 @@ public class OrderDTO {
 	private String customersEmail;
 	private String customersName;
 	private LocalDateTime timebought;
+	private boolean payment;
 	private List<OrderDetailDTO> orderDetails;
 
 	public OrderDTO() {
@@ -111,6 +112,14 @@ public class OrderDTO {
 
 	public void setTimebought(LocalDateTime timebought) {
 		this.timebought = timebought;
+	}
+
+	public boolean isPayment() {
+		return payment;
+	}
+
+	public void setPayment(boolean payment) {
+		this.payment = payment;
 	}
 
 	public List<OrderDetailDTO> getOrderDetails() {

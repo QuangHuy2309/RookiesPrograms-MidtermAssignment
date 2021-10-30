@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
-	public Optional<OrderEntity> getOrders(int id) {
+	public Optional<OrderEntity> getOrder(int id) {
 		return orderRepository.findById(id);
 
 	}
@@ -171,10 +171,19 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return orderRepository.getById(orderSaved.getId());
 	}
-
+	
+	@Transactional
+	public boolean updateOrderPayment(int id, String customerEmail) {
+		OrderEntity order = getOrder(id).get();
+		if (!order.getCustomers().getEmail().equalsIgnoreCase(customerEmail)) {
+			throw new ObjectPropertiesIllegalException("Error: Unauthorized");
+		}
+		order.setPayment(true);
+		return true;
+	}
 	@Transactional
 	public boolean deleteOrder(int id) {
-		OrderEntity order = getOrders(id).get();
+		OrderEntity order = getOrder(id).get();
 		PersonEntity person = personService.getPerson(order.getCustomers().getId()).get();
 		if (order.getStatus() != 4) { // False = Not delivery yet
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
@@ -193,7 +202,7 @@ public class OrderServiceImpl implements OrderService {
 		 * 
 		 */
 		int orderId = orderDTO.getId();
-		OrderEntity orderCheck = getOrders(orderId).get(); // Nếu không có Order sẽ gây ra lỗi NoSuchElementException
+		OrderEntity orderCheck = getOrder(orderId).get(); // Nếu không có Order sẽ gây ra lỗi NoSuchElementException
 															// sẽ được catch ở Controller
 
 		for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(orderId)) {
@@ -210,7 +219,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public boolean updateStatusOrder(int id, int status) {
-		OrderEntity order = getOrders(id).get();
+		OrderEntity order = getOrder(id).get();
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				boolean result = orderDetailService.updateDetailCancel(detail);
@@ -224,6 +233,7 @@ public class OrderServiceImpl implements OrderService {
 					return false;
 			}
 		}
+		if (status == 3) order.setPayment(true);
 		order.setStatus(status);
 		orderRepository.save(order);
 		return true;

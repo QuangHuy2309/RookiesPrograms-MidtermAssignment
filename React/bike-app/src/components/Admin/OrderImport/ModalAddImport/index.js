@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { IoAddOutline } from "react-icons/io5";
 import { GrBike } from "react-icons/gr";
 import { AiOutlineAppstore, AiOutlineClose } from "react-icons/ai";
+import * as XLSX from "xlsx";
 import {
   Button,
   Modal,
@@ -100,7 +101,7 @@ const ModalExample = (props) => {
       const body = JSON.stringify({
         employeeEmail: emailUser,
         // totalCost: total,
-        status: true,//e.target.status.value,
+        status: true, //e.target.status.value,
         orderImportDetails: toArr(),
       });
       post("/imports", body)
@@ -149,12 +150,49 @@ const ModalExample = (props) => {
   }
   function handleSearchChange(e) {
     setProdList([]);
-    get(`/public/product/search?keyword=${e.target.value.trim()}&type=${choice}`).then((response) => {
+    get(
+      `/public/product/search?keyword=${e.target.value.trim()}&type=${choice}`
+    ).then((response) => {
       if (response.status === 200) {
         setProdList([...response.data]);
       }
     });
   }
+
+  function uploadProd(e) {
+    const file = e.target.files[0];
+    const promise = new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+      fileReader.onload = (evt) => {
+        const bufferArray = evt.target.result;
+        const wb = XLSX.read(bufferArray, { type: "buffer" });
+        /* Get first worksheet */
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        /* Convert array of arrays */
+        const data = XLSX.utils.sheet_to_json(ws);
+        /* Update state */
+        resolve(data);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+    promise.then((data) => {
+      // console.log(data);
+      data.forEach((prod_data) => {
+        let prod = {
+          id: prod_data.id,
+          name: prod_data.name,
+          quantity: prod_data.amount,
+          price: prod_data.price,
+        };
+        setProdPickedList((oldArr) => [...oldArr, prod]);
+      });
+    });
+  }
+
   return (
     <div>
       <div className="btn-modal-AddImport">
@@ -183,16 +221,19 @@ const ModalExample = (props) => {
                     ))}
                 </DropdownToggle>
                 <DropdownMenu>
-                  {cateList.map((cate,index) => (
+                  {cateList.map((cate, index) => (
                     <div key={cate.id}>
                       <DropdownItem onClick={() => setChoice(cate.id)}>
                         {cate.name}
                       </DropdownItem>
-                      {(index < (cateList.length - 1))? <DropdownItem divider /> : null}
+                      {index < cateList.length - 1 ? (
+                        <DropdownItem divider />
+                      ) : null}
                     </div>
                   ))}
                 </DropdownMenu>
               </ButtonDropdown>{" "}
+              
             </Col>
 
             <Col className="searchField-AddImport mx-3">
@@ -206,6 +247,16 @@ const ModalExample = (props) => {
               />
             </Col>
           </Row>
+          <Label>Import: </Label>
+          <Input
+                type="file"
+                name="file"
+                id="exampleFile"
+                onChange={(e) => {
+                  uploadProd(e);
+                }}
+                className="ms-3"
+              />
           <div className="scrollable">
             {prodList.map((prod, index) => (
               <Row className="mb-3">
@@ -269,8 +320,8 @@ const ModalExample = (props) => {
                           name="price"
                           id="examplePrice"
                           required="required"
-                          step="1000"
-                          min="500000"
+                          step="1"
+                          min="500"
                           value={prod.price}
                           onChange={(e) =>
                             handleProdFieldChange(e, "price", index)
@@ -308,7 +359,9 @@ const ModalExample = (props) => {
             <Row>
               <Col className="priceTotal-OrderAddImport">
                 <h4 className="priceTitle-OrderAddImport">Total: </h4>
-                <h4 className="priceNum-OrderAddImport">{numberFormat(total)}</h4>
+                <h4 className="priceNum-OrderAddImport">
+                  {numberFormat(total)}
+                </h4>
               </Col>
             </Row>
             <hr />

@@ -94,7 +94,7 @@ public class OrderDetailServiceImplTest {
 
 	@Test
 	public void deleteDetailSuccess_Test() {
-		when(orderService.getOrders(detail1.getId().getOrderId())).thenReturn(Optional.of(order1));
+		when(orderService.getOrder(detail1.getId().getOrderId())).thenReturn(Optional.of(order1));
 		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(true);
 		doNothing().when(detailRepo).delete(detail1);
 		assertTrue(detailService.deleteDetail(detail1));
@@ -102,7 +102,7 @@ public class OrderDetailServiceImplTest {
 	
 	@Test
 	public void deleteDetailFailUpdateProdQuantity_Test() {
-		when(orderService.getOrders(detail1.getId().getOrderId())).thenReturn(Optional.of(order1));
+		when(orderService.getOrder(detail1.getId().getOrderId())).thenReturn(Optional.of(order1));
 		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(false);
 		assertFalse(detailService.deleteDetail(detail1));
 	}

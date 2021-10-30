@@ -307,6 +307,7 @@ export default function Order() {
             <th className="titleTable-OrderAdmin">BOUGHT AT</th>
             <th className="titleTable-OrderAdmin">TOTAL</th>
             <th className="titleTable-OrderAdmin">ADDRESS</th>
+            <th className="titleTable-OrderAdmin">PAYMENT</th>
             <th className="titleTable-OrderAdmin">PRODUCT</th>
             <th className="titleTable-OrderAdmin">STATUS</th>
             {/* <th></th> */}
@@ -323,6 +324,15 @@ export default function Order() {
               </td>
               <td>{numberFormat(order.totalCost)}</td>
               <td>{order.address}</td>
+              <td
+                className={
+                  order.payment
+                    ? "paymentStatusTrue_UserOrderHistory"
+                    : "paymentStatusFalse_UserOrderHistory"
+                }
+              >
+                {order.payment ? "Paid" : "Unpaid"}
+              </td>
               <td>
                 {" "}
                 <Button color="link" onClick={() => handleProductList(index)}>

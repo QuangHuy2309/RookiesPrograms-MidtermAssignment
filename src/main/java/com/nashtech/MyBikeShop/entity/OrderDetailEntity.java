@@ -96,6 +96,7 @@ public class OrderDetailEntity {
 	public OrderDetailEntity(OrderDetailDTO orderDTO) {
 		super();
 		this.ammount = orderDTO.getAmmount();
+		this.unitPrice = orderDTO.getUnitPrice();
 	}
 
 	public OrderDetailsKey getId() {

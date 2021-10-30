@@ -10,6 +10,7 @@ import OrderImport from "./OrderImport/OrderImport.js";
 import Database from "./Database/Database.js";
 import Report_RaE from "./Report_RaE/Report_RaE.js";
 import REPORT_TopProd from "./Report_TopProd/Report_TopProd.js";
+import REPORT_ProdProccess from "./ReportProductProccess/ReportProductProcess.js";
 import "./Admin.css"
 
 
@@ -41,6 +42,8 @@ export default function Index() {
       return (<Report_RaE/>);
       case 'REPORT_TopProd':
       return (<REPORT_TopProd/>);
+      case 'REPORT_ProdProccess':
+      return (<REPORT_ProdProccess/>);
     }
     // if (choice === "PRODUCT") {return (<Product/>)}
     // else if (choice === "USER") {return (<User/>)}

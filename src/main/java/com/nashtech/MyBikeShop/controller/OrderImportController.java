@@ -1,10 +1,16 @@
 package com.nashtech.MyBikeShop.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
@@ -29,6 +36,8 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.payload.response.MessageResponse;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
+import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.OrderImportDetailService;
 import com.nashtech.MyBikeShop.services.OrderImportService;
 import com.nashtech.MyBikeShop.services.PersonService;
@@ -56,6 +65,9 @@ public class OrderImportController {
 
 	@Autowired
 	PersonService personService;
+	
+	@Autowired
+	private JwtUtils jwtUtils;
 
 	@GetMapping("/orderImport/totalOrder")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
@@ -98,6 +110,16 @@ public class OrderImportController {
 
 	}
 
+	@PostMapping("/imports/file")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public ResponseEntity<?> createOrderImportFromExcel(HttpServletRequest request, @RequestParam("file") MultipartFile reapExcelDataFile) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		OrderImportEntity orderImportCreated = orderImportService.createOrderFromXLSS(reapExcelDataFile, email);
+		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportCreated), HttpStatus.OK);
+	    
+	}
+	
 	@Operation(summary = "Get Order import")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
@@ -187,4 +209,6 @@ public class OrderImportController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
+	
+	
 }

@@ -5,8 +5,21 @@ import { getCookie } from "../../../Utils/Cookie";
 import { useHistory, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Form, FormGroup, Label, Input, Row, Col } from "reactstrap";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Row,
+  Col,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import ModalDelte from "../../Admin/ModalDeleteConfirm";
+import PayPal from "../Payment/PayPal.js";
 import "./Order.css";
 
 toast.configure();
@@ -17,6 +30,11 @@ export default function Index() {
   const [nameError, setNameError] = useState("");
   const [addressError, setAddressError] = useState("");
   const [total, setTotal] = useState(0);
+  const [checkout, setCheckOut] = useState(false);
+  const [modal, setModal] = useState(false);
+  const paypal = useRef();
+  const order_id = useRef();
+  const toggle = () => setModal(!modal);
 
   useEffect(() => {
     getProdList();
@@ -26,8 +44,12 @@ export default function Index() {
   }, []);
   useEffect(() => {
     // setCartCookie();
+    setCheckOut(false);
     getTotalPrice(prodList);
   }, [prodList]);
+  useEffect(() => {
+    if (total > 0) setCheckOut(true);
+  }, [total]);
 
   function getUser() {
     const emailUser = getCookie("email");
@@ -71,7 +93,11 @@ export default function Index() {
   function toArr() {
     let arr = [];
     prodList.forEach((prod) => {
-      let item = { productId: prod.id, ammount: prod.quantity, unitPrice: prod.price };
+      let item = {
+        productId: prod.id,
+        ammount: prod.quantity,
+        unitPrice: prod.price,
+      };
       arr = [...arr, item];
     });
     console.log(arr);
@@ -82,38 +108,40 @@ export default function Index() {
     if (nameError == "" && addressError == "") {
       const body = JSON.stringify({
         customersEmail: e.target.email.value,
-        // totalCost: total,
+        isPay: false,
         status: 1,
         address: e.target.address.value,
         orderDetails: toArr(),
       });
       console.log(body);
-      // post("/order", body)
-      //   .then((response) => {
-      //     if (response.status === 200) {
-      //       toast.success(
-      //         `Other Success! A confirmation email will send to your email`,
-      //         {
-      //           position: toast.POSITION.TOP_RIGHT,
-      //           autoClose: 3000,
-      //         }
-      //       );
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     if (error.response.status === 400) {
-      //       toast.error(
-      //         `Sorry, we dont have enought for your quantity of product.`,
-      //         {
-      //           position: toast.POSITION.TOP_RIGHT,
-      //           autoClose: 3000,
-      //         }
-      //       );
-      //     }
-      //     console.log(error.response.status);
-      //   });
-      // document.cookie = `cart=; max-age=86400; path=/;`;
-      // history.push("/");
+      post("/order", body)
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success(
+              `Order Success! A confirmation email will send to your email`,
+              {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+              }
+            );
+            order_id.current = response.data.id;
+            document.cookie = `cart=; max-age=86400; path=/;`;
+            toggle();
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400) {
+            toast.error(
+              `Sorry, we dont have enought for your quantity of product.`,
+              {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+              }
+            );
+            history.push("/");
+          }
+          console.log(error.response.status);
+        });      
     }
   }
   async function setCartCookie(list) {
@@ -125,15 +153,16 @@ export default function Index() {
   }
 
   async function handleProdFieldChange(e, key, index) {
-    if (e.target.value > 0 && e.target.value <= prodList[index].description ) {
-    let list = [...prodList];
-    let prod = { ...list[index] };
-    prod.quantity = e.target.value;
-    list[index] = prod;
+    if (e.target.value > 0 && e.target.value <= prodList[index].description) {
+      let list = [...prodList];
+      let prod = { ...list[index] };
+      prod.quantity = e.target.value;
+      list[index] = prod;
 
-    await setProdList(list);
-    setCartCookie(list);
-    getTotalPrice(list);
+      await setProdList(list);
+      setCartCookie(list);
+      setCheckOut(false);
+      getTotalPrice(list);
     }
   }
   function handleUserFieldChange(e, key) {
@@ -160,6 +189,35 @@ export default function Index() {
       setCartCookie(list);
     }
   }
+  async function paypalBody() {
+    if (prodList.length !== "") {
+      let arr = [];
+      prodList.forEach((prod) => {
+        let amount_sample = { currency_code: "USD", value: prod.price };
+        let item = { description: prod.name, ammount: amount_sample };
+        arr = [...arr, item];
+      });
+      console.log(`ez: ${arr}`);
+      return arr.toString();
+    }
+  }
+  function createOrder(data, actions) {
+    let arr = [];
+    prodList.forEach((prod) => {
+      let amount_sample = { value: prod.price };
+      let item = { description: prod.name, ammount: amount_sample };
+      arr = [...arr, item];
+    });
+    console.log(`paypal: ${arr}`);
+    return actions.order.create({
+      purchase_units: arr,
+    });
+  }
+  async function payOnDeli() {
+    toggle();
+    history.push("/");
+  }
+
   return (
     <div className="login-form">
       <h2 className="head-Order">ORDER</h2>
@@ -167,7 +225,9 @@ export default function Index() {
         <FormGroup>
           <Row className="login">
             <Col className="col-1 priceTitle">
-              <Label for="nameExample" className="labelText-Order py-auto">Name</Label>
+              <Label for="nameExample" className="labelText-Order py-auto">
+                Name
+              </Label>
             </Col>
             <Col className="col-4">
               <Input
@@ -183,7 +243,9 @@ export default function Index() {
             </Col>
             <Col className="col-1"></Col>
             <Col className="col-1">
-              <Label for="exampleEmail" className="labelText-Order py-auto">Email</Label>
+              <Label for="exampleEmail" className="labelText-Order py-auto">
+                Email
+              </Label>
             </Col>
             <Col className="col">
               <Input
@@ -201,7 +263,9 @@ export default function Index() {
         <FormGroup>
           <Row className="login">
             <Col className="col-1">
-              <Label for="exampleAddress" className="labelText-Order py-auto">Address</Label>
+              <Label for="exampleAddress" className="labelText-Order py-auto">
+                Address
+              </Label>
             </Col>
             <Col>
               <Input
@@ -222,42 +286,50 @@ export default function Index() {
             <h3 className="priceNumTotal"> {numberFormat(total)}</h3>
           </Col>
           <Col className="btnDelProd">
-            <Button outline color="info" type="submit" className="btnOrder-Order">
+            <Button
+              outline
+              color="info"
+              type="submit"
+              className="btnOrder-Order"
+            >
               Place an Order
             </Button>
+            {/* {checkout ? <PayPal total={total} /> : null} */}
           </Col>
         </Row>
         <FormGroup>
           {prodList.map((prod, index) => (
             <Row className="prod-form-orderUser" key={prod.id}>
               <Col className="col-3">
-              <Link
-                    to={`/prodDetail/${prod.id}`}
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                  >
-                <img
-                  src={`data:image/jpeg;base64,${prod.photo}`}
-                  className="img-order"
-                />
+                <Link
+                  to={`/prodDetail/${prod.id}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                  }}
+                >
+                  <img
+                    src={`data:image/jpeg;base64,${prod.photo}`}
+                    className="img-order"
+                  />
                 </Link>
               </Col>
               <Col className="info-prod-order">
-              <Link
-                    to={`/prodDetail/${prod.id}`}
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                  >
-                <h5>{prod.name}</h5>
+                <Link
+                  to={`/prodDetail/${prod.id}`}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                  }}
+                >
+                  <h5>{prod.name}</h5>
                 </Link>
                 <p className="modalProd-Order">MODEL :: {prod.id}</p>
                 <Row>
                   <Col className="col-1">
-                    <Label for="exampleQuantity" className="pt-2">Qty</Label>
+                    <Label for="exampleQuantity" className="pt-2">
+                      Qty
+                    </Label>
                   </Col>
                   <Col className="col-3">
                     <Input
@@ -282,7 +354,7 @@ export default function Index() {
                       <h3 className="priceText-OrderForm">Price </h3>
                     </Col>
                     <Col>
-                      <h3 for="exampleQuantity" className="priceNum-OrderForm">
+                      <h3 className="priceNum-OrderForm">
                         {" "}
                         {numberFormat(prod.quantity * prod.price)}
                       </h3>
@@ -294,6 +366,17 @@ export default function Index() {
           ))}
         </FormGroup>
       </Form>
+      {/* <Button onclick={()=>paypalClick()}>paypal click</Button> */}
+      {/* <div ref={paypal} /> */}
+      <Modal isOpen={modal} toggle={toggle} className="">
+        <ModalHeader toggle={toggle} className="title-AddProductAdmin">
+          Payment
+        </ModalHeader>
+        <ModalBody>
+          <button color="info" className="payOndeli_Order" onClick={payOnDeli}>Payment on delivery</button>
+          <PayPal total={total} order_id={order_id.current}/>
+        </ModalBody>
+      </Modal>
     </div>
   );
 }

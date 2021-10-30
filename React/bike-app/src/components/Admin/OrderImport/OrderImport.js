@@ -19,16 +19,21 @@ export default function OrderImport() {
   const [prodList, setProdList] = useState([]);
   const [statusListProd, setStatusListProd] = useState(false);
   const [showPagination, setShowPage] = useState(true);
+  const [dropdownOpen, setOpen] = useState(false);
   const role = getCookie("role");
   const size = 6;
   let totalPage = useRef(0);
+  const toggle = () => setOpen(!dropdownOpen);
+  
   useEffect(() => {
     getCountTotalOrderImport();
     getOrderImportList();
   }, []);
+
   useEffect(() => {
     getOrderImportList();
   }, [pagenum]);
+
   async function getCountTotalOrderImport() {
     getWithAuth(`/orderImport/totalOrder`).then((response) => {
       if (response.status === 200) {

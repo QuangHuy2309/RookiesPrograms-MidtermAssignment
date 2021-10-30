@@ -23,11 +23,19 @@
   justify-content: center;
   margin-right: 3rem;
 }
-
+.priceTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: inline-block;
+}
 .priceTotal {
+  font-size: 1.5rem;
+  font-weight: 600;
   justify-content: flex-end;
 }
 .priceNumTotal {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-left: 1rem;
   color: #ff3f00;
 }
@@ -39,17 +47,28 @@
 }
 .statusUserHistoryColor-InProcess {
   margin-left: 1rem;
-  color: #FFB319;
+  color: #ffb319;
 }
 .statusUserHistoryColor-Delivery {
   margin-left: 1rem;
-  color: #185ADB;
+  color: #185adb;
 }
 .statusUserHistoryColor-Complete {
   margin-left: 1rem;
-  color: #6ECB63;
+  color: #6ecb63;
 }
 .statusUserHistoryColor-Canceled {
   margin-left: 1rem;
-  color: #FF0000;
+  color: #ff0000;
+}
+.payment_UserOrderHistory{
+  display: flex;
+}
+.paymentStatusTrue_UserOrderHistory{
+  margin-left: 1rem;
+  color: #6ecb63;
+}
+.paymentStatusFalse_UserOrderHistory{
+  margin-left: 1rem;
+  color: #ff3f00;
 }
