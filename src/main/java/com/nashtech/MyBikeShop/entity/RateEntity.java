@@ -71,6 +71,12 @@ public class RateEntity {
 		public void setProductId(String productId) {
 			this.productId = productId;
 		}
+
+		@Override
+		public String toString() {
+			return "RateKey [customerId=" + customerId + ", productId=" + productId + "]";
+		}
+		
 	}
 
 	public RateEntity() {

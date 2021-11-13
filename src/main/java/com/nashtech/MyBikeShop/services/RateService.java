@@ -13,7 +13,7 @@ public interface RateService {
 
 	public RateEntity createRate(RateDTO rate);
 
-	public boolean deleteRate(RateKey id);
+	public boolean deleteRate(RateKey id, String email);
 
 	public boolean updateRate(RateDTO rate);
 

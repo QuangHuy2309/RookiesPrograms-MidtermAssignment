@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDetailDTO;
+import com.nashtech.MyBikeShop.controller.CategoriesController;
 import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity.OrderImportDetailsKey;
 import com.nashtech.MyBikeShop.entity.OrderImportEntity;
@@ -58,7 +60,7 @@ public class OrderImportServiceImpl implements OrderImportService {
 	}
 
 	public long countTotal() {
-		return orderImportRepo.count();
+		return orderImportRepo.countByStatusNot(false);
 	}
 
 	@Override
@@ -96,7 +98,8 @@ public class OrderImportServiceImpl implements OrderImportService {
 					row.getCell(0).getStringCellValue());
 			Optional<OrderImportDetailEntity> detailCheck = detailList.stream()
 					.filter(detail -> detail.getId().equals(keyId)).findAny();
-			if (detailCheck.isPresent()) throw new ObjectPropertiesIllegalException("Error: File wrong format, duplicate product");
+			if (detailCheck.isPresent())
+				throw new ObjectPropertiesIllegalException("Error: File wrong format, duplicate product");
 			tempDetail.setId(keyId);
 			tempDetail.setAmmount((int) row.getCell(1).getNumericCellValue());
 			tempDetail.setPrice((float) row.getCell(2).getNumericCellValue());
@@ -114,7 +117,7 @@ public class OrderImportServiceImpl implements OrderImportService {
 		}
 		orderImport_saved.setOrderImportDetails(detailList);
 		System.out.println(orderImport_saved.toString());
-		return orderImport_saved; //orderImportRepo.save(orderImport_saved);
+		return orderImport_saved; // orderImportRepo.save(orderImport_saved);
 	}
 
 	@Override
@@ -146,7 +149,7 @@ public class OrderImportServiceImpl implements OrderImportService {
 	public List<OrderImportEntity> getOrderImportPage(int num, int size) {
 		Sort sortable = Sort.by("timeimport").descending();
 		Pageable pageable = PageRequest.of(num, size, sortable);
-		return orderImportRepo.findAll(pageable).stream().collect(Collectors.toList());
+		return orderImportRepo.findByStatusNot(pageable, false).stream().collect(Collectors.toList());
 	}
 
 	@Override
@@ -194,9 +197,11 @@ public class OrderImportServiceImpl implements OrderImportService {
 			for (OrderImportDetailEntity detail : order.getOrderImportDetails()) {
 				productService.updateProductQuantity(detail.getId().getProductId(), detail.getAmmount() * (-1));
 			}
-			PersonEntity person = personService.getPerson(order.getEmployee().getId()).get();
-			person.getOrdersImport().remove(order);
-			orderImportRepo.delete(order);
+//			PersonEntity person = personService.getPerson(order.getEmployee().getId()).get();
+//			person.getOrdersImport().remove(order);
+//			orderImportRepo.delete(order);
+			order.setStatus(false);
+			orderImportRepo.save(order);
 			return true;
 		}).orElse(false);
 	}

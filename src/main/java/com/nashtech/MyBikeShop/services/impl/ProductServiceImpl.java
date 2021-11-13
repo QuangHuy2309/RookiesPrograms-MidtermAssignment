@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -43,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	PersonService personService;
+	
+	private static final Logger logger = Logger.getLogger(ProductServiceImpl.class);
 	
 	public ProductServiceImpl() {
 		super();
@@ -89,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Optional<ProductEntity> getProduct(String id) {
-		return productRepository.findById(id);
+		return productRepository.findByIdIgnoreCaseAndStatusNot(id,false);
 	}
 	
 	public List<ProductEntity> searchProduct(String keyword){
@@ -105,11 +108,13 @@ public class ProductServiceImpl implements ProductService {
 			boolean checkName = checkExistName(productDTO.getName());
 			boolean checkId = checkExistId(productDTO.getId());
 			if (!checkId) {
+				logger.error(email+ " create product "+productDTO.getId()+" failed: ID had been used");
 				throw new ObjectAlreadyExistException(
-						"Failed! There is a product with this id. Please change product id");
+						"Error: Product's ID had been used.");
 			} else if (!checkName) {
+				logger.error(email+ " create product "+productDTO.getId()+" failed: ID had been used");
 				throw new ObjectAlreadyExistException(
-						"Failed! There is a product with this name. Please change product name");
+						"Error: Product's name had been used=");
 			} else {
 				CategoriesEntity cate = cateService.getCategories(productDTO.getCategoriesId()).get();
 				PersonEntity employee = personService.getPerson(email);
@@ -118,11 +123,16 @@ public class ProductServiceImpl implements ProductService {
 				productEntity.setUpdateDate(LocalDateTime.now());
 				productEntity.setStatus(true);
 				productEntity.setEmployeeUpdate(employee);
+				logger.info(email+ " create product id "+productDTO.getId()+" success");
 				return productRepository.save(productEntity);
 			}
 		} catch (DataAccessException ex) {
+			logger.error(email+ " create product "+productDTO.getId()+" failed");
+			logger.error(ex.getMessage());
 			throw new ObjectNotFoundException("Failed!" + ex.getMessage());
 		} catch (IllegalArgumentException ex) {
+			logger.error(email+ " create product "+productDTO.getId()+" failed");
+			logger.error(ex.getMessage());
 			throw new ObjectPropertiesIllegalException("Failed!" + ex.getMessage());
 		}
 	}
@@ -148,7 +158,8 @@ public class ProductServiceImpl implements ProductService {
 			productRepository.save(updateDate(product));
 			return true;
 		} else
-			throw new ObjectAlreadyExistException("There is a product with the same Name");
+			logger.error(email+ " update product "+productDTO.getId()+" failed: Duplicate name");
+			throw new ObjectAlreadyExistException("Error: Product's name had been used");
 	}
 
 	public boolean updateProductQuantity(String id, int numberChange) {
@@ -158,12 +169,14 @@ public class ProductServiceImpl implements ProductService {
 				throw new ObjectPropertiesIllegalException("Quantity of Product is not enought");
 			}
 			else if (!product.isStatus()) {
-				throw new ObjectNotFoundException("Product not found with id "+id);
+				logger.error("Update product quantity "+id+" failed: Product not found");
+				throw new ObjectNotFoundException("Error: Product not found with id "+id);
 			}
 			product.changeQuantity(numberChange);
 			// productRepository.save(updateDate(product));
 			return true;
 		} catch (NoSuchElementException ex) {
+			logger.error("Update product quantity "+id+" failed: Product not found");
 			ex.printStackTrace();
 			return false;
 		}
@@ -193,8 +206,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean checkExistId(String id) {
-		List<ProductEntity> prodList = productRepository.findByIdIgnoreCaseAndStatusNot(id, false);
-		return prodList.isEmpty();
+		Optional<ProductEntity> prod = productRepository.findByIdIgnoreCaseAndStatusNot(id, false);
+		return prod.isEmpty();
 	}
 
 	public boolean checkExistName(String name) {

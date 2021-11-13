@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
-import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
@@ -57,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+	
+	private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
 	public OrderServiceImpl() {
 		super();
@@ -161,14 +163,18 @@ public class OrderServiceImpl implements OrderService {
 							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Unit Price: "
 							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(detailDTO.getUnitPrice())
 							+ "</span></p>");
-			if (!result)
+			if (!result) {
+				logger.error("Failed in create detail order");
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
+			}
 		}
 		try {
 			sendSimpleMessage(orderDTO.getCustomersEmail(), listProd.toString(), totalCost);
 		} catch (MessagingException e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
+		logger.info("Order create by "+ orderDTO.getCustomersEmail() +" success");
 		return orderRepository.getById(orderSaved.getId());
 	}
 	
@@ -176,8 +182,10 @@ public class OrderServiceImpl implements OrderService {
 	public boolean updateOrderPayment(int id, String customerEmail) {
 		OrderEntity order = getOrder(id).get();
 		if (!order.getCustomers().getEmail().equalsIgnoreCase(customerEmail)) {
+			logger.error("Customer "+customerEmail+" tried update order of "+order.getCustomers().getEmail());
 			throw new ObjectPropertiesIllegalException("Error: Unauthorized");
 		}
+		logger.info("Order update payment status by "+ customerEmail +" success");
 		order.setPayment(true);
 		return true;
 	}
@@ -192,6 +200,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		person.getOrders().remove(order);
 		orderRepository.delete(order);
+		logger.info("Order delete by "+ person.getEmail() +" success");
 		return true;
 	}
 
@@ -223,19 +232,24 @@ public class OrderServiceImpl implements OrderService {
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				boolean result = orderDetailService.updateDetailCancel(detail);
-				if (!result)
+				if (!result) {
+					logger.error("Update order's status by" + order.getCustomers().getEmail()+" failed");
 					return false;
+				}
 			}
 		} else if (status != 4 && order.getStatus() == 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				boolean result = orderDetailService.updateDetail(detail);
-				if (!result)
+				if (!result) {
+					logger.error("Update order's status by" + order.getCustomers().getEmail()+" failed");
 					return false;
+				}
 			}
 		}
 		if (status == 3) order.setPayment(true);
 		order.setStatus(status);
 		orderRepository.save(order);
+		logger.info("Update order's status by" + order.getCustomers().getEmail()+" success");
 		return true;
 	}
 
@@ -321,7 +335,7 @@ public class OrderServiceImpl implements OrderService {
 				+ "    <p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 22px; line-height: 44px;\">Hi,</span><br /><span style=\"font-size: 16px; line-height: 32px;\">Thank you again for purchase. </span></p>\r\n"
 				+ "<p style=\"font-size: 14px; line-height: 200%;\"><span style=\"font-size: 16px; line-height: 32px;\">Your order is:</span></p>\r\n"
 				+ listProd + "\r\n\r\nTOTAL: "
-				+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(totalCost) + "  </div>\r\n"
+				+ NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(totalCost) + "  </div>\r\n"
 				+ "      </td>\r\n" + "    </tr>\r\n" + "  </tbody>\r\n" + "</table>\r\n" + "  </div>\r\n"
 				+ "</div>\r\n" + "    </div>\r\n" + "  </div>\r\n" + "</div>\r\n"
 				+ "<div class=\"u-row-container\" style=\"padding: 0px;background-color: transparent\">\r\n"

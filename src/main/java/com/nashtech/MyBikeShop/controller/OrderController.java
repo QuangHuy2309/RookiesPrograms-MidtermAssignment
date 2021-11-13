@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +30,7 @@ import com.nashtech.MyBikeShop.exception.WrongInputTypeException;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.OrderService;
+import com.nashtech.MyBikeShop.services.impl.OrderServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,6 +48,8 @@ public class OrderController {
 	
 	@Autowired
 	private JwtUtils jwtUtils;
+	
+	private static final Logger logger = Logger.getLogger(OrderController.class);
 
 	@Operation(summary = "Get total of Order")
 	@ApiResponses(value = {
@@ -210,7 +214,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/orderDTO")
-	public List<OrderDTO> getProductDTOPage(@RequestParam(name = "pagenum") int page,
+	public List<OrderDTO> getOrderDTOPage(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "status", required = false) Integer status) {
 		if (status == null)
 			return orderService.getOrderPage(page, size).stream().map(orderService::convertToDTO)
@@ -235,11 +239,17 @@ public class OrderController {
 
 	@GetMapping("/order/report/profitByMonth")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public float getProfitByMonth(@RequestParam(name = "month") int month, @RequestParam(name = "year") int year) {
-		if (month > 12 || month < 1)
+	public float getProfitByMonth(HttpServletRequest request, @RequestParam(name = "month") int month, @RequestParam(name = "year") int year) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		if (month > 12 || month < 1) {
+			logger.error("Get profit by " + email +" failed: Month must from 1 to 12");
 			throw new ObjectPropertiesIllegalException("Month must from 1 to 12");
-		if (year == 0 || year < 2000)
+		}
+		if (year == 0 || year < 2000) {
+			logger.error("Get profit by " + email +" failed: Year is invalid");
 			throw new ObjectPropertiesIllegalException("Year is invalid");
+		}
 		return orderService.profitByMonth(month, year);
 	}
 }

@@ -61,16 +61,12 @@ public class CategoriesServiceImpl implements CategoriesService {
 			return true;
 	}
 
-	public boolean deleteCategories(int id) {
+	public boolean deleteCategories(CategoriesEntity category) {
 //		categoriesRepository.deleteById(id);
-		try {
-		CategoriesEntity category = getCategories(id).get();
 		category.setStatus(false);
 		categoriesRepository.save(category);
 		return true;
-		}catch(NoSuchElementException ex) {
-			throw new ObjectNotFoundException("Not found Category with id: "+id);
-		}
+		
 	}
 
 	public boolean updateCategories(CategoriesDTO categoriesDTO) {

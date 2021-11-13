@@ -25,12 +25,17 @@ export default function Index() {
     getAvgRate();
   }, [id]);
   async function getProduct() {
-    await get(`/public/product/search/${id}`).then((response) => {
-      if (response.status === 200) {
-        console.log(response.data);
-        setProd(response.data);
-      }
-    });
+    await get(`/public/product/search/${id}`)
+      .then((response) => {
+        if (response.status === 200) {
+          setProd(response.data);
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          history.push("/404")
+        }
+      });
   }
   function addProductIdToCookie(type) {
     let cartCookie = getCookie("cart");

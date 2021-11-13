@@ -90,15 +90,11 @@ public class PersonServiceImpl implements PersonService {
 		}
 	}
 
-	public boolean deletePerson(int id) {
-		try {
-			PersonEntity person = getPerson(id).get();
-			person.setStatus(false);
-			personRepository.save(person);
-			return true;
-		} catch (NoSuchElementException ex) {
-			throw new ObjectNotFoundException(ex.getMessage());
-		}
+	public boolean deletePerson(PersonEntity person) {
+		person.setStatus(false);
+		personRepository.save(person);
+		return true;
+
 	}
 
 	public boolean updatePerson(PersonDTO personDTO) {

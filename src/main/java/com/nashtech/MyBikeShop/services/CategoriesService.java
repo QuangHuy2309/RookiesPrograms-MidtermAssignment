@@ -13,7 +13,7 @@ public interface CategoriesService {
 
 	public boolean createCategories(CategoriesDTO categories);
 
-	public boolean deleteCategories(int id);
+	public boolean deleteCategories(CategoriesEntity category);
 
 	public boolean checkExistName(int id, String name);
 

@@ -3,6 +3,9 @@ package com.nashtech.MyBikeShop.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,6 +27,8 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.payload.response.MessageResponse;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
+import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.payload.request.ChangePasswordRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +43,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class PersonController {
 	@Autowired
 	private PersonService personService;
+
+	@Autowired
+	private JwtUtils jwtUtils;
+
+	private static final Logger logger = Logger.getLogger(PersonController.class);
 
 	@Operation(summary = "Get all Account Infomation by Role")
 	@ApiResponses(value = {
@@ -60,7 +70,7 @@ public class PersonController {
 			@RequestParam(name = "role") String role) {
 		return personService.searchPerson(keyword, role);
 	}
-	
+
 	@GetMapping("/persons/search/roleNot")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public List<PersonEntity> searchPersonbyRoleNot(@RequestParam(name = "keyword") String keyword,
@@ -113,11 +123,23 @@ public class PersonController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/persons/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String deletePerson(@PathVariable(name = "id") int id) {
+	public String deletePerson(HttpServletRequest request, @PathVariable(name = "id") int id) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
-			return personService.deletePerson(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			PersonEntity person = personService.getPerson(id).get();
+			boolean check = personService.deletePerson(person);
+			if (check)
+				logger.info(email + " delete account " + person.getEmail() + " success");
+			else
+				logger.error(email + " delete account" + person.getEmail() + " failed");
+			return check ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
+			logger.error(ex.getStackTrace());
 			return StringUtils.FALSE;
+		} catch (NoSuchElementException ex) {
+			logger.error("Account not found with id: "+ id);
+			throw new ObjectNotFoundException(ex.getMessage());
 		}
 	}
 
@@ -146,12 +168,17 @@ public class PersonController {
 	public ResponseEntity<?> updatePassword(@PathVariable String email,
 			@RequestBody ChangePasswordRequest changePasswordRequest) {
 		try {
+			
 			PersonEntity updateAccount = personService.changePassword(email, changePasswordRequest.getOldPassword(),
 					changePasswordRequest.getNewPassword());
-			if (updateAccount == null)
+			if (updateAccount == null) {
+				logger.error("Account "+email+" change password failed");
 				return ResponseEntity.badRequest().body(new MessageResponse("Error: Change password failed."));
+			}
+			logger.info("Account "+email+" change password success");
 			return ResponseEntity.ok().body(new MessageResponse("Update password successfully."));
 		} catch (NoSuchElementException ex) {
+			logger.error("Error: Not found account with email: " + email);
 			throw new ObjectNotFoundException("Error: Not found account with email: " + email);
 		}
 

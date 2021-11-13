@@ -17,26 +17,25 @@ export default function Home1() {
   }, []);
 
   return (
-    <div>
-      {
-        cateList.map((cate) => {
-          let prodList = [];
-          console.log(prodList);
-          return (
-            <div key={cate.id}>
-              <div className="title-bike-type">
-                <Link
-                  to={`/Bike/${cate.id}`}
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <h2 className="cateName-Home Nav-HomeBtn">{cate.name}</h2>
-                </Link>
-              </div>
-              <Product id={cate.id} />
+    <div className="mt-4">
+      {cateList.map((cate) => {
+        let prodList = [];
+        console.log(prodList);
+        return (
+          <div key={cate.id}>
+            <div className="title-bike-type">
+              <Link
+                to={`/Bike/${cate.id}`}
+                style={{ textDecoration: "none", color: "black" }}
+              >
+                <h2 className="cateName-Home Nav-HomeBtn">{cate.name}</h2>
+              </Link>
             </div>
-          );
-        })
-      }
+            <Product id={cate.id} />
+          </div>
+        );
+      })}
+      
     </div>
   );
 }

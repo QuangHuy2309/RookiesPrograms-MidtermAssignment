@@ -23,7 +23,7 @@ public interface PersonService {
 
 	public PersonEntity createPerson(PersonDTO person);
 
-	public boolean deletePerson(int id);
+	public boolean deletePerson(PersonEntity person);
 
 	public boolean updatePerson(PersonDTO person);
 

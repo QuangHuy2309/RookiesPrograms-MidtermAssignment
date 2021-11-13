@@ -148,7 +148,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
 			case "categories": {
-				StringBuilder sql = new StringBuilder("\\copy (select name,description from categories order by id)" + " to '"
+				StringBuilder sql = new StringBuilder("\\copy (select name,description,status from categories order by id)" + " to '"
 						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -166,7 +166,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "products": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy products(id,name,price,quantity,producttype,description,brand,photo,createdate,updatedate,updateby)"
+						"\\copy products(id,name,price,quantity,producttype,description,brand,photo,createdate,updatedate,updateby,status)"
 								+ " to '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -174,7 +174,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderbill": {
-				StringBuilder sql = new StringBuilder("\\copy (select customerid,timebought,address,status from orderbill order by timebought)" + " to '"
+				StringBuilder sql = new StringBuilder("\\copy (select customerid,timebought,address,status,ispay from orderbill order by timebought)" + " to '"
 						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -244,7 +244,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
 			case "categories": {
-				StringBuilder sql = new StringBuilder("\\copy categories(name,description)" + " from '"
+				StringBuilder sql = new StringBuilder("\\copy categories(name,description,status)" + " from '"
 						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -262,7 +262,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "products": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy products(id,name,price,quantity,producttype,description,brand,photo,createdate,updatedate,updateby)"
+						"\\copy products(id,name,price,quantity,producttype,description,brand,photo,createdate,updatedate,updateby,status)"
 								+ " from '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -270,7 +270,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderbill": {
-				StringBuilder sql = new StringBuilder("\\copy orderbill(customerid,timebought,address,status)" + " from '"
+				StringBuilder sql = new StringBuilder("\\copy orderbill(customerid,timebought,address,status,ispay)" + " from '"
 						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)

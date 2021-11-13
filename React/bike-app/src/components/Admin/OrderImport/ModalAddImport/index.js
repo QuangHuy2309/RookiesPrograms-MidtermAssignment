@@ -31,6 +31,7 @@ toast.configure();
 const ModalExample = (props) => {
   const [cateList, setCateList] = useState([]);
   const [prodList, setProdList] = useState([]);
+  const [totalProdList, setTotalProdList] = useState([]);
   const [prodPickedList, setProdPickedList] = useState([]);
   const [modal, setModal] = useState(false);
   const [base64, setBase64] = useState("");
@@ -42,6 +43,7 @@ const ModalExample = (props) => {
 
   useEffect(() => {
     if (modal) {
+      setChoice(1);
       setProdPickedList([]);
       setTotal(0);
       get("/public/categories").then((response) => {
@@ -54,6 +56,10 @@ const ModalExample = (props) => {
   }, [modal]);
 
   useEffect(() => {
+    getTotalProductList();
+  }, [cateList]);
+
+  useEffect(() => {
     getProductList();
   }, [choice]);
 
@@ -61,6 +67,16 @@ const ModalExample = (props) => {
     getTotalPrice(prodPickedList);
   }, [prodPickedList]);
 
+  async function getTotalProductList() {
+    setProdList([]);
+    cateList.map((cate) => {
+      get(`/public/product`).then((response) => {
+        if (response.status === 200) {
+          setTotalProdList([...response.data]);
+        }
+      });
+    });
+  }
   async function getProductList() {
     setProdList([]);
     get(`/public/product/${choice}`).then((response) => {
@@ -158,6 +174,12 @@ const ModalExample = (props) => {
       }
     });
   }
+  function findDuplicateProd(id) {
+    return prodPickedList.findIndex((prod) => prod.id === id);
+  }
+  function findExistProd(id) {
+    return totalProdList.findIndex((prod) => prod.id === id);
+  }
 
   function uploadProd(e) {
     const file = e.target.files[0];
@@ -182,13 +204,35 @@ const ModalExample = (props) => {
     promise.then((data) => {
       // console.log(data);
       data.forEach((prod_data) => {
-        let prod = {
-          id: prod_data.id,
-          name: prod_data.name,
-          quantity: prod_data.amount,
-          price: prod_data.price,
-        };
-        setProdPickedList((oldArr) => [...oldArr, prod]);
+        let checkExist = findExistProd(prod_data.id);
+        if (checkExist >= 0) {
+          // let prod = findDuplicateProd(prod_data.id);
+          const check = findDuplicateProd(prod_data.id);
+          if (check >= 0) {
+            let list = [...prodPickedList];
+            let prod = { ...list[check] };
+            prod.quantity = prod_data.amount;
+            prod.price = prod_data.price;
+            list[check] = prod;
+            setProdPickedList(list);
+          } else {
+            let prod = {
+              id: prod_data.id,
+              name: prod_data.name,
+              quantity: prod_data.amount,
+              price: prod_data.price,
+            };
+            setProdPickedList((oldArr) => [...oldArr, prod]);
+          }
+        } else {
+          toast.error(
+            `Product with ID:"${prod_data.id}" not exist. \nPlease create it first!`,
+            {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            }
+          );
+        }
       });
     });
   }
@@ -217,7 +261,7 @@ const ModalExample = (props) => {
                   {cateList
                     .filter((cate) => cate.id === choice)
                     .map((filtered) => (
-                      <>{filtered.name}</>
+                      <> {filtered.name}</>
                     ))}
                 </DropdownToggle>
                 <DropdownMenu>
@@ -233,7 +277,6 @@ const ModalExample = (props) => {
                   ))}
                 </DropdownMenu>
               </ButtonDropdown>{" "}
-              
             </Col>
 
             <Col className="searchField-AddImport mx-3">
@@ -249,14 +292,14 @@ const ModalExample = (props) => {
           </Row>
           <Label>Import: </Label>
           <Input
-                type="file"
-                name="file"
-                id="exampleFile"
-                onChange={(e) => {
-                  uploadProd(e);
-                }}
-                className="ms-3"
-              />
+            type="file"
+            name="file"
+            id="exampleFile"
+            onChange={(e) => {
+              uploadProd(e);
+            }}
+            className="ms-3 mb-3"
+          />
           <div className="scrollable">
             {prodList.map((prod, index) => (
               <Row className="mb-3">
@@ -321,7 +364,7 @@ const ModalExample = (props) => {
                           id="examplePrice"
                           required="required"
                           step="1"
-                          min="500"
+                          min="50"
                           value={prod.price}
                           onChange={(e) =>
                             handleProdFieldChange(e, "price", index)

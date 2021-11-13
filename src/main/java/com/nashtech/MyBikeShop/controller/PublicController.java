@@ -49,8 +49,6 @@ public class PublicController {
 	public List<CategoriesEntity> retrieveCategories() {
 		return cateService.retrieveCategories();
 	}
-	
-	
 
 	@Operation(summary = "Get all Product Infomation") // PRODUCT
 	@ApiResponses(value = {
@@ -64,15 +62,16 @@ public class PublicController {
 	public List<ProductEntity> retrieveProducts() {
 		return productService.retrieveProducts();
 	}
-	
+
 	@GetMapping("/product/search")
 	public List<ProductEntity> searchProducts(@RequestParam(name = "keyword") String keyword,
 			@RequestParam(name = "type", required = false) Integer type) {
 		if (type != null)
-		return productService.searchProductByType(keyword,type);
-		else return productService.searchProduct(keyword);
+			return productService.searchProductByType(keyword, type);
+		else
+			return productService.searchProduct(keyword);
 	}
-	
+
 	@GetMapping("/product/{cateId}")
 	public List<ProductEntity> retrieveProductsByType(@PathVariable(name = "cateId") int id) {
 		return productService.retrieveProductsByType(id);
@@ -91,7 +90,7 @@ public class PublicController {
 		return productService.getProduct(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));
 	}
-	
+
 	@Operation(summary = "Get Product by Type for Page")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -104,7 +103,7 @@ public class PublicController {
 			@RequestParam(name = "size") int size, @RequestParam(name = "type") int id) {
 		return productService.getProductPage(page, size, id);
 	}
-	
+
 	@GetMapping("/productDTO/page")
 	public List<ProductDTO> getProductDTOPage(@RequestParam(name = "pagenum") int page,
 			@RequestParam(name = "size") int size, @RequestParam(name = "type") int id) {

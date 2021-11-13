@@ -125,10 +125,6 @@ public class OrderImportEntity {
 		this.orderImportDetails = orderImportDetails;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(employee, id, orderImportDetails, status, timeimport);
-	}
 
 	@Override
 	public boolean equals(Object obj) {

@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./components/Login";
+import FNFPage from "./components/404Page/404.js";
 import ForgetPassword from "./components/Login/ModalForgotPass";
 import Admin from "./components/Admin";
 import Order from "./components/Order";
@@ -47,6 +48,12 @@ function App() {
         <Route exact path="/ForgetPassword">
           <Header />
           <ForgetPassword />
+          <Footer />
+        </Route>
+        <Route exact path="/404">
+          <Header />
+          <Navbar />
+          <FNFPage />
           <Footer />
         </Route>
         <PrivateRouteAdmin exact path="/Admin" component={Admin} />

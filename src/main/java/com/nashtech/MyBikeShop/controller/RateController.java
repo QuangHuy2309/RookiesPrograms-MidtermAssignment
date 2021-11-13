@@ -1,5 +1,7 @@
 package com.nashtech.MyBikeShop.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +18,8 @@ import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
+import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.RateService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +35,9 @@ public class RateController {
 	@Autowired
 	RateService rateService;
 	
+	@Autowired
+	private JwtUtils jwtUtils;
+
 	@Operation(summary = "Create a Rate for Product")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -45,13 +52,13 @@ public class RateController {
 	public RateEntity createRateOfProduct(@RequestBody RateDTO rate) {
 		return rateService.createRate(rate);
 	}
-	
+
 	@PostMapping("/product/rate/checkExist")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public boolean checkExistRate(@RequestBody RateKey rate) {
 		return rateService.checkExist(rate);
 	}
-	
+
 	@Operation(summary = "Create a Rate for Product")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -62,10 +69,12 @@ public class RateController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/product/rate/delete")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public String deleteRateOfProduct(@RequestBody RateKey rate) {
-		return rateService.deleteRate(rate) ? StringUtils.TRUE : StringUtils.FALSE;
+	public String deleteRateOfProduct(HttpServletRequest request, @RequestBody RateKey rate) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		return rateService.deleteRate(rate, email) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
-	
+
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = ProductEntity.class)) }),

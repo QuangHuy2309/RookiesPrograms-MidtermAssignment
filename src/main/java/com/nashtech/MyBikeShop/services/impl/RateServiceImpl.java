@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.OptionalDouble;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.RateDTO;
+import com.nashtech.MyBikeShop.controller.CategoriesController;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity;
@@ -39,23 +41,34 @@ public class RateServiceImpl implements RateService {
 	@Autowired
 	PersonRepository personRepo;
 
+	private static final Logger logger = Logger.getLogger(RateServiceImpl.class);
+
 	public List<RateEntity> getRateByProduct(String id) {
 		return rateRepo.findByIdProductIdAndCustomerStatusNot(id, false);
 	}
 
 	public boolean checkExist(RateKey id) {
-		return (!rateRepo.existsById(id)) && (rateRepo.checkUserOrdered(id.getProductId(),id.getCustomerId()) > 0);
-//		return (rateRepo.checkUserOrdered(id.getProductId(),id.getCustomerId()) > 0);
+		return (!rateRepo.existsById(id)) && (rateRepo.checkUserOrdered(id.getProductId(), id.getCustomerId()) > 0);
 	}
 
 	public RateEntity createRate(RateDTO rateDTO) {
 		boolean checkExist = rateRepo.existsById(new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId()));
-		if (checkExist)
-			throw new ObjectAlreadyExistException("Exist a review with this customer on this product");
-		else {
-			RateEntity rate = new RateEntity(rateDTO);
-			rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
-			return rateRepo.save(rate);
+		try {
+			PersonEntity person = personRepo.findById(rateDTO.getCustomerId()).get();
+			if (checkExist) {
+
+				logger.error(person.getEmail() + " had review product with id " + rateDTO.getProductId());
+				throw new ObjectAlreadyExistException("Exist a review with this customer on this product");
+
+			} else {
+				RateEntity rate = new RateEntity(rateDTO);
+				rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
+				logger.info("Create rate by " + person.getEmail() + " success");
+				return rateRepo.save(rate);
+			}
+		} catch (NoSuchElementException ex) {
+			logger.error("Not found person with id: " + rateDTO.getCustomerId());
+			throw new ObjectNotFoundException("Not found person with id: " + rateDTO.getCustomerId());
 		}
 	}
 
@@ -65,7 +78,7 @@ public class RateServiceImpl implements RateService {
 		return rateRepo.findByIdProductIdAndCustomerStatusNot(pageable, id, false);
 	}
 
-	public boolean deleteRate(RateKey id) {
+	public boolean deleteRate(RateKey id, String email) {
 		try {
 			ProductEntity prod = prodRepo.findById(id.getProductId()).get();
 			PersonEntity person = personRepo.findById(id.getCustomerId()).get();
@@ -75,8 +88,11 @@ public class RateServiceImpl implements RateService {
 			prodRepo.save(prod);
 			personRepo.save(person);
 			rateRepo.delete(rate);
+			logger.info(email + " delete success rate " + id.toString());
 			return true;
 		} catch (EmptyResultDataAccessException | NoSuchElementException ex) {
+			logger.error(
+					"Not found Rate with CustomerId: " + id.getCustomerId() + " - ProductId: " + id.getProductId());
 			throw new ObjectNotFoundException(
 					"Not found Rate with CustomerId: " + id.getCustomerId() + " - ProductId: " + id.getProductId());
 		}

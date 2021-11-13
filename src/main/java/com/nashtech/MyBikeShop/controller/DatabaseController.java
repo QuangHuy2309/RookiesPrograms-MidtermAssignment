@@ -2,6 +2,9 @@ package com.nashtech.MyBikeShop.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.services.DatabaseService;
 import com.nashtech.MyBikeShop.payload.response.MessageResponse;
+import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
+import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,35 +29,53 @@ public class DatabaseController {
 	@Autowired
 	DatabaseService dbServices;
 
+	@Autowired
+	private JwtUtils jwtUtils;
+
+	private static final Logger logger = Logger.getLogger(DatabaseController.class);
+
 	@GetMapping("/db/backup")
 	@PreAuthorize("hasRole('ADMIN')")
-	public boolean dbBackUpAction() {
+	public boolean dbBackUpAction(HttpServletRequest request) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
 		dbServices.executeCommand("backup");
+		logger.info("Backup data by " + email);
 		return true;
 	}
 
 	@GetMapping("/db/restore")
 	@PreAuthorize("hasRole('ADMIN')")
-	public boolean dbRestoreAction() {
+	public boolean dbRestoreAction(HttpServletRequest request) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
 		dbServices.executeCommand("restore");
+		logger.info("Restore data by " + email);
 		return true;
 	}
 
 	@GetMapping("/db/export")
 	@PreAuthorize("hasRole('ADMIN')")
-	public boolean dbExportAction() {
+	public boolean dbExportAction(HttpServletRequest request) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
 		dbServices.exportToCSV();
+		logger.info("Export data to CSV by " + email);
 		return true;
 	}
 
 	@DeleteMapping("/db/{filename}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<?> deleteBackupFolder(@PathVariable(name = "filename") String filename) {
-		if (dbServices.deleteFolderBackup(filename))
-		{ 
+	public ResponseEntity<?> deleteBackupFolder(HttpServletRequest request,
+			@PathVariable(name = "filename") String filename) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		if (dbServices.deleteFolderBackup(filename)) {
+			logger.info("Delete backup data success by " + email);
 			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		}
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Delete backup folder failed."));
+		logger.error("Delete backup data failed by " + email);
+		return ResponseEntity.badRequest().body(new MessageResponse("Error: Delete backup folder failed."));
 	}
 
 	@GetMapping("/db/getBackupFileName")

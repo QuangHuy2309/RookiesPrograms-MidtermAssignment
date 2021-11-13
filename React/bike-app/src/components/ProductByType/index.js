@@ -104,7 +104,7 @@ export default function Index() {
     );
   }
   return (
-    <Row>
+    <Row className="mt-3">
       <Col className="col-3 ">
         <div className="bike-type">
           {cateList.map((cate) => (

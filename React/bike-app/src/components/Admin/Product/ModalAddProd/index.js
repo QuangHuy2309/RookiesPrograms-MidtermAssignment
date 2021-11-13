@@ -206,7 +206,7 @@ const ModalExample = (props) => {
                 name="price"
                 id="examplePrice"
                 required="required"
-                min="500"
+                min="50"
                 step="1"
               />
             </FormGroup>

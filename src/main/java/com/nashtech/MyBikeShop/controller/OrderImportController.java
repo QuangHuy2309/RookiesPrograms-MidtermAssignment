@@ -1,6 +1,5 @@
 package com.nashtech.MyBikeShop.controller;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,9 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDTO;
 import com.nashtech.MyBikeShop.DTO.OrderImportDetailDTO;
 import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
@@ -65,9 +61,11 @@ public class OrderImportController {
 
 	@Autowired
 	PersonService personService;
-	
+
 	@Autowired
 	private JwtUtils jwtUtils;
+
+	private static final Logger logger = Logger.getLogger(OrderImportController.class);
 
 	@GetMapping("/orderImport/totalOrder")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
@@ -87,6 +85,7 @@ public class OrderImportController {
 	public ResponseEntity<?> createOrderImport(@RequestBody OrderImportDTO newOrderImportDto) {
 		PersonEntity personImport = personService.getPerson(newOrderImportDto.getEmployeeEmail());
 		if (personImport == null) {
+			logger.error("Create import failed: Employee not found");
 			throw new ObjectNotFoundException("Employee not found");
 		}
 		Set<OrderImportDetailDTO> importDetailDtoList = newOrderImportDto.getOrderImportDetails();
@@ -95,6 +94,7 @@ public class OrderImportController {
 		for (OrderImportDetailDTO detailDto : importDetailDtoList) {
 			ProductEntity product = productService.getProduct(detailDto.getProductId()).orElse(null);
 			if (product == null) {
+				logger.error("Product ID " + detailDto.getProductId() + " not found!");
 				throw new ObjectNotFoundException("Product ID " + detailDto.getProductId() + " not found!");
 			}
 			OrderImportDetailEntity detailEntity = importDetailService.convertToEntity(detailDto);
@@ -105,21 +105,22 @@ public class OrderImportController {
 		orderImport.setOrderImportDetails(importDetailEntityList);
 
 		OrderImportEntity orderImportCreated = orderImportService.createOrderImport(orderImport);
-
+		logger.info("Import created by " + newOrderImportDto.getEmployeeEmail() + " success");
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportCreated), HttpStatus.OK);
 
 	}
 
 	@PostMapping("/imports/file")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> createOrderImportFromExcel(HttpServletRequest request, @RequestParam("file") MultipartFile reapExcelDataFile) {
+	public ResponseEntity<?> createOrderImportFromExcel(HttpServletRequest request,
+			@RequestParam("file") MultipartFile reapExcelDataFile) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
 		String email = jwtUtils.getUserNameFromJwtToken(jwt);
 		OrderImportEntity orderImportCreated = orderImportService.createOrderFromXLSS(reapExcelDataFile, email);
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportCreated), HttpStatus.OK);
-	    
+
 	}
-	
+
 	@Operation(summary = "Get Order import")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = OrderImportDTO.class)) }),
@@ -135,7 +136,6 @@ public class OrderImportController {
 		List<OrderImportDTO> orderImportDto = orderImportEntity.stream().map(orderImportService::convertToDto)
 				.collect(Collectors.toList());
 		return new ResponseEntity<List<OrderImportDTO>>(orderImportDto, HttpStatus.OK);
-//		return new ResponseEntity<List<OrderImportEntity>>(orderImportEntity, HttpStatus.OK);
 	}
 
 	@GetMapping("/imports/search/ImportByEmployee/{keyword}")
@@ -157,7 +157,7 @@ public class OrderImportController {
 	public ResponseEntity<?> getOrderImportDetail(@PathVariable int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
-			throw new ObjectNotFoundException("Order import not found!");
+			throw new ObjectNotFoundException("Order import not found with id: "+ importId);
 		}
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImport), HttpStatus.OK);
 	}
@@ -195,20 +195,22 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/imports/{importId}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> deleteOrderImport(@PathVariable(name = "importId") int importId) {
+	public ResponseEntity<?> deleteOrderImport(HttpServletRequest request,
+			@PathVariable(name = "importId") int importId) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String email = jwtUtils.getUserNameFromJwtToken(jwt);
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
+			logger.error("Delete import by "+ email+" failed: Order import not found!");
 			throw new ObjectNotFoundException("Order import not found!");
 		}
-//		if (orderImport.isStatus()) {
-//			return ResponseEntity.badRequest().body(new MessageResponse("Import order is delivered. Cannot delete!"));
-//		}
 		boolean result = orderImportService.deleteOrderImport(importId);
 		if (!result) {
+			logger.error("Delete import by "+ email+" failed: Internal Server Error");
 			return ResponseEntity.internalServerError().body(new MessageResponse("Delete fail!"));
 		}
+		logger.info("Delete import by "+ email+" success");
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	
+
 }

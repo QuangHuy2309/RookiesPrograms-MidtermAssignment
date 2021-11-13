@@ -20,11 +20,11 @@ export default function OrderImport() {
   const [statusListProd, setStatusListProd] = useState(false);
   const [showPagination, setShowPage] = useState(true);
   const [dropdownOpen, setOpen] = useState(false);
+  const [totalPage, setTotalPage] = useState(0);
   const role = getCookie("role");
   const size = 6;
-  let totalPage = useRef(0);
   const toggle = () => setOpen(!dropdownOpen);
-  
+
   useEffect(() => {
     getCountTotalOrderImport();
     getOrderImportList();
@@ -37,7 +37,7 @@ export default function OrderImport() {
   async function getCountTotalOrderImport() {
     getWithAuth(`/orderImport/totalOrder`).then((response) => {
       if (response.status === 200) {
-        totalPage.current = response.data;
+        setTotalPage(response.data);
       }
     });
   }
@@ -93,6 +93,7 @@ export default function OrderImport() {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
+            getCountTotalOrderImport();
             getOrderImportList();
           }
         })
@@ -165,7 +166,10 @@ export default function OrderImport() {
     }
   }
   function handleAdd(e) {
-    if (e) getOrderImportList();
+    if (e) {
+      getCountTotalOrderImport();
+      getOrderImportList();
+    }
   }
   function handleEdt(e) {
     if (e) getOrderImportList();
@@ -199,7 +203,9 @@ export default function OrderImport() {
             <th className="titleTable-OrderImportAdmin">PRODUCT</th>
             {/* <th className="titleTable-OrderImportAdmin"></th> */}
 
-            {role.includes("ADMIN") ? <th className="titleTable-OrderImportAdmin">ACTION</th> : null}
+            {role.includes("ADMIN") ? (
+              <th className="titleTable-OrderImportAdmin">ACTION</th>
+            ) : null}
           </tr>
         </thead>
         <tbody>
@@ -243,7 +249,7 @@ export default function OrderImport() {
       </Table>
       {showPagination ? (
         <Page
-          total={Math.ceil(totalPage.current / size)}
+          total={Math.ceil(totalPage / size)}
           onPageChange={(e) => setPageNum(e)}
         />
       ) : null}
