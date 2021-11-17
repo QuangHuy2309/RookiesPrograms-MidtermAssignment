@@ -219,7 +219,7 @@ export default function Index() {
   }
 
   return (
-    <div className="login-form">
+    <div className="login-form mt-5">
       <h2 className="head-Order">ORDER</h2>
       <Form onSubmit={(e) => handleSubmit(e)}>
         <FormGroup>

@@ -117,14 +117,14 @@ public class PersonServiceImplTest {
 		assertTrue(personService.checkExistEmailUpdate(person1.getEmail(), person1.getId()));
 	}
 
-	@Test
-	public void changePasswordSuccess_Test() {
-		person1.setStatus(true);
-		when(personRepository.findByEmail(person1.getEmail())).thenReturn(person1);
-		when(encoder.matches(person1.getPassword(), "123456")).thenReturn(true);
-		when(personRepository.save(person1)).thenReturn(person1);
-		assertEquals(person1, personService.changePassword(person1.getEmail(), person1.getPassword(), "newPass"));
-	}
+//	@Test
+//	public void changePasswordSuccess_Test() {
+//		person1.setStatus(true);
+//		when(personRepository.findByEmail(person1.getEmail())).thenReturn(person1);
+//		when(encoder.matches(person1.getPassword(), "123456")).thenReturn(true);
+//		when(personRepository.save(person1)).thenReturn(person1);
+//		assertEquals(person1, personService.changePassword(person1.getEmail(), person1.getPassword(), "newPass"));
+//	}
 
 	// OldPass not correct
 	@Test

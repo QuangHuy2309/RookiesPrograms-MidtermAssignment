@@ -35,3 +35,7 @@
 2021-11-14 11:14:32 INFO  PersonController:165 - Account id 1 update account id 1 success
 2021-11-14 11:17:00 INFO  PersonController:165 - Account id 1 update account id 1 success
 2021-11-14 11:17:29 INFO  PersonController:165 - Account id 1 update account id 1 success
+2021-11-17 20:58:08 INFO  PersonController:199 - Account id 13 change password success
+2021-11-17 21:05:21 INFO  PersonController:199 - Account id 13 change password success
+2021-11-17 21:10:15 INFO  OrderServiceImpl:177 - Account id 13 create order Id 0 success
+2021-11-17 21:22:46 INFO  OrderServiceImpl:205 - Account id 13 updated order payment status with Id 25 success

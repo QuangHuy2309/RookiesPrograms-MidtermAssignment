@@ -71,9 +71,25 @@ const ModalAdd = (props) => {
   async function sendOTP(e) {
     e.preventDefault();
     let email_trim = email.trim().toLowerCase();
-    // await checkExistEmail(email_trim);
-    if (checkExistEmail(email_trim)) {
-      get(`/auth/sendOTP/${email_trim}`)
+    const check = await checkExistEmail(email_trim);
+    // await console.log(check);
+    // if (check) {
+    //   console.log("TRUE");
+    //   get(`/auth/sendOTP/${email_trim}`)
+    //     .then((response) => {
+    //       if (response.status === 200)
+    //         toast.success("Verification code had send to your email", {
+    //           position: toast.POSITION.TOP_RIGHT,
+    //           autoClose: 3000,
+    //         });
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // }
+  }
+  async function sendMail(email_trim){
+    get(`/auth/sendOTP/${email_trim}`)
         .then((response) => {
           if (response.status === 200)
             toast.success("Verification code had send to your email", {
@@ -84,7 +100,6 @@ const ModalAdd = (props) => {
         .catch((error) => {
           console.log(error);
         });
-    }
   }
   function checkOTP(e) {
     e.preventDefault();
@@ -142,6 +157,7 @@ const ModalAdd = (props) => {
           setEmailError("Email does not exist!!!");
           return false;
         } else {
+          sendMail(email);
           return true;
         }
       }
@@ -150,7 +166,7 @@ const ModalAdd = (props) => {
   return (
     <div>
       <Navbar />
-      <div className="login-form-Login">
+      <div className="login-form-Login mt-5">
         <h2 className="head-login-Login">FORGOT PASSWORD</h2>
         <hr className="hrLoginForm" />
         <Form

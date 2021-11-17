@@ -93,7 +93,7 @@ export default function UserOrderHistory() {
     <>
       <Header />
       <Navbar />
-      <h1 className="mb-3">Order History</h1>
+      <h1 className="mb-3 mt-5">Order History</h1>
       <div>
         {orderList.map((order, index) => (
           <div className="orderHistory" key={index}>

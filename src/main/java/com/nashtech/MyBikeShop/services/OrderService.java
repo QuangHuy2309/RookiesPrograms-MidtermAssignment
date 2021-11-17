@@ -31,7 +31,7 @@ public interface OrderService {
 
 	public boolean updateOrder(OrderDTO order);
 	
-	public boolean updateOrderPayment(int id, String customerEmail);
+	public boolean updateOrderPayment(int id, int customerEmail);
 
 	public boolean updateStatusOrder(int id, int status);
 

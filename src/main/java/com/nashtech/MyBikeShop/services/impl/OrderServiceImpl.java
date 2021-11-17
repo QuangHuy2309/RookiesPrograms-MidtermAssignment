@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
@@ -179,17 +181,30 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Transactional
-	public boolean updateOrderPayment(int id, String customerEmail) {
-		OrderEntity order = getOrder(id).get();
-		PersonEntity person = personService.getPerson(customerEmail);
-		if (!order.getCustomers().getEmail().equalsIgnoreCase(customerEmail)) {
-			logger.error("Account id " + person.getId() + " updated order Id " + id
-					+ " payment status failed: This account not have permission");
-			throw new ObjectPropertiesIllegalException("Error: Unauthorized");
+	public boolean updateOrderPayment(int id, int userId) {
+		OrderEntity order;
+		PersonEntity person;
+		try {
+		 order = getOrder(id).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " updated order payment status with Id " + id + " failed: Not found this account");
+			throw new ObjectNotFoundException("Could not find order with Id: " + id);
 		}
-		order.setPayment(true);
-		logger.info("Account id " + person.getId() + " updated order payment status with Id " + id + " success");
-		return true;
+		try {
+			person = personService.getPerson(userId).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " updated order payment status with Id " + id + " failed: Not found this account");
+			throw new ObjectNotFoundException("Not found this account: " + userId);
+		}
+			if (!order.getCustomers().getEmail().equalsIgnoreCase(person.getEmail())) {
+				logger.error("Account id " + person.getId() + " updated order Id " + id
+						+ " payment status failed: This account not have permission");
+				throw new ObjectPropertiesIllegalException("Error: Unauthorized");
+			}
+			order.setPayment(true);
+			logger.info("Account id " + person.getId() + " updated order payment status with Id " + id + " success");
+			return true;
+		
 	}
 
 	@Transactional

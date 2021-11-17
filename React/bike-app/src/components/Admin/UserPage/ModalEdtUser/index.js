@@ -221,7 +221,7 @@ const ModalAdd = (props) => {
                 value={user.email}
                 required
                 onChange={(e) => handleFieldChange(e, "email")}
-                disabled
+                // disabled
               />
               <div style={{ color: "red" }}>{emailError}</div>
             </FormGroup>

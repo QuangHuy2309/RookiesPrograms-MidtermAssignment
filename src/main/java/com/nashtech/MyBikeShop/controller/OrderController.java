@@ -160,8 +160,8 @@ public class OrderController {
 	public String updateOrderPayment(HttpServletRequest request, @PathVariable(name = "id") int id) {
 		try {
 			String jwt = JwtAuthTokenFilter.parseJwt(request);
-			String email = jwtUtils.getUserNameFromJwtToken(jwt);
-			return orderService.updateOrderPayment(id, email) ? StringUtils.TRUE : StringUtils.FALSE;
+			String userId = jwtUtils.getUserNameFromJwtToken(jwt);
+			return orderService.updateOrderPayment(id, Integer.parseInt(userId)) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (NoSuchElementException ex) {
 			System.err.println(ex.getMessage());
 			throw new ObjectNotFoundException("Could not find Order with id: " + id);

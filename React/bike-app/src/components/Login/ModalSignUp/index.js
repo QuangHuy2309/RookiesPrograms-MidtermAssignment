@@ -39,6 +39,7 @@ const ModalAdd = (props) => {
       setRePassError("");
       setCheckEmail(false);
       setRePass("");
+      setVerify(false);
     }
   }, [modal]);
   async function checkRePass(pass) {
@@ -286,7 +287,7 @@ const ModalAdd = (props) => {
               }}
             />
             <br />
-            <Button color="primary" type="submit">
+            <Button color="primary" type="submit" disabled={!verify}>
               Sign Up
             </Button>{" "}
             <Button color="secondary" onClick={toggle}>
