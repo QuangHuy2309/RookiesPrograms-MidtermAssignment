@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.controller.ProductController;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.services.ProductService;
 import com.nashtech.MyBikeShop.services.impl.ProductServiceImpl;
@@ -43,9 +44,10 @@ public class ProductControllerTest {
 		CategoriesEntity cate = new CategoriesEntity(1, "cate1", "cateDes",true);
 		ProductEntity prod = new ProductEntity("a1","PRODUCT ENTITY",(float)6.5,4,cate);
 		ProductDTO prodDTO = new ProductDTO("a1DTO","PRODUCT DTO",(float)6.5,4,1,"A");
+		PersonEntity person1= new PersonEntity(1,"lqhuy2309@gmail.com","123456","Quang Huy","ADMIN");
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		
-		Mockito.when(prodService.createProduct(Mockito.anyObject(),"A")).thenReturn(prod);
+		Mockito.when(prodService.createProduct(Mockito.anyObject(),person1.getId())).thenReturn(prod);
 		
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/product")
 				.content(ow.writeValueAsString(prodDTO))

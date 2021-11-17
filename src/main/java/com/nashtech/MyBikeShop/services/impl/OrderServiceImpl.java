@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
+
 	private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
 	public OrderServiceImpl() {
@@ -143,7 +143,6 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public OrderEntity createOrder(OrderDTO orderDTO) {
-
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
 		orderEntity.setTimebought(LocalDateTime.now());
 		PersonEntity person = personService.getPerson(orderDTO.getCustomersEmail());
@@ -164,7 +163,8 @@ public class OrderServiceImpl implements OrderService {
 							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(detailDTO.getUnitPrice())
 							+ "</span></p>");
 			if (!result) {
-				logger.error("Failed in create detail order");
+				logger.error("Account id " + person.getId() + " create order " + orderDTO.getId()
+						+ " failed: Create detail order failed");
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
 			}
 		}
@@ -174,21 +174,24 @@ public class OrderServiceImpl implements OrderService {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
-		logger.info("Order create by "+ orderDTO.getCustomersEmail() +" success");
+		logger.info("Account id " + person.getId() + " create order Id " + orderDTO.getId() + " success");
 		return orderRepository.getById(orderSaved.getId());
 	}
-	
+
 	@Transactional
 	public boolean updateOrderPayment(int id, String customerEmail) {
 		OrderEntity order = getOrder(id).get();
+		PersonEntity person = personService.getPerson(customerEmail);
 		if (!order.getCustomers().getEmail().equalsIgnoreCase(customerEmail)) {
-			logger.error("Customer "+customerEmail+" tried update order of "+order.getCustomers().getEmail());
+			logger.error("Account id " + person.getId() + " updated order Id " + id
+					+ " payment status failed: This account not have permission");
 			throw new ObjectPropertiesIllegalException("Error: Unauthorized");
 		}
-		logger.info("Order update payment status by "+ customerEmail +" success");
 		order.setPayment(true);
+		logger.info("Account id " + person.getId() + " updated order payment status with Id " + id + " success");
 		return true;
 	}
+
 	@Transactional
 	public boolean deleteOrder(int id) {
 		OrderEntity order = getOrder(id).get();
@@ -200,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		person.getOrders().remove(order);
 		orderRepository.delete(order);
-		logger.info("Order delete by "+ person.getEmail() +" success");
+		logger.info("Account id " + person.getId() + " create order Id " + id + " success");
 		return true;
 	}
 
@@ -233,7 +236,8 @@ public class OrderServiceImpl implements OrderService {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				boolean result = orderDetailService.updateDetailCancel(detail);
 				if (!result) {
-					logger.error("Update order's status by" + order.getCustomers().getEmail()+" failed");
+					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
+							+ " failed: Update order details failed");
 					return false;
 				}
 			}
@@ -241,15 +245,17 @@ public class OrderServiceImpl implements OrderService {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
 				boolean result = orderDetailService.updateDetail(detail);
 				if (!result) {
-					logger.error("Update order's status by" + order.getCustomers().getEmail()+" failed");
+					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
+							+ " failed: Update order details failed");
 					return false;
 				}
 			}
 		}
-		if (status == 3) order.setPayment(true);
+		if (status == 3)
+			order.setPayment(true);
 		order.setStatus(status);
 		orderRepository.save(order);
-		logger.info("Update order's status by" + order.getCustomers().getEmail()+" success");
+		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id success");
 		return true;
 	}
 

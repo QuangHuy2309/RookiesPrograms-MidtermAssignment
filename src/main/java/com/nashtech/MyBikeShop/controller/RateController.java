@@ -71,8 +71,8 @@ public class RateController {
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public String deleteRateOfProduct(HttpServletRequest request, @RequestBody RateKey rate) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
-		return rateService.deleteRate(rate, email) ? StringUtils.TRUE : StringUtils.FALSE;
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
+		return rateService.deleteRate(rate, userId) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 
 	@ApiResponses(value = {

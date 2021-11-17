@@ -82,7 +82,7 @@ public class AuthController {
 		PersonEntity person = personRepository.findByEmail(loginRequest.getEmail());
 		if (person.isStatus()) {
 			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+					new UsernamePasswordAuthenticationToken(person.getId(), loginRequest.getPassword()));
 
 			// if go there, the user/password is correct
 			SecurityContextHolder.getContext().setAuthentication(authentication);

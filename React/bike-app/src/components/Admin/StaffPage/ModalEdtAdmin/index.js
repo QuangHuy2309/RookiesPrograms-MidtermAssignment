@@ -136,6 +136,7 @@ const ModalAdd = (props) => {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
+            document.cookie = `email=${email}; max-age=86400; path=/;`;
             props.onEdit("true");
             toggle();
           }
@@ -178,7 +179,7 @@ const ModalAdd = (props) => {
 
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle} className="title-UserAddAdmin">
-          <MdModeEdit /> User Information
+          <MdModeEdit /> Staff Information
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>

@@ -8,12 +8,12 @@ import { GiDutchBike,GiTruck } from "react-icons/gi";
 import { BiUserPin } from "react-icons/bi";
 import { logOut } from "../../../Utils/Auth";
 import {  getWithAuth } from "../../../Utils/httpHelper";
-import { HiDatabase } from "react-icons/hi";
+import { HiDatabase, HiHome } from "react-icons/hi";
 import { AiFillDatabase, AiOutlineLineChart } from "react-icons/ai";
 import { MdBorderColor } from "react-icons/md";
 import ModalConfirm from "../../ModalConfirm";
 import ModalChangePass from "../../ModalChangePass";
-import ModalEdtUser from "../UserPage/ModalEdtUser";
+import ModalEdtAdmin from "../StaffPage/ModalEdtAdmin";
 import { getCookie } from "../../../Utils/Cookie";
 
 export default function Index(props) {
@@ -39,6 +39,12 @@ export default function Index(props) {
   return (
     <ProSidebar>
       <Menu iconShape="square">
+        <MenuItem
+          icon={<HiHome />}
+          onClick={() => history.push('/')}
+        >
+          HOME
+        </MenuItem>
         <MenuItem
           icon={<AiFillDatabase />}
           onClick={() => props.onChoice("CATE")}
@@ -96,7 +102,7 @@ export default function Index(props) {
           {/* <MenuItem onClick={() => props.onChoice("CHANGEPASS")}> 
           Change Password</MenuItem> */}
           <MenuItem>
-            <ModalEdtUser
+            <ModalEdtAdmin
               isUser="true"
               id={id}
               onEdit={(e) => handleUpdate(e)}

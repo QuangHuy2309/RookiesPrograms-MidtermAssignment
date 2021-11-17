@@ -22,6 +22,7 @@ import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
+import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 
@@ -37,6 +38,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class ProductController {
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private PersonService personService;
 
 	@Autowired
 	private JwtUtils jwtUtils;
@@ -55,8 +59,8 @@ public class ProductController {
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public ProductEntity saveProduct(HttpServletRequest request, @RequestBody ProductDTO newProduct) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
-		return productService.createProduct(newProduct, email);
+		String id = jwtUtils.getUserNameFromJwtToken(jwt);
+		return productService.createProduct(newProduct, Integer.parseInt(id));
 	}
 
 	@GetMapping("/product/checkExistId/{id}")
@@ -87,9 +91,11 @@ public class ProductController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/product/{id}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public String deleteProduct(@PathVariable(name = "id") String id) {
+	public String deleteProduct(HttpServletRequest request, @PathVariable(name = "id") String id) {
 		try {
-			return productService.deleteProduct(id) ? StringUtils.TRUE : StringUtils.FALSE;
+			String jwt = JwtAuthTokenFilter.parseJwt(request);
+			String userId = jwtUtils.getUserNameFromJwtToken(jwt);
+			return productService.deleteProduct(id, Integer.parseInt(userId)) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
 			return StringUtils.FALSE;
 		}
@@ -108,9 +114,9 @@ public class ProductController {
 	public String editProduct(HttpServletRequest request, @RequestBody ProductDTO product,
 			@PathVariable(name = "id") String id) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		 try {
-		return productService.updateProduct(product, email) ? StringUtils.TRUE : StringUtils.FALSE;
+		return productService.updateProduct(product, Integer.parseInt(userId)) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (ObjectAlreadyExistException ex) {
 			return StringUtils.FALSE;
 		}

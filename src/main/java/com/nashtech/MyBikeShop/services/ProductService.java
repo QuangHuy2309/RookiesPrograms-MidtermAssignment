@@ -23,11 +23,11 @@ public interface ProductService {
 
 	public Optional<ProductEntity> getProduct(String id);
 
-	public ProductEntity createProduct(ProductDTO product, String email);
+	public ProductEntity createProduct(ProductDTO product, int id);
 
-	public boolean deleteProduct(String id);
+	public boolean deleteProduct(String id, int userId);
 
-	public boolean updateProduct(ProductDTO product, String email);
+	public boolean updateProduct(ProductDTO product, int id);
 
 	public boolean updateProductQuantity(String id, int numberChange);
 
