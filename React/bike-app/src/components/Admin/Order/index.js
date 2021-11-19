@@ -167,14 +167,30 @@ export default function Order() {
     }
   }
   function setStatusChoice(id, e) {
-    console.log(`${id}  + ${e.target.value}`);
     put(`/order/updateStatus/${id}?status=${e.target.value}`, "").then(
       (response) => {
         if (response.status === 200) {
+          toast.success(
+            `Update order status success`,
+            {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            }
+          );
           getListOrder();
         }
       }
-    );
+    ).catch((error) => {
+      if (error.response.status === 400 || error.response.status === 404) {
+        toast.error(
+          `Failed: ${error.response.data.message}`,
+          {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          }
+        );
+      }
+    });    
   }
   function getSearchOrderList(keyword, status) {
     setOrderList([]);

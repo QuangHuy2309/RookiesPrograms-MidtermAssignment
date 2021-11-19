@@ -183,11 +183,11 @@ public class ProductServiceImpl implements ProductService {
 	public boolean updateProductQuantity(String id, int numberChange) {
 		try {
 			ProductEntity product = getProduct(id).get();
-			if (product.getQuantity() - numberChange < 0) {
-				throw new ObjectPropertiesIllegalException("Quantity of Product is not enought");
+			if (product.getQuantity() - Math.abs(numberChange) < 0) {
+				throw new ObjectPropertiesIllegalException("Quantity of product is not enough to update");
 			} else if (!product.isStatus()) {
 				logger.error("Update product quantity " + id + " failed: Product not found");
-				throw new ObjectNotFoundException("Error: Product not found with id " + id);
+				throw new ObjectNotFoundException("Product not found with id " + id);
 			}
 			product.changeQuantity(numberChange);
 			// productRepository.save(updateDate(product));

@@ -39,3 +39,24 @@
 2021-11-17 21:05:21 INFO  PersonController:199 - Account id 13 change password success
 2021-11-17 21:10:15 INFO  OrderServiceImpl:177 - Account id 13 create order Id 0 success
 2021-11-17 21:22:46 INFO  OrderServiceImpl:205 - Account id 13 updated order payment status with Id 25 success
+2021-11-18 19:37:56 ERROR OrderServiceImpl:282 - Account id 7 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:39:14 ERROR OrderServiceImpl:282 - Account id 7 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:41:35 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:41:43 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:42:31 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:43:55 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:44:10 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:44:57 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:45:41 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:46:45 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:47:05 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:48:08 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:49:41 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:49:54 ERROR OrderServiceImpl:282 - Account id 1 update order status with Id 25 failed: Product not found with ID m3
+2021-11-18 19:53:20 INFO  OrderServiceImpl:298 - Account id 13 update order status with Id success
+2021-11-18 19:55:16 ERROR OrderServiceImpl:282 - Account id 7 update order status with Id 23 failed: Product not found with ID m3
+2021-11-18 20:03:32 INFO  OrderServiceImpl:298 - Account id 13 update order status with Id 23 success
+2021-11-18 20:04:08 INFO  OrderServiceImpl:298 - Account id 13 update order status with Id 23 success
+2021-11-18 20:04:34 INFO  OrderServiceImpl:298 - Account id 13 update order status with Id 23 success
+2021-11-18 20:04:37 INFO  OrderServiceImpl:298 - Account id 13 update order status with Id 23 success
+2021-11-18 20:05:04 INFO  OrderServiceImpl:298 - Account id 13 update order status with Id 23 success

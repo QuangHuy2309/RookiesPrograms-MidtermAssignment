@@ -33,7 +33,7 @@ public interface OrderService {
 	
 	public boolean updateOrderPayment(int id, int customerEmail);
 
-	public boolean updateStatusOrder(int id, int status);
+	public boolean updateStatusOrder(int id, int status, String userId);
 
 	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email);
 

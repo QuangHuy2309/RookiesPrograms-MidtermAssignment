@@ -185,26 +185,28 @@ public class OrderServiceImpl implements OrderService {
 		OrderEntity order;
 		PersonEntity person;
 		try {
-		 order = getOrder(id).get();
+			order = getOrder(id).get();
 		} catch (NoSuchElementException ex) {
-			logger.error("Account id " + userId + " updated order payment status with Id " + id + " failed: Not found this account");
+			logger.error("Account id " + userId + " updated order payment status with Id " + id
+					+ " failed: Not found this account");
 			throw new ObjectNotFoundException("Could not find order with Id: " + id);
 		}
 		try {
 			person = personService.getPerson(userId).get();
 		} catch (NoSuchElementException ex) {
-			logger.error("Account id " + userId + " updated order payment status with Id " + id + " failed: Not found this account");
+			logger.error("Account id " + userId + " updated order payment status with Id " + id
+					+ " failed: Not found this account");
 			throw new ObjectNotFoundException("Not found this account: " + userId);
 		}
-			if (!order.getCustomers().getEmail().equalsIgnoreCase(person.getEmail())) {
-				logger.error("Account id " + person.getId() + " updated order Id " + id
-						+ " payment status failed: This account not have permission");
-				throw new ObjectPropertiesIllegalException("Error: Unauthorized");
-			}
-			order.setPayment(true);
-			logger.info("Account id " + person.getId() + " updated order payment status with Id " + id + " success");
-			return true;
-		
+		if (!order.getCustomers().getEmail().equalsIgnoreCase(person.getEmail())) {
+			logger.error("Account id " + person.getId() + " updated order Id " + id
+					+ " payment status failed: This account not have permission");
+			throw new ObjectPropertiesIllegalException("Error: Unauthorized");
+		}
+		order.setPayment(true);
+		logger.info("Account id " + person.getId() + " updated order payment status with Id " + id + " success");
+		return true;
+
 	}
 
 	@Transactional
@@ -245,11 +247,26 @@ public class OrderServiceImpl implements OrderService {
 		return true;
 	}
 
-	public boolean updateStatusOrder(int id, int status) {
-		OrderEntity order = getOrder(id).get();
+	@Transactional
+	public boolean updateStatusOrder(int id, int status, String userId) {
+		OrderEntity order;
+		try {
+			order = getOrder(id).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " update order status with Id " + id
+					+ " failed: Could not find Order with id: " + id);
+			throw new ObjectNotFoundException(ex.getMessage());
+		}
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
-				boolean result = orderDetailService.updateDetailCancel(detail);
+				boolean result = false;
+				try {
+					result = orderDetailService.updateDetailCancel(detail);
+				} catch (NoSuchElementException ex) {
+					logger.error("Account id " + userId + " update order status with Id " + id
+							+ " failed: Product not found with ID " + detail.getId().getProductId());
+					throw new ObjectNotFoundException("Product not found with ID " + detail.getId().getProductId());
+				}
 				if (!result) {
 					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
 							+ " failed: Update order details failed");
@@ -258,7 +275,15 @@ public class OrderServiceImpl implements OrderService {
 			}
 		} else if (status != 4 && order.getStatus() == 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
-				boolean result = orderDetailService.updateDetail(detail);
+				boolean result = false;
+				try {
+					result = orderDetailService.updateDetail(detail);
+				} catch (NoSuchElementException ex) {
+					logger.error("Account id " + userId + " update order status with Id " + id
+							+ " failed: Product not found with ID " + detail.getId().getProductId());
+					throw new ObjectNotFoundException(
+							"Not found product with ID " + detail.getId().getProductId() + " to update quantity");
+				}
 				if (!result) {
 					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
 							+ " failed: Update order details failed");
@@ -270,7 +295,7 @@ public class OrderServiceImpl implements OrderService {
 			order.setPayment(true);
 		order.setStatus(status);
 		orderRepository.save(order);
-		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id success");
+		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id " + id + " success");
 		return true;
 	}
 

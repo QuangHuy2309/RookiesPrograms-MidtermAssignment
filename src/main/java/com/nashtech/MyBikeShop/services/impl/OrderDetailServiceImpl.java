@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
+import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.repository.OrderDetailRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
 import com.nashtech.MyBikeShop.services.OrderService;
@@ -67,6 +68,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 	@Transactional
 	public boolean updateDetailCancel(OrderDetailEntity orderDetailEntity) {
+		ProductEntity prod = productService.getProduct(orderDetailEntity.getId().getProductId()).get();
 		boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
 				orderDetailEntity.getAmmount());
 		if (!result)
@@ -76,6 +78,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 	@Transactional
 	public boolean updateDetail(OrderDetailEntity orderDetailEntity) {
+//		ProductEntity prod = productService.getProduct(orderDetailEntity.getId().getProductId()).get();
 		boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
 				orderDetailEntity.getAmmount() * (-1));
 		if (!result)
