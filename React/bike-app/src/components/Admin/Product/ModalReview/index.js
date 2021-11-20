@@ -42,24 +42,30 @@ export default function Index(props) {
   }, [modal]);
   useEffect(() => {
     if (modal) {
-      get(`/public/product/rateTotal/${props.id}`).then((response) => {
-        if (response.status === 200) {
-          totalReview.current = response.data;
-        }
-      });
-      get(
-        `/public/product/rate?pagenum=${pagenum}&size=${size}&id=${props.id}`
-      ).then((response) => {
-        if (response.status === 200) {
-          setReviewList([...response.data]);
-        }
-      });
+      getRate();
     }
   }, [pagenum, props.id]);
+
+  function getRate(){
+    get(`/public/product/rateTotal/${props.id}`).then((response) => {
+      if (response.status === 200) {
+        totalReview.current = response.data;
+      }
+    });
+    get(
+      `/public/product/rate?pagenum=${pagenum}&size=${size}&id=${props.id}`
+    ).then((response) => {
+      if (response.status === 200) {
+        setReviewList([...response.data]);
+      }
+    });
+  }
+
   function handlePageChange(e) {
     console.log(`Page press is ${e}`);
     setPageNum(e);
   }
+
   function handleDelete(e, customerId) {
     if (e === "OK") {
       const body = JSON.stringify({
@@ -70,10 +76,11 @@ export default function Index(props) {
       post("/product/rate/delete", body)
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Delete success", {
+            toast.success("Delete review success", {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
+            getRate();
           }
         })
         .catch((error) => {

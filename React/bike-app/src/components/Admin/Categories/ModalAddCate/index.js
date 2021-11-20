@@ -32,44 +32,41 @@ const ModalAdd = (props) => {
   async function handleSubmit(e) {
     e.preventDefault();
     const name = e.target.name.value.trim();
-    checkNameCate(name);
-    const check = (nameError === "") && checkName;
-    if (check) {
-      const body = JSON.stringify({
-        name: e.target.name.value.trim(),
-        description: e.target.description.value.trim(),
-      });
-      console.log(body);
-      // console.log(e.target.dob.value);
-
-      post("/categories", body)
-        .then((response) => {
-          console.log(response.data);
-          if (response.data === "SUCCESS")
-            toast.success("Add successfully!!!", {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-            });
-            props.onAdd(true);
-            toggle();
-        })
-        .catch((error) => {
-        toast.error("SignUp failed!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
-        console.log(error)
-      }
-        );
-    }
+    const des = e.target.description.value.trim();
+    if (nameError === "") checkNameCate(name, des);
+    // const check = (nameError === "") && checkName;
+    // if (check) {
+     
+    // }
   }
 
-  async function checkNameCate(name) {
+  async function checkNameCate(name,des) {
     getWithAuth(`/categories/checkName?name=${name}&id=0`).then((response) => {
       if (response.status === 200) {
         if (response.data) {
-          setNameError("");
-          setCheckName(true);
+          const body = JSON.stringify({
+            name: name,
+            description: des,
+          });
+          post("/categories", body)
+            .then((response) => {
+              console.log(response.data);
+              if (response.data === "SUCCESS")
+                toast.success("Add successfully!!!", {
+                  position: toast.POSITION.TOP_RIGHT,
+                  autoClose: 3000,
+                });
+                props.onAdd(true);
+                toggle();
+            })
+            .catch((error) => {
+            toast.error("Add category failed!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            console.log(error)
+          }
+            );
         } else {
           setNameError("Categories name is duplicated. Choose another name");
         }

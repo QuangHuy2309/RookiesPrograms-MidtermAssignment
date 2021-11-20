@@ -3,7 +3,7 @@ import { Table, Button, Row, Col, Input } from "reactstrap";
 import { getWithAuth, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./UserPage.css";
-import ModalEdt from "./ModalEdtUser";
+import ModalEdt from "./ModalEdtUserInPage";
 import Page from "../../Pagination";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

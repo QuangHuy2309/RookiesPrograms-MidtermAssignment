@@ -125,7 +125,6 @@ const ModalAdd = (props) => {
         status: true,
         role: "USER",
       });
-      console.log(body);
       // console.log(e.target.dob.value);
 
       put(`/persons/${id}`, body)
@@ -154,7 +153,7 @@ const ModalAdd = (props) => {
     let today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear() - 18;
+    let yyyy = today.getFullYear() - 12;
     if (dd < 10) {
       dd = "0" + dd;
     }

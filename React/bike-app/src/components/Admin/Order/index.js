@@ -82,7 +82,7 @@ export default function Order() {
   }
 
   function getProd(id, ammount, unitPrice) {
-    get(`/public/product/search/${id}`).then((response) => {
+    getWithAuth(`/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         // console.log(response.data);
         let prod = response.data;
@@ -167,30 +167,24 @@ export default function Order() {
     }
   }
   function setStatusChoice(id, e) {
-    put(`/order/updateStatus/${id}?status=${e.target.value}`, "").then(
-      (response) => {
+    put(`/order/updateStatus/${id}?status=${e.target.value}`, "")
+      .then((response) => {
         if (response.status === 200) {
-          toast.success(
-            `Update order status success`,
-            {
-              position: toast.POSITION.TOP_RIGHT,
-              autoClose: 3000,
-            }
-          );
-          getListOrder();
-        }
-      }
-    ).catch((error) => {
-      if (error.response.status === 400 || error.response.status === 404) {
-        toast.error(
-          `Failed: ${error.response.data.message}`,
-          {
+          toast.success(`Update order status success`, {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
-          }
-        );
-      }
-    });    
+          });
+          getListOrder();
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 400 || error.response.status === 404) {
+          toast.error(`Failed: ${error.response.data.message}`, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        }
+      });
   }
   function getSearchOrderList(keyword, status) {
     setOrderList([]);
@@ -262,7 +256,16 @@ export default function Order() {
         stateClass = "statusColor-Canceled";
         break;
     }
-    return (
+    return state === 3 ? (
+      <select
+        value={state}
+        selected={state}
+        className={stateClass}
+        onChange={(e) => setStatusChoice(id, e)}
+      >
+        <option value={3}>Completed</option>
+      </select>
+    ) : (
       <select
         value={state}
         selected={state}

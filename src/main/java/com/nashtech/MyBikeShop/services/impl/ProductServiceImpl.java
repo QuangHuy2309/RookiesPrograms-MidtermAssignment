@@ -63,7 +63,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public List<ProductEntity> retrieveProductsByType(int categoriesId) {
-		return productRepository.findByCategoriesIdAndStatusNot(categoriesId, false);
+		Sort sortable = Sort.by("updateDate").descending();
+		return productRepository.findByCategoriesIdAndStatusNot(sortable, categoriesId, false);
 	}
 
 	public List<ProductEntity> getProductPage(int page, int size, int categoriesId) {
@@ -93,7 +94,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Optional<ProductEntity> getProduct(String id) {
-		return productRepository.findByIdIgnoreCaseAndStatusNot(id, false);
+		return productRepository.findByIdIgnoreCaseAndStatusNotAndCategoriesStatusNot(id, false, false);
+	}
+	
+	public Optional<ProductEntity> getProductInludeDeleted(String id) {
+		return productRepository.findByIdIgnoreCase(id);
 	}
 
 	public List<ProductEntity> searchProduct(String keyword) {
@@ -148,6 +153,8 @@ public class ProductServiceImpl implements ProductService {
 			PersonEntity person = personService.getPerson(userId).get();
 //		person.getProduct().remove(prod);
 //		productRepository.deleteById(id);
+			prod.setUpdateDate(LocalDateTime.now());
+			prod.setEmployeeUpdate(person);
 			prod.setStatus(false);
 			productRepository.save(prod);
 			logger.info("Account id " + userId + " delete product id " + id + " success");
@@ -175,7 +182,8 @@ public class ProductServiceImpl implements ProductService {
 						"Account id " + userId + " update product " + productDTO.getId() + " failed: Duplicate name");
 			throw new ObjectAlreadyExistException("Error: Product's name had been used");
 		} catch (NoSuchElementException ex) {
-			logger.error("Account id " + userId + " update product id " +  productDTO.getId() + " failed: No found account with ID " + userId);
+			logger.error("Account id " + userId + " update product id " + productDTO.getId()
+					+ " failed: No found account with ID " + userId);
 			throw new ObjectNotFoundException("Error: No found account with ID " + userId);
 		}
 	}
@@ -194,13 +202,29 @@ public class ProductServiceImpl implements ProductService {
 			return true;
 		} catch (NoSuchElementException ex) {
 			logger.error("Update product quantity " + id + " failed: Product not found");
+			return false;
+		}
+	}
+	
+	public boolean updateProductQuantityToCancel(String id, int numberChange) {
+		try {
+			ProductEntity product = productRepository.findByIdIgnoreCase(id).get();
+			if (product.getQuantity() - Math.abs(numberChange) < 0) {
+				throw new ObjectPropertiesIllegalException("Quantity of product is not enough to update");
+			} 
+			product.changeQuantity(numberChange);
+			// productRepository.save(updateDate(product));
+			return true;
+		} catch (NoSuchElementException ex) {
+			logger.error("Update product quantity " + id + " failed: Product not found");
 			ex.printStackTrace();
 			return false;
 		}
 	}
 
 	public List<ProductEntity> findProductByCategories(int id) {
-		return productRepository.findByCategoriesIdAndStatusNot(id, false);
+		Sort sortable = Sort.by("updateDate").descending();
+		return productRepository.findByCategoriesIdAndStatusNot(sortable, id, false);
 	}
 
 	public ProductEntity updateDate(ProductEntity product) {
@@ -223,7 +247,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean checkExistId(String id) {
-		Optional<ProductEntity> prod = productRepository.findByIdIgnoreCaseAndStatusNot(id, false);
+		Optional<ProductEntity> prod = productRepository.findByIdIgnoreCase(id);
 		return prod.isEmpty();
 	}
 

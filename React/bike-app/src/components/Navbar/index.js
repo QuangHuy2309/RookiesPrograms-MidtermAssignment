@@ -278,7 +278,7 @@ export default function Index(props) {
               >
                 <PopoverBody className="popoverCart-Nav">
                   {prodList.map((prod, index) => {
-                    if (index >= 1 && index <= 4) {
+                    if (index >= 0 && index <= 3) {
                       return (
                         <Link
                           to={`/prodDetail/${prod.id}`}

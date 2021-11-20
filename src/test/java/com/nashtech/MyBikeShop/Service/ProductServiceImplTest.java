@@ -79,7 +79,8 @@ public class ProductServiceImplTest {
 	}
 	@Test
 	public void retrieveProductsByTypeSuccess_Test() {
-		when(prodRepository.findByCategoriesIdAndStatusNot(1, false)).thenReturn(prodList);
+		Sort sortable = Sort.by("updateDate").descending();
+		when(prodRepository.findByCategoriesIdAndStatusNot(sortable,1, false)).thenReturn(prodList);
 		List<ProductEntity> prodList_test = prodService.retrieveProductsByType(1);
 		assertEquals(list_size, prodList_test.size());
 	}

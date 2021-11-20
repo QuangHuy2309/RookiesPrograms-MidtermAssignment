@@ -28,19 +28,21 @@ const ModalAdd = (props) => {
   const [addressError, setAddressError] = useState("");
   const [today, setToday] = useState("");
   const [gender, setGener] = useState(false);
-  const [roleCheck, setRoleCheck] = useState(false);
+  const [roleUpdate, setRoleUpdate] = useState("");
+  const [visibleId, setShowId] = useState("");
   const role = getCookie("role");
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
     if (modal) {
+      
       getWithAuth(`/persons/search/${id}`).then((response) => {
         if (response.status === 200) {
           // console.log(response.data);
           setUser(response.data);
           setGener(response.data.gender);
-          if (response.data.role.includes("ADMIN")) setRoleCheck(false);
-          else setRoleCheck(true);
+          setRoleUpdate(response.data.role);
+          
         }
       });
       setNameError("");
@@ -97,20 +99,19 @@ const ModalAdd = (props) => {
         setGener(false);
       }
     }
-    if (key === "role") {
-      if (e.target.value === "ADMIN") {
-        setRoleCheck(false);
-      } else if (e.target.value === "STAFF") {
-        setRoleCheck(true);
-      }
-    }
+    // if (key === "role") {
+    //   if (e.target.value === "ADMIN") {
+    //     setRoleUpdate(e.target.value);
+    //   } else if (e.target.value === "EMP") {
+    //     setRoleUpdate(e.target.value);
+    //   }
+    // }
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     const email = e.target.email.value.trim();
     const id = e.target.id.value.trim();
-
     checkEmailExist(email, id);
     if (checkEmail && checkName && addressError == "") {
       const body = JSON.stringify({
@@ -122,7 +123,7 @@ const ModalAdd = (props) => {
         phonenumber: e.target.phonenumber.value,
         address: e.target.address.value.trim(),
         status: true,
-        role: e.target.role.value,
+        role: "USER",
       });
       // console.log(e.target.dob.value);
 
@@ -134,7 +135,6 @@ const ModalAdd = (props) => {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
-            document.cookie = `email=${email}; max-age=86400; path=/;`;
             props.onEdit("true");
             toggle();
           }
@@ -152,7 +152,7 @@ const ModalAdd = (props) => {
     let today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear() - 18;
+    let yyyy = today.getFullYear() - 12;
     if (dd < 10) {
       dd = "0" + dd;
     }
@@ -177,23 +177,23 @@ const ModalAdd = (props) => {
 
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle} className="title-UserAddAdmin">
-          <MdModeEdit /> Staff Information
+          <MdModeEdit /> User Information
         </ModalHeader>
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
-            <FormGroup>
-              <Label for="exampleEmail" className="titleTable-UserAdmin">
-                ID
-              </Label>
-              <Input
-                type="text"
-                name="id"
-                id="exampleEmail"
-                value={user.id}
-                required
-                disabled
-              />
-            </FormGroup>
+              <FormGroup className={(role.includes("USER")) ? "visibleHide" : ""}>
+                <Label for="exampleEmail" className="titleTable-UserAdmin">
+                  ID
+                </Label>
+                <Input
+                  type="text"
+                  name="id"
+                  id="exampleEmail"
+                  value={user.id}
+                  required
+                  disabled
+                />
+              </FormGroup>
             <FormGroup>
               <Label for="exampleFullName" className="titleTable-UserAdmin">
                 Name
@@ -219,6 +219,7 @@ const ModalAdd = (props) => {
                 value={user.email}
                 required
                 onChange={(e) => handleFieldChange(e, "email")}
+                // disabled
               />
               <div style={{ color: "red" }}>{emailError}</div>
             </FormGroup>
@@ -266,8 +267,8 @@ const ModalAdd = (props) => {
                 onChange={(e) => handleFieldChange(e, "dob")}
               />
             </FormGroup>
-            
-              <FormGroup tag="fieldset" className="radioGr-user mb-2" disabled={role.includes("STAFF")}>
+            {/* {((role.includes("ADMIN")) && (user.role === "ADMIN")) ? (
+              <FormGroup tag="fieldset" className="radioGr-user mb-2">
                 <Label for="exampleQuantity" className="titleTable-UserAdmin">
                   Role
                 </Label>
@@ -277,7 +278,8 @@ const ModalAdd = (props) => {
                       type="radio"
                       name="role"
                       value="ADMIN"
-                      checked={!roleCheck}
+                      checked={roleUpdate === "ADMIN"}
+                      required
                       onChange={(e) => handleFieldChange(e, "role")}
                     />{" "}
                     Admin
@@ -287,15 +289,16 @@ const ModalAdd = (props) => {
                   <Label check>
                     <Input
                       type="radio"
-                      name="role"
-                      value="STAFF"
-                      checked={roleCheck}
+                      name="radio"
+                      value="EMP"
+                      checked={roleUpdate === "EMP"}
                       onChange={(e) => handleFieldChange(e, "role")}
                     />{" "}
-                    Staff
+                    Employee
                   </Label>
                 </FormGroup>
               </FormGroup>
+            ) : null} */}
             <FormGroup>
               <Label for="exampleEmail" className="titleTable-UserAdmin">
                 Phonenumber

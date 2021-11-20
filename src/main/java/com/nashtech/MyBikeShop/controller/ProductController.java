@@ -21,6 +21,7 @@ import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
@@ -45,6 +46,13 @@ public class ProductController {
 	@Autowired
 	private JwtUtils jwtUtils;
 
+	@GetMapping("/product/search/{id}")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public ProductEntity getProduct(@PathVariable(name = "id") String id) {
+		return productService.getProductInludeDeleted(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));
+	}
+	
 	@Operation(summary = "Create a Product")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "The request has succeeded", content = {

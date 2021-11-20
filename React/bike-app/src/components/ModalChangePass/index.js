@@ -80,6 +80,9 @@ const ModalConfirm = (props) => {
     
     if (key === "oldPass") {
       setOldPass(e.target.value);
+      if (newPass === e.target.value){
+        setNewPassError("New password cannot be the same as Old password");
+      }
     }
     else if (key === "newPass"){
       const newPass = e.target.value;

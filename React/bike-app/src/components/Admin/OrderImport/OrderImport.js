@@ -49,7 +49,7 @@ export default function OrderImport() {
     });
   }
   function getProd(id, ammount, price) {
-    get(`/public/product/search/${id}`).then((response) => {
+    getWithAuth(`/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         let prod = response.data;
         prod.quantity = ammount;
@@ -98,10 +98,12 @@ export default function OrderImport() {
           }
         })
         .catch((error) => {
-          toast.error(error, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
+          if (error.response.status === 400 || error.response.status === 404) {
+            toast.error(`Failed: ${error.response.data.message}`, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+          }
         });
     }
   }

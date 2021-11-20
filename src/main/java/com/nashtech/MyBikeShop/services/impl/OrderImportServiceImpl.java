@@ -195,7 +195,7 @@ public class OrderImportServiceImpl implements OrderImportService {
 
 		return orderImportRepo.findById(orderImportId).map(order -> {
 			for (OrderImportDetailEntity detail : order.getOrderImportDetails()) {
-				productService.updateProductQuantity(detail.getId().getProductId(), detail.getAmmount() * (-1));
+				productService.updateProductQuantityToCancel(detail.getId().getProductId(), detail.getAmmount() * (-1));
 			}
 //			PersonEntity person = personService.getPerson(order.getEmployee().getId()).get();
 //			person.getOrdersImport().remove(order);

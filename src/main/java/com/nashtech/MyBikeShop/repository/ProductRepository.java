@@ -15,13 +15,15 @@ import com.nashtech.MyBikeShop.entity.ProductEntity;
 public interface ProductRepository extends JpaRepository<ProductEntity, String> {
 	List<ProductEntity> findByStatusNotAndCategoriesStatusNot(Sort sort, boolean status, boolean cateStatus);
 
-	List<ProductEntity> findByCategoriesIdAndStatusNot(int id, boolean status);
+	List<ProductEntity> findByCategoriesIdAndStatusNot(Sort sort, int id, boolean status);
 
 	List<ProductEntity> findByCategoriesIdAndStatusNot(Pageable pageable, int id, boolean status);
 
 	List<ProductEntity> findByNameIgnoreCaseAndStatusNot(String name, boolean status);
 
-	Optional<ProductEntity> findByIdIgnoreCaseAndStatusNot(String name, boolean status);
+	Optional<ProductEntity> findByIdIgnoreCase(String id);
+	
+	Optional<ProductEntity> findByIdIgnoreCaseAndStatusNotAndCategoriesStatusNot(String name, boolean status, boolean statusCate);
 
 
 	int countByCategoriesIdAndStatusNot(int id, boolean status);

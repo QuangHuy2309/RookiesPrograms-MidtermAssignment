@@ -92,7 +92,7 @@ const ModalCart = (props) => {
     }
   }
   async function handleProdFieldChange(e, key, index) {
-    if (e.target.value > 0 && e.target.value <= prodList[index].description ) {
+    // if (e.target.value > 0 && e.target.value <= prodList[index].description ) {
       let list = [...prodList];
       let prod = { ...list[index] };
       prod.quantity = e.target.value;
@@ -101,7 +101,7 @@ const ModalCart = (props) => {
       await setProdList(list);
       setCartCookie(list);
       getTotalPrice(list);
-    }
+    // }
   }
   async function handleDelete(e, index) {
     if (e === "OK") {

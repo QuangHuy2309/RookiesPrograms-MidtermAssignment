@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolationException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,6 +28,7 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
+import com.nashtech.MyBikeShop.payload.response.MessageResponse;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.CategoriesService;
@@ -106,7 +108,7 @@ public class CategoriesController {
 
 	@PutMapping("/categories/{id}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public String updateCategories(HttpServletRequest request, @RequestBody CategoriesDTO newCate,
+	public ResponseEntity<?> updateCategories(HttpServletRequest request, @RequestBody CategoriesDTO newCate,
 			@PathVariable(name = "id") int id) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
 		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
@@ -117,10 +119,11 @@ public class CategoriesController {
 				logger.info("Account id " + userId + " updated category id " + newCate.getId() + " success");
 			else
 				logger.error("Account id " + userId + " updated category id " + newCate.getId() + " failed");
-			return check ? StringUtils.TRUE : StringUtils.FALSE;
-		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
+			return check ? ResponseEntity.ok().body(new MessageResponse(StringUtils.TRUE)) 
+					: ResponseEntity.badRequest().body(new MessageResponse(StringUtils.FALSE));
+		} catch (IllegalArgumentException | ConstraintViolationException ex) {
 			logger.error(ex.getMessage());
-			return StringUtils.FALSE;
+			return ResponseEntity.badRequest().body(new MessageResponse(StringUtils.FALSE));
 		} catch (NoSuchElementException ex) {
 			logger.error("Account id " + userId + " updated created id " + newCate.getId()
 					+ " failed: No found account with ID " + userId);

@@ -68,8 +68,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 	@Transactional
 	public boolean updateDetailCancel(OrderDetailEntity orderDetailEntity) {
-		ProductEntity prod = productService.getProduct(orderDetailEntity.getId().getProductId()).get();
-		boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
+//		ProductEntity prod = productService.getProduct(orderDetailEntity.getId().getProductId()).get();
+		boolean result = productService.updateProductQuantityToCancel(orderDetailEntity.getId().getProductId(),
 				orderDetailEntity.getAmmount());
 		if (!result)
 			return false;
@@ -78,7 +78,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 	@Transactional
 	public boolean updateDetail(OrderDetailEntity orderDetailEntity) {
-//		ProductEntity prod = productService.getProduct(orderDetailEntity.getId().getProductId()).get();
+		ProductEntity prod = productService.getProduct(orderDetailEntity.getId().getProductId()).get();
 		boolean result = productService.updateProductQuantity(orderDetailEntity.getId().getProductId(),
 				orderDetailEntity.getAmmount() * (-1));
 		if (!result)
