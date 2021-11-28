@@ -4,7 +4,8 @@ import { get } from "../../Utils/httpHelper";
 import Product from "./Product";
 import "./Home.css";
 import { numberFormat } from "../../Utils/ConvertToCurrency";
-import Carousel from "react-elastic-carousel";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import {
   Card,
   CardImg,
@@ -19,7 +20,7 @@ import {
 export default function Home1() {
   const [cateList, setCateList] = useState([]);
   const [prodList, setProdList] = useState([]);
-  const size = 4;
+  const size = 7;
   useEffect(() => {
     get("/public/categories").then((response) => {
       if (response.status === 200) {
@@ -32,57 +33,56 @@ export default function Home1() {
       }
     });
   }, []);
-
+  const responsive = {
+    superLargeDesktop: {
+      // the naming can be any, depends on you.
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 5,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
   return (
-    <div className="mt-4">
-      {/* <div className="title-bike-type">
-        <h2 className="hotProd">
-          🔥
-          <h2 className="cateName-Home Nav-HomeBtn"> HOT PRODUCT</h2>
-          🔥
-        </h2>
-      </div>
-      <Row className="mb-4">
+    <div className="">
+      <h2 className="hotProd">
+        🔥
+        <h2 className="cateName-Home Nav-HomeBtn"> HOT PRODUCT</h2>
+        🔥
+      </h2>
+
+      <Carousel
+        draggable={true}
+        infinite={true}
+        showDots={true}
+        responsive={responsive}
+        autoPlay={true}
+        autoPlaySpeed={2000}
+        className="carouselHome"
+      >
         {prodList.map((prod) => (
-          <Col key={prod.id} className="col-3">
-            <Link
-              to={`/prodDetail/${prod.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <Card>
-                <CardImg
-                  top
-                  width="100%"
-                  src={`data:image/jpeg;base64,${prod.photo}`}
-                  alt="Card image cap"
-                />
-                <CardBody>
-                  <CardTitle tag="h5" className="card-name-prodHome">
-                    {prod.name}
-                  </CardTitle>
-                  <div className="card-info">
-                    <CardSubtitle tag="h4" className="mb-2 card-price">
-                      {numberFormat(prod.price)}
-                    </CardSubtitle>
-                    <Link to={`/prodDetail/${prod.id}`} className="card-btn">
-                      Buy Now
-                    </Link>
-                  </div>
-                </CardBody>
-              </Card>
-            </Link>
-          </Col>
+          <Link
+            to={`/prodDetail/${prod.id}`}
+            style={{ textDecoration: "none" }}
+          >
+            <img
+              src={`data:image/jpeg;base64,${prod.photo}`}
+              className="imgHotProd"
+              alt="Hot product"
+            />
+          </Link>
         ))}
-      </Row> */}
-      <Carousel>
-      {prodList.map((prod) => (
-        <img
-        src={`data:image/jpeg;base64,${prod.photo}`}
-        className="img-cart"
-        alt="Hot product"
-      />
-         ))}
       </Carousel>
+      <hr/>
       {cateList.map((cate) => {
         return (
           <div key={cate.id}>

@@ -27,4 +27,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #FC997C;
+    margin-bottom: 0;
+}
+.imgHotProd{
+    width: 12rem;
+}
+.carouselHome{
+    
 }
