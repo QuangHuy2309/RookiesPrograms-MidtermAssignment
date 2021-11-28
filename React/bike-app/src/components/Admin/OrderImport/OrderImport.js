@@ -95,6 +95,7 @@ export default function OrderImport() {
             });
             getCountTotalOrderImport();
             getOrderImportList();
+            setProdList([]);
           }
         })
         .catch((error) => {

@@ -77,6 +77,11 @@ export default function Index() {
       }
     });
   }
+  function handleReviewChange(e){
+    if (e){
+      getAvgRate();
+    }
+  }
   function handleOrder() {
     if (isLogin()) {
       addProductIdToCookie("Order");
@@ -141,7 +146,7 @@ export default function Index() {
       <br />
       <h4 className="descrip-prod">{prod.description}</h4>
       <div>
-        <Review id={prod.id} />
+        <Review id={prod.id}  onReviewChange={(e) => handleReviewChange(e)}/>
       </div>
     </>
   );

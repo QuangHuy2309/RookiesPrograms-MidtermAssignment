@@ -256,15 +256,13 @@ export default function Order() {
         stateClass = "statusColor-Canceled";
         break;
     }
-    return state === 3 ? (
-      <select
-        value={state}
-        selected={state}
-        className={stateClass}
-        onChange={(e) => setStatusChoice(id, e)}
-      >
-        <option value={3}>Completed</option>
-      </select>
+    let stateText;
+    if (state === 3) stateText = "Complete";
+    else if (state === 4) stateText = "Cancel";
+    return state >= 3 ? (
+     
+        <option className={stateClass} value={3}>{stateText}</option>
+      
     ) : (
       <select
         value={state}

@@ -47,7 +47,7 @@ public class ProductController {
 	private JwtUtils jwtUtils;
 
 	@GetMapping("/product/search/{id}")
-	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN') or hasRole('ADMIN')")
 	public ProductEntity getProduct(@PathVariable(name = "id") String id) {
 		return productService.getProductInludeDeleted(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find product with Id: " + id));

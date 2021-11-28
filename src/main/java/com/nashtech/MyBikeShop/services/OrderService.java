@@ -24,6 +24,8 @@ public interface OrderService {
 	public List<OrderEntity> searchOrderByCustomer(String keyword);
 	
 	public List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status);
+	
+	public boolean checkOrderedByProductAndCustomerId(String prodId, int customerId);
 
 	public OrderEntity createOrder(OrderDTO order);
 

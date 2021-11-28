@@ -62,7 +62,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 				return false;
 
 		}
-		orderDetailRepo.delete(orderDetailEntity);
+//		orderDetailRepo.delete(orderDetailEntity);
 		return true;
 	}
 

@@ -41,4 +41,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, String> 
 			+ "		and p.status != false and p.categories.status != false "
 			+ "ORDER BY p.updateDate DESC")
 	List<ProductEntity> searchProduct(String keyword);
+	
 }

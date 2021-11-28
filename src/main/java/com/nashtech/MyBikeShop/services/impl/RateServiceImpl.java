@@ -23,9 +23,11 @@ import com.nashtech.MyBikeShop.entity.RateEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.repository.ProductRepository;
 import com.nashtech.MyBikeShop.repository.RateRepository;
+import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
 import com.nashtech.MyBikeShop.services.RateService;
@@ -40,6 +42,9 @@ public class RateServiceImpl implements RateService {
 
 	@Autowired
 	PersonRepository personRepo;
+	
+	@Autowired
+	OrderService orderService;
 
 	private static final Logger logger = Logger.getLogger(RateServiceImpl.class);
 
@@ -48,7 +53,8 @@ public class RateServiceImpl implements RateService {
 	}
 
 	public boolean checkExist(RateKey id) {
-		return (!rateRepo.existsById(id)) && (rateRepo.checkUserOrdered(id.getProductId(), id.getCustomerId()) > 0);
+		return (!rateRepo.existsById(id)) && (rateRepo.checkUserOrdered(id.getProductId(), id.getCustomerId()) > 0)
+				&& (orderService.checkOrderedByProductAndCustomerId(id.getProductId(), id.getCustomerId()));
 	}
 
 	public RateEntity createRate(RateDTO rateDTO) {

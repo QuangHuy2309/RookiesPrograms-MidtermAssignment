@@ -131,6 +131,15 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findByStatus(pageable, status);
 	}
 
+	public boolean checkOrderedByProductAndCustomerId(String prodId, int customerId){
+		List<OrderEntity> listOrder = orderRepository.findByOrderDetailsIdProductIdAndCustomersId(prodId, customerId);
+		if (listOrder.isEmpty()) return false;
+		for (OrderEntity order : listOrder) {
+			if (order.getStatus() == 3) return true;
+		}
+		return false;
+	}
+
 	public OrderDTO convertToDTO(OrderEntity order) {
 		OrderDTO orderDTO = mapper.map(order, OrderDTO.class);
 		double totalCost = 0;

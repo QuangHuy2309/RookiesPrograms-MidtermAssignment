@@ -72,17 +72,12 @@ export default function Index(props) {
   }
   function handleSubmitReview(e) {
     e.preventDefault();
-    // console.log("SUBMIT REVIEW");
-    // console.log(`rateNum: ${rating}`);
-    // console.log(`RateText: ${e.target.rateText.value}`);
-
     const body = JSON.stringify({
       productId: props.id,
       customerId: user.id,
       rateNum: rating,
       rateText: e.target.rateText.value,
     });
-    console.log(body);
     post(`/product/rate/`, body)
       .then((response) => {
         if (response.status === 200) {
@@ -92,6 +87,7 @@ export default function Index(props) {
             autoClose: 3000,
           });
           getRate();
+          props.onReviewChange(true);
         }
       })
       .catch((error) => {
