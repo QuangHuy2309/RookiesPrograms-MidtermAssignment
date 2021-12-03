@@ -6,9 +6,7 @@ import java.util.Optional;
 import javax.mail.MessagingException;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
-import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
-import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 public interface OrderService {
 	public List<OrderEntity> retrieveOrders();
@@ -50,4 +48,8 @@ public interface OrderService {
 	public float profitByMonth(int month, int year);
 	
 	public OrderDTO convertToDTO(OrderEntity order);
+	
+	public int getLatestId();
+	
+	public int generateNewId();
 }

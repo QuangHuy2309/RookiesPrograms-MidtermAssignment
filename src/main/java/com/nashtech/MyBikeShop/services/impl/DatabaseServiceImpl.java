@@ -148,8 +148,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
 			case "categories": {
-				StringBuilder sql = new StringBuilder("\\copy (select name,description,status from categories order by id)" + " to '"
-						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+				StringBuilder sql = new StringBuilder(
+						"\\copy (select name,description,status from categories order by id)" + " to '"
+								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -157,8 +158,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "persons": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy (select email,password,fullname,dob,gender,address,phonenumber,role,status from persons order by id)" + " to '"
-								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+						"\\copy (select email,password,fullname,dob,gender,address,phonenumber,role,status from persons order by id)"
+								+ " to '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -174,8 +175,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderbill": {
-				StringBuilder sql = new StringBuilder("\\copy (select customerid,timebought,address,status,ispay from orderbill order by timebought)" + " to '"
-						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+				StringBuilder sql = new StringBuilder(
+						"\\copy (select id, customerid,timebought,address,status,ispay from orderbill order by timebought)"
+								+ " to '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -190,8 +192,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderimport": {
-				StringBuilder sql = new StringBuilder("\\copy (select employeeid,timeimport,status from orderimport order by id)" + " to '"
-						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+				StringBuilder sql = new StringBuilder(
+						"\\copy (select id, employeeid,timeimport,status from orderimport order by id)" + " to '"
+								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -237,7 +240,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				"TRUNCATE TABLE orderbill, orderdetails, persons, orderimport, orderimportdetails, review, products, categories \r\n"
 						+ "RESTART IDENTITY;");
 		int row_truncate = em.createNativeQuery(sql_truncate.toString()).executeUpdate();
-		
+
 		ArrayList<String> typeList = new ArrayList<>(Arrays.asList("categories", "persons", "products", "orderbill",
 				"orderdetails", "orderimport", "orderimportdetails", "review"));
 		for (String type : typeList) {
@@ -270,8 +273,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderbill": {
-				StringBuilder sql = new StringBuilder("\\copy orderbill(customerid,timebought,address,status,ispay)" + " from '"
-						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+				StringBuilder sql = new StringBuilder(
+						"\\copy orderbill(id, customerid, timebought, address, status, ispay)" + " from '"
+								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -286,7 +290,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderimport": {
-				StringBuilder sql = new StringBuilder("\\copy orderimport(employeeid,timeimport,status)" + " from '"
+				StringBuilder sql = new StringBuilder("\\copy orderimport(id, employeeid, timeimport, status)" + " from '"
 						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)

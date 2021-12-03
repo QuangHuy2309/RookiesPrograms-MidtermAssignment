@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.nashtech.MyBikeShop.entity.OrderEntity;
-import com.nashtech.MyBikeShop.entity.ProductEntity;
 
 @Repository
 public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
@@ -24,6 +23,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 	long countByCustomersEmail(String email);
 
 	long countByStatus(int status);
+	
+	boolean existsById(int id);
 
 	@Query(value = "select SUM(o2.amount*o2.unitprice) from orderbill o , orderdetails o2 \r\n"
 			+ "where o.id =o2.orderid and EXTRACT(MONTH FROM o.timebought) = :month and EXTRACT(YEAR FROM o.timebought) = :year", nativeQuery = true)
@@ -34,4 +35,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 	
 	@Query("SELECT o FROM OrderEntity o WHERE  (UPPER(o.customers.fullname) LIKE %?1%) and o.status = ?2 ORDER BY o.timebought DESC")
 	List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status);
+	
+	@Query("select Max(o.id) from OrderEntity o ")
+	int findFirstByIdOrderByIdDesc();
 }

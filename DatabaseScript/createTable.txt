@@ -5,9 +5,10 @@
 -- DROP TABLE public.categories;
 
 CREATE TABLE public.categories (
-	id serial NOT NULL,
+	id serial4 NOT NULL,
 	"name" text NOT NULL,
 	description text NULL,
+	status bool NULL,
 	CONSTRAINT categories_pkey PRIMARY KEY (id)
 );
 
@@ -19,7 +20,7 @@ CREATE TABLE public.categories (
 -- DROP TABLE public.persons;
 
 CREATE TABLE public.persons (
-	id serial NOT NULL,
+	id serial4 NOT NULL,
 	email text NOT NULL,
 	"password" text NOT NULL,
 	fullname text NOT NULL,
@@ -28,6 +29,7 @@ CREATE TABLE public.persons (
 	address text NULL,
 	phonenumber varchar(12) NULL,
 	"role" text NULL,
+	status bool NULL,
 	CONSTRAINT persons_pkey PRIMARY KEY (id)
 );
 
@@ -39,12 +41,12 @@ CREATE TABLE public.persons (
 -- DROP TABLE public.orderbill;
 
 CREATE TABLE public.orderbill (
-	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id int4 NOT NULL,
 	customerid int4 NOT NULL,
 	timebought timestamp NOT NULL,
-	totalcost numeric NOT NULL,
 	address text NOT NULL,
-	status bool NOT NULL,
+	status int4 NOT NULL,
+	ispay bool NULL,
 	CONSTRAINT orderbill_pk PRIMARY KEY (id),
 	CONSTRAINT fk_persons FOREIGN KEY (customerid) REFERENCES public.persons(id)
 );
@@ -57,10 +59,9 @@ CREATE TABLE public.orderbill (
 -- DROP TABLE public.orderimport;
 
 CREATE TABLE public.orderimport (
-	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id int4 NOT NULL,
 	employeeid int4 NOT NULL,
 	timeimport timestamp NOT NULL,
-	totalcost numeric NOT NULL,
 	status bool NOT NULL,
 	CONSTRAINT orderimport_pk PRIMARY KEY (id),
 	CONSTRAINT fk_persons FOREIGN KEY (employeeid) REFERENCES public.persons(id)
@@ -84,8 +85,11 @@ CREATE TABLE public.products (
 	photo bytea NULL,
 	createdate timestamp NULL,
 	updatedate timestamp NULL,
+	updateby int4 NULL,
+	status bool NULL,
 	CONSTRAINT products_pkey PRIMARY KEY (id),
-	CONSTRAINT fk_products_categories FOREIGN KEY (producttype) REFERENCES public.categories(id) ON UPDATE CASCADE
+	CONSTRAINT fk_products_categories FOREIGN KEY (producttype) REFERENCES public.categories(id) ON UPDATE CASCADE,
+	CONSTRAINT fk_products_employee FOREIGN KEY (updateby) REFERENCES public.persons(id)
 );
 
 
@@ -117,6 +121,7 @@ CREATE TABLE public.orderdetails (
 	orderid int4 NOT NULL,
 	productid text NOT NULL,
 	amount int4 NOT NULL DEFAULT 1,
+	unitprice numeric NULL,
 	CONSTRAINT bill_product_pkey PRIMARY KEY (orderid, productid),
 	CONSTRAINT orderdetails_orderid_fkey FOREIGN KEY (orderid) REFERENCES public.orderbill(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT orderdetails_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(id) ON UPDATE CASCADE

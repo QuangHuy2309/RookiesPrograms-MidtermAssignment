@@ -30,4 +30,8 @@ public interface OrderImportService {
 	
 	public long countTotal();
 	
+	public int getLatestId();
+	
+	public int generateNewId();
+	
 }

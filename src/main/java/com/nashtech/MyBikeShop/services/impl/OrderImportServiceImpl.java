@@ -63,16 +63,27 @@ public class OrderImportServiceImpl implements OrderImportService {
 		return orderImportRepo.countByStatusNot(false);
 	}
 
+	public int getLatestId() {
+		return orderImportRepo.findFirstByIdOrderByIdDesc();
+	}
+	
+	public int generateNewId() {
+		int id = orderImportRepo.findFirstByIdOrderByIdDesc()+1;
+		while (orderImportRepo.existsById(id)) id++;
+		return id;
+	}
+	
 	@Override
 	@Transactional
 	public OrderImportEntity createOrderImport(OrderImportEntity orderImport) {
 		if (orderImport.isStatus()) {
 			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true);
 		}
+		orderImport.setId(generateNewId());
 		orderImport.setTimeimport(LocalDateTime.now());
 		return orderImportRepo.save(orderImport);
 	}
-
+	
 	@Override
 	@Transactional
 	public OrderImportEntity createOrderFromXLSS(MultipartFile reapExcelDataFile, String email) {

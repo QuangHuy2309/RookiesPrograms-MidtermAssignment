@@ -1,13 +1,10 @@
 package com.nashtech.MyBikeShop.services.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.text.NumberFormat;
 
@@ -102,6 +99,16 @@ public class OrderServiceImpl implements OrderService {
 	public long countByStatus(int status) {
 		return orderRepository.countByStatus(status);
 	}
+	
+	public int getLatestId() {
+		return orderRepository.findFirstByIdOrderByIdDesc();
+	}
+	
+	public int generateNewId() {
+		int id = orderRepository.findFirstByIdOrderByIdDesc()+1;
+		while (orderRepository.existsById(id)) id++;
+		return id;
+	}
 
 	public List<OrderEntity> getOrdersByCustomerPages(int num, int size, int id) {
 		Sort sortable = Sort.by("timebought").descending();
@@ -155,6 +162,7 @@ public class OrderServiceImpl implements OrderService {
 	@Transactional
 	public OrderEntity createOrder(OrderDTO orderDTO) {
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
+		orderEntity.setId(generateNewId());
 		orderEntity.setTimebought(LocalDateTime.now());
 		PersonEntity person = personService.getPerson(orderDTO.getCustomersEmail());
 		orderEntity.setCustomers(person);

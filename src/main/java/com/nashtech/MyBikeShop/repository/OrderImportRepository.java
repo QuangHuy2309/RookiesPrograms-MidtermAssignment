@@ -16,6 +16,11 @@ public interface OrderImportRepository extends JpaRepository<OrderImportEntity, 
 	
 	int  countByStatusNot(boolean status);
 	
+	boolean existsById(int id);
+	
+	@Query("select Max(o.id) from OrderImportEntity o ")
+	int findFirstByIdOrderByIdDesc();
+	
 	@Query(value = "select SUM(o2.amount*o2.price) "
 			+ "from orderimport o, orderimportdetails o2 "
 			+ "where o.id =o2.orderimportid and "

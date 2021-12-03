@@ -22,7 +22,7 @@ import com.nashtech.MyBikeShop.DTO.OrderDTO;
 @Table(name = "orderbill")
 public class OrderEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
 
