@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ReportProdProcess;
 import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
+import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.services.OrderImportService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ReportService;
+import com.nashtech.MyBikeShop.services.impl.reportMapper.ProductMapper;
 import com.nashtech.MyBikeShop.services.impl.reportMapper.ReportProductProcessMapper;
 import com.nashtech.MyBikeShop.services.impl.reportMapper.ReportTopProductMapper;
 
@@ -45,7 +47,15 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return profit;
 	}
-
+	public List<ProductEntity> hotProduct(int size){
+		String sqlQuery = "select p.id as id, p.name as name, p.price as price, p.quantity as quantity,"
+				+ "p.photo as photo, sum(o2.amount) as totalsold from products p , orderbill o ,orderdetails o2, categories c "
+				+ "where o2.orderid =o.id and o2.productid = p.id and p.quantity > 0"
+				+ "and p.producttype = c.id and c.status != false and p.status != false "
+				+ "group by p.id order by totalsold desc "
+				+ "LIMIT "+size;
+		return template.query(sqlQuery, new ProductMapper());
+	}
 	public List<ReportTopProduct> topProductByMonth(String fromMonth, String toMonth) {
 		String sqlQuery = "select p.id as id, p.name as name, p.price as price, p.quantity as quantity, \r\n"
 				+ "p.photo as photo, sum(o2.amount) as totalsold from products p , orderbill o ,orderdetails o2 \r\n"

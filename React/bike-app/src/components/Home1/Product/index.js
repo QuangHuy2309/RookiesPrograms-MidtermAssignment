@@ -7,7 +7,6 @@ import "./Product.css";
 import {
   Card,
   CardImg,
-  CardText,
   CardBody,
   CardTitle,
   CardSubtitle,

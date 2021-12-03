@@ -7,6 +7,7 @@ import { logOut } from "../../Utils/Auth";
 import ModalConfirm from "../ModalConfirm";
 import ModalChangePass from "../ModalChangePass";
 import ModalEdtUser from "../Admin/UserPage/ModalEdtUser";
+import ModalEdtAdmin from "../Admin/StaffPage/ModalEdtAdmin";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { numberFormat } from "../../Utils/ConvertToCurrency";
@@ -39,6 +40,7 @@ export default function Index(props) {
   const [status, setStatus] = useState([getCookie("status")]);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const id = getCookie("id");
+  const role = getCookie("role");
   useEffect(() => {
     get("/public/categories").then((response) => {
       if (response.status === 200) {
@@ -107,12 +109,20 @@ export default function Index(props) {
             </DropdownToggle>
             <DropdownMenu className="dropdownMenu-Nav">
               <DropdownItem>
+              {(role.includes('USER')) ?
                 <ModalEdtUser
                   isUser="true"
                   id={id}
                   onUserSide="onUserSide"
                   onEdit={(e) => handleUpdate(e)}
+                /> :
+                <ModalEdtAdmin
+                  isUser="true"
+                  id={id}
+                  onUserSide="onUserSide"
+                  onEdit={(e) => handleUpdate(e)}
                 />
+            }
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
@@ -120,6 +130,7 @@ export default function Index(props) {
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
+                {(role.includes('USER')) ?
                 <Link
                   to={`/OrderHistory`}
                   style={{
@@ -129,7 +140,18 @@ export default function Index(props) {
                   }}
                 >
                   Order History
-                </Link>
+                </Link> : 
+                <Link
+                to={`/Admin`}
+                style={{
+                  textDecoration: "none",
+                  color: "#1DB9C3",
+                  "font-weight": "600",
+                }}
+              >
+                Page Management
+              </Link>
+                }
               </DropdownItem>
               <DropdownItem divider />
               <DropdownItem>
@@ -256,7 +278,7 @@ export default function Index(props) {
               >
                 <PopoverBody className="popoverCart-Nav">
                   {prodList.map((prod, index) => {
-                    if (index >= 1 && index <= 4) {
+                    if (index >= 0 && index <= 3) {
                       return (
                         <Link
                           to={`/prodDetail/${prod.id}`}

@@ -19,9 +19,20 @@
     font-weight: 900;
     font-family:  'Raleway',sans-serif;
     line-height: 1.5;
-    
-    
 }
 .cateName-Home:hover{
     color:white;
+}
+.hotProd{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FC997C;
+    margin-bottom: 0;
+}
+.imgHotProd{
+    width: 12rem;
+}
+.carouselHome{
+    
 }

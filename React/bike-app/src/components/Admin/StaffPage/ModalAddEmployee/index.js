@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { postAuth , get } from "../../../../Utils/httpHelper";
+import { postAuth, get } from "../../../../Utils/httpHelper";
 import { IoPersonAddSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -53,17 +53,15 @@ const ModalAdd = (props) => {
       setEmailError("");
     } else if (key === "phonenumber") {
       setPhonenumber(e.target.value.replace(/\D/, ""));
-    } 
-    else if (key === "rePass") {
+    } else if (key === "rePass") {
       setRePass(e.target.value);
       setRePassError("");
     }
-
   }
 
-  async function checkRePass(pass){
-    if (pass !== rePass){
-      setRePassError("Please enter the same password as above")
+  async function checkRePass(pass) {
+    if (pass !== rePass) {
+      setRePassError("Please enter the same password as above");
     }
   }
 
@@ -73,7 +71,8 @@ const ModalAdd = (props) => {
     const pass = e.target.password.value;
     checkRePass(pass);
     checkExistEmail(email);
-    const check = checkEmail && checkName && (rePassError == "") && (pass === rePass);
+    const check =
+      checkEmail && checkName && rePassError == "" && pass === rePass;
     if (check) {
       const body = JSON.stringify({
         id: e.target.id.value,
@@ -92,20 +91,22 @@ const ModalAdd = (props) => {
 
       postAuth("/auth/signup", body)
         .then((response) => {
-          if(response.status === 200)  {toast("Add successfully!!!", {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-          props.onAdd(true);
-          toggle();
-        }
+          if (response.status === 200) {
+            toast.success("Add successfully!!!", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            props.onAdd(true);
+            toggle();
+          }
         })
         .catch((error) => {
           toast.error("Add failed, please check again", {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
-          console.log(error)});
+          console.log(error);
+        });
     }
   }
   function checkExistEmail(email) {
@@ -125,7 +126,7 @@ const ModalAdd = (props) => {
     let today = new Date();
     let dd = today.getDate();
     let mm = today.getMonth() + 1; //January is 0!
-    let yyyy = today.getFullYear()-18;
+    let yyyy = today.getFullYear() - 18;
     if (dd < 10) {
       dd = "0" + dd;
     }
@@ -139,7 +140,7 @@ const ModalAdd = (props) => {
 
   return (
     <div>
-      <Button color="success" onClick={toggle} >
+      <Button color="success" onClick={toggle}>
         <IoPersonAddSharp /> Add staff account
       </Button>
       <Modal isOpen={modal} toggle={toggle}>
@@ -149,7 +150,9 @@ const ModalAdd = (props) => {
         <ModalBody>
           <Form onSubmit={(e) => handleSubmit(e)}>
             <FormGroup>
-              <Label for="examplePrice" className="titleTable-UserAdmin">Email</Label>
+              <Label for="examplePrice" className="titleTable-UserAdmin">
+                Email
+              </Label>
               <Input
                 type="email"
                 name="email"
@@ -162,7 +165,9 @@ const ModalAdd = (props) => {
               </div>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePasswrod" className="titleTable-UserAdmin">Password</Label>
+              <Label for="examplePasswrod" className="titleTable-UserAdmin">
+                Password
+              </Label>
               <Input
                 type="password"
                 name="password"
@@ -172,7 +177,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleRePassword" className="titleTable-UserAdmin">Confirm Password</Label>
+              <Label for="exampleRePassword" className="titleTable-UserAdmin">
+                Confirm Password
+              </Label>
               <Input
                 type="password"
                 name="rePass"
@@ -187,7 +194,9 @@ const ModalAdd = (props) => {
               {rePassError}
             </div>
             <FormGroup>
-              <Label for="exampleFullName" className="titleTable-UserAdmin">Name</Label>
+              <Label for="exampleFullName" className="titleTable-UserAdmin">
+                Name
+              </Label>
               <Input
                 type="text"
                 name="fullname"
@@ -199,9 +208,10 @@ const ModalAdd = (props) => {
                 {nameError}
               </div>
             </FormGroup>
-            
             <FormGroup tag="fieldset" className="radioGr-user mb-2">
-              <Label for="exampleQuantity" className="titleTable-UserAdmin">Gender</Label>
+              <Label for="exampleQuantity" className="titleTable-UserAdmin">
+                Gender
+              </Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="radio" value="false" required />{" "}
@@ -215,7 +225,11 @@ const ModalAdd = (props) => {
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="exampleBrand" required="required" className="titleTable-UserAdmin">
+              <Label
+                for="exampleBrand"
+                required="required"
+                className="titleTable-UserAdmin"
+              >
                 Day of Birth
               </Label>
               <Input
@@ -227,7 +241,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup tag="fieldset" className="radioGr-user mb-2">
-              <Label for="exampleQuantity" className="titleTable-UserAdmin">Role</Label>
+              <Label for="exampleQuantity" className="titleTable-UserAdmin">
+                Role
+              </Label>
               <FormGroup check className="radioBtn-user">
                 <Label check>
                   <Input type="radio" name="role" value="ADMIN" required />{" "}
@@ -241,7 +257,9 @@ const ModalAdd = (props) => {
               </FormGroup>
             </FormGroup>
             <FormGroup>
-              <Label for="examplePhone" className="titleTable-UserAdmin">Phonenumber</Label>
+              <Label for="examplePhone" className="titleTable-UserAdmin">
+                Phonenumber
+              </Label>
               <Input
                 type="text"
                 name="phonenumber"
@@ -254,7 +272,9 @@ const ModalAdd = (props) => {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="exampleAddress" className="titleTable-UserAdmin">Address</Label>
+              <Label for="exampleAddress" className="titleTable-UserAdmin">
+                Address
+              </Label>
               <Input
                 type="text"
                 name="address"

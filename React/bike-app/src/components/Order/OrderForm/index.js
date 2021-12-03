@@ -153,7 +153,7 @@ export default function Index() {
   }
 
   async function handleProdFieldChange(e, key, index) {
-    if (e.target.value > 0 && e.target.value <= prodList[index].description) {
+    // if (e.target.value > 0 && e.target.value <= prodList[index].description) {
       let list = [...prodList];
       let prod = { ...list[index] };
       prod.quantity = e.target.value;
@@ -163,7 +163,7 @@ export default function Index() {
       setCartCookie(list);
       setCheckOut(false);
       getTotalPrice(list);
-    }
+    // }
   }
   function handleUserFieldChange(e, key) {
     setUser({ [key]: e.target.value });
@@ -219,7 +219,7 @@ export default function Index() {
   }
 
   return (
-    <div className="login-form">
+    <div className="login-form mt-5">
       <h2 className="head-Order">ORDER</h2>
       <Form onSubmit={(e) => handleSubmit(e)}>
         <FormGroup>

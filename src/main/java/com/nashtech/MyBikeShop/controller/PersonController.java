@@ -125,21 +125,23 @@ public class PersonController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String deletePerson(HttpServletRequest request, @PathVariable(name = "id") int id) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
 			PersonEntity person = personService.getPerson(id).get();
 			boolean check = personService.deletePerson(person);
 			if (check)
-				logger.info(email + " delete account " + person.getEmail() + " success");
+				logger.info("Account id " + userId + " delete account id " + id + " success");
 			else
-				logger.error(email + " delete account" + person.getEmail() + " failed");
+				logger.error("Account id " + userId + " delete account id " + id + " failed");
 			return check ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (DataIntegrityViolationException | EmptyResultDataAccessException ex) {
-			logger.error(ex.getStackTrace());
+			logger.error("Account id " + userId + "delete account" + id + " failed");
+			logger.error(ex.getMessage());
 			return StringUtils.FALSE;
 		} catch (NoSuchElementException ex) {
-			logger.error("Account not found with id: "+ id);
-			throw new ObjectNotFoundException(ex.getMessage());
+			logger.error("Account id " + userId + "delete account" + id + " failed: Not found Account with ID " + id);
+			throw new ObjectNotFoundException(
+					"Account id " + userId + "delete account" + id + " failed: Not found Account with ID " + id);
 		}
 	}
 
@@ -153,8 +155,22 @@ public class PersonController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping("/persons/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public String editPerson(@RequestBody PersonDTO newPerson, @PathVariable(name = "id") int id) {
-		return personService.updatePerson(newPerson) ? StringUtils.TRUE : StringUtils.FALSE;
+	public String editPerson(HttpServletRequest request, @RequestBody PersonDTO newPerson,
+			@PathVariable(name = "id") int id) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
+		try {
+			boolean check = personService.updatePerson(newPerson);
+			if (check)
+				logger.info("Account id " + userId + " update account id " + id + " success");
+			else
+				logger.error("Account id " + userId + " update account id " + id + " failed");
+			return check ? StringUtils.TRUE : StringUtils.FALSE;
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + "update account" + id + " failed: Not found Account with ID " + id);
+			throw new ObjectNotFoundException(
+					"Account id " + userId + "update account" + id + " failed: Not found Account with ID " + id);
+		}
 	}
 
 	@GetMapping("/persons/countByRole/{role}")
@@ -165,17 +181,22 @@ public class PersonController {
 
 	@PutMapping("/persons/updatePassword/{email}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> updatePassword(@PathVariable String email,
+	public ResponseEntity<?> updatePassword(HttpServletRequest request, @PathVariable String email,
 			@RequestBody ChangePasswordRequest changePasswordRequest) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
-			
+			PersonEntity personUpdate = personService.getPerson(Integer.parseInt(userId)).get();
+			if (!personUpdate.getEmail().equalsIgnoreCase(email)) {
+				logger.error("Account id " + userId + " update Account password failed: Account not have permission");
+			}
 			PersonEntity updateAccount = personService.changePassword(email, changePasswordRequest.getOldPassword(),
 					changePasswordRequest.getNewPassword());
 			if (updateAccount == null) {
-				logger.error("Account "+email+" change password failed");
+				logger.error("Account id " + userId + " update Account password failed: Not found account with email "+ email);
 				return ResponseEntity.badRequest().body(new MessageResponse("Error: Change password failed."));
 			}
-			logger.info("Account "+email+" change password success");
+			logger.info("Account id " + userId + " change password success");
 			return ResponseEntity.ok().body(new MessageResponse("Update password successfully."));
 		} catch (NoSuchElementException ex) {
 			logger.error("Error: Not found account with email: " + email);

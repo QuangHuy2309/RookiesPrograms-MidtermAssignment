@@ -134,7 +134,6 @@ const ModalAdd = (props) => {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 3000,
             });
-            document.cookie = `email=${email}; max-age=86400; path=/;`;
             props.onEdit("true");
             toggle();
           }

@@ -82,7 +82,7 @@ export default function Order() {
   }
 
   function getProd(id, ammount, unitPrice) {
-    get(`/public/product/search/${id}`).then((response) => {
+    getWithAuth(`/product/search/${id}`).then((response) => {
       if (response.status === 200) {
         // console.log(response.data);
         let prod = response.data;
@@ -167,14 +167,24 @@ export default function Order() {
     }
   }
   function setStatusChoice(id, e) {
-    console.log(`${id}  + ${e.target.value}`);
-    put(`/order/updateStatus/${id}?status=${e.target.value}`, "").then(
-      (response) => {
+    put(`/order/updateStatus/${id}?status=${e.target.value}`, "")
+      .then((response) => {
         if (response.status === 200) {
+          toast.success(`Update order status success`, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
           getListOrder();
         }
-      }
-    );
+      })
+      .catch((error) => {
+        if (error.response.status === 400 || error.response.status === 404) {
+          toast.error(`Failed: ${error.response.data.message}`, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
+        }
+      });
   }
   function getSearchOrderList(keyword, status) {
     setOrderList([]);
@@ -246,7 +256,14 @@ export default function Order() {
         stateClass = "statusColor-Canceled";
         break;
     }
-    return (
+    let stateText;
+    if (state === 3) stateText = "Complete";
+    else if (state === 4) stateText = "Cancel";
+    return state >= 3 ? (
+     
+        <option className={stateClass} value={3}>{stateText}</option>
+      
+    ) : (
       <select
         value={state}
         selected={state}

@@ -24,6 +24,8 @@ public interface OrderService {
 	public List<OrderEntity> searchOrderByCustomer(String keyword);
 	
 	public List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status);
+	
+	public boolean checkOrderedByProductAndCustomerId(String prodId, int customerId);
 
 	public OrderEntity createOrder(OrderDTO order);
 
@@ -31,9 +33,9 @@ public interface OrderService {
 
 	public boolean updateOrder(OrderDTO order);
 	
-	public boolean updateOrderPayment(int id, String customerEmail);
+	public boolean updateOrderPayment(int id, int customerEmail);
 
-	public boolean updateStatusOrder(int id, int status);
+	public boolean updateStatusOrder(int id, int status, String userId);
 
 	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email);
 

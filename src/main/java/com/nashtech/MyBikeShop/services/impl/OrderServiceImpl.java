@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
+import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
@@ -57,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
+
 	private static final Logger logger = Logger.getLogger(OrderServiceImpl.class);
 
 	public OrderServiceImpl() {
@@ -129,6 +131,15 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findByStatus(pageable, status);
 	}
 
+	public boolean checkOrderedByProductAndCustomerId(String prodId, int customerId){
+		List<OrderEntity> listOrder = orderRepository.findByOrderDetailsIdProductIdAndCustomersId(prodId, customerId);
+		if (listOrder.isEmpty()) return false;
+		for (OrderEntity order : listOrder) {
+			if (order.getStatus() == 3) return true;
+		}
+		return false;
+	}
+
 	public OrderDTO convertToDTO(OrderEntity order) {
 		OrderDTO orderDTO = mapper.map(order, OrderDTO.class);
 		double totalCost = 0;
@@ -143,7 +154,6 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	public OrderEntity createOrder(OrderDTO orderDTO) {
-
 		OrderEntity orderEntity = new OrderEntity(orderDTO);
 		orderEntity.setTimebought(LocalDateTime.now());
 		PersonEntity person = personService.getPerson(orderDTO.getCustomersEmail());
@@ -164,7 +174,8 @@ public class OrderServiceImpl implements OrderService {
 							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(detailDTO.getUnitPrice())
 							+ "</span></p>");
 			if (!result) {
-				logger.error("Failed in create detail order");
+				logger.error("Account id " + person.getId() + " create order " + orderDTO.getId()
+						+ " failed: Create detail order failed");
 				throw new ObjectPropertiesIllegalException("Failed in create detail order");
 			}
 		}
@@ -174,21 +185,39 @@ public class OrderServiceImpl implements OrderService {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
-		logger.info("Order create by "+ orderDTO.getCustomersEmail() +" success");
+		logger.info("Account id " + person.getId() + " create order Id " + orderDTO.getId() + " success");
 		return orderRepository.getById(orderSaved.getId());
 	}
-	
+
 	@Transactional
-	public boolean updateOrderPayment(int id, String customerEmail) {
-		OrderEntity order = getOrder(id).get();
-		if (!order.getCustomers().getEmail().equalsIgnoreCase(customerEmail)) {
-			logger.error("Customer "+customerEmail+" tried update order of "+order.getCustomers().getEmail());
+	public boolean updateOrderPayment(int id, int userId) {
+		OrderEntity order;
+		PersonEntity person;
+		try {
+			order = getOrder(id).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " updated order payment status with Id " + id
+					+ " failed: Not found this account");
+			throw new ObjectNotFoundException("Could not find order with Id: " + id);
+		}
+		try {
+			person = personService.getPerson(userId).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " updated order payment status with Id " + id
+					+ " failed: Not found this account");
+			throw new ObjectNotFoundException("Not found this account: " + userId);
+		}
+		if (!order.getCustomers().getEmail().equalsIgnoreCase(person.getEmail())) {
+			logger.error("Account id " + person.getId() + " updated order Id " + id
+					+ " payment status failed: This account not have permission");
 			throw new ObjectPropertiesIllegalException("Error: Unauthorized");
 		}
-		logger.info("Order update payment status by "+ customerEmail +" success");
 		order.setPayment(true);
+		logger.info("Account id " + person.getId() + " updated order payment status with Id " + id + " success");
 		return true;
+
 	}
+
 	@Transactional
 	public boolean deleteOrder(int id) {
 		OrderEntity order = getOrder(id).get();
@@ -200,7 +229,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		person.getOrders().remove(order);
 		orderRepository.delete(order);
-		logger.info("Order delete by "+ person.getEmail() +" success");
+		logger.info("Account id " + person.getId() + " create order Id " + id + " success");
 		return true;
 	}
 
@@ -227,29 +256,55 @@ public class OrderServiceImpl implements OrderService {
 		return true;
 	}
 
-	public boolean updateStatusOrder(int id, int status) {
-		OrderEntity order = getOrder(id).get();
+	@Transactional
+	public boolean updateStatusOrder(int id, int status, String userId) {
+		OrderEntity order;
+		try {
+			order = getOrder(id).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " update order status with Id " + id
+					+ " failed: Could not find Order with id: " + id);
+			throw new ObjectNotFoundException(ex.getMessage());
+		}
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
-				boolean result = orderDetailService.updateDetailCancel(detail);
+				boolean result = false;
+				try {
+					result = orderDetailService.updateDetailCancel(detail);
+				} catch (NoSuchElementException ex) {
+					logger.error("Account id " + userId + " update order status with Id " + id
+							+ " failed: Product not found with ID " + detail.getId().getProductId());
+					throw new ObjectNotFoundException("Product not found with ID " + detail.getId().getProductId());
+				}
 				if (!result) {
-					logger.error("Update order's status by" + order.getCustomers().getEmail()+" failed");
+					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
+							+ " failed: Update order details failed");
 					return false;
 				}
 			}
 		} else if (status != 4 && order.getStatus() == 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
-				boolean result = orderDetailService.updateDetail(detail);
+				boolean result = false;
+				try {
+					result = orderDetailService.updateDetail(detail);
+				} catch (NoSuchElementException ex) {
+					logger.error("Account id " + userId + " update order status with Id " + id
+							+ " failed: Product not found with ID " + detail.getId().getProductId());
+					throw new ObjectNotFoundException(
+							"Not found product with ID " + detail.getId().getProductId() + " to update quantity");
+				}
 				if (!result) {
-					logger.error("Update order's status by" + order.getCustomers().getEmail()+" failed");
+					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
+							+ " failed: Update order details failed");
 					return false;
 				}
 			}
 		}
-		if (status == 3) order.setPayment(true);
+		if (status == 3)
+			order.setPayment(true);
 		order.setStatus(status);
 		orderRepository.save(order);
-		logger.info("Update order's status by" + order.getCustomers().getEmail()+" success");
+		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id " + id + " success");
 		return true;
 	}
 

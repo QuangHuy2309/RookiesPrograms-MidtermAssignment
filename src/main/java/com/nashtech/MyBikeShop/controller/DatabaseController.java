@@ -38,9 +38,9 @@ public class DatabaseController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public boolean dbBackUpAction(HttpServletRequest request) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String id = jwtUtils.getUserNameFromJwtToken(jwt);
 		dbServices.executeCommand("backup");
-		logger.info("Backup data by " + email);
+		logger.info("Backup data by account ID " + id);
 		return true;
 	}
 
@@ -48,9 +48,9 @@ public class DatabaseController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public boolean dbRestoreAction(HttpServletRequest request) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String id = jwtUtils.getUserNameFromJwtToken(jwt);
 		dbServices.executeCommand("restore");
-		logger.info("Restore data by " + email);
+		logger.info("Restore data by account ID " + id);
 		return true;
 	}
 
@@ -58,9 +58,9 @@ public class DatabaseController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public boolean dbExportAction(HttpServletRequest request) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String id = jwtUtils.getUserNameFromJwtToken(jwt);
 		dbServices.exportToCSV();
-		logger.info("Export data to CSV by " + email);
+		logger.info("Export data to CSV by account ID " + id);
 		return true;
 	}
 
@@ -69,12 +69,12 @@ public class DatabaseController {
 	public ResponseEntity<?> deleteBackupFolder(HttpServletRequest request,
 			@PathVariable(name = "filename") String filename) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String id = jwtUtils.getUserNameFromJwtToken(jwt);
 		if (dbServices.deleteFolderBackup(filename)) {
-			logger.info("Delete backup data success by " + email);
+			logger.info("Delete backup data success by account ID " + id);
 			return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 		}
-		logger.error("Delete backup data failed by " + email);
+		logger.error("Delete backup data failed by account ID " + id);
 		return ResponseEntity.badRequest().body(new MessageResponse("Error: Delete backup folder failed."));
 	}
 

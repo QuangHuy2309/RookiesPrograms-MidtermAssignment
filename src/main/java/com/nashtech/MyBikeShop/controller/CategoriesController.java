@@ -8,6 +8,7 @@ import javax.validation.ConstraintViolationException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
+import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectViolateForeignKeyException;
+import com.nashtech.MyBikeShop.payload.response.MessageResponse;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.CategoriesService;
+import com.nashtech.MyBikeShop.services.PersonService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,6 +46,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class CategoriesController {
 	@Autowired
 	CategoriesService cateService;
+
+	@Autowired
+	PersonService personService;
 
 	@Autowired
 	private JwtUtils jwtUtils;
@@ -79,37 +86,48 @@ public class CategoriesController {
 	@PostMapping("/categories")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String createCategories(HttpServletRequest request, @RequestBody CategoriesDTO newCate) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
-			String jwt = JwtAuthTokenFilter.parseJwt(request);
-			String email = jwtUtils.getUserNameFromJwtToken(jwt);
+			PersonEntity person = personService.getPerson(Integer.parseInt(userId)).get();
 			boolean check = cateService.createCategories(newCate);
 			if (check)
-				logger.info(email + " created category " + newCate.getId() + " success");
+				logger.info("Account id " + userId + " created category id " + newCate.getId() + " success");
 			else
-				logger.error(email + " created category" + newCate.getId() + " failed");
+				logger.error("Account id " + userId + " created category id " + newCate.getId() + " failed");
 			return check ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
 			logger.error(ex.getMessage());
 			return StringUtils.FALSE;
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " create created id " + newCate.getId()
+					+ " failed: No found account with ID " + userId);
+			throw new ObjectNotFoundException("Error: No found account with ID " + userId);
 		}
 	}
 
 	@PutMapping("/categories/{id}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public String updateCategories(HttpServletRequest request, @RequestBody CategoriesDTO newCate,
+	public ResponseEntity<?> updateCategories(HttpServletRequest request, @RequestBody CategoriesDTO newCate,
 			@PathVariable(name = "id") int id) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
-			String jwt = JwtAuthTokenFilter.parseJwt(request);
-			String email = jwtUtils.getUserNameFromJwtToken(jwt);
+			PersonEntity person = personService.getPerson(Integer.parseInt(userId)).get();
 			boolean check = cateService.updateCategories(newCate);
 			if (check)
-				logger.info(email + " updated category " + newCate.getId() + " success");
+				logger.info("Account id " + userId + " updated category id " + newCate.getId() + " success");
 			else
-				logger.error(email + " updated category" + newCate.getId() + " failed");
-			return check ? StringUtils.TRUE : StringUtils.FALSE;
-		} catch (IllegalArgumentException | ConstraintViolationException | ObjectAlreadyExistException ex) {
+				logger.error("Account id " + userId + " updated category id " + newCate.getId() + " failed");
+			return check ? ResponseEntity.ok().body(new MessageResponse(StringUtils.TRUE)) 
+					: ResponseEntity.badRequest().body(new MessageResponse(StringUtils.FALSE));
+		} catch (IllegalArgumentException | ConstraintViolationException ex) {
 			logger.error(ex.getMessage());
-			return StringUtils.FALSE;
+			return ResponseEntity.badRequest().body(new MessageResponse(StringUtils.FALSE));
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " updated created id " + newCate.getId()
+					+ " failed: No found account with ID " + userId);
+			throw new ObjectNotFoundException("Error: No found account with ID " + userId);
 		}
 	}
 
@@ -123,22 +141,27 @@ public class CategoriesController {
 	@DeleteMapping("/categories/{id}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String deleteCategories(HttpServletRequest request, @PathVariable(name = "id") int id) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
-			String jwt = JwtAuthTokenFilter.parseJwt(request);
-			String email = jwtUtils.getUserNameFromJwtToken(jwt);
+
+			PersonEntity person = personService.getPerson(Integer.parseInt(userId)).get();
 			CategoriesEntity category = cateService.getCategories(id).get();
 			boolean check = cateService.deleteCategories(category);
 			if (check)
-				logger.info(email + " delete category " + category.getId() + " success");
+				logger.info("Account id " + userId + " delete category " + category.getId() + " success");
 			else
-				logger.error(email + " updated category" + category.getId() + " failed");
+				logger.error("Account id " + userId + " updated category" + category.getId() + " failed");
 			return check ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (DataIntegrityViolationException ex) {
-			logger.error("This category had at least a product. Delete Product first!");
+			logger.error("Account id " + userId + " updated created id " + id
+					+ " failed: This category had at least a product. Delete Product first!");
 			throw new ObjectViolateForeignKeyException("This category had at least a product. Delete Product first!");
 		} catch (NoSuchElementException ex) {
-			logger.error("Not found Category with id: " + id);
-			throw new ObjectNotFoundException("Not found Category with id: " + id);
+			logger.error("Account id " + userId + " updated created id " + id + " failed: No found account with ID "
+					+ userId + " or category with id " + id);
+			throw new ObjectNotFoundException(
+					"Error: No found account with ID " + userId + " or category with id " + id);
 		}
 	}
 }

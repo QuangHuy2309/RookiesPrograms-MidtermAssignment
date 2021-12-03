@@ -19,6 +19,7 @@ import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.services.CategoriesService;
 import com.nashtech.MyBikeShop.services.ProductService;
 import com.nashtech.MyBikeShop.services.RateService;
+import com.nashtech.MyBikeShop.services.ReportService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,6 +39,9 @@ public class PublicController {
 
 	@Autowired
 	RateService rateService;
+	
+	@Autowired
+	ReportService reportService;
 
 	@Operation(summary = "Get all Categories") // CATEGORIES
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "The request has succeeded", content = {
@@ -75,6 +79,11 @@ public class PublicController {
 	@GetMapping("/product/{cateId}")
 	public List<ProductEntity> retrieveProductsByType(@PathVariable(name = "cateId") int id) {
 		return productService.retrieveProductsByType(id);
+	}
+	
+	@GetMapping("/product/hotProd/{size}")
+	public List<ProductEntity> getHotProducts(@PathVariable(name = "size") int size) {
+		return reportService.hotProduct(size);
 	}
 
 	@Operation(summary = "Get a Product Infomation by ID")

@@ -79,7 +79,8 @@ public class ProductServiceImplTest {
 	}
 	@Test
 	public void retrieveProductsByTypeSuccess_Test() {
-		when(prodRepository.findByCategoriesIdAndStatusNot(1, false)).thenReturn(prodList);
+		Sort sortable = Sort.by("updateDate").descending();
+		when(prodRepository.findByCategoriesIdAndStatusNot(sortable,1, false)).thenReturn(prodList);
 		List<ProductEntity> prodList_test = prodService.retrieveProductsByType(1);
 		assertEquals(list_size, prodList_test.size());
 	}
@@ -89,7 +90,7 @@ public class ProductServiceImplTest {
 		when(cateService.getCategories(prodDTO.getCategoriesId())).thenReturn(Optional.of(cate1));
 		when(personService.getPerson(Mockito.anyString())).thenReturn(person1);
 		when(prodRepository.save(Mockito.any(ProductEntity.class))).thenReturn(prod1);
-		ProductEntity prod_test = prodService.createProduct(prodDTO,"lqhuy2309@gmail.com");
+		ProductEntity prod_test = prodService.createProduct(prodDTO,person1.getId());
 		assertEquals(prod1, prod_test);
 	}
 	
@@ -100,13 +101,13 @@ public class ProductServiceImplTest {
 		when(personService.getPerson(Mockito.anyString())).thenReturn(person1);
 		when(prodRepository.findByNameIgnoreCaseAndStatusNot(prodDTO.getName(), false)).thenReturn(EmptyList);
 		when(prodRepository.save(Mockito.any(ProductEntity.class))).thenReturn(prod1);
-		assertTrue(prodService.updateProduct(prodDTO,"admin1@gmail.com"));
+		assertTrue(prodService.updateProduct(prodDTO,person1.getId()));
 	}
 	
 	@Test
 	public void deleteProductSuccess_Test() {
 		when(prodRepository.save(Mockito.any(ProductEntity.class))).thenReturn(prod1);
 		when(prodRepository.findById(Mockito.anyString())).thenReturn(Optional.of(prod1));
-		assertTrue(prodService.deleteProduct(Mockito.anyString()));
+		assertTrue(prodService.deleteProduct(Mockito.anyString(),person1.getId()));
 	}
 }

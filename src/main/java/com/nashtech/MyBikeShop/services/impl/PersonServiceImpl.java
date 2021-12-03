@@ -38,9 +38,6 @@ public class PersonServiceImpl implements PersonService {
 
 	HashMap<String, String> otpList = new HashMap<String, String>();
 
-	public PersonServiceImpl() {
-		super();
-	}
 
 	public PersonServiceImpl(PersonRepository personRepository, PasswordEncoder encoder) {
 		this.personRepository = personRepository;

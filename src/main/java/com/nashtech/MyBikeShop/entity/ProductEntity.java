@@ -155,7 +155,7 @@ public class ProductEntity {
 	public void changeQuantity(int numChange) {
 		boolean checkNumberChange = ((numChange < 0) && (this.quantity < Math.abs(numChange)));
 		if (checkNumberChange)
-			throw new ObjectPropertiesIllegalException("The number of quantity change is invalid");
+			throw new ObjectPropertiesIllegalException("Quantity of product is not enough to update");
 		this.quantity += numChange;
 	}
 

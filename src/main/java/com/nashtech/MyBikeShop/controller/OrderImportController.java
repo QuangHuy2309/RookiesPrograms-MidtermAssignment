@@ -31,6 +31,7 @@ import com.nashtech.MyBikeShop.entity.OrderImportEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
+import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.payload.response.MessageResponse;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
@@ -82,11 +83,19 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PostMapping("/imports")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> createOrderImport(@RequestBody OrderImportDTO newOrderImportDto) {
+	public ResponseEntity<?> createOrderImport(HttpServletRequest request,
+			@RequestBody OrderImportDTO newOrderImportDto) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		PersonEntity personImport = personService.getPerson(newOrderImportDto.getEmployeeEmail());
 		if (personImport == null) {
-			logger.error("Create import failed: Employee not found");
+			logger.error("Create import failed: Employee not found with email " + newOrderImportDto.getEmployeeEmail());
 			throw new ObjectNotFoundException("Employee not found");
+		} else if (!userId.equals(String.valueOf(personImport.getId()))) {
+			logger.error("Create import failed: Employee Id " + personImport.getId()
+					+ " create import not match Employee Id " + userId + " send request");
+			throw new ObjectPropertiesIllegalException(
+					"Create import failed: Employee Id create import not match Employee Id send request");
 		}
 		Set<OrderImportDetailDTO> importDetailDtoList = newOrderImportDto.getOrderImportDetails();
 		Set<OrderImportDetailEntity> importDetailEntityList = new HashSet<OrderImportDetailEntity>();
@@ -94,18 +103,17 @@ public class OrderImportController {
 		for (OrderImportDetailDTO detailDto : importDetailDtoList) {
 			ProductEntity product = productService.getProduct(detailDto.getProductId()).orElse(null);
 			if (product == null) {
-				logger.error("Product ID " + detailDto.getProductId() + " not found!");
+				logger.error("Account id " + personImport.getId() + " create Import failed: Product ID "
+						+ detailDto.getProductId() + " not found!");
 				throw new ObjectNotFoundException("Product ID " + detailDto.getProductId() + " not found!");
 			}
 			OrderImportDetailEntity detailEntity = importDetailService.convertToEntity(detailDto);
 			detailEntity.setOrder(orderImport);
 			importDetailEntityList.add(detailEntity);
 		}
-
 		orderImport.setOrderImportDetails(importDetailEntityList);
-
 		OrderImportEntity orderImportCreated = orderImportService.createOrderImport(orderImport);
-		logger.info("Import created by " + newOrderImportDto.getEmployeeEmail() + " success");
+		logger.info("Account id " + personImport.getId() + " create Import success");
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportCreated), HttpStatus.OK);
 
 	}
@@ -157,7 +165,7 @@ public class OrderImportController {
 	public ResponseEntity<?> getOrderImportDetail(@PathVariable int importId) {
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
-			throw new ObjectNotFoundException("Order import not found with id: "+ importId);
+			throw new ObjectNotFoundException("Order import not found with id: " + importId);
 		}
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImport), HttpStatus.OK);
 	}
@@ -198,18 +206,18 @@ public class OrderImportController {
 	public ResponseEntity<?> deleteOrderImport(HttpServletRequest request,
 			@PathVariable(name = "importId") int importId) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
-			logger.error("Delete import by "+ email+" failed: Order import not found!");
+			logger.error("Account id " + userId + " delete import failed: Order import not found!");
 			throw new ObjectNotFoundException("Order import not found!");
 		}
 		boolean result = orderImportService.deleteOrderImport(importId);
 		if (!result) {
-			logger.error("Delete import by "+ email+" failed: Internal Server Error");
+			logger.error("Account id " + userId + " delete import failed: Internal Server Error");
 			return ResponseEntity.internalServerError().body(new MessageResponse("Delete fail!"));
 		}
-		logger.info("Delete import by "+ email+" success");
+		logger.info("Account id " + userId + " delete import success");
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 

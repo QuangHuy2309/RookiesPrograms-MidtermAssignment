@@ -26,6 +26,7 @@ export default function Index() {
   const [prodList, setProdList] = useState([]);
   const [checkRadioAsc, setCheckRadioAsc] = useState(false);
   const [checkRadioDes, setCheckRadioDes] = useState(false);
+  const [search, setSearch] = useState("");
   const size = 8;
   let totalPage = useRef(0);
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function Index() {
     setPageNum(e);
   }
   async function handleSortClick(e) {
-    console.log(e);
+    setSearch("");
     if (e === "ASC") {
       if (checkRadioAsc) {
         setCheckRadioAsc(false);
@@ -94,6 +95,7 @@ export default function Index() {
     });
   }
   function handleSearchChange(e) {
+    setSearch(e.target.value);
     setProdList([]);
     get(`/public/product/search?keyword=${e.target.value.trim()}&type=${id}`).then(
       (response) => {
@@ -159,6 +161,7 @@ export default function Index() {
             id="exampleEmail"
             required="required"
             placeholder="Search Product by name"
+            value={search}
             onChange={(e) => handleSearchChange(e)}
           />
         </div>

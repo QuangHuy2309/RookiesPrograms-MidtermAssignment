@@ -39,6 +39,7 @@ const ModalAdd = (props) => {
     setRePassError("");
     setCheckEmail(false);
     setRePass("");
+    setShow(false);
   }, []);
   useEffect(() => {
     if (modal) {
@@ -71,9 +72,25 @@ const ModalAdd = (props) => {
   async function sendOTP(e) {
     e.preventDefault();
     let email_trim = email.trim().toLowerCase();
-    // await checkExistEmail(email_trim);
-    if (checkExistEmail(email_trim)) {
-      get(`/auth/sendOTP/${email_trim}`)
+    const check = await checkExistEmail(email_trim);
+    // await console.log(check);
+    // if (check) {
+    //   console.log("TRUE");
+    //   get(`/auth/sendOTP/${email_trim}`)
+    //     .then((response) => {
+    //       if (response.status === 200)
+    //         toast.success("Verification code had send to your email", {
+    //           position: toast.POSITION.TOP_RIGHT,
+    //           autoClose: 3000,
+    //         });
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // }
+  }
+  async function sendMail(email_trim){
+    get(`/auth/sendOTP/${email_trim}`)
         .then((response) => {
           if (response.status === 200)
             toast.success("Verification code had send to your email", {
@@ -84,10 +101,10 @@ const ModalAdd = (props) => {
         .catch((error) => {
           console.log(error);
         });
-    }
   }
   function checkOTP(e) {
     e.preventDefault();
+    if (email.trim() !== ""){
     get(`/auth/checkOTP?email=${email}&otp=${e.target.otp.value}`)
       .then((response) => {
         if (response.data === true) toggle();
@@ -101,11 +118,12 @@ const ModalAdd = (props) => {
       .catch((error) => {
         console.log(error);
       });
+    }
   }
   async function handleSubmit(e) {
     e.preventDefault();
     const check = checkRePass(newPass) && (rePassError == "") && (newPass === rePass);
-    if (check) {
+    if (check && show) {
       const body = JSON.stringify({
         email: email,
         password: newPass
@@ -140,9 +158,9 @@ const ModalAdd = (props) => {
       if (response.status === 200) {
         if (response.data) {
           setEmailError("Email does not exist!!!");
-          return false;
         } else {
-          return true;
+          sendMail(email);
+          setShow(true);
         }
       }
     });
@@ -150,12 +168,12 @@ const ModalAdd = (props) => {
   return (
     <div>
       <Navbar />
-      <div className="login-form-Login">
+      <div className="login-form-Login mt-5">
         <h2 className="head-login-Login">FORGOT PASSWORD</h2>
         <hr className="hrLoginForm" />
         <Form
           onSubmit={(e) => sendOTP(e)}
-          className="inputEmail_ForgotPass mb-3"
+          className="inputEmail_ForgotPass"
         >
           <Row>
             <Col>
@@ -190,7 +208,7 @@ const ModalAdd = (props) => {
           </Row>
         </Form>
         <div className="error-ForgotPass">{emailError}</div>
-        <Form onSubmit={(e) => checkOTP(e)} className="inputOTP_ForgotPass">
+        <Form onSubmit={(e) => checkOTP(e)} className="inputOTP_ForgotPass mt-3">
           <FormGroup className="otpForgotPass">
             <Label for="exampleOTP" className="titleModalForgotPass-login">
               OTP code
@@ -200,14 +218,15 @@ const ModalAdd = (props) => {
               name="otp"
               id="exampleOTP"
               required="required"
+              minLength="5"
               className="ms-3 inputOTP-ForgotPassword"
             />
           </FormGroup>
-
           <Button
             color="primary"
             type="submit"
-            className="btnSendOTP-ForgotPass"
+            className="mt-3"
+            disabled={!show}
           >
             Submit
           </Button>

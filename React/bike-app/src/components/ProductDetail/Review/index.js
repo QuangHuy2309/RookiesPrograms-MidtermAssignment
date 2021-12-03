@@ -26,6 +26,12 @@ export default function Index(props) {
   useEffect(() => {}, [props.id]);
 
   useEffect(() => {
+    getRate();
+    getUserDetail();
+    checkReview();
+  }, [pagenum, props.id]);
+
+  function getRate() {
     get(`/public/product/rateTotal/${props.id}`).then((response) => {
       if (response.status === 200) {
         totalPage.current = response.data;
@@ -38,9 +44,7 @@ export default function Index(props) {
         setReviewList([...response.data]);
       }
     });
-    getUserDetail();
-    checkReview();
-  }, [pagenum, props.id]);
+  }
 
   function getUserDetail() {
     const emailUser = getCookie("email");
@@ -51,35 +55,29 @@ export default function Index(props) {
       }
     });
   }
-  function checkReview(){
+  function checkReview() {
     const body = JSON.stringify({
       productId: props.id,
       customerId: user.id,
     });
-    post(`/product/rate/checkExist`, body)
-      .then((response) => {
-        if (response.status === 200) {
-          // console.log(response.data);
-          setCheck(response.data);
-        }
-      });
+    post(`/product/rate/checkExist`, body).then((response) => {
+      if (response.status === 200) {
+        // console.log(response.data);
+        setCheck(response.data);
+      }
+    });
   }
   function handlePageChange(e) {
     setPageNum(e);
   }
   function handleSubmitReview(e) {
     e.preventDefault();
-    // console.log("SUBMIT REVIEW");
-    // console.log(`rateNum: ${rating}`);
-    // console.log(`RateText: ${e.target.rateText.value}`);
-
     const body = JSON.stringify({
       productId: props.id,
       customerId: user.id,
       rateNum: rating,
       rateText: e.target.rateText.value,
     });
-    console.log(body);
     post(`/product/rate/`, body)
       .then((response) => {
         if (response.status === 200) {
@@ -88,60 +86,62 @@ export default function Index(props) {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 3000,
           });
-          history.push(`/prodDetail/${props.id}`);
+          getRate();
+          props.onReviewChange(true);
         }
       })
       .catch((error) => {
         if (error.response.status === 409)
-        toast.error(`You had review this product before`, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 3000,
-        });
+          toast.error(`You had review this product before`, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 3000,
+          });
       });
   }
   function customerReview() {
     const name = getCookie("username");
     const status = getCookie("status");
     checkReview();
-    const open = ((check) && (status==="true"));
-    if (open)
-    {return (
-      <div className="reviewInput-card">
-        <Row>
-          <Col className="col-1">
-            <Avatar src={avaImg} size="100" round={true} />
-          </Col>
-          <Col className="col-review">
-            <Form onSubmit={(e) => handleSubmitReview(e)}>
-              <FormGroup className="col-review">
-                <p className="name-review">{name}</p>
-                <div className="rateNum">
-                  <Rating
-                    onClick={(e) => setRating(e, console.log(`rate is ${e}`))}
-                    ratingValue={rating}
-                    transition
-                    size={40}
-                    stars={5}
+    const open = check && status === "true";
+    if (open) {
+      return (
+        <div className="reviewInput-card">
+          <Row>
+            <Col className="col-1">
+              <Avatar src={avaImg} size="100" round={true} />
+            </Col>
+            <Col className="col-review">
+              <Form onSubmit={(e) => handleSubmitReview(e)}>
+                <FormGroup className="col-review">
+                  <p className="name-review">{name}</p>
+                  <div className="rateNum">
+                    <Rating
+                      onClick={(e) => setRating(e, console.log(`rate is ${e}`))}
+                      ratingValue={rating}
+                      transition
+                      size={40}
+                      stars={5}
+                    />
+                  </div>
+                  <Input
+                    type="textarea"
+                    name="rateText"
+                    id="exampleText"
+                    requires
+                    className="inputForm"
                   />
+                </FormGroup>
+                <div className="btnInput-card">
+                  <Button outline color="info" type="submit">
+                    Submit
+                  </Button>
                 </div>
-                <Input
-                  type="textarea"
-                  name="rateText"
-                  id="exampleText"
-                  requires
-                  className="inputForm"
-                />
-              </FormGroup>
-              <div className="btnInput-card">
-                <Button outline color="info" type="submit">
-                  Submit
-                </Button>
-              </div>
-            </Form>
-          </Col>
-        </Row>
-      </div>
-    );}
+              </Form>
+            </Col>
+          </Row>
+        </div>
+      );
+    }
   }
 
   return (
@@ -164,10 +164,12 @@ export default function Index(props) {
           </Row>
         </div>
       ))}
-      { (reviewList.length <1)? null :  <Page
-        total={Math.ceil(totalPage.current / size)}
-        onPageChange={(e) => handlePageChange(e)}
-      />}
+      {reviewList.length < 1 ? null : (
+        <Page
+          total={Math.ceil(totalPage.current / size)}
+          onPageChange={(e) => handlePageChange(e)}
+        />
+      )}
     </>
   );
 }

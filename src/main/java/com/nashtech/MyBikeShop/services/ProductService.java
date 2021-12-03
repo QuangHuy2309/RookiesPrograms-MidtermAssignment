@@ -22,14 +22,18 @@ public interface ProductService {
 	public List<ProductEntity> searchProductByType(String keyword, int type);
 
 	public Optional<ProductEntity> getProduct(String id);
+	
+	public Optional<ProductEntity> getProductInludeDeleted(String id);
 
-	public ProductEntity createProduct(ProductDTO product, String email);
+	public ProductEntity createProduct(ProductDTO product, int id);
 
-	public boolean deleteProduct(String id);
+	public boolean deleteProduct(String id, int userId);
 
-	public boolean updateProduct(ProductDTO product, String email);
+	public boolean updateProduct(ProductDTO product, int id);
 
 	public boolean updateProductQuantity(String id, int numberChange);
+	
+	public boolean updateProductQuantityToCancel(String id, int numberChange);
 
 	public List<ProductEntity> findProductByCategories(int id);
 

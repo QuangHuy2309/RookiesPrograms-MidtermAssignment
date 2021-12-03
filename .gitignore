@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+mybikeshop.log
+React/bike-app/package.json
+React/bike-app/package-lock.json

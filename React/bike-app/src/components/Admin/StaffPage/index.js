@@ -13,7 +13,7 @@ import {
 import { getWithAuth, del } from "../../../Utils/httpHelper";
 import { format } from "date-fns";
 import "./StaffPage.css";
-import ModalEdtAdmin from "./ModalEdtAdmin";
+import ModalEdtAdmin from "./ModalEdtAdminInPage";
 import ModalAdd from "./ModalAddEmployee";
 import Page from "../../Pagination";
 import { toast } from "react-toastify";

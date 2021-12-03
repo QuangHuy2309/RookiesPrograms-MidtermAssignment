@@ -42,13 +42,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
-	
+
 	@Autowired
 	private OrderService orderService;
-	
+
 	@Autowired
 	private JwtUtils jwtUtils;
-	
+
 	private static final Logger logger = Logger.getLogger(OrderController.class);
 
 	@Operation(summary = "Get total of Order")
@@ -149,7 +149,6 @@ public class OrderController {
 		try {
 			return orderService.updateOrder(order) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (NoSuchElementException ex) {
-			System.err.println(ex.getMessage());
 			throw new ObjectNotFoundException("Could not find Order with id: " + order.getId());
 		}
 
@@ -158,12 +157,13 @@ public class OrderController {
 	@PutMapping("/order/payment/{id}")
 	@PreAuthorize("hasRole('USER')")
 	public String updateOrderPayment(HttpServletRequest request, @PathVariable(name = "id") int id) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		try {
-			String jwt = JwtAuthTokenFilter.parseJwt(request);
-			String email = jwtUtils.getUserNameFromJwtToken(jwt);
-			return orderService.updateOrderPayment(id, email) ? StringUtils.TRUE : StringUtils.FALSE;
+			return orderService.updateOrderPayment(id, Integer.parseInt(userId)) ? StringUtils.TRUE : StringUtils.FALSE;
 		} catch (NoSuchElementException ex) {
-			System.err.println(ex.getMessage());
+			logger.error("Account id " + userId + " update order status with Id " + id
+					+ " failed: Could not find Order with id: " + id);
 			throw new ObjectNotFoundException("Could not find Order with id: " + id);
 		}
 
@@ -226,28 +226,30 @@ public class OrderController {
 
 	@PutMapping("/order/updateStatus/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public String updateStatusOrder(@PathVariable(name = "id") int id, @RequestParam(name = "status") int status) {
-		if (status < 0 || status > 4)
+	public String updateStatusOrder(HttpServletRequest request, @PathVariable(name = "id") int id,
+			@RequestParam(name = "status") int status) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
+		if (status < 0 || status > 4) {
+			logger.error(
+					"Account id " + userId + " update order status with Id " + id + " failed: Wrong status " + status);
 			throw new WrongInputTypeException("Wrong status");
-		try {
-			String result = orderService.updateStatusOrder(id, status) ? StringUtils.TRUE : StringUtils.FALSE;
-			return result;
-		} catch (NoSuchElementException ex) {
-			throw new ObjectNotFoundException(ex.getMessage());
 		}
+		return orderService.updateStatusOrder(id, status, userId) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 
 	@GetMapping("/order/report/profitByMonth")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public float getProfitByMonth(HttpServletRequest request, @RequestParam(name = "month") int month, @RequestParam(name = "year") int year) {
+	public float getProfitByMonth(HttpServletRequest request, @RequestParam(name = "month") int month,
+			@RequestParam(name = "year") int year) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
-		String email = jwtUtils.getUserNameFromJwtToken(jwt);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		if (month > 12 || month < 1) {
-			logger.error("Get profit by " + email +" failed: Month must from 1 to 12");
+			logger.error("Account id " + userId + " get profit failed: Month must from 1 to 12");
 			throw new ObjectPropertiesIllegalException("Month must from 1 to 12");
 		}
 		if (year == 0 || year < 2000) {
-			logger.error("Get profit by " + email +" failed: Year is invalid");
+			logger.error("Account id " + userId + " get profit failed: Year is invalid");
 			throw new ObjectPropertiesIllegalException("Year is invalid");
 		}
 		return orderService.profitByMonth(month, year);

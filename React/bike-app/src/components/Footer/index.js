@@ -5,7 +5,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 export default function index() {
   return (
-    <footer>
+    <footer className="mt-3">
       {/* <h2>ABOUT ME</h2>
       <br/>
       <a href="https://www.facebook.com/supbored/" style={{ textDecoration: 'none' }}>

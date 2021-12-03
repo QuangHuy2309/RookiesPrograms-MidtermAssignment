@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Link } from "react-router-dom";
 import { getWithAuth, get } from "../../../Utils/httpHelper";
 import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { useState } from 'react/cjs/react.development';
@@ -12,7 +13,7 @@ export default function ProdList(props) {
         getProdList();
     },[]);
     function getProd(id, amount) {
-        get(`/public/product/search/${id}`).then((response) => {
+        getWithAuth(`/product/search/${id}`).then((response) => {
           if (response.status === 200) {
             // console.log(response.data);
             let prod = response.data;
@@ -28,6 +29,10 @@ export default function ProdList(props) {
     return (
         <div>
             {prodList.map((prod) => (
+              <Link
+              to={`/prodDetail/${prod.id}`}
+              style={{ textDecoration: "none",color: "black" }}
+            >
             <Row className="mb-3" key={prod.id}>
               <Col className="col-3">
                 <img
@@ -46,7 +51,8 @@ export default function ProdList(props) {
                     Price: {numberFormat(prod.quantity * prod.price)}
                 </h5>
                 </Col>
-                </Row>))
+                </Row>
+                </Link>))
         }
         </div>
     )
