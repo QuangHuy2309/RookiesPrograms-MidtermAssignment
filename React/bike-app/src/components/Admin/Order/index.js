@@ -14,7 +14,10 @@ import {
   Button,
   DropdownItem,
   DropdownMenu,
-  ButtonDropdown,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
   DropdownToggle,
   Label,
   Input,
@@ -100,7 +103,8 @@ export default function Order() {
   }
   function handleProductList(index) {
     getProdList(index);
-    setStatusListProd(true);
+    // setStatusListProd(true);
+    toggle();
   }
   // function handleDelete(e, id) {
   //   if (e === "OK") {
@@ -122,50 +126,50 @@ export default function Order() {
   //       });
   //   }
   // }
-  function showList() {
-    if (statusListProd) {
-      return prodList.map((prod) => (
-        <Row id="prodOrder-form" key={prod.id}>
-          <Col className="col-3">
-            <img
-              src={`data:image/jpeg;base64,${prod.photo}`}
-              className="img-order"
-            />
-          </Col>
-          <Col className="info-prod-order">
-            <h4>{prod.name}</h4>
-            <Row>
-              <Col className="col-2">
-                <h6>Model:</h6>
-              </Col>
-              <Col>
-                <h6>{prod.id}</h6>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="col-2">
-                <h6>Quantity:</h6>
-              </Col>
-              <Col>
-                <h6>{prod.quantity}</h6>
-              </Col>
-            </Row>
-            <h6>
-              <Row>
-                <Col className="col-2">
-                  <h6>Unit Price:</h6>
-                </Col>
-                <Col>
-                  <h6>{numberFormat(prod.price)}</h6>
-                </Col>
-              </Row>
-            </h6>
-            <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
-          </Col>
-        </Row>
-      ));
-    }
-  }
+  // function showList() {
+  //   if (statusListProd) {
+  //     return prodList.map((prod) => (
+  //       <Row id="prodOrder-form" key={prod.id}>
+  //         <Col className="col-3">
+  //           <img
+  //             src={`data:image/jpeg;base64,${prod.photo}`}
+  //             className="img-order"
+  //           />
+  //         </Col>
+  //         <Col className="info-prod-order">
+  //           <h4>{prod.name}</h4>
+  //           <Row>
+  //             <Col className="col-2">
+  //               <h6>Model:</h6>
+  //             </Col>
+  //             <Col>
+  //               <h6>{prod.id}</h6>
+  //             </Col>
+  //           </Row>
+  //           <Row>
+  //             <Col className="col-2">
+  //               <h6>Quantity:</h6>
+  //             </Col>
+  //             <Col>
+  //               <h6>{prod.quantity}</h6>
+  //             </Col>
+  //           </Row>
+  //           <h6>
+  //             <Row>
+  //               <Col className="col-2">
+  //                 <h6>Unit Price:</h6>
+  //               </Col>
+  //               <Col>
+  //                 <h6>{numberFormat(prod.price)}</h6>
+  //               </Col>
+  //             </Row>
+  //           </h6>
+  //           <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+  //         </Col>
+  //       </Row>
+  //     ));
+  //   }
+  // }
   function setStatusChoice(id, e) {
     put(`/order/updateStatus/${id}?status=${e.target.value}`, "")
       .then((response) => {
@@ -378,7 +382,56 @@ export default function Order() {
           onPageChange={(e) => setPageNum(e)}
         />
       ) : null}
-      {showList()}
+      <Modal isOpen={dropdownOpen} toggle={toggle}  size="lg" >
+        <ModalHeader toggle={toggle} className="titleTable-OrderAdmin">Product Ordered</ModalHeader>
+        <ModalBody className="scrollable-Order">
+          {prodList.map((prod) => (
+            <Row id="prodOrder-form" key={prod.id}>
+            <Col className="col-3">
+              <img
+                src={`data:image/jpeg;base64,${prod.photo}`}
+                className="img-order"
+              />
+            </Col>
+            <Col className="info-prod-order">
+              <h4>{prod.name}</h4>
+              <Row>
+                <Col className="col-3">
+                  <h6>Model:</h6>
+                </Col>
+                <Col>
+                  <h6>{prod.id}</h6>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="col-3">
+                  <h6>Quantity:</h6>
+                </Col>
+                <Col>
+                  <h6>{prod.quantity}</h6>
+                </Col>
+              </Row>
+              <h6>
+                <Row>
+                  <Col className="col-3">
+                    <h6>Unit Price:</h6>
+                  </Col>
+                  <Col>
+                    <h6>{numberFormat(prod.price)}</h6>
+                  </Col>
+                </Row>
+              </h6>
+              <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+            </Col>
+          </Row>
+          ))}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle} className="btnCancel">
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 }

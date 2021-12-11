@@ -1,11 +1,11 @@
 .title-OrderAdmin {
   margin: 2rem;
   font-weight: 600;
-  text-shadow: -2px 2px #FF9A3C;
+  text-shadow: -2px 2px #ff9a3c;
 }
-.titleTable-OrderAdmin{
+.titleTable-OrderAdmin {
   font-weight: 600;
-  text-shadow: -2px 2px #FF9A3C;
+  text-shadow: -2px 2px #ff9a3c;
 }
 .btn-list {
   display: flex;
@@ -15,52 +15,58 @@
 }
 .img-order {
   text-align: left;
-  height: 200px;
+  height: 120px;
+}
+.scrollable-Order {
+  overflow: scroll;
+  max-height: 32rem;
+  width: 100%;
 }
 #prodOrder-form {
   border: 0.25px solid #333;
   border-width: medium;
-  padding: 1rem;
-  margin-left: 3rem;
+  padding: 0.5rem;
+  /* margin-inline: 1rem; */
   margin-bottom: 2rem;
 }
 .info-prod-order {
   text-align: left;
+  padding: 0.5rem;
 }
 .tableOrder {
   margin-left: 1rem;
 }
-.statusColor-InProcess{
-  background-color: #FFFEB7;
+.statusColor-InProcess {
+  background-color: #fffeb7;
 }
-.statusColor-Delivery{
-  background-color: #39A2DB;
+.statusColor-Delivery {
+  background-color: #39a2db;
 }
-.statusColor-Complete{
-  background-color: #6ECB63;
+.statusColor-Complete {
+  background-color: #6ecb63;
 }
-.statusColor-Canceled{
-  background-color: #FF5C58;
+.statusColor-Canceled {
+  background-color: #ff5c58;
 }
-.statusColorChoice-InProcess{
-  color: #FFB344;
+.statusColorChoice-InProcess {
+  color: #ffb344;
 }
-.statusColorChoice-Delivery{
-  color: #22577A;
+.statusColorChoice-Delivery {
+  color: #22577a;
 }
-.statusColorChoice-Complete{
-  color: #5D8233;
+.statusColorChoice-Complete {
+  color: #5d8233;
 }
-.statusColorChoice-Canceled{
-  color: #FF5C58;
+.statusColorChoice-Canceled {
+  color: #ff5c58;
 }
-.statusChoice-Order{
+.statusChoice-Order {
   display: flex;
   text-align: left;
   margin-left: 3rem;
   margin-bottom: 1rem;
 }
-.statusChoiceText-Order{
+.statusChoiceText-Order {
   margin-left: 1rem;
   font-weight: 400;
   font-size: 1.7rem;

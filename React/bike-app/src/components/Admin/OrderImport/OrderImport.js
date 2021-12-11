@@ -6,7 +6,17 @@ import { numberFormat } from "../../../Utils/ConvertToCurrency";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Col, Table, Button, Input } from "reactstrap";
+import {
+  Row,
+  Col,
+  Table,
+  Button,
+  Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
 import "./OrderImport.css";
 import ModalAdd from "./ModalAddImport";
 import { getCookie } from "../../../Utils/Cookie";
@@ -66,7 +76,8 @@ export default function OrderImport() {
   }
   async function handleProductList(id, index) {
     getProdList(index);
-    setStatusListProd(true);
+    toggle();
+    // setStatusListProd(true);
   }
   function handleDeliveryButton(id, index) {
     const body = JSON.stringify({
@@ -108,50 +119,50 @@ export default function OrderImport() {
         });
     }
   }
-  function showList() {
-    if (statusListProd) {
-      return prodList.map((prod) => (
-        <Row id="prodOrder-form" key={prod.id}>
-          <Col className="col-3">
-            <img
-              src={`data:image/jpeg;base64,${prod.photo}`}
-              className="img-order"
-            />
-          </Col>
-          <Col className="info-prod-order">
-            <h4>{prod.name}</h4>
-            <Row>
-              <Col className="col-2">
-                <h6>Model:</h6>
-              </Col>
-              <Col>
-                <h6>{prod.id}</h6>
-              </Col>
-            </Row>
-            <Row>
-              <Col className="col-2">
-                <h6>Quantity:</h6>
-              </Col>
-              <Col>
-                <h6>{prod.quantity}</h6>
-              </Col>
-            </Row>
-            <h6>
-              <Row>
-                <Col className="col-2">
-                  <h6>Unit Price:</h6>
-                </Col>
-                <Col>
-                  <h6>{numberFormat(prod.price)}</h6>
-                </Col>
-              </Row>
-            </h6>
-            <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
-          </Col>
-        </Row>
-      ));
-    }
-  }
+  // function showList() {
+  //   if (statusListProd) {
+  //     return prodList.map((prod) => (
+  //       <Row id="prodOrder-form" key={prod.id}>
+  //         <Col className="col-3">
+  //           <img
+  //             src={`data:image/jpeg;base64,${prod.photo}`}
+  //             className="img-order"
+  //           />
+  //         </Col>
+  //         <Col className="info-prod-order">
+  //           <h4>{prod.name}</h4>
+  //           <Row>
+  //             <Col className="col-2">
+  //               <h6>Model:</h6>
+  //             </Col>
+  //             <Col>
+  //               <h6>{prod.id}</h6>
+  //             </Col>
+  //           </Row>
+  //           <Row>
+  //             <Col className="col-2">
+  //               <h6>Quantity:</h6>
+  //             </Col>
+  //             <Col>
+  //               <h6>{prod.quantity}</h6>
+  //             </Col>
+  //           </Row>
+  //           <h6>
+  //             <Row>
+  //               <Col className="col-2">
+  //                 <h6>Unit Price:</h6>
+  //               </Col>
+  //               <Col>
+  //                 <h6>{numberFormat(prod.price)}</h6>
+  //               </Col>
+  //             </Row>
+  //           </h6>
+  //           <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+  //         </Col>
+  //       </Row>
+  //     ));
+  //   }
+  // }
   async function handleSearchChange(e) {
     if (e.target.value.trim().length > 0) {
       setOrderList([]);
@@ -256,7 +267,58 @@ export default function OrderImport() {
           onPageChange={(e) => setPageNum(e)}
         />
       ) : null}
-      {showList()}
+      <Modal isOpen={dropdownOpen} toggle={toggle} size="lg">
+        <ModalHeader toggle={toggle} className="titleTable-OrderAdmin">
+          Product Imported
+        </ModalHeader>
+        <ModalBody className="scrollable-Order">
+          {prodList.map((prod) => (
+            <Row id="prodOrder-form" key={prod.id}>
+              <Col className="col-3">
+                <img
+                  src={`data:image/jpeg;base64,${prod.photo}`}
+                  className="img-order"
+                />
+              </Col>
+              <Col className="info-prod-order">
+                <h4>{prod.name}</h4>
+                <Row>
+                  <Col className="col-3">
+                    <h6>Model:</h6>
+                  </Col>
+                  <Col>
+                    <h6>{prod.id}</h6>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col className="col-3">
+                    <h6>Quantity:</h6>
+                  </Col>
+                  <Col>
+                    <h6>{prod.quantity}</h6>
+                  </Col>
+                </Row>
+                <h6>
+                  <Row>
+                    <Col className="col-3">
+                      <h6>Unit Price:</h6>
+                    </Col>
+                    <Col>
+                      <h6>{numberFormat(prod.price)}</h6>
+                    </Col>
+                  </Row>
+                </h6>
+                <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+              </Col>
+            </Row>
+          ))}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle} className="btnCancel">
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 }
