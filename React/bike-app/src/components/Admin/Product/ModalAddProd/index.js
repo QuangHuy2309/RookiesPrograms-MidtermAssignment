@@ -250,7 +250,7 @@ const ModalExample = (props) => {
             </FormGroup>
             <FormGroup>
               <Label for="exampleText" className="titleTale-ProductAdmin">Description</Label>
-              <Input type="textarea" name="description" id="exampleText" />
+              <Input type="textarea" name="description" id="exampleText" required="required" />
             </FormGroup>
             <FormGroup>
               <Label for="exampleFile" className="titleTale-ProductAdmin">File</Label>

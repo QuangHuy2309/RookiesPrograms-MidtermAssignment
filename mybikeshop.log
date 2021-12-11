@@ -7,3 +7,28 @@
 2021-12-03 19:24:20 INFO  DatabaseController:74 - Delete backup data success by account ID 1
 2021-12-03 19:24:22 INFO  DatabaseController:74 - Delete backup data success by account ID 1
 2021-12-03 19:24:23 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-11 09:57:20 INFO  RateServiceImpl:73 - Account id 13 create review success
+2021-12-11 10:02:58 INFO  OrderServiceImpl:196 - Account id 13 create order Id 0 success
+2021-12-11 10:04:29 INFO  OrderServiceImpl:224 - Account id 13 updated order payment status with Id 30 success
+2021-12-11 10:11:56 INFO  CategoriesController:95 - Account id 3 created category id 0 success
+2021-12-11 10:12:03 INFO  CategoriesController:95 - Account id 3 created category id 0 success
+2021-12-11 10:13:41 ERROR ProductServiceImpl:117 - Account id 3 create product r4 failed: ID had been used
+2021-12-11 10:14:09 ERROR ProductServiceImpl:117 - Account id 3 create product r4 failed: ID had been used
+2021-12-11 10:14:35 INFO  ProductServiceImpl:132 - Account id 3 create product id r41 success
+2021-12-11 10:16:06 ERROR ProductServiceImpl:181 - Account id 3 update product r41 failed: Duplicate name
+2021-12-11 10:17:32 INFO  ProductServiceImpl:132 - Account id 3 create product id ar success
+2021-12-11 10:18:42 INFO  OrderImportController:116 - Account id 3 create Import success
+2021-12-11 10:32:22 INFO  OrderImportController:116 - Account id 3 create Import success
+2021-12-11 10:36:59 INFO  OrderServiceImpl:315 - Account id 22 update order status with Id 26 success
+2021-12-11 10:41:08 INFO  OrderServiceImpl:315 - Account id 13 update order status with Id 28 success
+2021-12-11 10:41:30 INFO  OrderServiceImpl:315 - Account id 22 update order status with Id 29 success
+2021-12-11 10:41:34 INFO  OrderServiceImpl:315 - Account id 22 update order status with Id 29 success
+2021-12-11 10:41:35 INFO  OrderServiceImpl:315 - Account id 13 update order status with Id 28 success
+2021-12-11 10:44:44 INFO  PersonController:165 - Account id 3 update account id 25 success
+2021-12-11 10:45:47 INFO  PersonController:133 - Account id 3 delete account id 25 success
+2021-12-11 10:49:18 INFO  OrderServiceImpl:196 - Account id 13 create order Id 0 success
+2021-12-11 10:50:40 INFO  CategoriesController:152 - Account id 1 delete category 3 success
+2021-12-11 10:52:30 INFO  ProductServiceImpl:160 - Account id 1 delete product id ar success
+2021-12-11 10:55:37 INFO  OrderImportController:220 - Account id 1 delete import success
+2021-12-11 10:58:01 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-11 10:58:05 INFO  DatabaseController:74 - Delete backup data success by account ID 1

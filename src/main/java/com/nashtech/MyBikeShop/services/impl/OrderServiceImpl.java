@@ -179,7 +179,7 @@ public class OrderServiceImpl implements OrderService {
 			listProd.append(
 					"<p style=\\\"font-size: 14px; line-height: 200%;\\\"><span style=\\\"font-size: 16px; line-height: 32px;\\\">"
 							+ prod.getName() + ". Quantity: " + detailDTO.getAmmount() + ". Unit Price: "
-							+ NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(detailDTO.getUnitPrice())
+							+ NumberFormat.getCurrencyInstance(new Locale("en", "US")).format(detailDTO.getUnitPrice())
 							+ "</span></p>");
 			if (!result) {
 				logger.error("Account id " + person.getId() + " create order " + orderDTO.getId()

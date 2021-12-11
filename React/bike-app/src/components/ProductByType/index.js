@@ -96,6 +96,7 @@ export default function Index() {
   }
   function handleSearchChange(e) {
     setSearch(e.target.value);
+    setCheckRadioAsc("");
     setProdList([]);
     get(`/public/product/search?keyword=${e.target.value.trim()}&type=${id}`).then(
       (response) => {
@@ -208,10 +209,11 @@ export default function Index() {
             </Col>
           ))}
         </Row>
+        {(search === "")?
         <Page
           total={Math.ceil(totalPage.current / size)}
           onPageChange={(e) => handlePageChange(e)}
-        />
+        /> : null}
       </Col>
     </Row>
   );

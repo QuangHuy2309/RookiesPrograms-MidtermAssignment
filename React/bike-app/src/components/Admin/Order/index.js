@@ -260,9 +260,7 @@ export default function Order() {
     if (state === 3) stateText = "Complete";
     else if (state === 4) stateText = "Cancel";
     return state >= 3 ? (
-     
-        <option className={stateClass} value={3}>{stateText}</option>
-      
+      <option className={stateClass}>{stateText}</option>
     ) : (
       <select
         value={state}
@@ -270,10 +268,23 @@ export default function Order() {
         className={stateClass}
         onChange={(e) => setStatusChoice(id, e)}
       >
-        <option value={1}>In process</option>
+        {state == 1 ? (
+          <>
+            <option value={1}>In process</option>
+            <option value={2}>Delivering</option>
+            <option value={4}>Canceled</option>
+          </>
+        ) : (
+          <>
+            <option value={2}>Delivering</option>
+            <option value={3}>Completed</option>
+            <option value={4}>Canceled</option>
+          </>
+        )}
+        {/* <option value={1}>In process</option>
         <option value={2}>Delivering</option>
         <option value={3}>Completed</option>
-        <option value={4}>Canceled</option>
+        <option value={4}>Canceled</option> */}
       </select>
     );
   }

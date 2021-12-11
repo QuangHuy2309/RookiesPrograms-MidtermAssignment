@@ -122,7 +122,7 @@ public class PersonController {
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@DeleteMapping("/persons/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize(" hasRole('STAFF') or hasRole('ADMIN')")
 	public String deletePerson(HttpServletRequest request, @PathVariable(name = "id") int id) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
 		String userId = jwtUtils.getUserNameFromJwtToken(jwt);

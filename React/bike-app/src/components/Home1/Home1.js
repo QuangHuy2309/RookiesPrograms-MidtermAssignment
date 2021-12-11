@@ -59,7 +59,6 @@ export default function Home1() {
         <h2 className="cateName-Home Nav-HomeBtn"> HOT PRODUCT</h2>
         🔥
       </h2>
-
       <Carousel
         draggable={true}
         infinite={true}
@@ -82,7 +81,7 @@ export default function Home1() {
           </Link>
         ))}
       </Carousel>
-      <hr/>
+      <hr />
       {cateList.map((cate) => {
         return (
           <div key={cate.id}>

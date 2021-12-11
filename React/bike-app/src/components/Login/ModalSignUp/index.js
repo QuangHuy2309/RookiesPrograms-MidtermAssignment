@@ -23,6 +23,8 @@ const ModalAdd = (props) => {
   const [checkEmail, setCheckEmail] = useState(false);
   const [checkName, setCheckName] = useState(false);
   const [nameError, setNameError] = useState("");
+  const [checkAddress, setCheckAddress] = useState(false);
+  const [addressError, setAddressError] = useState("");
   const [phone, setPhonenumber] = useState("");
   const [rePass, setRePass] = useState("");
   const [rePassError, setRePassError] = useState("");
@@ -66,6 +68,7 @@ const ModalAdd = (props) => {
       checkName &&
       rePassError == "" &&
       pass === rePass &&
+      checkAddress &&
       verify;
     if (check) {
       const body = JSON.stringify({
@@ -117,7 +120,15 @@ const ModalAdd = (props) => {
     } else if (key === "rePass") {
       setRePass(e.target.value);
       setRePassError("");
-    }
+    } else if (key === "address") {
+      if (e.target.value.trim() == "") {
+        setAddressError("Address must not blank");
+        setCheckAddress(false);
+      } else {
+        setAddressError("");
+        setCheckAddress(true);
+      }
+    } 
   }
 
   function checkExistEmail(email) {
@@ -273,7 +284,11 @@ const ModalAdd = (props) => {
                 name="address"
                 id="exampleAddress"
                 required="required"
+                onChange={(e) => handleFieldChange(e, "address")}
               />
+              <div style={{ color: "red", "text-align": "left" }}>
+                {addressError}
+              </div>
             </FormGroup>
             <br />
             <Recaptcha
