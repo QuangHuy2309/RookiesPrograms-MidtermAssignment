@@ -8,7 +8,7 @@ import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderImportEntity;
 
 public interface OrderImportService {
-	public OrderImportEntity createOrderImport (OrderImportEntity orderImport);
+	public OrderImportEntity createOrderImport (OrderImportEntity orderImport, int userId);
 	
 	public OrderImportEntity convertToEntity (OrderImportDTO orderImportDto);
 	
@@ -20,7 +20,7 @@ public interface OrderImportService {
 	
 	public OrderImportEntity findOrderImportById (int importId);
 	
-	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId);
+	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId, int userId);
 	
 	public boolean deleteOrderImport (int orderImportId);
 	

@@ -94,10 +94,11 @@ public class OrderImportServiceImplTest {
 
 	@Test
 	public void createOrderImportSuccess_Test() {
+		when(personService.getPerson(Mockito.anyInt())).thenReturn(Optional.of(person1));
 		when(productService.getProduct(Mockito.anyString())).thenReturn(Optional.of(prod1));
 		when(productService.updateProductWithoutCheckAnything(prod1)).thenReturn(prod1);
 		when(orderImportRepo.save(import1)).thenReturn(import1);
-		assertEquals(import1, importService.createOrderImport(import1));
+		assertEquals(import1, importService.createOrderImport(import1, person1.getId()));
 	}
 
 	@Test
@@ -106,7 +107,7 @@ public class OrderImportServiceImplTest {
 		when(productService.updateProductWithoutCheckAnything(prod1)).thenReturn(prod1);
 		when(orderImportRepo.findById(import1.getId())).thenReturn(Optional.of(import1));
 		when(orderImportRepo.save(import1)).thenReturn(import1);
-		assertEquals(import1, importService.updateOrderImport(import1DTO, import1.getId()));
+		assertEquals(import1, importService.updateOrderImport(import1DTO, import1.getId(), person1.getId()));
 	}
 
 	@Test

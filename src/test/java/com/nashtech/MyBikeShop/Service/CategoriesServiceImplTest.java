@@ -1,10 +1,12 @@
 package com.nashtech.MyBikeShop.Service;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.nashtech.MyBikeShop.DTO.CategoriesDTO;
 import com.nashtech.MyBikeShop.entity.CategoriesEntity;
+import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.exception.ObjectAlreadyExistException;
 import com.nashtech.MyBikeShop.repository.CategoriesRepository;
 import com.nashtech.MyBikeShop.services.CategoriesService;
@@ -37,11 +40,12 @@ public class CategoriesServiceImplTest {
 	public static void setup() {
 		System.out.println("Start test Categories");
 	}
-
+	CategoriesEntity cate;
 	@BeforeEach
 	public void beforeEach() {
 		//categoriesRepo = Mockito.mock(CategoriesRepository.class);
 		//categoriesService = Mockito.mock(CategoriesServiceImpl.class);
+		cate = new CategoriesEntity(1, "Cate 1", "This is categories number 1", true);
 		System.out.println("Before each Testcase");
 	}
 
@@ -71,10 +75,10 @@ public class CategoriesServiceImplTest {
 	public void testCreateCategories_WhenNameExisted() {
 		assertNotNull(categoriesRepo);
 		assertNotNull(categoriesService);
-		CategoriesEntity cate = new CategoriesEntity(1, "Cate 1", "This is categories number 1", true);
+		
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
 		List<CategoriesEntity> list = Arrays.asList(cate);
-		when(categoriesRepo.findByNameIgnoreCaseAndStatusNot(Mockito.anyString(),false)).thenReturn(list);
+		when(categoriesRepo.findByNameIgnoreCaseAndStatusNot(cate.getName(),false)).thenReturn(list);
 		try {
 			assertEquals("There is a category with the same Name",categoriesService.createCategories(cateDTO));
 		} catch (ObjectAlreadyExistException e) {
@@ -89,7 +93,8 @@ public class CategoriesServiceImplTest {
 		assertNotNull(categoriesRepo);
 		assertNotNull(categoriesService);
 		CategoriesDTO cateDTO = new CategoriesDTO(1, "Cate 1", "This is categories number 1");
-		when(categoriesRepo.findByNameIgnoreCaseAndStatusNot(Mockito.anyString(),false)).thenReturn(null);
+		List<CategoriesEntity> emptyList = new ArrayList<CategoriesEntity>(); 
+		when(categoriesRepo.findByNameIgnoreCaseAndStatusNot(cateDTO.getName(),false)).thenReturn(emptyList);
 		
 		try {
 			System.out.println(categoriesService.createCategories(cateDTO));
@@ -99,7 +104,7 @@ public class CategoriesServiceImplTest {
 		}
 		
 		try {
-			assertEquals("Success",categoriesService.createCategories(cateDTO));
+			assertTrue(categoriesService.createCategories(cateDTO));
 		} catch (ObjectAlreadyExistException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,5 +112,8 @@ public class CategoriesServiceImplTest {
 	}
 	
 	@Test
-	public void testDeleteCategories() {}
+	public void testDeleteCategoriesSuccess() {
+		when(categoriesRepo.save(cate)).thenReturn(cate);
+		assertTrue(categoriesService.deleteCategories(cate));
+	}
 }

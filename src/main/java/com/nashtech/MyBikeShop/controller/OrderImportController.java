@@ -112,7 +112,7 @@ public class OrderImportController {
 			importDetailEntityList.add(detailEntity);
 		}
 		orderImport.setOrderImportDetails(importDetailEntityList);
-		OrderImportEntity orderImportCreated = orderImportService.createOrderImport(orderImport);
+		OrderImportEntity orderImportCreated = orderImportService.createOrderImport(orderImport, Integer.parseInt(userId));
 		logger.info("Account id " + personImport.getId() + " create Import success");
 		return new ResponseEntity<OrderImportDTO>(orderImportService.convertToDto(orderImportCreated), HttpStatus.OK);
 
@@ -179,14 +179,17 @@ public class OrderImportController {
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
 	@PutMapping("/imports/{importId}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
-	public ResponseEntity<?> updateOrder(@RequestBody OrderImportDTO orderImportDto,
+	public ResponseEntity<?> updateOrder(HttpServletRequest request, 
+			@RequestBody OrderImportDTO orderImportDto,
 			@PathVariable(name = "importId") int importId) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
 		OrderImportEntity orderImport = orderImportService.findOrderImportById(importId);
 		if (orderImport == null) {
 			throw new ObjectNotFoundException("Order import not found!");
 		}
 
-		OrderImportEntity orderImportUpdate = orderImportService.updateOrderImport(orderImportDto, importId);
+		OrderImportEntity orderImportUpdate = orderImportService.updateOrderImport(orderImportDto, importId, Integer.parseInt(userId));
 		if (orderImportUpdate == null) {
 			return ResponseEntity.internalServerError().body(new MessageResponse("Update order import fail!"));
 		}

@@ -96,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
 	public Optional<ProductEntity> getProduct(String id) {
 		return productRepository.findByIdIgnoreCaseAndStatusNotAndCategoriesStatusNot(id, false, false);
 	}
-	
+
 	public Optional<ProductEntity> getProductInludeDeleted(String id) {
 		return productRepository.findByIdIgnoreCase(id);
 	}
@@ -148,21 +148,34 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public boolean deleteProduct(String id, int userId) {
+		ProductEntity prod;
+		PersonEntity person;
 		try {
-			ProductEntity prod = getProduct(id).get();
-			PersonEntity person = personService.getPerson(userId).get();
-//		person.getProduct().remove(prod);
-//		productRepository.deleteById(id);
-			prod.setUpdateDate(LocalDateTime.now());
-			prod.setEmployeeUpdate(person);
-			prod.setStatus(false);
-			productRepository.save(prod);
-			logger.info("Account id " + userId + " delete product id " + id + " success");
-			return true;
+			prod = getProduct(id).get();
 		} catch (NoSuchElementException ex) {
-			logger.error("Account id " + id + " delete product id " + id + " failed: No found account with ID " + id);
+			logger.error(
+					"Account id " + userId + " delete product id " + id + " failed: No found product with ID " + id);
+			throw new ObjectNotFoundException("Error: No found product with ID " + id);
+		}
+		try {
+			person = personService.getPerson(userId).get();
+		} catch (NoSuchElementException ex) {
+			logger.error(
+					"Account id " + userId + " delete product id " + id + " failed: No found account with ID " + id);
 			throw new ObjectNotFoundException("Error: No found account with ID " + id);
 		}
+//		person.getProduct().remove(prod);
+//		productRepository.deleteById(id);
+		prod.setUpdateDate(LocalDateTime.now());
+		prod.setEmployeeUpdate(person);
+		prod.setStatus(false);
+		productRepository.save(prod);
+		logger.info("Account id " + userId + " delete product id " + id + " success");
+		return true;
+//		} catch (NoSuchElementException ex) {
+//			logger.error("Account id " + userId + " delete product id " + id + " failed: No found account with ID " + id);
+//			throw new ObjectNotFoundException("Error: No found account with ID " + id);
+//		}
 	}
 
 	public boolean updateProduct(ProductDTO productDTO, int userId) {
@@ -198,22 +211,22 @@ public class ProductServiceImpl implements ProductService {
 				throw new ObjectNotFoundException("Product not found with id " + id);
 			}
 			product.changeQuantity(numberChange);
-			// productRepository.save(updateDate(product));
+			productRepository.save(updateDate(product));
 			return true;
 		} catch (NoSuchElementException ex) {
 			logger.error("Update product quantity " + id + " failed: Product not found");
 			return false;
 		}
 	}
-	
+
 	public boolean updateProductQuantityToCancel(String id, int numberChange) {
 		try {
 			ProductEntity product = productRepository.findByIdIgnoreCase(id).get();
 			if (product.getQuantity() - Math.abs(numberChange) < 0) {
 				throw new ObjectPropertiesIllegalException("Quantity of product is not enough to update");
-			} 
+			}
 			product.changeQuantity(numberChange);
-			// productRepository.save(updateDate(product));
+			productRepository.save(updateDate(product));
 			return true;
 		} catch (NoSuchElementException ex) {
 			logger.error("Update product quantity " + id + " failed: Product not found");

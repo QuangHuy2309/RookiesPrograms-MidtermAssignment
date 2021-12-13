@@ -272,7 +272,8 @@ public class OrderServiceImpl implements OrderService {
 		} catch (NoSuchElementException ex) {
 			logger.error("Account id " + userId + " update order status with Id " + id
 					+ " failed: Could not find Order with id: " + id);
-			throw new ObjectNotFoundException(ex.getMessage());
+			throw new ObjectNotFoundException("Update order status with Id " + id
+					+ " failed: Could not find Order with Id: " + id);
 		}
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {

@@ -75,9 +75,9 @@ public class OrderImportServiceImpl implements OrderImportService {
 	
 	@Override
 	@Transactional
-	public OrderImportEntity createOrderImport(OrderImportEntity orderImport) {
+	public OrderImportEntity createOrderImport(OrderImportEntity orderImport, int userId) {
 		if (orderImport.isStatus()) {
-			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true);
+			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true, userId);
 		}
 		orderImport.setId(generateNewId());
 		orderImport.setTimeimport(LocalDateTime.now());
@@ -172,7 +172,7 @@ public class OrderImportServiceImpl implements OrderImportService {
 		return orderImportRepo.searchImportByEmployee(keyword.toUpperCase());
 	}
 
-	private void changeProductQuantityByDetailList(Set<OrderImportDetailEntity> importDetailList, boolean isAdd) {
+	private void changeProductQuantityByDetailList(Set<OrderImportDetailEntity> importDetailList, boolean isAdd, int userId) {
 		for (OrderImportDetailEntity importDetail : importDetailList) {
 			ProductEntity product = productService.getProduct(importDetail.getId().getProductId()).orElse(null);
 			int productNewQuantity = product.getQuantity();
@@ -181,19 +181,21 @@ public class OrderImportServiceImpl implements OrderImportService {
 			} else {
 				productNewQuantity -= importDetail.getAmmount();
 			}
+			PersonEntity employee = personService.getPerson(userId).get();
+			product.setEmployeeUpdate(employee);
 			product.setQuantity(productNewQuantity);
-
+			product.setUpdateDate(LocalDateTime.now());
 			productService.updateProductWithoutCheckAnything(product);
 		}
 	}
 
 	@Override
 	@Transactional
-	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId) {
+	public OrderImportEntity updateOrderImport(OrderImportDTO orderImportDto, int orderImportId, int userId) {
 		OrderImportEntity orderImport = findOrderImportById(orderImportId);
 
 		if (!orderImport.isStatus() && orderImportDto.isStatus()) {
-			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true);
+			changeProductQuantityByDetailList(orderImport.getOrderImportDetails(), true, userId);
 		}
 
 		orderImport.setStatus(true);

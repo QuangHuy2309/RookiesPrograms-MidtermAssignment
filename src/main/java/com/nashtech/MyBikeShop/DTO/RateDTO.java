@@ -9,7 +9,7 @@ public class RateDTO {
 	private String rateText;
 	public RateDTO() {}
 
-	public RateDTO(String productId, int customerId, int rateNum, String rateText, Date dateReview) {
+	public RateDTO(String productId, int customerId, int rateNum, String rateText) {
 		super();
 		this.productId = productId;
 		this.customerId = customerId;

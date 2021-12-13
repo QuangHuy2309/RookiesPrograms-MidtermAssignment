@@ -42,7 +42,7 @@ public class RateServiceImpl implements RateService {
 
 	@Autowired
 	PersonRepository personRepo;
-	
+
 	@Autowired
 	OrderService orderService;
 
@@ -59,23 +59,24 @@ public class RateServiceImpl implements RateService {
 
 	public RateEntity createRate(RateDTO rateDTO) {
 		boolean checkExist = rateRepo.existsById(new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId()));
-		try {
-			PersonEntity person = personRepo.findById(rateDTO.getCustomerId()).get();
-			if (checkExist) {
+		if (checkExist) {
+			logger.error("Account id " + rateDTO.getCustomerId() + " review product with id " + rateDTO.getProductId()
+					+ " failed: This account had reviewed before");
+			throw new ObjectAlreadyExistException("Exist a review with this customer on this product");
 
-				logger.error("Account id " + person.getId() + " review product with id " + rateDTO.getProductId()
-						+ " failed: This account had reviewed before");
-				throw new ObjectAlreadyExistException("Exist a review with this customer on this product");
+		} else {
+			try {
+				PersonEntity person = personRepo.findById(rateDTO.getCustomerId()).get();
 
-			} else {
 				RateEntity rate = new RateEntity(rateDTO);
 				rate.setDateReview(java.sql.Date.valueOf(LocalDate.now()));
 				logger.info("Account id " + person.getId() + " create review success");
 				return rateRepo.save(rate);
+
+			} catch (NoSuchElementException ex) {
+				logger.error("Not found person with id: " + rateDTO.getCustomerId());
+				throw new ObjectNotFoundException("Not found person with id: " + rateDTO.getCustomerId());
 			}
-		} catch (NoSuchElementException ex) {
-			logger.error("Not found person with id: " + rateDTO.getCustomerId());
-			throw new ObjectNotFoundException("Not found person with id: " + rateDTO.getCustomerId());
 		}
 	}
 
@@ -87,7 +88,7 @@ public class RateServiceImpl implements RateService {
 
 	public boolean deleteRate(RateKey id, String userId) {
 		try {
-			ProductEntity prod = prodRepo.findById(id.getProductId()).get();
+			ProductEntity prod = prodRepo.findByIdIgnoreCase(id.getProductId()).get();
 			PersonEntity person = personRepo.findById(id.getCustomerId()).get();
 			RateEntity rate = rateRepo.findById(id).get();
 			prod.getReviews().remove(rate);
@@ -95,11 +96,12 @@ public class RateServiceImpl implements RateService {
 			prodRepo.save(prod);
 			personRepo.save(person);
 			rateRepo.delete(rate);
-			logger.info("Account id " + userId  + " delete rate with ID " + id.toString() + " success");
+			logger.info("Account id " + userId + " delete rate with ID " + id.toString() + " success");
 			return true;
 		} catch (EmptyResultDataAccessException | NoSuchElementException ex) {
-			logger.error("Account id " + userId  +" delete rate with ID " + id.toString() +
-					"failed: Not found Rate with CustomerId: " + id.getCustomerId() + " - ProductId: " + id.getProductId());
+			logger.error("Account id " + userId + " delete rate with ID " + id.toString()
+					+ "failed: Not found Rate with CustomerId: " + id.getCustomerId() + " - ProductId: "
+					+ id.getProductId());
 			throw new ObjectNotFoundException(
 					"Not found Rate with CustomerId: " + id.getCustomerId() + " - ProductId: " + id.getProductId());
 		}

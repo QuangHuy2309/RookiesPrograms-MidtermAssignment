@@ -83,6 +83,13 @@ public class RateEntity {
 		super();
 	}
 
+	public RateEntity(RateKey id, int rateNum, String rateText) {
+		super();
+		this.id = id;
+		this.rateNum = rateNum;
+		this.rateText = rateText;
+	}
+
 	public RateEntity(RateKey id, PersonEntity customer, ProductEntity product, int rateNum, String rateText,
 			Date datereview) {
 		super();

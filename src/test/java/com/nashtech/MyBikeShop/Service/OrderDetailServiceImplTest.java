@@ -1,6 +1,5 @@
 package com.nashtech.MyBikeShop.Service;
 
-
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,9 +19,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.nashtech.MyBikeShop.entity.CategoriesEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
+import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
 import com.nashtech.MyBikeShop.repository.OrderDetailRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
@@ -48,6 +49,8 @@ public class OrderDetailServiceImplTest {
 	private OrderDetailEntity detail2;
 	private OrderDetailEntity detail3;
 	private OrderEntity order1;
+	private CategoriesEntity cate1;
+	private ProductEntity prod1;
 	List<OrderDetailEntity> listDetail;
 	private final int list_size = 3;
 
@@ -58,6 +61,8 @@ public class OrderDetailServiceImplTest {
 		detail3 = new OrderDetailEntity(new OrderDetailsKey(1, "ProdC"), 3, 300.0);
 		order1 = new OrderEntity(1, "Quan 1", 1,
 				new PersonEntity(1, "lqhuy2309@gmail.com", "123456", "Quang Huy", "ADMIN"));
+		cate1 = new CategoriesEntity(1, "Cate 1", "This is categories number 1", true);
+		prod1 = new ProductEntity("ProdA", "Product A", (float) 3.45, 2, cate1);
 		listDetail = new ArrayList<OrderDetailEntity>(Arrays.asList(detail1, detail2, detail3));
 	}
 
@@ -95,39 +100,46 @@ public class OrderDetailServiceImplTest {
 	@Test
 	public void deleteDetailSuccess_Test() {
 		when(orderService.getOrder(detail1.getId().getOrderId())).thenReturn(Optional.of(order1));
-		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(true);
+		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount()))
+				.thenReturn(true);
 		doNothing().when(detailRepo).delete(detail1);
 		assertTrue(detailService.deleteDetail(detail1));
 	}
-	
+
 	@Test
 	public void deleteDetailFailUpdateProdQuantity_Test() {
 		when(orderService.getOrder(detail1.getId().getOrderId())).thenReturn(Optional.of(order1));
-		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(false);
+		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount()))
+				.thenReturn(false);
 		assertFalse(detailService.deleteDetail(detail1));
 	}
-	
+
 	@Test
 	public void updateDetailCancelSuccess_Test() {
-		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(true);
+		when(productService.updateProductQuantityToCancel(detail1.getId().getProductId(), detail1.getAmmount()))
+				.thenReturn(true);
 		assertTrue(detailService.updateDetailCancel(detail1));
 	}
-	
+
 	@Test
 	public void updateDetailCancelFailUpdateProdQuantity_Test() {
-		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(false);
+		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount()))
+				.thenReturn(false);
 		assertFalse(detailService.updateDetailCancel(detail1));
 	}
-	
+
 	@Test
 	public void updateDetailSuccess_Test() {
+		when(productService.getProduct(detail1.getId().getProductId())).thenReturn(Optional.of(prod1));
 		when(productService.updateProductQuantity(Mockito.anyString(), Mockito.anyInt())).thenReturn(true);
 		assertTrue(detailService.updateDetail(detail1));
 	}
-	
+
 	@Test
 	public void updateDetailFailUpdateProdQuantity_Test() {
-		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount())).thenReturn(false);
+		when(productService.getProduct(detail1.getId().getProductId())).thenReturn(Optional.of(prod1));
+		when(productService.updateProductQuantity(detail1.getId().getProductId(), detail1.getAmmount()))
+				.thenReturn(false);
 		assertFalse(detailService.updateDetail(detail1));
 	}
 }
