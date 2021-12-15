@@ -34,6 +34,8 @@ public interface OrderService {
 	public boolean updateOrderPayment(int id, int customerEmail);
 
 	public boolean updateStatusOrder(int id, int status, String userId);
+	
+	public boolean updateNoteOrder(int id, int status, String userId, String note);
 
 	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email);
 

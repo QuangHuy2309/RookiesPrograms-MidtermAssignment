@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.OrderDTO;
-import com.nashtech.MyBikeShop.DTO.ProductDTO;
 import com.nashtech.MyBikeShop.Utils.StringUtils;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
@@ -30,7 +29,6 @@ import com.nashtech.MyBikeShop.exception.WrongInputTypeException;
 import com.nashtech.MyBikeShop.security.JWT.JwtAuthTokenFilter;
 import com.nashtech.MyBikeShop.security.JWT.JwtUtils;
 import com.nashtech.MyBikeShop.services.OrderService;
-import com.nashtech.MyBikeShop.services.impl.OrderServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -236,6 +234,20 @@ public class OrderController {
 			throw new WrongInputTypeException("Wrong status");
 		}
 		return orderService.updateStatusOrder(id, status, userId) ? StringUtils.TRUE : StringUtils.FALSE;
+	}
+	
+	@PutMapping("/order/note/{id}")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public String updateStatusOrder(HttpServletRequest request, @PathVariable(name = "id") int id,
+			@RequestParam(name = "status") int status, @RequestParam(name = "note") String note) {
+		String jwt = JwtAuthTokenFilter.parseJwt(request);
+		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
+		if (status < 0 || status > 4) {
+			logger.error(
+					"Account id " + userId + " update order status with Id " + id + " failed: Wrong status " + status);
+			throw new WrongInputTypeException("Wrong status");
+		}
+		return orderService.updateNoteOrder(id, status, userId, note) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 
 	@GetMapping("/order/report/profitByMonth")

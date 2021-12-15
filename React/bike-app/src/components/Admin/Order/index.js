@@ -7,6 +7,8 @@ import "./Order.css";
 import ModalDeleteConfirm from "../ModalDeleteConfirm";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getCookie } from "../../../Utils/Cookie";
+import ModalAddNote from "./ModalAddNote/ModalAddNote.js";
 import {
   Row,
   Col,
@@ -22,6 +24,7 @@ import {
   Label,
   Input,
   Dropdown,
+  UncontrolledTooltip,
 } from "reactstrap";
 
 toast.configure();
@@ -29,6 +32,11 @@ export default function Order() {
   const [pagenum, setPageNum] = useState(0);
   const [statusListProd, setStatusListProd] = useState(false);
   const [dropdownOpen, setOpen] = useState(false);
+
+  const [showNote, setShowNote] = useState(false);
+  const [idNote, setIDNote] = useState("");
+  const [statusNote, setStatusNote] = useState("");
+
   const [orderList, setOrderList] = useState([]);
   const [prodList, setProdList] = useState([]);
   const [dropdownOpenChoiceState, setOpenChoiceState] = useState(false);
@@ -36,6 +44,7 @@ export default function Order() {
   const [totalPage, setTotalPage] = useState(0);
   const [search, setSearch] = useState("");
   const [showPagination, setShowPage] = useState(true);
+  const role = getCookie("role");
   const size = 6;
 
   const toggle = () => setOpen(!dropdownOpen);
@@ -171,25 +180,33 @@ export default function Order() {
   //   }
   // }
   function setStatusChoice(id, e) {
-    put(`/order/updateStatus/${id}?status=${e.target.value}`, "")
-      .then((response) => {
-        if (response.status === 200) {
-          toast.success(`Update order status success`, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-          getListOrder();
-        }
-      })
-      .catch((error) => {
-        if (error.response.status === 400 || error.response.status === 404) {
-          toast.error(`Failed: ${error.response.data.message}`, {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 3000,
-          });
-        }
-      });
+    const status = e.target.value;
+    if (status < 4) {
+      put(`/order/updateStatus/${id}?status=${status}`, "")
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success(`Update order status success`, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+            getListOrder();
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 400 || error.response.status === 404) {
+            toast.error(`Failed: ${error.response.data.message}`, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 3000,
+            });
+          }
+        });
+    } else {
+      setShowNote(true);
+      setIDNote(id);
+      setStatusNote(status);
+    }
   }
+
   function getSearchOrderList(keyword, status) {
     setOrderList([]);
     getWithAuth(
@@ -244,7 +261,7 @@ export default function Order() {
     );
   }
 
-  function dropDownStatus(id, state) {
+  function dropDownStatus(id, state, note) {
     let stateClass;
     switch (state) {
       case 1:
@@ -264,32 +281,52 @@ export default function Order() {
     if (state === 3) stateText = "Complete";
     else if (state === 4) stateText = "Cancel";
     return state >= 3 ? (
-      <option className={stateClass}>{stateText}</option>
+      <>
+        <option id={`select_tooltip_${id}`} className={stateClass}>
+          {stateText}
+        </option>
+        {note ? (
+          <UncontrolledTooltip placement="top" target={`select_tooltip_${id}`}>
+            {note}
+          </UncontrolledTooltip>
+        ) : null}
+      </>
     ) : (
-      <select
-        value={state}
-        selected={state}
-        className={stateClass}
-        onChange={(e) => setStatusChoice(id, e)}
-      >
-        {state == 1 ? (
-          <>
-            <option value={1}>In process</option>
-            <option value={2}>Delivering</option>
-            <option value={4}>Canceled</option>
-          </>
-        ) : (
-          <>
-            <option value={2}>Delivering</option>
-            <option value={3}>Completed</option>
-            <option value={4}>Canceled</option>
-          </>
-        )}
-        {/* <option value={1}>In process</option>
+      <>
+        <select
+          id={`select_tooltip_${id}`}
+          value={state}
+          selected={state}
+          className={stateClass}
+          onChange={(e) => setStatusChoice(id, e)}
+        >
+          {state == 1 ? (
+            <>
+              <option value={1}>In process</option>
+              <option value={2}>Delivering</option>
+              <option value={4}>Canceled</option>
+            </>
+          ) : (
+            <>
+              {role.includes("ADMIN") ? (
+                <option value={1}>In process</option>
+              ) : null}
+              <option value={2}>Delivering</option>
+              <option value={3}>Completed</option>
+              <option value={4}>Canceled</option>
+            </>
+          )}
+          {/* <option value={1}>In process</option>
         <option value={2}>Delivering</option>
         <option value={3}>Completed</option>
         <option value={4}>Canceled</option> */}
-      </select>
+        </select>
+        {note ? (
+          <UncontrolledTooltip placement="top" target={`select_tooltip_${id}`}>
+            {note}
+          </UncontrolledTooltip>
+        ) : null}
+      </>
     );
   }
   return (
@@ -342,6 +379,7 @@ export default function Order() {
             <th className="titleTable-OrderAdmin">PAYMENT</th>
             <th className="titleTable-OrderAdmin">PRODUCT</th>
             <th className="titleTable-OrderAdmin">STATUS</th>
+            {/* <th className="titleTable-OrderAdmin">NOTE</th> */}
             {/* <th></th> */}
           </tr>
         </thead>
@@ -365,13 +403,14 @@ export default function Order() {
               >
                 {order.payment ? "Paid" : "Unpaid"}
               </td>
+
               <td>
                 {" "}
                 <Button color="link" onClick={() => handleProductList(index)}>
                   List Product
                 </Button>
               </td>
-              <td>{dropDownStatus(order.id, order.status)}</td>
+              <td>{dropDownStatus(order.id, order.status, order.note)}</td>
             </tr>
           ))}
         </tbody>
@@ -382,48 +421,50 @@ export default function Order() {
           onPageChange={(e) => setPageNum(e)}
         />
       ) : null}
-      <Modal isOpen={dropdownOpen} toggle={toggle}  size="lg" >
-        <ModalHeader toggle={toggle} className="titleTable-OrderAdmin">Product Ordered</ModalHeader>
+      <Modal isOpen={dropdownOpen} toggle={toggle} size="lg">
+        <ModalHeader toggle={toggle} className="titleTable-OrderAdmin">
+          Product Ordered
+        </ModalHeader>
         <ModalBody className="scrollable-Order">
           {prodList.map((prod) => (
             <Row id="prodOrder-form" key={prod.id}>
-            <Col className="col-3">
-              <img
-                src={`data:image/jpeg;base64,${prod.photo}`}
-                className="img-order"
-              />
-            </Col>
-            <Col className="info-prod-order">
-              <h4>{prod.name}</h4>
-              <Row>
-                <Col className="col-3">
-                  <h6>Model:</h6>
-                </Col>
-                <Col>
-                  <h6>{prod.id}</h6>
-                </Col>
-              </Row>
-              <Row>
-                <Col className="col-3">
-                  <h6>Quantity:</h6>
-                </Col>
-                <Col>
-                  <h6>{prod.quantity}</h6>
-                </Col>
-              </Row>
-              <h6>
+              <Col className="col-3">
+                <img
+                  src={`data:image/jpeg;base64,${prod.photo}`}
+                  className="img-order"
+                />
+              </Col>
+              <Col className="info-prod-order">
+                <h4>{prod.name}</h4>
                 <Row>
                   <Col className="col-3">
-                    <h6>Unit Price:</h6>
+                    <h6>Model:</h6>
                   </Col>
                   <Col>
-                    <h6>{numberFormat(prod.price)}</h6>
+                    <h6>{prod.id}</h6>
                   </Col>
                 </Row>
-              </h6>
-              <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
-            </Col>
-          </Row>
+                <Row>
+                  <Col className="col-3">
+                    <h6>Quantity:</h6>
+                  </Col>
+                  <Col>
+                    <h6>{prod.quantity}</h6>
+                  </Col>
+                </Row>
+                <h6>
+                  <Row>
+                    <Col className="col-3">
+                      <h6>Unit Price:</h6>
+                    </Col>
+                    <Col>
+                      <h6>{numberFormat(prod.price)}</h6>
+                    </Col>
+                  </Row>
+                </h6>
+                <h5>Total Price: {numberFormat(prod.quantity * prod.price)}</h5>
+              </Col>
+            </Row>
           ))}
         </ModalBody>
         <ModalFooter>
@@ -432,6 +473,13 @@ export default function Order() {
           </Button>
         </ModalFooter>
       </Modal>
+      <ModalAddNote
+        modal={showNote}
+        id={idNote}
+        status={statusNote}
+        onAddNote={(e) => getListOrder()}
+        onChangeShowNote={(e) => setShowNote(e)}
+      />
     </>
   );
 }

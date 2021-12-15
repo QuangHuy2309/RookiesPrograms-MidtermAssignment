@@ -316,6 +316,59 @@ public class OrderServiceImpl implements OrderService {
 		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id " + id + " success");
 		return true;
 	}
+	
+	public boolean updateNoteOrder(int id, int status, String userId, String note) {
+		OrderEntity order;
+		try {
+			order = getOrder(id).get();
+			order.setNote(note);
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " update order status with Id " + id
+					+ " failed: Could not find Order with id: " + id);
+			throw new ObjectNotFoundException("Update order status with Id " + id
+					+ " failed: Could not find Order with Id: " + id);
+		}
+		if (status == 4 && order.getStatus() != 4) {
+			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
+				boolean result = false;
+				try {
+					result = orderDetailService.updateDetailCancel(detail);
+				} catch (NoSuchElementException ex) {
+					logger.error("Account id " + userId + " update order status with Id " + id
+							+ " failed: Product not found with ID " + detail.getId().getProductId());
+					throw new ObjectNotFoundException("Product not found with ID " + detail.getId().getProductId());
+				}
+				if (!result) {
+					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
+							+ " failed: Update order details failed");
+					return false;
+				}
+			}
+		} else if (status != 4 && order.getStatus() == 4) {
+			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
+				boolean result = false;
+				try {
+					result = orderDetailService.updateDetail(detail);
+				} catch (NoSuchElementException ex) {
+					logger.error("Account id " + userId + " update order status with Id " + id
+							+ " failed: Product not found with ID " + detail.getId().getProductId());
+					throw new ObjectNotFoundException(
+							"Not found product with ID " + detail.getId().getProductId() + " to update quantity");
+				}
+				if (!result) {
+					logger.error("Account id " + order.getCustomers().getId() + " update order status with Id " + id
+							+ " failed: Update order details failed");
+					return false;
+				}
+			}
+		}
+		if (status == 3)
+			order.setPayment(true);
+		order.setStatus(status);
+		orderRepository.save(order);
+		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id " + id + " success");
+		return true;
+	}
 
 	public List<OrderEntity> getOrderByCustomerEmail(int num, int size, String email) {
 		Sort sortable = Sort.by("timebought").descending();

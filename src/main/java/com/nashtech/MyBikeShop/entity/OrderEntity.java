@@ -37,6 +37,9 @@ public class OrderEntity {
 	
 	@Column(name = "ispay")
 	private boolean payment;
+	
+	@Column(name = "note")
+	private String note;
 
 	@ManyToOne
 	@JoinColumn(name = "customerid")
@@ -63,6 +66,7 @@ public class OrderEntity {
 		this.payment = order.isPayment();
 		this.address = order.getAddress();
 		this.status = order.isStatus();
+		this.note = order.getNote();
 	}
 
 	public int getId() {
@@ -111,6 +115,14 @@ public class OrderEntity {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	public Set<OrderDetailEntity> getOrderDetails() {

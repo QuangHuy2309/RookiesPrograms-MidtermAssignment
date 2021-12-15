@@ -20,10 +20,12 @@ export default function Index() {
   let { id } = useParams();
   const [prod, setProd] = useState(Object);
   const [rateAvg, setRateAvg] = useState(0);
+
   useEffect(() => {
     getProduct();
     getAvgRate();
   }, [id]);
+
   async function getProduct() {
     await get(`/public/product/search/${id}`)
       .then((response) => {
@@ -33,7 +35,7 @@ export default function Index() {
       })
       .catch((error) => {
         if (error.response.status === 404) {
-          history.push("/404")
+          history.push("/404");
         }
       });
   }
@@ -77,15 +79,19 @@ export default function Index() {
       }
     });
   }
-  function handleReviewChange(e){
-    if (e){
+  function handleReviewChange(e) {
+    if (e) {
       getAvgRate();
     }
   }
   function handleOrder() {
     if (isLogin()) {
-      addProductIdToCookie("Order");
-      history.push(`/Ordering`);
+      const roleCookie = getCookie("role");
+      let checkRole = roleCookie.includes("ROLE_USER");
+      if (checkRole) {
+        addProductIdToCookie("Order");
+        history.push(`/Ordering`);
+      }
     } else {
       toast.warning("You need to login first!!!", {
         position: toast.POSITION.TOP_RIGHT,
@@ -146,7 +152,7 @@ export default function Index() {
       <br />
       <h4 className="descrip-prod">{prod.description}</h4>
       <div>
-        <Review id={prod.id}  onReviewChange={(e) => handleReviewChange(e)}/>
+        <Review id={prod.id} onReviewChange={(e) => handleReviewChange(e)} />
       </div>
     </>
   );

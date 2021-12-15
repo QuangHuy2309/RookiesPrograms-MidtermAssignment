@@ -111,6 +111,7 @@ export default function Index() {
         isPay: false,
         status: 1,
         address: e.target.address.value,
+        note: e.target.note.value,
         orderDetails: toArr(),
       });
       console.log(body);
@@ -277,6 +278,22 @@ export default function Index() {
                 required="required"
               />
               <div style={{ color: "red" }}>{addressError}</div>
+            </Col>
+          </Row>
+        </FormGroup>
+        <FormGroup>
+          <Row className="login">
+            <Col className="col-1">
+              <Label for="exampleNote" className="labelText-Order py-auto">
+                Note
+              </Label>
+            </Col>
+            <Col>
+              <Input
+                type="textarea"
+                name="note"
+                id="exampleNote"
+              />
             </Col>
           </Row>
         </FormGroup>

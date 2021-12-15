@@ -332,7 +332,7 @@ const ModalExample = (props) => {
                   <th className="titleTable-OrderImportAdmin">ID</th>
                   <th className="titleTable-OrderImportAdmin">PRODUCT NAME</th>
                   <th className="titleTable-OrderImportAdmin">QUANTITY</th>
-                  <th className="titleTable-OrderImportAdmin">UNIT PRICE</th>
+                  <th className="titleTable-OrderImportAdmin">UNIT COST</th>
                   <th className="titleTable-OrderImportAdmin">ACTION</th>
                 </tr>
               </thead>

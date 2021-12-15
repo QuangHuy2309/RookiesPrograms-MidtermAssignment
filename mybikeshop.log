@@ -30,3 +30,43 @@
 2021-12-13 19:54:19 ERROR ProductServiceImpl:117 - Account id 1 create product ProdA failed: ID had been used
 2021-12-13 19:54:19 INFO  ProductServiceImpl:132 - Account id 1 create product id ProdA success
 2021-12-13 19:54:19 ERROR ProductServiceImpl:194 - Account id 1 update product ProdA failed: Duplicate name
+2021-12-14 18:54:17 INFO  OrderServiceImpl:316 - Account id 22 update order status with Id 29 success
+2021-12-14 18:54:35 INFO  OrderImportController:116 - Account id 1 create Import success
+2021-12-14 18:54:46 INFO  OrderImportController:223 - Account id 1 delete import success
+2021-12-14 18:55:53 INFO  OrderServiceImpl:196 - Account id 13 create order Id 0 success
+2021-12-15 19:41:49 INFO  RateServiceImpl:73 - Account id 13 create review success
+2021-12-15 19:43:23 INFO  OrderServiceImpl:196 - Account id 13 create order Id 0 success
+2021-12-15 19:45:06 INFO  OrderServiceImpl:224 - Account id 13 updated order payment status with Id 30 success
+2021-12-15 19:48:13 INFO  CategoriesController:95 - Account id 1 created category id 0 success
+2021-12-15 19:49:01 INFO  ProductServiceImpl:132 - Account id 1 create product id R41 success
+2021-12-15 19:49:49 INFO  RateServiceImpl:99 - Account id 3 delete rate with ID RateKey [customerId=13, productId=RL3] success
+2021-12-15 19:50:03 ERROR ProductServiceImpl:194 - Account id 3 update product RL3 failed: Duplicate name
+2021-12-15 19:51:02 INFO  OrderServiceImpl:316 - Account id 13 update order status with Id 30 success
+2021-12-15 19:52:05 INFO  OrderServiceImpl:316 - Account id 13 update order status with Id 30 success
+2021-12-15 19:52:57 INFO  OrderImportController:116 - Account id 3 create Import success
+2021-12-15 20:03:17 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 20:14:55 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 20:20:40 INFO  OrderServiceImpl:316 - Account id 22 update order status with Id 29 success
+2021-12-15 20:21:05 INFO  OrderServiceImpl:316 - Account id 22 update order status with Id 29 success
+2021-12-15 20:21:08 INFO  OrderServiceImpl:316 - Account id 22 update order status with Id 29 success
+2021-12-15 20:21:12 INFO  OrderServiceImpl:316 - Account id 22 update order status with Id 29 success
+2021-12-15 21:35:55 INFO  OrderServiceImpl:369 - Account id 13 update order status with Id 28 success
+2021-12-15 21:37:10 INFO  OrderServiceImpl:369 - Account id 22 update order status with Id 29 success
+2021-12-15 21:46:58 INFO  DatabaseController:74 - Delete backup data success by account ID 1
+2021-12-15 21:47:00 INFO  DatabaseController:74 - Delete backup data success by account ID 1
+2021-12-15 21:47:03 INFO  DatabaseController:74 - Delete backup data success by account ID 1
+2021-12-15 21:47:05 INFO  DatabaseController:74 - Delete backup data success by account ID 1
+2021-12-15 21:47:05 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:47:16 INFO  OrderServiceImpl:369 - Account id 22 update order status with Id 29 success
+2021-12-15 21:47:32 INFO  OrderServiceImpl:369 - Account id 22 update order status with Id 29 success
+2021-12-15 21:47:35 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:47:54 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:48:04 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:48:44 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:49:01 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:51:22 INFO  DatabaseController:63 - Export data to CSV by account ID 1
+2021-12-15 21:57:35 INFO  OrderServiceImpl:196 - Account id 13 create order Id 0 success
+2021-12-15 21:59:46 INFO  OrderServiceImpl:196 - Account id 13 create order Id 0 success
+2021-12-15 22:00:21 INFO  OrderServiceImpl:316 - Account id 13 update order status with Id 31 success
+2021-12-15 22:00:30 INFO  OrderServiceImpl:369 - Account id 13 update order status with Id 31 success
+2021-12-15 22:26:35 INFO  DatabaseController:63 - Export data to CSV by account ID 1

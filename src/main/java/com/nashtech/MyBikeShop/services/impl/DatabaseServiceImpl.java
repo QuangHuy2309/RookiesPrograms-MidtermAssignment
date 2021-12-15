@@ -176,7 +176,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "orderbill": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy (select id, customerid,timebought,address,status,ispay from orderbill order by timebought)"
+						"\\copy (select id, customerid,timebought,address,status,ispay,note from orderbill order by timebought)"
 								+ " to '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -274,7 +274,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "orderbill": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy orderbill(id, customerid, timebought, address, status, ispay)" + " from '"
+						"\\copy orderbill(id, customerid, timebought, address, status, ispay,note)" + " from '"
 								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
