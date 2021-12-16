@@ -1,13 +1,18 @@
-.chart-div{
-    position: relative;
-    margin-left: 3rem; 
+.chart-div {
+  position: relative;
+  margin-left: 3rem;
 }
-.datepicker{
-    width: 12rem;
-    margin-left: 3rem; 
+.datepicker {
+  width: 12rem;
+  margin-left: 3rem;
 }
-.title-Report{
-    margin: 2rem;
+.title-Report {
+  margin: 2rem;
   font-weight: 600;
-  text-shadow: -2px 2px #B5FFD9;
+  text-shadow: -2px 2px #b5ffd9;
+}
+.profit{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
 }

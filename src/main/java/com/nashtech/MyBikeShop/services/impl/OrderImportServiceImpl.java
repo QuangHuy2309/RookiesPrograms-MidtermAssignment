@@ -226,5 +226,9 @@ public class OrderImportServiceImpl implements OrderImportService {
 			result = (float) 0;
 		return result;
 	}
-
+	
+	public List<OrderImportEntity> getImportByProductId(String prodId){
+		Sort sortable = Sort.by("timeimport").ascending();
+		return orderImportRepo.findByOrderImportDetailsIdProductIdAndStatusNot(sortable, prodId, false);
+	}
 }

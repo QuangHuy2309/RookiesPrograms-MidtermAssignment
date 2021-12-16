@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.ReportProdProcess;
 import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
+import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ReportService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -22,10 +23,20 @@ public class ReportController {
 	@Autowired
 	ReportService reportService;
 	
+	@Autowired
+	OrderService orderService;
+	
 	@GetMapping("/report/profit/{year}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public List<Float> profitByYear(@PathVariable(name = "year") int year){
 		return reportService.profitByYear(year);
+	}
+	
+	@GetMapping("/report/profit")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public double profitByMonthAndYear(@RequestParam(name = "month") int month,
+			@RequestParam(name = "year") int year){
+		return orderService.calculateProfitMonth(month,year);
 	}
 	
 	@GetMapping("/report/purchasecost/{year}")

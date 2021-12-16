@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +19,8 @@ public interface OrderImportRepository extends JpaRepository<OrderImportEntity, 
 	
 	boolean existsById(int id);
 	
+	List<OrderImportEntity> findByOrderImportDetailsIdProductIdAndStatusNot(Sort sort, String prodId, boolean status);
+	
 	@Query("select Max(o.id) from OrderImportEntity o ")
 	int findFirstByIdOrderByIdDesc();
 	
@@ -30,4 +33,5 @@ public interface OrderImportRepository extends JpaRepository<OrderImportEntity, 
 	@Query("SELECT o FROM OrderImportEntity o WHERE  (UPPER(o.employee.fullname) LIKE %?1%) ORDER BY o.timeimport DESC")
 	List<OrderImportEntity> searchImportByEmployee(String keyword);
 
+	
 }

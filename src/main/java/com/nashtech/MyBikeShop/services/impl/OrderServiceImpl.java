@@ -1,7 +1,9 @@
 package com.nashtech.MyBikeShop.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -26,6 +28,8 @@ import com.nashtech.MyBikeShop.DTO.OrderDTO;
 import com.nashtech.MyBikeShop.DTO.OrderDetailDTO;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
 import com.nashtech.MyBikeShop.entity.OrderEntity;
+import com.nashtech.MyBikeShop.entity.OrderImportDetailEntity;
+import com.nashtech.MyBikeShop.entity.OrderImportEntity;
 import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.OrderDetailEntity.OrderDetailsKey;
@@ -33,6 +37,7 @@ import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.exception.ObjectPropertiesIllegalException;
 import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderDetailService;
+import com.nashtech.MyBikeShop.services.OrderImportService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.PersonService;
 import com.nashtech.MyBikeShop.services.ProductService;
@@ -53,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	OrderDetailService orderDetailService;
+
+	@Autowired
+	OrderImportService importService;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -99,14 +107,15 @@ public class OrderServiceImpl implements OrderService {
 	public long countByStatus(int status) {
 		return orderRepository.countByStatus(status);
 	}
-	
+
 	public int getLatestId() {
 		return orderRepository.findFirstByIdOrderByIdDesc();
 	}
-	
+
 	public int generateNewId() {
-		int id = orderRepository.findFirstByIdOrderByIdDesc()+1;
-		while (orderRepository.existsById(id)) id++;
+		int id = orderRepository.findFirstByIdOrderByIdDesc() + 1;
+		while (orderRepository.existsById(id))
+			id++;
 		return id;
 	}
 
@@ -138,11 +147,13 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findByStatus(pageable, status);
 	}
 
-	public boolean checkOrderedByProductAndCustomerId(String prodId, int customerId){
+	public boolean checkOrderedByProductAndCustomerId(String prodId, int customerId) {
 		List<OrderEntity> listOrder = orderRepository.findByOrderDetailsIdProductIdAndCustomersId(prodId, customerId);
-		if (listOrder.isEmpty()) return false;
+		if (listOrder.isEmpty())
+			return false;
 		for (OrderEntity order : listOrder) {
-			if (order.getStatus() == 3) return true;
+			if (order.getStatus() == 3)
+				return true;
 		}
 		return false;
 	}
@@ -272,8 +283,8 @@ public class OrderServiceImpl implements OrderService {
 		} catch (NoSuchElementException ex) {
 			logger.error("Account id " + userId + " update order status with Id " + id
 					+ " failed: Could not find Order with id: " + id);
-			throw new ObjectNotFoundException("Update order status with Id " + id
-					+ " failed: Could not find Order with Id: " + id);
+			throw new ObjectNotFoundException(
+					"Update order status with Id " + id + " failed: Could not find Order with Id: " + id);
 		}
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
@@ -316,7 +327,7 @@ public class OrderServiceImpl implements OrderService {
 		logger.info("Account id " + order.getCustomers().getId() + " update order status with Id " + id + " success");
 		return true;
 	}
-	
+
 	public boolean updateNoteOrder(int id, int status, String userId, String note) {
 		OrderEntity order;
 		try {
@@ -325,8 +336,8 @@ public class OrderServiceImpl implements OrderService {
 		} catch (NoSuchElementException ex) {
 			logger.error("Account id " + userId + " update order status with Id " + id
 					+ " failed: Could not find Order with id: " + id);
-			throw new ObjectNotFoundException("Update order status with Id " + id
-					+ " failed: Could not find Order with Id: " + id);
+			throw new ObjectNotFoundException(
+					"Update order status with Id " + id + " failed: Could not find Order with Id: " + id);
 		}
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
@@ -381,6 +392,45 @@ public class OrderServiceImpl implements OrderService {
 		if (result == null)
 			result = (float) 0;
 		return result;
+	}
+
+	public double calculateProfitMonth(int month, int year) {
+		List<OrderEntity> orderList = orderRepository.getOrderFromMonth(month, year);
+		// Profit
+		Map<String, Integer> prodList = new HashMap<>();
+		double profit = 0;
+		for (OrderEntity order : orderList) {
+			for (OrderDetailEntity detail : order.getOrderDetails()) {
+				String prodId = detail.getId().getProductId();
+				profit += detail.getAmmount() * detail.getUnitPrice();
+				if (prodList.isEmpty() || !prodList.containsKey(prodId)) {	
+					prodList.put(prodId, detail.getAmmount());
+				} else if (prodList.containsKey(prodId)) {
+					int oldAmount = prodList.get(prodId);
+					prodList.replace(prodId, detail.getAmmount() + oldAmount);
+				}
+			}
+		}
+		// Cost
+		for (Map.Entry<String, Integer> entry : prodList.entrySet()) {
+			List<OrderImportEntity> importList = importService.getImportByProductId(entry.getKey());
+			int index = 0;
+			int amount = prodList.get(entry.getKey());
+			while (amount > 0) {
+				OrderImportDetailEntity detailImport = importList.get(index).getOrderImportDetails()
+						.stream().filter(detail -> detail.getId().getProductId().equalsIgnoreCase(entry.getKey())).findFirst().orElse(null);
+				if (amount <= detailImport.getAmmount()) {
+					profit -= amount * detailImport.getPrice();
+				}
+				else {
+					profit -= detailImport.getAmmount() * detailImport.getPrice();
+					index++;
+				}
+				amount -= detailImport.getAmmount();
+				
+			}
+		}
+		return profit;	
 	}
 
 	public void sendSimpleMessage(String to, String listProd, Double totalCost) throws MessagingException {

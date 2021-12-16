@@ -54,4 +54,6 @@ public interface OrderService {
 	public int getLatestId();
 	
 	public int generateNewId();
+	
+	public double calculateProfitMonth(int month, int year);
 }

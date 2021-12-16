@@ -34,4 +34,6 @@ public interface OrderImportService {
 	
 	public int generateNewId();
 	
+	public List<OrderImportEntity> getImportByProductId(String prodId);
+	
 }
