@@ -16,3 +16,14 @@
     justify-content: flex-end;
     margin-right: 1rem;
 }
+.profit-text-RaE{
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0;
+}
+.profit-num-RaE{
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  padding-left: 0;
+}

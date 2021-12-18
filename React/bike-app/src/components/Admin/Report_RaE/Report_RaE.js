@@ -8,6 +8,7 @@ export default function Report() {
   const [today, setToday] = useState("");
   const [selectedDate, setSelectedDate] = useState(today);
   const [profitNum, setProfitNum] = useState(0);
+  const [profitNumMonthBefore, setProfitNumBefore] = useState(0);
   const [profit, setProfit] = useState([]);
   const [purchase, setPurchase] = useState([]);
 
@@ -56,14 +57,24 @@ export default function Report() {
   }, [selectedDate]);
 
   async function calProfit(month, year) {
-    getWithAuth(`/report/profit?month=${month}&year=${year}`).then(
-      (response) => {
-        if (response.status === 200) {
-          // console.log(response.data);
-          setProfitNum(response.data);
+    if (month !== "" && year !== "") {
+      getWithAuth(`/report/profit?month=${month}&year=${year}`).then(
+        (response) => {
+          if (response.status === 200) {
+            // console.log(response.data);
+            setProfitNum(response.data);
+          }
         }
-      }
-    );
+      );
+      getWithAuth(`/report/profit?month=${month - 1}&year=${year}`).then(
+        (response) => {
+          if (response.status === 200) {
+            // console.log(response.data);
+            setProfitNumBefore(response.data);
+          }
+        }
+      );
+    }
   }
   function setDate() {
     let today = new Date();
@@ -84,27 +95,31 @@ export default function Report() {
     setSelectedDate(e.target.value);
   }
   async function getProfitList(year) {
-    setProfit([]);
-    getWithAuth(`/report/profit/${year}`).then((response) => {
-      if (response.status === 200) {
-        setProfit([...response.data]);
-      }
-    });
+    if (year !== "") {
+      setProfit([]);
+      getWithAuth(`/report/profit/${year}`).then((response) => {
+        if (response.status === 200) {
+          setProfit([...response.data]);
+        }
+      });
+    }
   }
   async function getPurchaseList(year) {
-    setPurchase([]);
-    getWithAuth(`/report/purchasecost/${year}`).then((response) => {
-      if (response.status === 200) {
-        setPurchase([...response.data]);
-      }
-    });
+    if (year !== "") {
+      setPurchase([]);
+      getWithAuth(`/report/purchasecost/${year}`).then((response) => {
+        if (response.status === 200) {
+          setPurchase([...response.data]);
+        }
+      });
+    }
   }
 
   return (
     <div>
       <h2 className="title-Report">REVENUE & EXPENDITURE</h2>
       <Row>
-        <Col className="col-5">
+        <Col className="col-8">
           <div className="datepicker">
             <Input
               type="month"
@@ -116,9 +131,26 @@ export default function Report() {
             />
           </div>
         </Col>
-        <Col className="profit">
-          <h4 className="priceTitle">Profit: </h4>
-          <h4 className="status-false">{numberFormat(profitNum)}</h4>
+
+        <Col>
+          <Row className="profit">
+            <Col className="col-6 profit-text-RaE">
+              <h4 className="priceTitle ">Profit in month: </h4>
+            </Col>
+            <Col className="profit-num-RaE">
+              <h4 className="status-false">
+                {numberFormat(profitNum - profitNumMonthBefore)}
+              </h4>
+            </Col>
+          </Row>
+          <Row className="profit">
+            <Col className="col-6 profit-text-RaE">
+              <h4 className="priceTitle">Total profit: </h4>
+            </Col>
+            <Col className="profit-num-RaE">
+              <h4 className="status-false">{numberFormat(profitNum)}</h4>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <div className="chart-div">
