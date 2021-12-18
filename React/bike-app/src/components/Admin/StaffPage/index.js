@@ -175,7 +175,7 @@ export default function Index() {
             name="name"
             id="name"
             className="search-OrderImport"
-            placeholder="Search Customer by name"
+            placeholder="Search Employee by name"
             value={search}
             onChange={(e) => handleSearchChange(e)}
           />
