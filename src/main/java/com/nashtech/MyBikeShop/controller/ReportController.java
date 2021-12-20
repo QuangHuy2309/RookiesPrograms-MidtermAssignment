@@ -32,6 +32,13 @@ public class ReportController {
 		return reportService.profitByYear(year);
 	}
 	
+	@GetMapping("/report/profitByMonth")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	public List<Float> profitByYear(@RequestParam(name = "fromMonth") String fromMonth,
+			@RequestParam(name = "toMonth") String toMonth){
+		return reportService.profitMonth(fromMonth,toMonth);
+	}
+	
 	@GetMapping("/report/profit")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public double profitByMonthAndYear(@RequestParam(name = "month") int month,

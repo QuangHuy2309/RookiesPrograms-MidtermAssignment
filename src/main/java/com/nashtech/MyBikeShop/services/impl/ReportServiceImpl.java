@@ -39,6 +39,31 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return profit;
 	}
+	
+	public List<Float> profitMonth(String fromMonth, String toMonth) {
+		List<Float> profit = new ArrayList<>();
+		if (fromMonth.compareTo(toMonth) == 1) {
+			String temp = fromMonth;
+			fromMonth = toMonth;
+			toMonth = temp;
+		}
+		String[] arrayFrom = fromMonth.split("-");
+		String[] arrayTo = toMonth.split("-");
+		int monthFrom = Integer.parseInt(arrayFrom[0]);
+		int monthTo = Integer.parseInt(arrayTo[0]);
+		int yearFrom = Integer.parseInt(arrayFrom[1]);
+		int yearTo = Integer.parseInt(arrayTo[1]);
+		while (monthFrom <= monthTo || yearFrom < yearTo) {
+			profit.add(orderService.profitByMonth(monthFrom, yearFrom));
+			if (monthFrom == monthTo && yearFrom == yearTo) break;
+			monthFrom++;
+			if (monthFrom > 12) {
+				yearFrom++;
+				monthFrom=1;
+			}
+		}
+		return profit;
+	}
 
 	public List<Float> purchaseCostByYear(int year) {
 		List<Float> profit = new ArrayList<>();

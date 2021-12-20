@@ -64,7 +64,6 @@ export default function Index(props) {
     }
   }, [modal]);
   useEffect(() => {
-    console.log(choice);
     if (choice == 0) {
       getListProdReport();
     } else {

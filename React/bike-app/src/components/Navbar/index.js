@@ -182,9 +182,10 @@ export default function Index(props) {
     );
   }
   async function handleSearchChange(e) {
-    if (e.target.value.trim() != "") {
+    let keyword = e.target.value.trim().split(/ +/).join(' ');
+    if (keyword != "") {
       setProdList([]);
-      get(`/public/product/search?keyword=${e.target.value}`).then(
+      get(`/public/product/search?keyword=${keyword.replace(/%20/g, " ")}`).then(
         (response) => {
           if (response.status === 200) {
             setProdList([...response.data]);
@@ -193,7 +194,7 @@ export default function Index(props) {
       );
       setPopoverOpen(true);
     }
-    if (e.target.value == "") {
+    if (keyword == "") {
       setPopoverOpen(false);
       setProdList([]);
     }

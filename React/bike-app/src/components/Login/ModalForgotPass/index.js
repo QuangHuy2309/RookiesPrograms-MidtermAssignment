@@ -136,7 +136,7 @@ const ModalAdd = (props) => {
               autoClose: 3000,
             });
             toggle();
-            history.push("/Login");
+            history.push("/");
           }
         })
         .catch((error) => {

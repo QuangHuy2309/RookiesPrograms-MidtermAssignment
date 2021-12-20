@@ -16,4 +16,6 @@ public interface ReportService {
 	public List<ReportProdProcess> productProccess(int cateId);
 	
 	public List<ProductEntity> hotProduct(int size);
+	
+	public List<Float> profitMonth(String fromMonth, String toMonth);
 }

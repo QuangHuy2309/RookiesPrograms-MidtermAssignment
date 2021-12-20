@@ -93,6 +93,7 @@ export default function Index(props) {
             <p onClick={() => props.onChoice("REPORT_RaE")}>
               Revenue & Expenditure
             </p>
+            <p onClick={() => props.onChoice("REPORT_ProfitMonth")}>Revenue</p>
             <p onClick={() => props.onChoice("REPORT_TopProd")}>Top sale</p>
             <p onClick={() => props.onChoice("REPORT_ProdProccess")}>Product Report</p>
           </SubMenu>

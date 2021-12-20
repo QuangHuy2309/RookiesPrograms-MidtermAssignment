@@ -1,0 +1,50 @@
+.chart-div-TopProd {
+  position: relative;
+  margin-left: 1rem;
+  /* transform: scale(0.9); */
+}
+.datepicker {
+  width: 12rem;
+  margin-left: 3rem;
+}
+.title-Report {
+  margin: 2rem;
+  font-weight: 600;
+  text-shadow: -2px 2px #b5ffd9;
+}
+.selectDateDiv-TopProd {
+  display: flex;
+}
+.btnDiv-TopProd {
+  position: relative;
+  margin-left: 3rem;
+}
+.btn-TopProd {
+  position: absolute;
+  bottom: 0;
+}
+.img-reportTopProd{
+  width: 12rem;
+}
+.titleProdSelect-ReportTopProd{
+  text-align: center;
+  /* margin-bottom: 1rem; */
+}
+.titleTextProdSelect-ReportTopProd{
+  font-weight: 600;
+}
+.infoProdSelect-ReportTopProd{
+  display: block;
+}
+.infoTextProdSelect-ReportTopProd{
+  margin-bottom: 0;
+  /* font-weight: 400; */
+}
+.selectNumProd-ReportTopProd{
+  width: 3rem;
+  text-align: right;
+  margin-top: 2rem;
+}
+.divNumProd-ReportTopProd{
+  text-align: right;
+}
