@@ -32,6 +32,13 @@ public interface OrderImportRepository extends JpaRepository<OrderImportEntity, 
 
 	@Query("SELECT o FROM OrderImportEntity o WHERE  (UPPER(o.employee.fullname) LIKE %?1%) ORDER BY o.timeimport DESC")
 	List<OrderImportEntity> searchImportByEmployee(String keyword);
+	
+	@Query(value = "select SUM(o2.price*o2.amount)/SUM(o2.amount) " 
+			+ "from orderimport o, orderimportdetails o2 "
+			+ "where o.id = o2.orderimportid and "
+			+ "o2.productid = :prodId and EXTRACT(MONTH FROM o.timeimport) <= :month and EXTRACT(YEAR FROM o.timeimport) <= :year "
+			+ "", nativeQuery = true)
+	Double avgCostImportOfProd(@Param("prodId") String prodId, @Param("month") Integer month, @Param("year") Integer year);
 
 	
 }

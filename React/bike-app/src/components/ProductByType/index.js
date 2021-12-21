@@ -94,11 +94,12 @@ export default function Index() {
       }
     });
   }
-  function handleSearchChange(e) {
+  function handleSearchChange(e) {  
+    let keyword = e.target.value.trim().split(/ +/).join(' ');
     setSearch(e.target.value);
     setCheckRadioAsc("");
     setProdList([]);
-    get(`/public/product/search?keyword=${e.target.value.trim()}&type=${id}`).then(
+    get(`/public/product/search?keyword=${keyword}&type=${id}`).then(
       (response) => {
         if (response.status === 200) {
           setProdList([...response.data]);

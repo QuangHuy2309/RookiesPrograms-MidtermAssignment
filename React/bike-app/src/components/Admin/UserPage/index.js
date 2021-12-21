@@ -80,8 +80,9 @@ export default function Index() {
   async function handleSearchChange(e) {
     if (e.target.value.trim().length > 0) {
       setUserList([]);
+      let keyword = e.target.value.trim().split(/ +/).join(' ');
       getWithAuth(
-        `/persons/search?keyword=${e.target.value.trim()}&role=USER`
+        `/persons/search?keyword=${keyword}&role=USER`
       ).then((response) => {
         if (response.status === 200) {
           setUserList([...response.data]);

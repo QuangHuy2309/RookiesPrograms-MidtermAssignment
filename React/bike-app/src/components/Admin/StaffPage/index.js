@@ -133,9 +133,10 @@ export default function Index() {
     }
   }
   async function handleSearchChange(e) {
-    setSearch(e.target.value.trim());
+    setSearch(e.target.value);
     if (e.target.value.trim().length > 0) {
-      getSearchStaffList(e.target.value.trim());
+      let keyword = e.target.value.trim().split(/ +/).join(' ');
+      getSearchStaffList(keyword);
     } else {
       setShowPage(true);
       getListUser();

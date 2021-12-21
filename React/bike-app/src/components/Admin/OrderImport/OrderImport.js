@@ -166,8 +166,9 @@ export default function OrderImport() {
   async function handleSearchChange(e) {
     if (e.target.value.trim().length > 0) {
       setOrderList([]);
+      let keyword = e.target.value.trim().split(/ +/).join(' ');
       getWithAuth(
-        `/imports/search/ImportByEmployee/${e.target.value.trim()}`
+        `/imports/search/ImportByEmployee/${keyword}`
       ).then((response) => {
         if (response.status === 200) {
           setOrderList([...response.data]);

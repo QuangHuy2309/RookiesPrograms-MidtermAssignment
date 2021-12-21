@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.MyBikeShop.DTO.ReportProdProcess;
 import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
+import com.nashtech.MyBikeShop.services.OrderImportService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ReportService;
 
@@ -25,6 +26,9 @@ public class ReportController {
 	
 	@Autowired
 	OrderService orderService;
+	
+	@Autowired
+	OrderImportService importService;
 	
 	@GetMapping("/report/profit/{year}")
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
@@ -43,7 +47,7 @@ public class ReportController {
 	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public double profitByMonthAndYear(@RequestParam(name = "month") int month,
 			@RequestParam(name = "year") int year){
-		return orderService.calculateProfitMonth(month,year);
+		return reportService.profitAvgMonth(month,year);
 	}
 	
 	@GetMapping("/report/purchasecost/{year}")

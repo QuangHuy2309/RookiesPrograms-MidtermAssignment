@@ -1,7 +1,9 @@
 package com.nashtech.MyBikeShop.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -9,7 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.MyBikeShop.DTO.ReportProdProcess;
 import com.nashtech.MyBikeShop.DTO.ReportTopProduct;
+import com.nashtech.MyBikeShop.entity.OrderDetailEntity;
+import com.nashtech.MyBikeShop.entity.OrderEntity;
 import com.nashtech.MyBikeShop.entity.ProductEntity;
+import com.nashtech.MyBikeShop.repository.OrderImportRepository;
+import com.nashtech.MyBikeShop.repository.OrderRepository;
 import com.nashtech.MyBikeShop.services.OrderImportService;
 import com.nashtech.MyBikeShop.services.OrderService;
 import com.nashtech.MyBikeShop.services.ReportService;
@@ -24,9 +30,15 @@ public class ReportServiceImpl implements ReportService {
 
 	@Autowired
 	OrderService orderService;
-
+	
 	@Autowired
 	OrderImportService importService;
+
+	@Autowired
+	OrderImportRepository importRepo;
+	
+	@Autowired
+	OrderRepository orderRepo;
 
 	public ReportServiceImpl(NamedParameterJdbcTemplate template) {
 		this.template = template;
@@ -36,31 +48,6 @@ public class ReportServiceImpl implements ReportService {
 		List<Float> profit = new ArrayList<>();
 		for (int i = 1; i <= 12; i++) {
 			profit.add(orderService.profitByMonth(i, year));
-		}
-		return profit;
-	}
-	
-	public List<Float> profitMonth(String fromMonth, String toMonth) {
-		List<Float> profit = new ArrayList<>();
-		if (fromMonth.compareTo(toMonth) == 1) {
-			String temp = fromMonth;
-			fromMonth = toMonth;
-			toMonth = temp;
-		}
-		String[] arrayFrom = fromMonth.split("-");
-		String[] arrayTo = toMonth.split("-");
-		int monthFrom = Integer.parseInt(arrayFrom[0]);
-		int monthTo = Integer.parseInt(arrayTo[0]);
-		int yearFrom = Integer.parseInt(arrayFrom[1]);
-		int yearTo = Integer.parseInt(arrayTo[1]);
-		while (monthFrom <= monthTo || yearFrom < yearTo) {
-			profit.add(orderService.profitByMonth(monthFrom, yearFrom));
-			if (monthFrom == monthTo && yearFrom == yearTo) break;
-			monthFrom++;
-			if (monthFrom > 12) {
-				yearFrom++;
-				monthFrom=1;
-			}
 		}
 		return profit;
 	}
@@ -116,5 +103,54 @@ public class ReportServiceImpl implements ReportService {
 				+ "	products p, categories c \r\n"
 				+ "	where p.producttype = c.id and c.status != false and p.status != false and p.producttype = "+cateId+";";
 		return template.query(sqlQuery, new ReportProductProcessMapper());
+	}
+	
+	public List<Float> profitMonth(String fromMonth, String toMonth) {
+		List<Float> profit = new ArrayList<>();
+		if (fromMonth.compareTo(toMonth) == 1) {
+			String temp = fromMonth;
+			fromMonth = toMonth;
+			toMonth = temp;
+		}
+		String[] arrayFrom = fromMonth.split("-");
+		String[] arrayTo = toMonth.split("-");
+		int monthFrom = Integer.parseInt(arrayFrom[0]);
+		int monthTo = Integer.parseInt(arrayTo[0]);
+		int yearFrom = Integer.parseInt(arrayFrom[1]);
+		int yearTo = Integer.parseInt(arrayTo[1]);
+		while (monthFrom <= monthTo || yearFrom < yearTo) {
+			profit.add(orderService.profitByMonth(monthFrom, yearFrom));
+			if (monthFrom == monthTo && yearFrom == yearTo) break;
+			monthFrom++;
+			if (monthFrom > 12) {
+				yearFrom++;
+				monthFrom=1;
+			}
+		}
+		return profit;
+	}
+	
+	public double profitAvgMonth(int month, int year) {
+		List<OrderEntity> orderList = orderRepo.getOrderFromMonth(month, year);
+		// Profit
+		Map<String, Integer> prodList = new HashMap<>();
+		for (OrderEntity order : orderList) {
+			for (OrderDetailEntity detail : order.getOrderDetails()) {
+				String prodId = detail.getId().getProductId();
+				if (prodList.isEmpty() || !prodList.containsKey(prodId)) {	
+					prodList.put(prodId, detail.getAmmount());
+				} else if (prodList.containsKey(prodId)) {
+					int oldAmount = prodList.get(prodId);
+					prodList.replace(prodId, detail.getAmmount() + oldAmount);
+				}
+			}
+		}
+		double total = 0;
+		for (Map.Entry<String, Integer> entry : prodList.entrySet()) {
+			double costAVG = importRepo.avgCostImportOfProd(entry.getKey(), month, year);
+			double profitAVG = orderRepo.avgPriceSoldOfProd(entry.getKey(), month, year);
+			total += (profitAVG - costAVG) * prodList.get(entry.getKey());
+		}
+		return total;
 	}
 }

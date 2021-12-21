@@ -25,5 +25,8 @@
   display: flex;
   justify-content: flex-start;
   margin: 0;
-  padding-left: 0;
+  padding-left: 0 !important;
+}
+.price_Rae{
+  color: orangered;
 }

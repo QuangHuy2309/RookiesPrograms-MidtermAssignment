@@ -129,7 +129,6 @@ export default function Report() {
     let yearTo = to.slice(3);
     let monthTo = to.slice(0, 2);
 
-    if (monthFrom < 10) monthFrom = from.slice(1,2)
     if (yearFrom > yearTo) {
       [monthFrom, monthTo] = [monthTo, monthFrom];
       [yearFrom, yearTo] = [yearTo, yearFrom];
@@ -137,10 +136,12 @@ export default function Report() {
       [monthFrom, monthTo] = [monthTo, monthFrom];
     }
     let list = []
+    // if (monthFrom < 10) monthFrom = from.slice(1,2);
+    console.log(monthFrom)
     while (monthFrom <= monthTo || yearFrom < yearTo) {
       // setLabelColChart((oldArr) => [...oldArr, `${monthFrom}-${yearFrom}`]);
       // console.log(`${monthFrom}-${yearFrom}`)
-      list.push(`${monthFrom}-${yearFrom}`)
+      list.push(`${Number(monthFrom)}-${yearFrom}`)
       if (monthFrom == monthTo && yearFrom == yearTo) break;
     	monthFrom++;
     	if (monthFrom > 12) {
@@ -148,6 +149,7 @@ export default function Report() {
     		monthFrom=1;
     	}
     }
+    console.log(list)
     setLabelColChart(list);
   }
 

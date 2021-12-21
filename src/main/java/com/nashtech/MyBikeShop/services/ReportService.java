@@ -18,4 +18,6 @@ public interface ReportService {
 	public List<ProductEntity> hotProduct(int size);
 	
 	public List<Float> profitMonth(String fromMonth, String toMonth);
+	
+	public double profitAvgMonth(int month, int year);
 }

@@ -209,6 +209,7 @@ export default function Order() {
 
   function getSearchOrderList(keyword, status) {
     setOrderList([]);
+    keyword = keyword.trim().split(/ +/).join(' ');
     getWithAuth(
       `/order/search/OrderByCustomer?keyword=${keyword}&status=${status}`
     ).then((response) => {
@@ -219,7 +220,7 @@ export default function Order() {
     });
   }
   async function handleSearchChange(e) {
-    setSearch(e.target.value.trim());
+    setSearch(e.target.value);
     if (e.target.value.trim().length > 0) {
       let status = choice;
       if (choice == 0) status = "";

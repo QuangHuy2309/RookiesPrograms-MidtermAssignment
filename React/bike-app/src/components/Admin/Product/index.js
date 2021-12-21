@@ -141,9 +141,10 @@ export default function Index() {
   }
   function handleSearchChange(e) {
     if (e.target.value.trim().length > 0) {
+      let keyword = e.target.value.trim().split(/ +/).join(' ');
       setProdList([]);
       get(
-        `/public/product/search?keyword=${e.target.value.trim()}&type=${choice}`
+        `/public/product/search?keyword=${keyword}&type=${choice}`
       ).then((response) => {
         if (response.status === 200) {
           setProdList([...response.data]);

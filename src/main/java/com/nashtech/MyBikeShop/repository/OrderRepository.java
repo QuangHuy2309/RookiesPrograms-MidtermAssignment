@@ -42,4 +42,11 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 
 	@Query("select Max(o.id) from OrderEntity o ")
 	int findFirstByIdOrderByIdDesc();
+	
+	@Query(value = "select SUM(o2.unitprice*o2.amount)/SUM(o2.amount) " 
+			+ "from orderbill o, orderdetails o2 "
+			+ "where o.id = o2.orderid and "
+			+ "o2.productid = :prodId and EXTRACT(MONTH FROM o.timebought) <= :month and EXTRACT(YEAR FROM o.timebought) <= :year "
+			+ "", nativeQuery = true)
+	Double avgPriceSoldOfProd(@Param("prodId") String prodId, @Param("month") Integer month, @Param("year") Integer year);
 }
