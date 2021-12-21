@@ -66,6 +66,14 @@ export default function Report() {
           }
         }
       );
+      getWithAuth(`/report/profit?month=${month-1}&year=${year}`).then(
+        (response) => {
+          if (response.status === 200) {
+            // console.log(response.data);
+            setProfitNumBefore(response.data);
+          }
+        }
+      );
     }
   }
   function setDate() {
@@ -128,6 +136,14 @@ export default function Report() {
           <Row>
             <Col className="col-6 profit-text-RaE">
               <h4 className="priceTitle ">Profit in month: </h4>
+            </Col>
+            <Col className="profit-num-RaE">
+              <h4 className="price_Rae">{numberFormat(profitNum-profitNumMonthBefore)}</h4>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="col-6 profit-text-RaE">
+              <h4 className="priceTitle ">Profit: </h4>
             </Col>
             <Col className="profit-num-RaE">
               <h4 className="price_Rae">{numberFormat(profitNum)}</h4>

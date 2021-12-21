@@ -149,7 +149,6 @@ export default function Report() {
     		monthFrom=1;
     	}
     }
-    console.log(list)
     setLabelColChart(list);
   }
 
