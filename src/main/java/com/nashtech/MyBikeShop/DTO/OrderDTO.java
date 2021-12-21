@@ -13,6 +13,7 @@ public class OrderDTO {
 	private Integer status;
 	private String customersEmail;
 	private String customersName;
+	private String employeeApprovedName;
 	private LocalDateTime timebought;
 	private boolean payment;
 	private String note;
@@ -129,6 +130,14 @@ public class OrderDTO {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public String getEmployeeApprovedName() {
+		return employeeApprovedName;
+	}
+
+	public void setEmployeeApprovedName(String employeeApprovedName) {
+		this.employeeApprovedName = employeeApprovedName;
 	}
 
 	public List<OrderDetailDTO> getOrderDetails() {

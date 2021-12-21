@@ -372,7 +372,7 @@ export default function Order() {
         <thead>
           <tr>
             <th className="titleTable-OrderAdmin">ID</th>
-            <th className="titleTable-OrderAdmin">CUSTOMER EMAIL</th>
+            {/* <th className="titleTable-OrderAdmin">CUSTOMER EMAIL</th> */}
             <th className="titleTable-OrderAdmin">CUSTOMER NAME</th>
             <th className="titleTable-OrderAdmin">BOUGHT AT</th>
             <th className="titleTable-OrderAdmin">TOTAL</th>
@@ -380,6 +380,7 @@ export default function Order() {
             <th className="titleTable-OrderAdmin">PAYMENT</th>
             <th className="titleTable-OrderAdmin">PRODUCT</th>
             <th className="titleTable-OrderAdmin">STATUS</th>
+            <th className="titleTable-OrderAdmin">EMPLOYEE APPROVED</th>
             {/* <th className="titleTable-OrderAdmin">NOTE</th> */}
             {/* <th></th> */}
           </tr>
@@ -388,7 +389,7 @@ export default function Order() {
           {orderList.map((order, index) => (
             <tr key={order.id}>
               <th scope="row">{order.id}</th>
-              <td>{order.customersEmail}</td>
+              {/* <td>{order.customersEmail}</td> */}
               <td>{order.customersName}</td>
               <td>
                 {format(new Date(order.timebought), "dd/MM/yyyy HH:mm:ss")}
@@ -412,6 +413,7 @@ export default function Order() {
                 </Button>
               </td>
               <td>{dropDownStatus(order.id, order.status, order.note)}</td>
+              <td>{order.employeeApprovedName}</td>
             </tr>
           ))}
         </tbody>

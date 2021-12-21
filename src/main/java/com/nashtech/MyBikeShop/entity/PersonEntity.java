@@ -57,6 +57,10 @@ public class PersonEntity {
 	@OneToMany(mappedBy = "customers", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Set<OrderEntity> orders;
+	
+	@OneToMany(mappedBy = "employee", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<OrderEntity> orders_Employee;
 
 	@OneToMany(mappedBy = "employee", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -191,6 +195,14 @@ public class PersonEntity {
 
 	public void setOrders(Set<OrderEntity> orders) {
 		this.orders = orders;
+	}
+
+	public Set<OrderEntity> getOrders_Employee() {
+		return orders_Employee;
+	}
+
+	public void setOrders_Employee(Set<OrderEntity> orders_Employee) {
+		this.orders_Employee = orders_Employee;
 	}
 
 	public Set<OrderImportEntity> getOrdersImport() {

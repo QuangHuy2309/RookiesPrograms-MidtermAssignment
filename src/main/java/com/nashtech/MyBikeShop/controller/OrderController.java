@@ -223,7 +223,7 @@ public class OrderController {
 	}
 
 	@PutMapping("/order/updateStatus/{id}")
-	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
 	public String updateStatusOrder(HttpServletRequest request, @PathVariable(name = "id") int id,
 			@RequestParam(name = "status") int status) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
@@ -237,7 +237,7 @@ public class OrderController {
 	}
 	
 	@PutMapping("/order/note/{id}")
-	@PreAuthorize("hasRole('STAFF') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public String updateStatusOrder(HttpServletRequest request, @PathVariable(name = "id") int id,
 			@RequestParam(name = "status") int status, @RequestParam(name = "note") String note) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);

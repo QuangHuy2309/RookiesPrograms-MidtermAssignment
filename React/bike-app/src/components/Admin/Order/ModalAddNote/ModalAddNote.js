@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { put } from "../../../../Utils/httpHelper";
 import { toast } from "react-toastify";
+import { getCookie } from "../../../../Utils/Cookie";
 import {
   Button,
   Modal,
@@ -15,6 +16,7 @@ import {
 toast.configure();
 export default function ModalAddNote(props) {
   const [modal, setModal] = useState(props.modal);
+  
   function toggleNote() {
     props.onChangeShowNote(false);
     // setModal(!modal);
@@ -26,10 +28,14 @@ export default function ModalAddNote(props) {
 
   function handleSubmitNote(e) {
     e.preventDefault();
+    const id = getCookie("id");
+    const username = getCookie("username");
+    let note = `Cancel by: ${id}-${username}. Reason: ${e.target.note.value.trim()}`;
+
     put(
       `/order/note/${props.id}?status=${
         props.status
-      }&note=${e.target.note.value.trim()}`,
+      }&note=${note}`,
       ""
     )
       .then((response) => {

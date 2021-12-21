@@ -44,6 +44,10 @@ public class OrderEntity {
 	@ManyToOne
 	@JoinColumn(name = "customerid")
 	private PersonEntity customers;
+	
+	@ManyToOne
+	@JoinColumn(name = "approveby")
+	private PersonEntity employee;
 
 	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	Set<OrderDetailEntity> orderDetails;
@@ -131,6 +135,14 @@ public class OrderEntity {
 
 	public void setOrderDetails(Set<OrderDetailEntity> orderDetails) {
 		this.orderDetails = orderDetails;
+	}
+
+	public PersonEntity getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(PersonEntity employee) {
+		this.employee = employee;
 	}
 
 	@Override

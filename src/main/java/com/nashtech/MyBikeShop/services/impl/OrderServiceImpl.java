@@ -167,6 +167,8 @@ public class OrderServiceImpl implements OrderService {
 		orderDTO.setTotalCost(totalCost);
 		orderDTO.setCustomersEmail(order.getCustomers().getEmail());
 		orderDTO.setCustomersName(order.getCustomers().getFullname());
+		if (order.getEmployee() != null)
+		orderDTO.setEmployeeApprovedName(order.getEmployee().getFullname());
 		return orderDTO;
 	}
 
@@ -278,6 +280,7 @@ public class OrderServiceImpl implements OrderService {
 	@Transactional
 	public boolean updateStatusOrder(int id, int status, String userId) {
 		OrderEntity order;
+		PersonEntity person;
 		try {
 			order = getOrder(id).get();
 		} catch (NoSuchElementException ex) {
@@ -285,6 +288,13 @@ public class OrderServiceImpl implements OrderService {
 					+ " failed: Could not find Order with id: " + id);
 			throw new ObjectNotFoundException(
 					"Update order status with Id " + id + " failed: Could not find Order with Id: " + id);
+		}
+		try {
+			person = personService.getPerson(Integer.parseInt(userId)).get();
+		} catch (NoSuchElementException ex) {
+			logger.error("Account id " + userId + " updated order payment status with Id " + id
+					+ " failed: Not found this account");
+			throw new ObjectNotFoundException("Not found this account: " + userId);
 		}
 		if (status == 4 && order.getStatus() != 4) {
 			for (OrderDetailEntity detail : orderDetailService.getDetailOrderByOrderId(id)) {
@@ -320,7 +330,9 @@ public class OrderServiceImpl implements OrderService {
 				}
 			}
 		}
-		if (status == 3)
+		if (status == 1) order.setEmployee(null);
+		else if (status == 2) order.setEmployee(person);
+		else if (status == 3)
 			order.setPayment(true);
 		order.setStatus(status);
 		orderRepository.save(order);

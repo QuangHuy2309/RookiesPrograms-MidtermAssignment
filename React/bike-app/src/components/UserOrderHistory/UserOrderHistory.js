@@ -48,8 +48,9 @@ export default function UserOrderHistory() {
     setPageNum(e);
   }
   function handleChangeStatus(e, id) {
+    const note = "Customer Cancel"
     if (e === "OK") {
-      put(`/order/updateStatus/${id}?status=4`, "").then((response) => {
+      put(`/order/note/${id}?status=4&note=${note}`, "").then((response) => {
         if (response.status === 200) {
           getOrderList();
         }
