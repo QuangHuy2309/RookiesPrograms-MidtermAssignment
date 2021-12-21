@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RatingView } from "react-simple-star-rating";
-import { get, delWithBody, post } from "../../../../Utils/httpHelper";
+import { get, delWithBody, del } from "../../../../Utils/httpHelper";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Page from "../../../Pagination";
@@ -66,14 +66,13 @@ export default function Index(props) {
     setPageNum(e);
   }
 
-  function handleDelete(e, customerId) {
+  function handleDelete(e, id) {
     if (e === "OK") {
-      const body = JSON.stringify({
-        customerId: customerId,
-        productId: props.id,
-      });
-      console.log(body);
-      post("/product/rate/delete", body)
+      // const body = JSON.stringify({
+      //   customerId: customerId,
+      //   productId: props.id,
+      // });
+      del(`/product/rate/delete/${id}`)
         .then((response) => {
           if (response.status === 200) {
             toast.success("Delete review success", {
@@ -113,7 +112,7 @@ export default function Index(props) {
                 <Col className="btnCol-ModalRv">
                   {/* <Button color="danger" onClick={() => handleDelete(review.id.customerId)} >Delete</Button> */}
                   <ModalDeleteConfirm
-                    onChoice={(e) => handleDelete(e, review.id.customerId)}
+                    onChoice={(e) => handleDelete(e, review.id)}
                   />
                 </Col>
               </Row>

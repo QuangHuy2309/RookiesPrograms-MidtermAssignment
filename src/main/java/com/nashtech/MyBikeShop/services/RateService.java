@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.nashtech.MyBikeShop.DTO.RateDTO;
 import com.nashtech.MyBikeShop.entity.RateEntity;
-import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
 
 public interface RateService {
 	public List<RateEntity> getRateByProduct(String id);
@@ -13,13 +12,13 @@ public interface RateService {
 
 	public RateEntity createRate(RateDTO rate);
 
-	public boolean deleteRate(RateKey id, String email);
+	public boolean deleteRate(int id, String email);
 
 	public boolean updateRate(RateDTO rate);
 
 	public int getNumRate(String id);
 
-	public boolean checkExist(RateKey id);
+	public boolean checkExist(String prodId, int customerId);
 
 	public double getAverageRateNumByProduct(String id);
 }

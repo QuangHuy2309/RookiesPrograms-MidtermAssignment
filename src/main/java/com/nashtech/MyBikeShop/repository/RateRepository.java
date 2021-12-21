@@ -9,17 +9,18 @@ import org.springframework.stereotype.Repository;
 
 import com.nashtech.MyBikeShop.entity.ProductEntity;
 import com.nashtech.MyBikeShop.entity.RateEntity;
-import com.nashtech.MyBikeShop.entity.RateEntity.RateKey;
 
 @Repository
-public interface RateRepository extends JpaRepository<RateEntity, RateKey> {
-	List<RateEntity> findByIdProductIdAndCustomerStatusNot(String id, boolean status);
+public interface RateRepository extends JpaRepository<RateEntity, Integer> {
+	List<RateEntity> findByProductIdAndCustomerStatusNot(String id, boolean status);
 
-	List<RateEntity> findByIdProductIdAndCustomerStatusNot(Pageable pageable, String id, boolean status);
+	List<RateEntity> findByProductIdAndCustomerStatusNot(Pageable pageable, String id, boolean status);
 
-	int countByIdProductIdAndCustomerStatusNot(String id, boolean status);
+	int countByProductIdAndCustomerStatusNot(String id, boolean status);
 
-	boolean existsById(RateKey id);
+	boolean existsByProductIdAndCustomerId(String prodId, int userId);
+	
+	boolean existsById(int id);
 
 	@Query("select count(o) from PersonEntity p , OrderEntity o , OrderDetailEntity o2, ProductEntity p2 \r\n"
 			+ "where p.id = o.customers.id and o2.id.orderId = o.id and o2.id.productId = p2.id and p.status != false "

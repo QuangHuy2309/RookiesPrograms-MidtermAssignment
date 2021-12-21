@@ -7,6 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,17 +17,22 @@ import javax.persistence.Table;
 import com.nashtech.MyBikeShop.DTO.RateDTO;
 
 @Entity
-@Table(name = "review")
+@Table(name = "reviewdetails")
 public class RateEntity {
-	@EmbeddedId
-	private RateKey id;
+//	@EmbeddedId
+//	private RateKey id;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "customerid", insertable = false, updatable = false)
+	@JoinColumn(name = "customerid")
 	private PersonEntity customer;
 
 	@ManyToOne
-	@JoinColumn(name = "productid", insertable = false, updatable = false)
+	@JoinColumn(name = "productid")
 	private ProductEntity product;
 
 	@Column(name = "rate_num")
@@ -36,7 +44,7 @@ public class RateEntity {
 	@Column(name = "datereview")
 	private Date dateReview;
 
-	@Embeddable
+//	@Embeddable
 	public static class RateKey implements Serializable {
 		private static final long serialVersionUID = -6908742347311635007L;
 
@@ -83,14 +91,14 @@ public class RateEntity {
 		super();
 	}
 
-	public RateEntity(RateKey id, int rateNum, String rateText) {
+	public RateEntity(int id, int rateNum, String rateText) {
 		super();
 		this.id = id;
 		this.rateNum = rateNum;
 		this.rateText = rateText;
 	}
 
-	public RateEntity(RateKey id, PersonEntity customer, ProductEntity product, int rateNum, String rateText,
+	public RateEntity(int id, PersonEntity customer, ProductEntity product, int rateNum, String rateText,
 			Date datereview) {
 		super();
 		this.id = id;
@@ -103,19 +111,27 @@ public class RateEntity {
 
 	public RateEntity(RateDTO rateDTO) {
 		super();
-		this.id = new RateKey(rateDTO.getCustomerId(), rateDTO.getProductId());
+//		this.id = rateDTO.getId();
 		this.rateNum = rateDTO.getRateNum();
 		this.rateText = rateDTO.getRateText();
 	}
 
-	public RateKey getId() {
+//	public RateKey getId() {
+//		return id;
+//	}
+//
+//	public void setId(RateKey id) {
+//		this.id = id;
+//	}
+	
+	public int getId() {
 		return id;
 	}
 
-	public void setId(RateKey id) {
+	public void setId(int id) {
 		this.id = id;
 	}
-
+	
 	public PersonEntity getCustomer() {
 		return customer;
 	}
