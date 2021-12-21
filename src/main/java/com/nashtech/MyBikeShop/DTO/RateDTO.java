@@ -3,6 +3,7 @@ package com.nashtech.MyBikeShop.DTO;
 import java.util.Date;
 
 public class RateDTO {
+	private int id;
 	private String productId;
 	private int customerId;
 	private int rateNum;
@@ -15,6 +16,14 @@ public class RateDTO {
 		this.customerId = customerId;
 		this.rateNum = rateNum;
 		this.rateText = rateText;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getProductId() {

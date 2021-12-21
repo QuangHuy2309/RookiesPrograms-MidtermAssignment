@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,7 @@ public class RateController {
 	@PostMapping("/product/rate/checkExist")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
 	public boolean checkExistRate(@RequestBody RateKey rate) {
-		return rateService.checkExist(rate);
+		return rateService.checkExist(rate.getProductId(), rate.getCustomerId());
 	}
 
 	@Operation(summary = "Create a Rate for Product")
@@ -67,12 +68,12 @@ public class RateController {
 			@ApiResponse(responseCode = "400", description = "Bad Request: Invalid syntax", content = @Content),
 			@ApiResponse(responseCode = "404", description = "Can not find the requested resource", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content) })
-	@PostMapping("/product/rate/delete")
+	@DeleteMapping("/product/rate/delete/{id}")
 	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
-	public String deleteRateOfProduct(HttpServletRequest request, @RequestBody RateKey rate) {
+	public String deleteRateOfProduct(HttpServletRequest request,@PathVariable(name = "id") int id) {
 		String jwt = JwtAuthTokenFilter.parseJwt(request);
 		String userId = jwtUtils.getUserNameFromJwtToken(jwt);
-		return rateService.deleteRate(rate, userId) ? StringUtils.TRUE : StringUtils.FALSE;
+		return rateService.deleteRate(id, userId) ? StringUtils.TRUE : StringUtils.FALSE;
 	}
 
 	@ApiResponses(value = {

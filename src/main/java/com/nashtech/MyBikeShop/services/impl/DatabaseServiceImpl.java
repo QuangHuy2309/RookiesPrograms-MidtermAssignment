@@ -143,7 +143,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			dir.mkdirs();
 		}
 		ArrayList<String> typeList = new ArrayList<>(Arrays.asList("categories", "persons", "products", "orderbill",
-				"orderdetails", "orderimport", "orderimportdetails", "review"));
+				"orderdetails", "orderimport", "orderimportdetails", "reviewdetails"));
 		for (String type : typeList) {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
@@ -176,7 +176,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "orderbill": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy (select id, customerid,timebought,address,status,ispay,note from orderbill order by timebought)"
+						"\\copy (select id, customerid,timebought,address,status,ispay,note,approveby from orderbill order by timebought)"
 								+ " to '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -208,9 +208,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 					check = false;
 				break;
 			}
-			case "review": {
+			case "reviewdetails": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy review(productid,customerid,rate_num,rate_text,datereview)" + " to '"
+						"\\copy reviewdetails(productid,customerid,rate_num,rate_text,datereview)" + " to '"
 								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -237,12 +237,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 			throw new ObjectNotFoundException("Cannot find the folder with name: " + filename);
 		}
 		StringBuilder sql_truncate = new StringBuilder(
-				"TRUNCATE TABLE orderbill, orderdetails, persons, orderimport, orderimportdetails, review, products, categories \r\n"
+				"TRUNCATE TABLE orderbill, orderdetails, persons, orderimport, orderimportdetails, reviewdetails, products, categories \r\n"
 						+ "RESTART IDENTITY;");
 		int row_truncate = em.createNativeQuery(sql_truncate.toString()).executeUpdate();
 
 		ArrayList<String> typeList = new ArrayList<>(Arrays.asList("categories", "persons", "products", "orderbill",
-				"orderdetails", "orderimport", "orderimportdetails", "review"));
+				"orderdetails", "orderimport", "orderimportdetails", "reviewdetails"));
 		for (String type : typeList) {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
@@ -274,8 +274,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 			}
 			case "orderbill": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy orderbill(id, customerid, timebought, address, status, ispay,note)" + " from '"
-								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+						"\\copy orderbill(id, customerid, timebought, address, status, ispay,note,approveby)"
+								+ " from '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -290,8 +290,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 				break;
 			}
 			case "orderimport": {
-				StringBuilder sql = new StringBuilder("\\copy orderimport(id, employeeid, timeimport, status)" + " from '"
-						+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
+				StringBuilder sql = new StringBuilder("\\copy orderimport(id, employeeid, timeimport, status)"
+						+ " from '" + pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
 					check = false;
@@ -305,9 +305,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 					check = false;
 				break;
 			}
-			case "review": {
+			case "reviewdetails": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy review(productid,customerid,rate_num,rate_text,datereview)" + " from '"
+						"\\copy reviewdetails(productid,customerid,rate_num,rate_text,datereview)" + " from '"
 								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
