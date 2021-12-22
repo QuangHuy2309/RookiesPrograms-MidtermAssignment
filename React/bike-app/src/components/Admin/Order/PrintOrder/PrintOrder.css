@@ -1,0 +1,54 @@
+.printOrderFrom {
+  text-align: left;
+  border: 0.25px solid #333;
+  border-width: medium;
+  margin-right: 2rem !important;
+  margin-left: 2rem !important;
+  padding: 1rem;
+}
+.addressBox_PrintOrder {
+  text-align: left;
+  border: 0.25px dotted #333;
+  border-width: medium;
+  margin-inline: auto !important;
+  /* padding: 3rem; */
+}
+.leftAddressBox_PrintOrder {
+  border-right: 0.25px dotted #333;
+  border-width: medium;
+  padding: 0 !important;
+}
+.tableProduct_PrintOrder {
+  text-align: center;
+}
+.tableProductTextLeft_PrintOrder {
+  text-align: left;
+}
+.tableProductTextRight_PrintOrder {
+  text-align: right;
+}
+.total_PrintOrder {
+  font-weight: 600;
+}
+.textAddressBox_PrintOrder {
+  color: black;
+  margin-bottom: 0;
+}
+.idOrder_PrintOrder {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* flex-direction: column; */
+}
+.parenElement_PrintOrder {
+  position: relative;
+}
+.childElement_PrintOrder {
+  position: absolute;
+  bottom: 0;
+}
+@media print {
+  .dontPrint {
+    display: none !important;
+  }
+}
