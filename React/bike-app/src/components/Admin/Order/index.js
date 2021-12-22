@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getCookie } from "../../../Utils/Cookie";
 import ModalAddNote from "./ModalAddNote/ModalAddNote.js";
+import PrintOrder from "./PrintOrder/PrintOrder.js";
 import {
   Row,
   Col,
@@ -382,7 +383,7 @@ export default function Order() {
             <th className="titleTable-OrderAdmin">STATUS</th>
             <th className="titleTable-OrderAdmin">EMPLOYEE APPROVED</th>
             {/* <th className="titleTable-OrderAdmin">NOTE</th> */}
-            {/* <th></th> */}
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -414,6 +415,7 @@ export default function Order() {
               </td>
               <td>{dropDownStatus(order.id, order.status, order.note)}</td>
               <td>{order.employeeApprovedName}</td>
+              <td><PrintOrder id={order.id} order={order}/></td>
             </tr>
           ))}
         </tbody>

@@ -268,6 +268,7 @@ const ModalExample = (props) => {
               <img src={base64} height="250px"></img>
             </FormGroup>
             <br />
+            
             <Button color="primary" type="submit">
             <IoAddOutline/> ADD
             </Button>{" "}

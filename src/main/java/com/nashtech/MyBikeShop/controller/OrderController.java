@@ -100,6 +100,14 @@ public class OrderController {
 		return orderService.getOrder(id)
 				.orElseThrow(() -> new ObjectNotFoundException("Could not find order with Id: " + id));
 	}
+	
+	@GetMapping("/orderDTO/{id}")
+	@PreAuthorize("hasRole('USER') or hasRole('STAFF') or hasRole('ADMIN')")
+	public OrderDTO findOrderDTO(@PathVariable(name = "id") int id) {
+		OrderEntity order = orderService.getOrder(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Could not find order with Id: " + id));
+		 return orderService.convertToDTO(order);
+	}
 
 	@Operation(summary = "Create Order")
 	@ApiResponses(value = {

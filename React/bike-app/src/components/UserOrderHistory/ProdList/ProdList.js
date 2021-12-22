@@ -29,6 +29,7 @@ export default function ProdList(props) {
     return (
         <div>
             {prodList.map((prod) => (
+              <div key={prod.id}>
               <Link
               to={`/prodDetail/${prod.id}`}
               style={{ textDecoration: "none",color: "black" }}
@@ -52,7 +53,8 @@ export default function ProdList(props) {
                 </h5>
                 </Col>
                 </Row>
-                </Link>))
+                </Link>
+                </div>))
         }
         </div>
     )
