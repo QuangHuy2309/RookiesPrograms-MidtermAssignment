@@ -27,7 +27,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 	boolean existsById(int id);
 
 	@Query(value = "select SUM(o2.amount*o2.unitprice) from orderbill o , orderdetails o2 \r\n"
-			+ "where o.id =o2.orderid and EXTRACT(MONTH FROM o.timebought) = :month and EXTRACT(YEAR FROM o.timebought) = :year", nativeQuery = true)
+			+ "where o.id =o2.orderid and EXTRACT(MONTH FROM o.timebought) = :month and EXTRACT(YEAR FROM o.timebought) <= :year", nativeQuery = true)
 	Float profitByMonth(@Param("month") Integer month, @Param("year") Integer year);
 
 	@Query("SELECT o FROM OrderEntity o WHERE (UPPER(o.customers.fullname) LIKE %?1%) ORDER BY o.timebought DESC")
@@ -36,7 +36,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
 	@Query("SELECT o FROM OrderEntity o WHERE (UPPER(o.customers.fullname) LIKE %?1%) and o.status = ?2 ORDER BY o.timebought DESC")
 	List<OrderEntity> searchOrderByStatusAndCustomer(String keyword, int status);
 
-	@Query("SELECT o FROM OrderEntity o WHERE EXTRACT(MONTH FROM o.timebought) <= :month and EXTRACT(YEAR FROM o.timebought) = :year"
+	@Query("SELECT o FROM OrderEntity o WHERE EXTRACT(MONTH FROM o.timebought) <= :month and EXTRACT(YEAR FROM o.timebought) <= :year"
 			+ " ORDER BY o.timebought ASC")
 	List<OrderEntity> getOrderFromMonth(@Param("month") Integer month, @Param("year") Integer year);
 
