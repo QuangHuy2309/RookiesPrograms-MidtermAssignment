@@ -2,10 +2,7 @@ package com.nashtech.MyBikeShop.services.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -29,7 +26,6 @@ import com.nashtech.MyBikeShop.entity.PersonEntity;
 import com.nashtech.MyBikeShop.exception.ObjectNotFoundException;
 import com.nashtech.MyBikeShop.repository.PersonRepository;
 import com.nashtech.MyBikeShop.services.DatabaseService;
-import com.nashtech.MyBikeShop.services.PersonService;
 
 @Service
 public class DatabaseServiceImpl implements DatabaseService {
@@ -143,7 +139,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 			dir.mkdirs();
 		}
 		ArrayList<String> typeList = new ArrayList<>(Arrays.asList("categories", "persons", "products", "orderbill",
-				"orderdetails", "orderimport", "orderimportdetails", "reviewdetails"));
+				"orderdetails", "orderimport", "orderimportdetails", "review"));
 		for (String type : typeList) {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
@@ -208,9 +204,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 					check = false;
 				break;
 			}
-			case "reviewdetails": {
+			case "review": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy reviewdetails(productid,customerid,rate_num,rate_text,datereview)" + " to '"
+						"\\copy review(productid,customerid,rate_num,rate_text,datereview)" + " to '"
 								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)
@@ -237,12 +233,12 @@ public class DatabaseServiceImpl implements DatabaseService {
 			throw new ObjectNotFoundException("Cannot find the folder with name: " + filename);
 		}
 		StringBuilder sql_truncate = new StringBuilder(
-				"TRUNCATE TABLE orderbill, orderdetails, persons, orderimport, orderimportdetails, reviewdetails, products, categories \r\n"
+				"TRUNCATE TABLE orderbill, orderdetails, persons, orderimport, orderimportdetails, review, products, categories \r\n"
 						+ "RESTART IDENTITY;");
 		int row_truncate = em.createNativeQuery(sql_truncate.toString()).executeUpdate();
 
 		ArrayList<String> typeList = new ArrayList<>(Arrays.asList("categories", "persons", "products", "orderbill",
-				"orderdetails", "orderimport", "orderimportdetails", "reviewdetails"));
+				"orderdetails", "orderimport", "orderimportdetails", "review"));
 		for (String type : typeList) {
 			StringBuilder pathForEach = new StringBuilder(backUpPath.toString() + ("/" + type + ".csv"));
 			switch (type) {
@@ -305,9 +301,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 					check = false;
 				break;
 			}
-			case "reviewdetails": {
+			case "review": {
 				StringBuilder sql = new StringBuilder(
-						"\\copy reviewdetails(productid,customerid,rate_num,rate_text,datereview)" + " from '"
+						"\\copy review(productid,customerid,rate_num,rate_text,datereview)" + " from '"
 								+ pathForEach.toString() + "' DELIMITER ',' CSV HEADER;");
 				int row = em.createNativeQuery(sql.toString()).executeUpdate();
 				if (row < 1)

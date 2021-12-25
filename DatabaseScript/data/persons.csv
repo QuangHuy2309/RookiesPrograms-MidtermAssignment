@@ -1,0 +1,24 @@
+email,password,fullname,dob,gender,address,phonenumber,role,status
+admin1@gmail.com,$2a$10$gzBfiRgHf87d7ud4lFSkZuj6uyTHADxm2teGmtBIn8QHr7nN9kpNG,Ad Văn Min,2003-07-02 07:00:00,f,Thủ thừa,0355544873,ADMIN,t
+nguyenvanc@gmail.com,$2a$10$yojInWL4x890cqsb5xd0yOcf/g6Uy/FvNgJPnOXjGlL/VZ9VUK7W2,Nguyễn Văn Chiến,1999-02-28 07:00:00,f,Quan 9,0978877132,USER,t
+staff1@gmail.com,$2a$10$ik5NoMy6FX.Zcq0CmVyih.eHQUfpJkjGc6R248OidbB3Q9HwLP6aW,Nguyễn Ngọc Sáp,2000-01-01 07:00:00,t,TP HCM,0973146133,STAFF,t
+nguyenvanb@gmail.com,$2a$10$woAJ4lGzz0C4opVW9d2bx.jDaR/6c5uqRfuGhx90xvZ5hnZonvOUC,Nguyễn Văn Bình,1999-01-31 07:00:00,t,Quan 9,0966613248,USER,t
+nguyenvane@gmail.com,$2a$10$v.urwm37FwAuOKbAhHBUv.z4VFDlVw5rVP04pRBA1NrvYRShBQR0y,Nguyễn Văn Em,1993-11-19 07:00:00,f,Trà Vinh,0903617456,USER,t
+nguyenvanh@gmail.com,$2a$10$nckKY8Hc4ptUyBOCgeAyz.1/zBdfHtxAQccEHkxCBo8.VGZC6TOGS,Nguyễn Văn Hoàng,1995-06-08 07:00:00,f,TP HCM,0943878989,USER,t
+shynhyn319@gmail.com,$2a$10$l4LGql2yMSf2kR7z1LfkZusOGv5Qf7CF5IG9YjEPGhlMt4Q9Q/OfW,Lê Hoàng Nhật Lâm,1999-01-31 07:00:00,f,Quan 9,0964871348,ADMIN,t
+nguyenvand@gmail.com,$2a$10$sX2.tKO6uetkdJSIfG5Aaet0iknSjGm1T3DK8ZmaiAihraenTup4y,Nguyễn Văn D1,1999-04-28 07:00:00,t,Quan 9,0967618731,USER,t
+nguyenvana@gmail.com,$2a$10$/xg7mg7vUx7o34TZ1yBa9enWX6TvKvfqcONywcJP8c396TWK16pQy,Nguyễn Văn A1,1999-01-31 07:00:00,f,Quan 9,0967134446,USER,t
+htyen1564x@gmail.com,$2a$10$52PfY1RQZZX8PUTokGaw3ufUsqDeIzLMywhI5I5dSi.hMds/nHLPC,Huỳnh Thụy Yến,2000-01-01 07:00:00,t,TP HCM,0854678134,ADMIN,t
+tpo69321x@gmail.com,$2a$10$UbKyAAEuZDuXmnLW99eYqOP2X12tXGBLEW2JyRdQjWrIXMQ3wimDm,Trần Phương Oanh,1991-11-05 07:00:00,t,Nghệ An,0967135222,USER,t
+tqph1651x@gmail.com,$2a$10$rd159/3iMlpv2WGpc3wM.uN4uE8wd8ne/.hVAUNXzVjVdCOOjKB2y,Trần Quốc Phương Hoàng,1997-11-12 07:00:00,t,Hà Nội,0972131654,USER,t
+lqhuy2309@gmail.com,$2a$10$FRP9Mf9diqdNF/8.e73CHuw/bMq3eQPnU7pY8gbK41fTOt/GO2kDC,Lương Quang Huy,1999-09-22 07:00:00,f,Long An,0967141557,USER,t
+tranvana@gmail.com,$2a$10$6CPtRlTWQ/sh9iaILwJfNureof.WbEDRmEDJpQtjYx7I1N29/iYAm,Trần Văn Anh,2000-07-20 07:00:00,f,TP HCM,0978454533,STAFF,t
+tranvana1@gmail.com,$2a$10$BBmKJVQ/3OCmZRurfQwH5OddKqyxSVYHN9Gy8L3sqArT90zEKuIy6,Trần Văn Anh,2003-07-20 07:00:00,f,TP HCM,0975646878,ADMIN,t
+tqcuong2163x@gmail.com,$2a$10$FKShuLVqTZwyaICEIYlTduTHn4TxSRe8C39CqsAVLez0pkd9jYdpq,Trịnh Quốc Cường,1998-06-10 07:00:00,f,Bình Dương,0967146163,USER,t
+a2@gmail.com,$2a$10$pc1mi.Eo5zAJ0m3iqfK7vuyk8F4/7F4cV7h0aZPRveNnAKk0YIuvm,Nguyễn Anh Minh,2003-07-14 07:00:00,t,TP HCM,0956481373,STAFF,t
+a134@gmail.com,$2a$10$.7jmZ5R0KpRg.rrBfhwI9uy0ydBdWte5YBLc8vdBhUkfd1HVsMmEm,Trần Anh Minh,1997-02-05 07:00:00,f,TP HCM,0964984234,ADMIN,t
+nqhuy0612x@gmail.com,$2a$10$R2A7bxmPVdwda9hHAYhc4u.5dV/xVNcuDGXvzOMixsDBMFEt.AkSO,Nguyễn Quốc Huy,1995-01-08 07:00:00,f,Trà Vinh,0947216462,USER,t
+ntanh6971x@gmail.com,$2a$10$1YNXu/4az6abnNIXLiwfPO8iMtyrLpbZYMicR3ZpPmpOJLiYlA6xS,Nguyễn Tuấn Anh,2000-01-01 07:00:00,f,Đà Nẵng,0124242424,USER,t
+nqhoang6103x@gmail.com,$2a$10$9oZs/EcPr1U3PaQibuOKt.CupLGtT.GOa9ygFo6ZxcuMzzo4dhtUO,Nguyễn Quốc Hoàng,1997-06-10 07:00:00,f,Bình Định,0903612751,USER,t
+nhuhoa2x@gmail.com,$2a$10$jfUg4OnKuYbIMOJM/xA4POGRJXJNGQUbRrWZvonfFHcn6RhyZfgk2,Nguyễn Như Hoa,2000-07-11 07:00:00,t,Hà Tĩnh,0941272165,USER,t
+test@gmail.com,$2a$10$TzWhAG9IWXEnGHqq2oEUm.rtDcQUJFNAdAMquaIWhJ7Ie00rmORQ2,Oke,2009-12-15 07:00:00,t,A,1111111111,USER,t

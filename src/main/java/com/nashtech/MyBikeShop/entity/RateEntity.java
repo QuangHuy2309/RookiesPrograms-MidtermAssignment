@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import com.nashtech.MyBikeShop.DTO.RateDTO;
 
 @Entity
-@Table(name = "reviewdetails")
+@Table(name = "review")
 public class RateEntity {
 //	@EmbeddedId
 //	private RateKey id;

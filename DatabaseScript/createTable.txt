@@ -47,7 +47,10 @@ CREATE TABLE public.orderbill (
 	address text NOT NULL,
 	status int4 NOT NULL,
 	ispay bool NULL,
+	note text NULL,
+	approveby int4 NULL,
 	CONSTRAINT orderbill_pk PRIMARY KEY (id),
+	CONSTRAINT fk_orderbill_employee_approveby FOREIGN KEY (approveby) REFERENCES public.persons(id),
 	CONSTRAINT fk_persons FOREIGN KEY (customerid) REFERENCES public.persons(id)
 );
 
@@ -100,12 +103,13 @@ CREATE TABLE public.products (
 -- DROP TABLE public.review;
 
 CREATE TABLE public.review (
+	id serial4 NOT NULL,
 	productid text NOT NULL,
 	customerid int4 NOT NULL,
 	rate_num int4 NULL DEFAULT 0,
 	rate_text text NULL,
 	datereview date NULL,
-	CONSTRAINT email_product_pkey PRIMARY KEY (customerid, productid),
+	CONSTRAINT review_pkey PRIMARY KEY (id),
 	CONSTRAINT review_customeremail_fkey FOREIGN KEY (customerid) REFERENCES public.persons(id) ON UPDATE CASCADE,
 	CONSTRAINT review_productid_fkey FOREIGN KEY (productid) REFERENCES public.products(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
